@@ -168,6 +168,7 @@ public class PromoterController extends BaseController {
 				newUser.setOpenMemberInfoId(-1);
 				newUser.setHeadImage(user.getHeadImage());
 				newUser.setNickname(user.getNickname());
+				newUser.setIsRegist(user.getIsRegist());
 				ResponseData rr = new ResponseData(newUser);
 				return rr;
 			}
