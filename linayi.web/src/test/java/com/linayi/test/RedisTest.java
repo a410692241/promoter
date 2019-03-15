@@ -47,7 +47,7 @@ public class RedisTest {
 
 
 	@Resource
-    private RedisUtil redisUtil;
+    private RedisUtil redisUtil;    
     @Resource(name="redisTemplate")
     private RedisTemplate<Serializable, Serializable> redisTemplate;
 
