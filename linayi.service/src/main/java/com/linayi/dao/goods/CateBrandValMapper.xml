@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.goods.CateBrandValMapper">
+  <select id="getCateBrandVal" resultType="com.linayi.entity.goods.CateBrandVal">
+    select cate_brand_val_id cateBrandValId, category_id categoryId, brand_id brandId, attr_value_id attrValueId from cate_brand_val
+    <where>
+      <if test="categoryId != null">
+        category_id = #{categoryId}
+      </if>
+      <if test="brandId != null">
+        and brand_id = #{brandId}
+      </if>
+      <if test="valueId != null">
+       and attr_value_id = #{valueId}
+      </if>
+    </where>
+  </select>
+
+  <insert id="insert" parameterType="com.linayi.entity.goods.CateBrandVal" useGeneratedKeys="true" keyProperty="cateBrandValId">
+    insert into cate_brand_val (cate_brand_val_id, category_id, brand_id, 
+      attr_value_id)
+    values (#{cateBrandValId,jdbcType=INTEGER}, #{categoryId,jdbcType=INTEGER}, #{brandId,jdbcType=INTEGER}, 
+      #{attrValueId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linayi.entity.goods.CateBrandVal" useGeneratedKeys="true" keyProperty="cateBrandValId">
+    insert into cate_brand_val
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="cateBrandValId != null">
+        cate_brand_val_id,
+      </if>
+      <if test="categoryId != null">
+        category_id,
+      </if>
+      <if test="brandId != null">
+        brand_id,
+      </if>
+      <if test="attrValueId != null">
+        attr_value_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="cateBrandValId != null">
+        #{cateBrandValId,jdbcType=INTEGER},
+      </if>
+      <if test="categoryId != null">
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="brandId != null">
+        #{brandId,jdbcType=INTEGER},
+      </if>
+      <if test="attrValueId != null">
+        #{attrValueId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

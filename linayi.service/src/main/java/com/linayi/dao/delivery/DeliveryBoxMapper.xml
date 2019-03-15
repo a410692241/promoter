@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linayi.dao.delivery.DeliveryBoxMapper" >
+<resultMap id="BaseResultMap" type="com.linayi.entity.delivery.DeliveryBox" >
+    <id column="delivery_box_id" property="deliveryBoxId" jdbcType="BIGINT" />
+    <result column="box_no" property="boxNo" jdbcType="BIGINT" />
+    <result column="image" property="image" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+    <sql id="Base_Column_List" >
+    delivery_box_id, box_no, image,update_time, create_time
+  </sql>
+  
+  <!--通过配送箱ID获取配送箱信息 DeliveryBox getDeliveryBox(Long deliveryBoxId);  -->
+  <select id="getDeliveryBox" resultMap="BaseResultMap">
+  	select
+  		<include refid="Base_Column_List" />
+  	from 
+  		delivery_box
+  	where 
+  		delivery_box_id = #{deliveryBoxId}
+  </select>
+  
+  <!--通过配送箱ID插入封箱图片 Integer updateImageById(DeliveryBox deliveryBox);  -->
+	<update id="updateImageById" parameterType="com.linayi.entity.delivery.DeliveryBox">
+		update
+			delivery_box
+		set
+			image=#{image}
+		where
+			delivery_box_id = #{deliveryBoxId}
+	</update>  
+  
+  <!-- 插入 -->
+  <insert id="insert" useGeneratedKeys="true" keyProperty="deliveryBoxId"
+            parameterType="com.linayi.entity.delivery.DeliveryBox">
+        INSERT INTO 
+        	delivery_box
+        	(box_no, create_time)
+        VALUES (
+            #{boxNo,jdbcType=BIGINT},
+            #{createTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+</mapper>

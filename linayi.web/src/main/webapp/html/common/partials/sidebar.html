@@ -1,0 +1,56 @@
+﻿    <!-- Page Sidebar Header-->
+<div class="sidebar-header-wrapper">
+    <i class="searchicon fa "></i>
+    <div class="searchhelper">Search Reports, Charts, Emails or Notifications</div>
+</div>
+<!-- /Page Sidebar Header -->
+<!-- Sidebar Menu -->
+<ul class="nav sidebar-menu">
+    <!--Dashboard-->
+    <li ui-sref-active="active">
+        <a ui-sref="app.dashboard">
+            <i class="menu-icon glyphicon glyphicon-home"></i>
+            <span class="menu-text"> 首页 </span>
+        </a>
+    </li>
+    
+    <!--UI Elements-->
+    <li ng-repeat="menu in menuItemList | orderBy : 'priority' track by $index">
+    	 
+        <a href="#" ui-sref="{{ menu.sref }}" ng-if="menu.children.length == 0">
+            <i class="menu-icon fa fa-th"></i>
+            <span class="menu-text"> {{ menu.text }} </span>
+        </a>
+        
+        <a href="#" class="menu-dropdown" ng-if="menu.children.length != 0">
+            <i class="menu-icon fa fa-desktop"></i>
+            <span class="menu-text"> {{ menu.text }} </span>
+            <i class="menu-expand"></i>
+        </a>
+        
+        <ul class="submenu" ng-if="menu.children.length != 0">
+	            <li ng-repeat="menu in menu.children | orderBy : 'priority' track by $index" {{ menu.children.length == 0 ? "ui-sref-active='active'":'' }} >
+	                <a href="#" ui-sref="{{menu.sref}}" ng-if="menu.children.length == 0">
+	                    <span class="menu-text">{{ menu.text }}</span>
+	                </a>
+	                
+	                <a href="#" class="menu-dropdown" ng-if="menu.children.length != 0">
+	                    <span class="menu-text">
+	                        {{ menu.text }}
+	                    </span>
+	                    <i class="menu-expand"></i>
+	                </a>
+	                <ul class="submenu" ng-if="menu.children.length != 0">
+	                    <li ui-sref-active="active">
+	                        <a href="#" ui-sref="{{menu.sref}}">
+	                            <i class="menu-icon fa fa-rocket"></i>
+	                            <span class="menu-text"> {{ menu.text }} </span>
+	                        </a>
+	                    </li>
+	                </ul>
+	            </li>
+        </ul>
+    </li>
+    
+</ul>
+<!-- /Sidebar Menu -->

@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.area.AreaMapper">
+  <resultMap id="BaseResultMap" type="com.linayi.entity.area.Area">
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="parent" jdbcType="VARCHAR" property="parent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="level" jdbcType="SMALLINT" property="level" />
+    <result column="rank" jdbcType="INTEGER" property="rank" />
+    <result column="section_no" jdbcType="VARCHAR" property="sectionNo" />
+  </resultMap>
+  <insert id="insert" parameterType="com.linayi.entity.area.Area">
+    insert into area (code, parent, name, 
+      level, rank, section_no
+      )
+    values (#{code,jdbcType=VARCHAR}, #{parent,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{level,jdbcType=SMALLINT}, #{rank,jdbcType=INTEGER}, #{sectionNo,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linayi.entity.area.Area">
+    insert into area
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="code != null">
+        code,
+      </if>
+      <if test="parent != null">
+        parent,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="level != null">
+        level,
+      </if>
+      <if test="rank != null">
+        rank,
+      </if>
+      <if test="sectionNo != null">
+        section_no,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="parent != null">
+        #{parent,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=SMALLINT},
+      </if>
+      <if test="rank != null">
+        #{rank,jdbcType=INTEGER},
+      </if>
+      <if test="sectionNo != null">
+        #{sectionNo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+
+<!-- 根据层级获取地区信息  List<Area> getArea(String parent); -->
+  <select id="getArea" resultType="com.linayi.entity.area.Area">
+  	SELECT
+  		code,parent,name,level,rank,section_no sectionNo 
+  	FROM
+  		area
+  	WHERE
+  		level >=1
+  </select>
+  
+  <!-- 获取省 -->
+  <select id="getProvince" resultType="com.linayi.entity.area.Area">
+		SELECT * from area where level = 1
+	</select> 
+	
+ <!-- 获取市区 -->
+	<select id="listAreaInfo" parameterType="com.linayi.entity.area.Area"
+		resultType="com.linayi.entity.area.Area">
+		SELECT `code`, parent, `name` FROM area
+		<where>
+			<if test="parent != null">
+				and parent = #{parent}
+			</if>
+		</where>
+	</select>
+
+    <!--
+    数据库表的基本查询列名集合
+  -->
+    <sql id="Base_Column_List">
+        code, name, parent, level, rank, section_no
+    </sql>
+
+    <!--
+        Where子句
+      -->
+    <sql id="Base_Query_Where">
+        <if test="code != null">
+            and code = #{code,jdbcType=VARCHAR}
+        </if>
+        <if test="name != null">
+            and name = #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="parent != null">
+            and parent = #{parent,jdbcType=VARCHAR}
+        </if>
+        <if test="level != null">
+            and level = #{level,jdbcType=SMALLINT}
+        </if>
+        <if test="rank != null">
+            and rank = #{rank,jdbcType=INTEGER}
+        </if>
+        <if test="sectionNo != null">
+            and section_no = #{sectionNo,jdbcType=VARCHAR}
+        </if>
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from area
+        where code = #{code,jdbcType=VARCHAR}
+    </select>
+
+    <select id="query" resultMap="BaseResultMap" parameterType="com.linayi.entity.area.Area">
+        select
+        <include refid="Base_Column_List"/>
+        from area
+        <where>
+            <include refid="Base_Query_Where"></include>
+        </where>
+    </select>
+
+    <!--
+        查询总条数
+    -->
+    <select id="queryTotal" resultType="long">
+        select num(*) from area
+    </select>
+
+    <!--
+        基本更新字段
+    -->
+    <sql id="Base_Update_Column">
+        <set>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="parent != null">
+                parent = #{parent,jdbcType=VARCHAR},
+            </if>
+            <if test="level != null">
+                level = #{level,jdbcType=SMALLINT},
+            </if>
+            <if test="rank != null">
+                rank = #{rank,jdbcType=INTEGER},
+            </if>
+            <if test="sectionNo != null">
+                section_no = #{sectionNo,jdbcType=VARCHAR}
+            </if>
+        </set>
+    </sql>
+
+    <!--
+      根据主键删除数据库表中的记录
+    -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete FROM area
+        where code = #{code,jdbcType=VARCHAR}
+    </delete>
+
+
+    <!--
+      根据主键更新数据库表
+    -->
+    <update id="updateByPrimaryKey" parameterType="com.linayi.entity.area.Area">
+        update area
+        <set>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="parent != null">
+                parent = #{parent,jdbcType=VARCHAR},
+            </if>
+            <if test="level != null">
+                level = #{level,jdbcType=SMALLINT},
+            </if>
+            <if test="rank != null">
+                rank = #{rank,jdbcType=INTEGER},
+            </if>
+            <if test="sectionNo != null">
+                section_no = #{sectionNo,jdbcType=VARCHAR}
+            </if>
+        </set>
+        where code = #{code,jdbcType=VARCHAR}
+    </update>
+
+
+
+<!-- 通过街道名字搜索街道code List<Integer> getStreetCodeByStreetName(String streetName); -->
+  <select id="getStreetCodeByStreetName" resultType="java.lang.String">
+  	SELECT
+  		code
+  	FROM
+  		area
+  	WHERE
+  		level=4
+  	AND name LIKE concat('%',#{streetName},'%')
+  </select>
+  <!-- 通过code搜索名字 String getNameByCode(String code); -->
+  <select id="getNameByCode" resultType="java.lang.String">
+  	SELECT
+  		name
+  	FROM
+  		area
+  	WHERE
+  		 code=#{code}
+  </select>
+    <!-- 通过area某个信息获取Area信息     Area getAreaInfo(Area area); -->
+  <select id="getAreaInfo" resultType="com.linayi.entity.area.Area">
+  	SELECT
+  		code, parent, name, level, rank, section_no sectionNo
+  	FROM
+  		area
+  	<where>
+     	<if	test="code != null"> 
+     		code=#{code}
+     	</if>
+     	<if	test="parent != null">
+     		AND parent=#{parent}
+     	</if>
+     	<if	test="name != null">
+     		AND name=#{name}
+     	</if>
+     	<if	test="level != null">
+     		AND level=#{level}
+     	</if>
+     	<if	test="rank != null">
+     		AND rank=#{rank}
+     	</if>
+     	<if	test="sectionNo != null">
+     		AND section_no=#{sectionNo}
+     	</if>
+     </where>
+  </select>
+</mapper>

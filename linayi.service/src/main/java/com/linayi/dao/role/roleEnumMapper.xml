@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.linayi.dao.role.RoleEnumMapper">
+
+    <select id="selectRoleList" resultType="com.linayi.entity.account.Role_menu">
+ 		select r.`role_name`,r.`status`,r.`create_time`,r.`update_time`,m.`menu_name`, rm.`role_menu_id` from `role` r , `role_menu` rm , `menu` m
+ 		where r.`role_id` = rm.`role_id` and rm.`menu_id` = m.`menu_id`
+ 	</select>
+	<delete id="deleteRoleMenu" parameterType="String">
+ 		delete from `role` where `role_id`=#{role_menu_id}
+ 	</delete>
+	<select id="selectMenu" resultType="com.linayi.entity.account.Menu">
+		select `menu_name`,`module_id` from menu
+	</select>
+
+	<select id="selectRoleByMenu" parameterType="Long" resultType="com.linayi.entity.account.Role_menu">
+		select `role_name` from `role` where `role_id` in (select `role_id` from `role_menu` where `role_menu_id` = #{roleMenuId})
+	</select>
+
+	<select id="selectRole" resultType="com.linayi.entity.account.Role">
+        select `role_name` , `role_id`, `status` from `role`
+    </select>
+	<select id="selectIdbyRoleName" parameterType="String">
+        select `role_id` from `role` where `role_name`=#{roleName}
+    </select>
+	<insert id="insertAccountRole" parameterType="com.linayi.entity.account.Account">
+        insert into `account_role` (`account_id`,`role_id`) values(#{accountId},#{roleId})
+    </insert>
+	<select id="selectByAccountId" parameterType="Integer" resultType="Integer">
+    select `account_role_id` from `account_role` where `account_id` = #{accountId}
+    </select>
+	<select id="selectByAr" parameterType="Integer" resultType="Integer">
+        select `account_id` from `account_role` where `account_role_id` = #{accountRoleId}
+    </select>
+
+	<!--<update id="updateRoleMenu" parameterType="com.linayi.entity.account.Role_menu">
+		update `role_menu` set `role_id`=#{roleId} , `menu_id` =#{menuId} where `role_id` in
+		(select `role_id` from `role` where `role_name`=#{roleName}) and `menu_id` in
+		(select `menu_id` from `menu` where `menu_name`=#{menuName})
+	</update>
+
+	<insert id="insertRoleMenu" parameterType="com.linayi.entity.account.Role_menu">
+ 		insert into `role_menu` (`role_id`,`menu_id`) values  in(
+		(select `role_id` from `role` where `role_name`=#{roleName}),
+		(select `menu_id` from `menu` where `menu_name`=#{menuName}))
+ 	</insert>-->
+
+
+</mapper>

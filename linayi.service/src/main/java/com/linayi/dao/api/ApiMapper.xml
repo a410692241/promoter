@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.api.ApiLogsMapper">
+    <resultMap id="BaseResultMap" type="com.linayi.entity.api.ApiLogs">
+        <id column="log_id" jdbcType="INTEGER" property="logId" />
+        <result column="request_url" jdbcType="VARCHAR" property="requestUrl" />
+        <result column="request_time" jdbcType="TIMESTAMP" property="requestTime" />
+        <result column="request_head" jdbcType="VARCHAR" property="requestHead" />
+        <result column="request_body" jdbcType="VARCHAR" property="requestBody" />
+        <result column="error_msg" jdbcType="VARCHAR" property="errorMsg" />
+        <result column="response_body" jdbcType="VARCHAR" property="responseBody" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    log_id, request_url, request_time, request_head, request_body, error_msg, response_body
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from api_logs
+        where log_id = #{logId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from api_logs
+    where log_id = #{logId,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" keyColumn="log_id" keyProperty="logId" parameterType="com.linayi.entity.api.ApiLogs" useGeneratedKeys="true">
+    insert into api_logs (request_url, request_time, request_head,
+      request_body, error_msg, response_body
+      )
+    values (#{requestUrl,jdbcType=VARCHAR}, #{requestTime,jdbcType=TIMESTAMP}, #{requestHead,jdbcType=VARCHAR},
+      #{requestBody,jdbcType=VARCHAR}, #{errorMsg,jdbcType=VARCHAR}, #{responseBody,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" keyColumn="log_id" keyProperty="logId" parameterType="com.linayi.entity.api.ApiLogs" useGeneratedKeys="true">
+        insert into api_logs
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="requestUrl != null">
+                request_url,
+            </if>
+            <if test="requestTime != null">
+                request_time,
+            </if>
+            <if test="requestHead != null">
+                request_head,
+            </if>
+            <if test="requestBody != null">
+                request_body,
+            </if>
+            <if test="errorMsg != null">
+                error_msg,
+            </if>
+            <if test="responseBody != null">
+                response_body,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="requestUrl != null">
+                #{requestUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="requestTime != null">
+                #{requestTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="requestHead != null">
+                #{requestHead,jdbcType=VARCHAR},
+            </if>
+            <if test="requestBody != null">
+                #{requestBody,jdbcType=VARCHAR},
+            </if>
+            <if test="errorMsg != null">
+                #{errorMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="responseBody != null">
+                #{responseBody,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.linayi.entity.api.ApiLogs">
+        update api_logs
+        <set>
+            <if test="requestUrl != null">
+                request_url = #{requestUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="requestTime != null">
+                request_time = #{requestTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="requestHead != null">
+                request_head = #{requestHead,jdbcType=VARCHAR},
+            </if>
+            <if test="requestBody != null">
+                request_body = #{requestBody,jdbcType=VARCHAR},
+            </if>
+            <if test="errorMsg != null">
+                error_msg = #{errorMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="responseBody != null">
+                response_body = #{responseBody,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where log_id = #{logId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.linayi.entity.api.ApiLogs">
+    update api_logs
+    set request_url = #{requestUrl,jdbcType=VARCHAR},
+      request_time = #{requestTime,jdbcType=TIMESTAMP},
+      request_head = #{requestHead,jdbcType=VARCHAR},
+      request_body = #{requestBody,jdbcType=VARCHAR},
+      error_msg = #{errorMsg,jdbcType=VARCHAR},
+      response_body = #{responseBody,jdbcType=VARCHAR}
+    where log_id = #{logId,jdbcType=INTEGER}
+  </update>
+</mapper>

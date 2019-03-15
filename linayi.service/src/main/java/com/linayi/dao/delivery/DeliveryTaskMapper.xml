@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linayi.dao.delivery.DeliveryTaskMapper" >
+<resultMap id="BaseResultMap" type="com.linayi.entity.delivery.DeliveryTask" >
+    <id column="delivery_task_id" property="deliveryTaskId" jdbcType="BIGINT" />
+    <result column="orders_id" property="ordersId" jdbcType="BIGINT" />
+    <result column="delivery_box_id" property="deliveryBoxId" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="community_id" property="communityId" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+	<!--获取所有的配送任务 List<DeliveryTask> getLsitDeliveryTask();  -->
+	<select id="getListDeliveryTask" parameterType="com.linayi.entity.delivery.DeliveryTask" resultMap="BaseResultMap">
+		select 
+			delivery_task_id,orders_id,delivery_box_id
+		from
+			delivery_task
+		where
+			status = 'PACKED' 
+	</select>
+	<!--通过配送箱ID修改状态为配送中 Integer updateStatusByDeliveryBoxId(Long deliveryBoxId);  -->
+	<update id="updateStatusByDeliveryBoxId">
+		update 
+			delivery_task
+		set
+			status = 'DELIVERING'
+		where
+		delivery_box_id=#{deliveryBoxId}
+	</update>
+<select id="getDeliveryTaskByUserIdAndStatus" resultType="com.linayi.entity.delivery.DeliveryTask" parameterType="com.linayi.entity.delivery.DeliveryTask">
+  SELECT
+    delivery_task_id,orders_id,delivery_box_id,user_id,status,community_id,update_time,create_time
+  FROM
+    delivery_task
+  <where>
+      <if test="deliveryTaskId!=null">
+          delivery_task_id = #{deliveryTaskId}
+      </if>
+      <if test="ordersId!=null">
+		  AND
+          orders_id = #{ordersId}
+      </if>
+      <if test="deliveryBoxId!=null">
+		  AND
+          delivery_box_id = #{deliveryBoxId}
+      </if>
+      <if test="userId!=null">
+		  AND
+          user_id = #{userId}
+      </if>
+      <if test="status!=null">
+          AND
+          status = #{status}
+      </if>
+      <if test="communityId!=null">
+          AND
+          community_id = #{communityId}
+      </if>
+  </where>
+</select>
+
+<select id="getDeliveryTaskByUserId" resultType="com.linayi.entity.delivery.DeliveryTask" parameterType="com.linayi.entity.delivery.DeliveryTask">
+SELECT
+	delivery_task_id,orders_id,delivery_box_id,user_id,status,community_id,update_time,create_time
+FROM
+	delivery_task
+WHERE
+	user_id = #{userId}
+AND
+	status = "PACKED"
+OR
+	status = "DELIVERING"
+ORDER BY
+	status = "PACKED" ASC
+</select>
+
+<update id="updateDeliveryTaskStatusByOrdersId" parameterType="com.linayi.entity.delivery.DeliveryTask">
+  UPDATE
+    delivery_task
+  SET
+    status=#{status},update_time=#{updateTime}
+  WHERE
+    orders_id=#{ordersId}
+</update>
+	<select id="selectAll" resultType="com.linayi.entity.delivery.DeliveryTask">
+		SELECT
+			  dt.delivery_task_id,
+			  dt.orders_id,
+			  dt.delivery_box_id,
+			  dt.user_id, 
+			  dt.status,
+			  dt.community_id,
+			  o.update_time,
+			  o.create_time,
+			  c.name communityName,
+			  o.receiver_name receiverName,
+			  o.amount
+	     FROM
+			 delivery_task dt,community c,orders o
+		<where>
+			 dt.community_id=c.community_id
+		AND
+			 o.orders_id=dt.orders_id
+		<if test="status!=null">
+		AND	dt.status=#{status}
+		</if>
+		<if test="communityName!=null and communityName!=''">
+		AND	c.name=#{communityName}
+		</if>
+		<if test="receiverName!=null and receiverName!=''">
+		AND	o.receiver_name like concat ('%',#{receiverName},'%')
+		</if>
+		<if test="deliveryTaskId!=null">
+		AND	dt.delivery_task_id=#{deliveryTaskId}
+		</if>
+		<if test="ordersId!=null">
+		AND	dt.orders_id=#{ordersId}
+		</if>
+		<if test="userId!=null">
+		AND	dt.user_id=#{userId}
+		</if>
+		<if test="deliveryBoxId!=null">
+		AND	dt.delivery_box_id=#{deliveryBoxId}
+		</if>
+		 <if test="createTimeStart != null and createTimeStart != ''">
+        AND o.create_time <![CDATA[ >= ]]> #{createTimeStart}
+        </if>
+        <if test="createTimeEnd != null and createTimeEnd != ''">
+        AND o.create_time <![CDATA[ <= ]]> #{createTimeEnd}
+        </if>
+            order by o.update_time desc,o.create_time desc
+
+		</where>
+	</select>
+	<!--通过配送任务ID获取配送任务  DeliveryTask getDeliveryTaskById(Long deliveryTaskId);  -->
+	<select id="getDeliveryTaskById" resultMap="BaseResultMap">
+		select
+			delivery_task_id,orders_id,delivery_box_id,user_id,status,community_id,update_time,create_time
+		from 
+			delivery_task
+		where
+			delivery_task_id = #{deliveryTaskId}
+	</select>
+	
+	<!-- 插入 -->
+  <insert id="insert" useGeneratedKeys="true" keyProperty="deliveryTaskId"
+            parameterType="com.linayi.entity.delivery.DeliveryTask">
+        INSERT INTO 
+        	delivery_task
+        	(orders_id, delivery_box_id, user_id, status, community_id, create_time)
+        VALUES (
+            #{ordersId,jdbcType=BIGINT},
+            #{deliveryBoxId,jdbcType=BIGINT},
+            #{userId,jdbcType=INTEGER},
+            #{status,jdbcType=VARCHAR},
+            #{communityId,jdbcType=INTEGER},
+            #{createTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+	<select id="getDeliveryTaskByOrdersId" resultMap="BaseResultMap">
+		select
+			delivery_task_id,orders_id,delivery_box_id,user_id,status,community_id,update_time,create_time
+		from
+			delivery_task
+		where
+			orders_id = #{ordersId}
+	</select>
+</mapper>

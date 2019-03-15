@@ -1,0 +1,111 @@
+package com.linayi.service.community.impl;
+
+
+import com.linayi.dao.area.AreaMapper;
+import com.linayi.dao.community.CommunityMapper;
+import com.linayi.entity.area.Area;
+import com.linayi.entity.area.SmallCommunity;
+import com.linayi.entity.community.Community;
+import com.linayi.service.area.SmallCommunityService;
+import com.linayi.service.community.CommunityService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.*;
+import java.util.stream.Collectors;
+
+
+@Service
+public class CommunityServiceImpl implements CommunityService {
+    @Resource
+    private CommunityMapper communityMapper;
+    @Autowired
+    private SmallCommunityService smallCommunityService;
+    @Resource
+    private AreaMapper areaMapper;
+
+    @Override
+    public List<Community> getCommunityList(Community community) {
+        List<Community> list = communityMapper.getCommunityList(community);
+        //为每一个社区的地址 增加省市区街道
+        for(int i=0;i<list.size();i++){
+        	String areaCode = list.get(i).getAreaCode();
+        	if(!"".equals(areaCode) && areaCode != null){
+        		String areaName = getAreaNameByAreaCode(areaCode);
+            	String address = list.get(i).getAddress();
+            	list.get(i).setAddress(areaName+address);	
+        	}
+        }
+        return list;
+    }
+
+    @Override
+    public Community getCommunity(Community community) {
+    	community = communityMapper.getCommunity(community);
+    	String areaCode = community.getAreaCode();
+    	if(!"".equals(areaCode) && areaCode != null){
+    		String areaName = getAreaNameByAreaCode(areaCode);
+    		community.setAreaName(areaName);
+    	}
+        return community;
+    }
+
+    @Override
+    public Community addOrUpdateCommunity(Community community) {
+        if (community.getCommunityId() != null) {
+            Date date = new Date();
+            community.setUpdateTime(date);
+            communityMapper.updateCommunity(community);
+        } else {
+            Date createTime = new Date();
+            community.setStatus("NORMAL");
+            community.setCreateTime(createTime);
+            communityMapper.insert(community);
+        }
+        return community;
+    }
+
+
+    //解绑网点修改状态
+    @Override
+    @Transactional
+    public Integer removeCommunity(Integer communityId) {
+        return communityMapper.removeCommunity(communityId);
+    }
+
+    @Override
+    public List<Community> getCommunityByAreaCode(Community community) {
+        String code = community.getAreaCode();
+        List<SmallCommunity> smallCommunities = smallCommunityService.getSmallCommunityByAreaCode(code);
+        List<Integer> smallCommunityIdList = smallCommunities.stream().collect(Collectors.mapping(SmallCommunity::getSmallCommunityId, Collectors.toList()));
+        List<Community> communityLists = communityMapper.getCommunityBySmallCommunityIdList(smallCommunityIdList);
+        //对communityId去重
+        List<Community> uniqueCommunityList = communityLists.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(o -> o.getCommunityId() + ";" + o.getCommunityId()))), ArrayList::new));
+        return uniqueCommunityList;
+    }
+    
+    /** 通过areaCode获取完整的省市区街道名
+     * @param community
+     * @return
+     */
+    private String getAreaNameByAreaCode(String areaCode){
+    	//获取街道名
+		String streetName = areaMapper.getNameByCode(areaCode);
+		//获取省市区区名
+		String regionName = areaMapper.getNameByCode(areaCode.substring(0, 8));
+		String cityName = areaMapper.getNameByCode(areaCode.substring(0, 6));
+		String provinceName = areaMapper.getNameByCode(areaCode.substring(0, 4));
+		//拼接
+		String areaName =provinceName+cityName+regionName+streetName;
+    	return areaName;
+    }
+
+    @Override
+    public Community getCommunityById(Integer communityId) {
+        Community community = new Community();
+        community.setCommunityId(communityId);
+        return communityMapper.getCommunity(community);
+    }
+}

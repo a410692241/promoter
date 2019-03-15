@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.goods.CommunityGoodsMapper">
+  <resultMap id="BaseResultMap" type="com.linayi.entity.goods.CommunityGoods">
+    <result column="community_goods_id" jdbcType="BIGINT" property="communityGoodsId" />
+    <result column="community_id" jdbcType="INTEGER" property="communityId" />
+    <result column="goods_sku_id" jdbcType="INTEGER" property="goodsSkuId" />
+    <result column="min_supermarket_id" jdbcType="INTEGER" property="minSupermarketId" />
+    <result column="min_price" jdbcType="INTEGER" property="minPrice" />
+    <result column="max_supermarket_id" jdbcType="INTEGER" property="maxSupermarketId" />
+    <result column="max_price" jdbcType="INTEGER" property="maxPrice" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <select id="getCommunityGoods" resultMap="BaseResultMap">
+    select community_goods_id, community_id, goods_sku_id, min_supermarket_id, min_price,max_supermarket_id, max_price, create_time, update_time from community_goods
+    <where>
+      <if test="communityGoodsId != null">
+        community_goods_id = #{communityGoodsId}
+      </if>
+      <if test="communityId != null">
+        and community_id = #{communityId}
+      </if>
+      <if test="goodsSkuId != null">
+        and goods_sku_id = #{goodsSkuId}
+      </if>
+      <if test="minSupermarketId != null">
+        and min_supermarket_id = #{minSupermarketId}
+      </if>
+      <if test="minPrice != null">
+        and min_price = #{minPrice}
+      </if>
+      <if test="maxSupermarketId != null">
+        and max_supermarket_id = #{maxSupermarketId}
+      </if>
+      <if test="maxPrice != null">
+        and max_price = #{maxPrice}
+      </if>
+    </where>
+  </select>
+  <insert id="insert" parameterType="com.linayi.entity.goods.CommunityGoods">
+    insert into community_goods (community_id, goods_sku_id,
+      min_supermarket_id, min_price,max_supermarket_id, max_price, create_time,
+      update_time)
+    values (#{communityId,jdbcType=INTEGER}, #{goodsSkuId,jdbcType=INTEGER},
+      #{minSupermarketId,jdbcType=INTEGER}, #{minPrice,jdbcType=INTEGER},#{maxSupermarketId,jdbcType=INTEGER}, #{maxPrice,jdbcType=INTEGER},
+       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linayi.entity.goods.CommunityGoods">
+    insert into community_goods
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="communityGoodsId != null">
+        community_goods_id,
+      </if>
+      <if test="communityId != null">
+        community_id,
+      </if>
+      <if test="goodsSkuId != null">
+        goods_sku_id,
+      </if>
+      <if test="minSupermarketId != null">
+        min_supermarket_id,
+      </if>
+      <if test="minPrice != null">
+        min_price,
+      </if>
+      <if test="maxSupermarketId != null">
+        max_supermarket_id,
+      </if>
+      <if test="maxPrice != null">
+        max_price,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="communityGoodsId != null">
+        #{communityGoodsId,jdbcType=BIGINT},
+      </if>
+      <if test="communityId != null">
+        #{communityId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsSkuId != null">
+        #{goodsSkuId,jdbcType=INTEGER},
+      </if>
+      <if test="minSupermarketId != null">
+        #{minSupermarketId,jdbcType=INTEGER},
+      </if>
+      <if test="minPrice != null">
+        #{minPrice,jdbcType=INTEGER},
+      </if>
+      <if test="maxSupermarketId != null">
+        #{maxSupermarketId,jdbcType=INTEGER},
+      </if>
+      <if test="maxPrice != null">
+        #{maxPrice,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  <!-- 通过社区id删除社区商品表信息 -->
+  <delete id="delectCommunityGoods">
+  	DELETE FROM
+  				community_goods
+  		  WHERE
+  				community_id=#{communityId}	
+  			<if test="goodsSkuId!=null and goodsSkuId!=''">
+  		 	AND	goods_sku_id=#{goodsSkuId}
+  		 	 </if>
+  				
+
+  </delete>
+  
+  
+  
+</mapper>

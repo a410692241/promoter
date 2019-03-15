@@ -1,0 +1,126 @@
+﻿<div class="navbar-inner">
+    <div class="navbar-container">
+        <!-- Navbar Barnd -->
+        <div class="navbar-header pull-left">
+            <a href="javascript:void(0)" class="navbar-brand">
+                <small>
+                    <img src="resource/others/BeyondAdmin/assets/img/logo.png" ng-if="!settings.rtl" alt="" />
+                    <img src="resource/others/BeyondAdmin/assets/img/logo-rtl.png" ng-if="settings.rtl" alt="" />
+                </small>
+            </a>
+        </div>
+        <!-- /Navbar Barnd -->
+        <!-- Sidebar Collapse -->
+        <div class="sidebar-collapse"></div>
+        <!-- /Sidebar Collapse -->
+        <!-- Account Area and Settings --->
+        <div class="navbar-header pull-right">
+            <div class="navbar-account">
+                <ul class="account-area">
+                    <li>
+                        <a class="login-area dropdown-toggle" data-toggle="dropdown">
+                            <div class="avatar" title="View your public profile">
+                                <img src="resource/others/BeyondAdmin/assets/img/avatars/adam-jansen.jpg">
+                            </div>
+                            <section style="min-width: 103px">
+                                <h2><span class="profile"><span>{{adminAccount.account}}</span></span></h2>
+                            </section>
+                        </a>
+                        <!--Login Area Dropdown-->
+                        <ul class="pull-right dropdown-menu dropdown-arrow dropdown-login-area">
+                            <li class="username"><a>David Stevenson</a></li>
+                            <li class="email"><a></a></li>
+                            <!--Avatar Area-->
+                            <li>
+                                <div class="avatar-area">
+                                    <img src="resource/others/BeyondAdmin/assets/img/avatars/adam-jansen.jpg" class="avatar">
+<!--                                     <span class="caption">修改头像</span> -->
+                                </div>
+                            </li>
+                            <!--Avatar Area-->
+                            <li class="edit">
+                                <a href="profile.html" class="pull-left"></a>
+                                <a ng-click="changePwd()" href="javascript:void(0);" class="pull-right">修改密码</a>
+                            </li>
+                            <!--Theme Selector Area-->
+                            <li class="theme-area">
+                                <ul class="colorpicker">
+                                    <li><a class="colorpick-btn" href="" style="background-color:#5DB2FF;" skin-changer rel="resource/others/BeyondAdmin/assets/css/skins/blue.min.css"></a></li>
+                                    <li><a class="colorpick-btn" href="" style="background-color:#2dc3e8;" skin-changer rel="resource/others/BeyondAdmin/assets/css/skins/azure.min.css"></a></li>
+                                    <li><a class="colorpick-btn" href="" style="background-color:#03B3B2;" skin-changer rel="resource/others/BeyondAdmin/assets/css/skins/teal.min.css"></a></li>
+                                    <li><a class="colorpick-btn" href="" style="background-color:#53a93f;" skin-changer rel="resource/others/BeyondAdmin/assets/css/skins/green.min.css"></a></li>
+                                    <li><a class="colorpick-btn" href="" style="background-color:#FF8F32;" skin-changer rel="resource/others/BeyondAdmin/assets/css/skins/orange.min.css"></a></li>
+                                    <li><a class="colorpick-btn" href="" style="background-color:#cc324b;" skin-changer rel="resource/others/BeyondAdmin/assets/css/skins/pink.min.css"></a></li>
+                                    <li><a class="colorpick-btn" href="" style="background-color:#AC193D;" skin-changer rel="resource/others/BeyondAdmin/assets/css/skins/darkred.min.css"></a></li>
+                                    <li><a class="colorpick-btn" href="" style="background-color:#8C0095;" skin-changer rel="resource/others/BeyondAdmin/assets/css/skins/purple.min.css"></a></li>
+                                    <li><a class="colorpick-btn" href="" style="background-color:#0072C6;" skin-changer rel="resource/others/BeyondAdmin/assets/css/skins/darkblue.min.css"></a></li>
+                                    <li><a class="colorpick-btn" href="" style="background-color:#585858;" skin-changer rel="resource/others/BeyondAdmin/assets/css/skins/gray.min.css"></a></li>
+                                    <li><a class="colorpick-btn" href="" style="background-color:#474544;" skin-changer rel="resource/others/BeyondAdmin/assets/css/skins/black.min.css"></a></li>
+                                    <li><a class="colorpick-btn" href="" style="background-color:#001940;" skin-changer rel="resource/others/BeyondAdmin/assets/css/skins/deepblue.min.css"></a></li>
+                                </ul>
+                            </li>
+                            <!--/Theme Selector Area-->
+                            <li class="dropdown-footer">
+                                <a ng-click="logout()" href="javascript:void(0)">
+                                    	退出登陆
+                                </a>
+                            </li>
+                        </ul>
+                        <!--/Login Area Dropdown-->
+                    </li>
+                    <!-- /Account Area -->
+                    <!--Note: notice that setting div must start right after account area list.
+                    no space must be between these elements-->
+                    <!-- Settings -->
+                </ul>
+            </div>
+        </div>
+        <!-- /Account Area and Settings -->
+    </div>
+</div>
+<script id="html/partials/navbar/changePwd.html" type="text/ng-template">
+<div class="modal-content modal-primary">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" ng-click="cancel()" aria-hidden="true"><i class=" fa fa-close"></i></button>
+      <h5 class="modal-title">修改密码</h5>
+</div>
+<div class="modal-body">
+<!-- body -->
+<form class="form-horizontal ng-pristine ng-valid" role="form">
+<div class="row">
+<div class="form-group col-lg-12 col-xs-12 col-sm-12">
+   <label for="inputEmail3" class="col-sm-2 control-label no-padding-right">原始密码</label>
+   <div class="col-sm-10">
+       <input ng-required="required" type="text" ng-model="user.oldPassword" class="form-control">
+   </div>
+</div>
+<div class="form-group col-lg-12 col-xs-12 col-sm-12">
+   <label for="inputEmail3" class="col-sm-2 control-label no-padding-right">新密码</label>
+   <div class="col-sm-10">
+       <input ng-required="required" type="text" ng-model="user.password" class="form-control">
+   </div>
+</div>
+<div class="form-group col-lg-12 col-xs-12 col-sm-12">
+   <label for="inputEmail3" class="col-sm-2 control-label no-padding-right">确认新密码</label>
+   <div class="col-sm-10">
+       <input ng-required="required" type="text" ng-model="user.rePassword" class="form-control">
+   </div>
+</div>
+</div>
+</form>
+<!-- body end -->
+</div>
+<div class="modal-footer" style="text-align: center;">
+    <a ng-click="save()" class="btn btn-primary" href="javascript:void(0);">
+		<i class="fa fa-save"></i>确认
+	</a>
+   	<a ng-click="cancel()" class="btn btn-primary" href="javascript:void(0);">
+ 		<i class="fa fa-close"></i>取消
+	</a>
+</div>
+</div>
+<toaster-container toaster-options="{'position-class': 'toast-top-center', 'close-button':true,'limit':1}"></toaster-container>
+</script>
+<div>
+
+</div>

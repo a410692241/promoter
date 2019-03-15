@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.goods.AttributeValueMapper">
+  <select id="getAttributeValueByCaAndBr" resultType="com.linayi.entity.goods.AttributeValue">
+    select `value_id` , `value`, `attribute_id`, `status`, `update_time` , `create_time` from
+    `attribute_value` a join `cate_brand_val` c on a.value_id = c.attr_value_id where c.category_id = #{categoryId}
+    and c.brand_id = #{brandId} and a.status = 'NORMAL' order by value_id
+  </select>
+
+  <select id="getAttributeValue" resultType="com.linayi.entity.goods.AttributeValue">
+    select `value_id` , `value`, `attribute_id`, `status`, `update_time` , `create_time` from `attribute_value`
+    where status = 'NORMAL'
+      <if test="valueId != null">
+        and value_id = #{valueId}
+      </if>
+      <if test="attributeId != null">
+        and attribute_id = #{attributeId}
+      </if>
+      <if test="value != null">
+        and value = #{value}
+      </if>
+  </select>
+
+  <insert id="insert" parameterType="com.linayi.entity.goods.AttributeValue" useGeneratedKeys="true" keyProperty="valueId">
+    insert into attribute_value (value_id, VALUE, attribute_id, 
+      STATUS, update_time, create_time
+      )
+    values (#{valueId,jdbcType=INTEGER}, #{value,jdbcType=VARCHAR}, #{attributeId,jdbcType=INTEGER}, 
+      #{status,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linayi.entity.goods.AttributeValue">
+    insert into attribute_value
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="valueId != null">
+        value_id,
+      </if>
+      <if test="value != null">
+        VALUE,
+      </if>
+      <if test="attributeId != null">
+        attribute_id,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="valueId != null">
+        #{valueId,jdbcType=INTEGER},
+      </if>
+      <if test="value != null">
+        #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeId != null">
+        #{attributeId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+   <select id="selectAttrValueById" resultType="com.linayi.entity.goods.AttributeValue">
+   select `value_id`,`VALUE`,`attribute_id`,`status`, `update_time` , `create_time` from `attribute_value` where `value_id` = ${valueId}
+  </select>
+  <select id="selectAttrValueList" resultType="com.linayi.entity.goods.AttributeValue">
+ 		select `value_id`,`VALUE`,`attribute_id`,`status`, `update_time` , `create_time` from `attribute_value`
+ 		<where>
+	 			<if test="valueId!=null and valueId!=''">
+	 				and value_id=#{valueId} 
+	 			</if>
+	 			<if test="value!=null and value!=''">
+	 				and VALUE=#{value} 
+	 			</if>
+	 			<if test="attributeId!=null and attributeId!=''">
+	 				and attribute_id=#{attributeId} 
+	 			</if>
+	 			<if test="status!=null and status!=''">
+	 				and STATUS=#{status} 
+	 			</if>
+	 			<if test="attributeIdList != null and attributeIdList.size() > 0">
+	 				and attribute_id
+	 				<foreach collection="attributeIdList" item="item" open=" in(" close=")" separator=",">
+	 					${item}
+	 				</foreach>
+	 			</if>
+ 		</where>
+ 	</select>
+ 	<!-- 通过id修改属性 -->
+ 	<update id="updateById">
+ 		update `attribute_value`
+ 		<set>
+		    	<if test="value!=null and value!=''">
+ 		 		`VALUE`=#{value},
+ 		 		</if>
+		    	<if test="attributeId!=null and attributeId!=''">
+ 		 		`attribute_id`=#{attributeId},
+ 		 		</if>
+		    	<if test="status!=null and status!=''">
+ 		 		`STATUS`=#{status}
+ 		 		</if>
+ 		</set>
+ 		where value_id=#{valueId}
+ 	</update>
+ 	<!--通过id删除属性值  -->
+ 	<delete id="deleteById">
+ 		delete from `attribute_value` where value_id=#{valueId}
+ 	</delete>
+ 	
+ 	<!-- 添加 -->
+ 	<insert id="add" parameterType="com.linayi.entity.goods.AttributeValue" useGeneratedKeys="true" keyProperty="valueId">
+ 		insert into `attribute_value`(`value_id`,`VALUE`,`attribute_id`,`STATUS`,`update_time`,`create_time`)
+ 		values (#{valueId},#{value},#{attributeId},#{status},#{updateTime},#{createTime})
+ 	</insert>
+</mapper>

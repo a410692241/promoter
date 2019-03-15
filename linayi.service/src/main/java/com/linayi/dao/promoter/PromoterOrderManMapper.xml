@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.promoter.PromoterOrderManMapper">
+  <insert id="insert" parameterType="com.linayi.entity.promoter.PromoterOrderMan">
+    insert into promoter_order_man (promoter_order_man_id, promoter_id, order_man_id, 
+      identity, update_time, create_time
+      )
+    values (#{promoterOrderManId,jdbcType=INTEGER}, #{promoterId,jdbcType=INTEGER}, #{orderManId,jdbcType=INTEGER}, 
+      #{identity,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <sql id="base_column">
+    promoter_order_man_id, promoter_id, order_man_id, identity, update_time, create_time
+  </sql>
+  <select id="getPromoterOrderMan" resultType="com.linayi.entity.promoter.PromoterOrderMan">
+    select <include refid="base_column"/>
+    from promoter_order_man
+    <where>
+      <if test="promoterOrderManId != null">
+        promoter_order_man_id = #{promoterOrderManId}
+      </if>
+      <if test="promoterId != null">
+        promoter_id = #{promoterId}
+      </if>
+      <if test="orderManId != null">
+        order_man_id = #{orderManId}
+      </if>
+      <if test="identity != null">
+        identity = #{identity}
+      </if>
+    </where>
+  </select>
+  <select id="getPromoterOrderManList" parameterType="com.linayi.entity.promoter.PromoterOrderMan" resultType="com.linayi.entity.promoter.PromoterOrderMan">
+    select oomi.order_man_id orderManId from open_order_man_info oomi join  user u on u.user_id = oomi.order_man_id and u.is_order_man = 'TRUE'
+    <where>
+      <if test="orderManId != null">
+        oomi.order_man_id = #{orderManId}
+      </if>
+      <if test="promoterId != null">
+        AND oomi.promoter_id = #{promoterId}
+      </if>
+    </where>
+    GROUP BY oomi.order_man_id
+  </select>
+  <!--  通过下单员Id获取PromoterOrderMan  PromoterOrderMan getPromoterOrderManByOrderManId(Integer orderManId); -->
+  <select id="getPromoterOrderManByOrderManId" resultType="com.linayi.entity.promoter.PromoterOrderMan">
+  	select
+  		promoter_order_man_id, promoter_id, order_man_id, 
+      	identity, update_time, create_time
+     from 
+     	promoter_order_man
+     where
+     	order_man_id=#{orderManId}
+  </select>
+  
+ <!--  通过推广商id获取该推广商下的所有PromoterOrderMan -->
+ <!-- List<PromoterOrderMan> getOrderManListByPromoterId(Integer promoterId) -->
+ <select id="getOrderManListByPromoterId" resultType="com.linayi.entity.promoter.PromoterOrderMan">
+ 	SELECT
+ 		promoter_order_man_id, promoter_id, order_man_id, 
+      	identity, update_time, create_time
+	FROM
+		promoter_order_man
+    WHERE
+    	promoter_id=#{promoterId}
+ </select>
+</mapper>

@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.area.SmallCommunityMapper">
+  <resultMap id="BaseResultMap" type="com.linayi.entity.area.SmallCommunity">
+    <result column="small_community_id" jdbcType="INTEGER" property="smallCommunityId" />
+    <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="community_id" jdbcType="INTEGER" property="communityId" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+     <result column="deliverer_id" jdbcType="INTEGER" property="delivererId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="deliverer_id" jdbcType="INTEGER" property="delivererId" />
+  </resultMap>
+  <insert id="insert" parameterType="com.linayi.entity.area.SmallCommunity">
+    insert into small_community (small_community_id, area_code, name, 
+      community_id, status, create_time, deliverer_id
+      update_time)
+    values (#{smallCommunityId,jdbcType=INTEGER}, #{areaCode,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{communityId,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP},#{delivererId,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linayi.entity.area.SmallCommunity">
+    insert into small_community
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="smallCommunityId != null">
+        small_community_id,
+      </if>
+      <if test="areaCode != null">
+        area_code,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="communityId != null">
+        community_id,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="smallCommunityId != null">
+        #{smallCommunityId,jdbcType=INTEGER},
+      </if>
+      <if test="areaCode != null">
+        #{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="communityId != null">
+        #{communityId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 根据搜索条件获取小区信息List<SmallCommunity> getSmallCommunityList(SmallCommunity smallCommunity); -->
+  <select id="getSmallCommunityList" resultType="com.linayi.entity.area.SmallCommunity">
+  		SELECT 
+  			small_community_id,area_code, name, 
+     		community_id,status,create_time, update_time,deliverer_id
+     	FROM
+     		small_community
+     	<where>
+     		status="NORMAL"
+     	<if	test="areaCodeList !=null and areaCodeList.size() > 0">
+     		AND area_code in
+     		<foreach collection="areaCodeList" index="index" item="item" open="(" separator="," close=")">
+                ${item}       
+        	</foreach>    
+     	</if>
+     	<if	test="communityIdList != null and communityIdList.size() > 0">
+     		AND community_id in
+     		<foreach collection="communityIdList" index="index" item="item1" open="(" separator="," close=")">
+                ${item1}       
+        	</foreach>    
+     	</if>
+     	<if	test="name != null and name !='' ">
+     		AND
+     			name LIKE concat('%',#{name},'%')
+     	</if>
+     	<if	test="communityId != null and communityId !='' and communityId &gt; 0">
+     		AND
+     			community_id = #{communityId}
+     	</if>
+     	<if	test="communityId != null and communityId !='' and communityId &lt; 0">
+     		AND
+     			IFNULL(community_id,'')!= -#{communityId} 
+     	</if>
+     	<if test="type == 'showBind'">
+     		AND community_id is not null
+     	</if>
+     	<if test="type == 'showUnbind'">
+     		AND community_id is null
+     	</if>
+     	</where>
+     	ORDER BY small_community_id DESC
+  </select>
+	<select id="queryAllCommunity" resultType="com.linayi.entity.area.SmallCommunity"
+			parameterType="com.linayi.entity.area.SmallCommunity">
+		select small_community_id, area_code, name, community_id, status, create_time, update_time
+		from small_community
+		where community_id is not null
+	</select>
+	<select id="query" resultType="com.linayi.entity.area.SmallCommunity"
+			parameterType="com.linayi.entity.area.SmallCommunity">
+		select small_community_id, area_code, name, community_id, status, create_time, update_time
+		from small_community
+		<where>
+			<if test="smallCommunityId != null">
+				and small_community_id = #{smallCommunityId,jdbcType=INTEGER}
+			</if>
+			<if test="areaCode != null">
+				and area_code = #{areaCode,jdbcType=VARCHAR}
+			</if>
+			<if test="name != null">
+				and name = #{name,jdbcType=VARCHAR}
+			</if>
+			<if test="communityId != null">
+				and community_id = #{communityId,jdbcType=INTEGER}
+			</if>
+			<if test="status != null">
+				and status = #{status,jdbcType=VARCHAR}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="updateTime != null">
+				and update_time = #{updateTime,jdbcType=TIMESTAMP}
+			</if>
+		</where>
+	</select>
+
+  <!-- 通过小区信息获取信息  SmallCommunity getSmallCommunity(SmallCommunity smallCommunity); -->
+   <select id="getSmallCommunity" resultType="com.linayi.entity.area.SmallCommunity">
+   		SELECT 
+  			small_community_id,area_code, name,
+     		community_id,status,deliverer_id,create_time, update_time
+     	FROM
+     		small_community
+     	<where>
+     	<if	test="smallCommunityId != null"> 
+     			small_community_id=#{smallCommunityId}
+     	</if>
+     	<if	test="areaCode != null">
+     		AND area_code=#{areaCode}
+     	</if>
+     	<if	test="name != null">
+     		AND name=#{name}
+     	</if>
+     	<if	test="communityId != null">
+     		AND community_id=#{communityId}
+     	</if>
+     	<if	test="status != null">
+     		AND status=#{status}
+     	</if>
+     	</where>
+   </select>
+   
+   <!-- 修改小区信息 Integer updateSmallCommunity(SmallCommunity smallCommunity); -->
+   <update id="updateSmallCommunity" parameterType="com.linayi.entity.area.SmallCommunity">
+   		UPDATE
+   			small_community
+   		<set>
+   			<if test="areaCode!=null">
+   				area_code=#{areaCode},
+   			</if>
+   			<if test="name!=null">
+   				name=#{name},
+   			</if>
+   			<if test="communityId!=null">
+   				community_id=#{communityId},
+   			</if>
+   			<if test="delivererId!=null">
+   				deliverer_id=#{delivererId},
+   			</if>
+   			update_time=#{updateTime}
+   		</set>
+   		WHERE 
+   			small_community_id=#{smallCommunityId}
+   </update>
+   <!-- 解除社区与小区的绑定关系  Integer removeBind(SmallCommunity smallCommunity); -->
+   <update id="removeBind" parameterType="com.linayi.entity.area.SmallCommunity">
+   		UPDATE
+   			small_community
+   		<set>
+   			community_id=#{communityId},update_time=#{updateTime}
+   		</set>
+   		WHERE 
+   			small_community_id=#{smallCommunityId}
+   </update>
+   
+   <!-- 根据小区ID修改状态为已删除 实现删除数据效果 Integer removeSmallCommunity(Integer smallCommunityId); -->
+   <update id="removeSmallCommunity">
+   		UPDATE
+   			small_community
+   		set
+   			status = 'REMOVED'
+   		WHERE 
+   			small_community_id=#{smallCommunityId}
+   </update>
+   <!--获取社区ID为null的小区 即未绑定社区 SmallCommunity getCommunityIdIsNull();  -->
+   <select id="getCommunityIdIsNull" resultType="com.linayi.entity.area.SmallCommunity">
+   		SELECT 
+  			small_community_id,area_code, name, 
+     		community_id,status,create_time, update_time
+     	FROM
+     		small_community
+     	WHERE
+     		community_id is null
+   </select>
+   <!--获取社区ID不为null的小区 即绑定社区 SmallCommunity getCommunityIdIsNotNull();  -->
+   <select id="getCommunityIdIsNotNull" resultType="com.linayi.entity.area.SmallCommunity">
+   		SELECT 
+  			small_community_id,area_code, name, 
+     		community_id,status,create_time, update_time
+     	FROM
+     		small_community
+     	WHERE
+     		community_id is not null
+   </select>
+   
+   	<!-- 根据订单id和社区id获取小区信息 -->
+   	<!-- SmallCommunity getSmallCommunitybyCommunityId(Integer communityId) -->
+   	<select id="getSmallCommunitybyCommunityId" resultType="com.linayi.entity.area.SmallCommunity">
+   		SELECT
+   			sc.small_community_id,sc.area_code, sc.name, 
+     		sc.community_id,sc.status,sc.create_time, sc.update_time, sc.deliverer_id
+     	FROM
+     		small_community sc
+     	JOIN orders o ON sc.name=o.address_two
+     	WHERE
+     		sc.community_id=#{communityId}
+     	AND
+     		o.orders_id=#{ordersId}
+   	</select>
+
+	<!-- 通过delivererId获取信息 -->
+	<select id="getDeliverer" resultType="com.linayi.entity.area.SmallCommunity">
+		SELECT
+			small_community_id,area_code, name,
+			community_id,status,deliverer_id,create_time, update_time
+		FROM
+			small_community
+		WHERE
+			deliverer_id=#{delivererId}
+	</select>
+</mapper>

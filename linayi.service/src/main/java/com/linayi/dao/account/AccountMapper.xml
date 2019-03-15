@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.linayi.dao.account.AccountMapper">
+    <!--<select id="selectAccountByaccountId" resultType="com.linayi.entity.account.Account">
+ 		select `mobile` from `admin_account` where account_id=#{accountId}
+ 	</select>-->
+
+    <!--<select id="selectAdminAccountByaccountId" resultType="com.linayi.entity.account.Account">
+ 		select `account_id`,`user_name`,`mobile`,`password`,`user_type`,`user_id`,`incorrect_times`,`status`,`create_time`,`last_login_time`,`update_time`,`creator_account_id` from `admin_account` where account_id=#{value}
+ 	</select>-->
+
+    <select id="selectAccountList" resultType="com.linayi.entity.account.Account">
+        select `account_id`,`user_name`,`mobile`,`password`,`open_id`,`user_type`,`user_id`,`incorrect_times`,`status`,`create_time`,`last_login_time`,`update_time`,`creator_account_id` from `account`
+        <where>
+            <if test="accountId!=null and accountId!=''">
+                and account_id=#{accountId}
+            </if>
+            <if test="userName!=null and userName!=''">
+                and user_name=#{userName}
+            </if>
+            <if test="mobile!=null and mobile!=''">
+                and mobile=#{mobile}
+            </if>
+            <if test="password!=null and password!=''">
+                and password=#{password}
+            </if>
+            <if test="openId!=null and openId!=''">
+                and open_id=#{openId}
+            </if>
+            <if test="userType!=null and userType!=''">
+                and user_type=#{userType}
+            </if>
+            <if test="userId!=null and userId!=''">
+                and user_id=#{userId}
+            </if>
+            <if test="incorrectTimes!=null and incorrectTimes!=''">
+                and incorrect_times=#{incorrectTimes}
+            </if>
+            <if test="status!=null and status!=''">
+                and status=#{status}
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                and create_time=#{createTime}
+            </if>
+            <if test="lastLoginTime!=null and lastLoginTime!=''">
+                and last_login_time=#{lastLoginTime}
+            </if>
+            <if test="updateTime!=null and updateTime!=''">
+                and update_time=#{updateTime}
+            </if>
+            <if test="creatorAccountId!=null and creatorAccountId!=''">
+                and creator_account_id=#{creatorAccountId}
+            </if>
+        </where>
+        order by account_id desc
+    </select>
+
+    <select id="selectEmployeeList" resultType="com.linayi.entity.account.Account">
+        select `account_id`,`user_name`,`mobile`,`password`,`open_id`,`user_type`,`user_id`,`incorrect_times`,`status`,`create_time`,`last_login_time`,`update_time`,`creator_account_id` from `account`
+        <where>
+            <if test="accountId!=null and accountId!=''">
+                and account_id=#{accountId}
+            </if>
+            <if test="userName!=null and userName!=''">
+                and user_name=#{userName}
+            </if>
+            <if test="mobile!=null and mobile!=''">
+                and mobile=#{mobile}
+            </if>
+            <if test="password!=null and password!=''">
+                and password=#{password}
+            </if>
+            <if test="openId!=null and openId!=''">
+                and open_id=#{openId}
+            </if>
+            <if test="userType!=null and userType!=''">
+                and user_type=#{userType}
+            </if>
+            <if test="userId!=null and userId!=''">
+                and user_id=#{userId}
+            </if>
+            <if test="incorrectTimes!=null and incorrectTimes!=''">
+                and incorrect_times=#{incorrectTimes}
+            </if>
+            <if test="status!=null and status!=''">
+                and status=#{status}
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                and create_time=#{createTime}
+            </if>
+            <if test="lastLoginTime!=null and lastLoginTime!=''">
+                and last_login_time=#{lastLoginTime}
+            </if>
+            <if test="updateTime!=null and updateTime!=''">
+                and update_time=#{updateTime}
+            </if>
+            <if test="creatorAccountId!=null and creatorAccountId!=''">
+                and creator_account_id=#{creatorAccountId}
+            </if>
+        </where>
+       and `user_type` = "EMPLOYEE"
+        order by account_id desc
+    </select>
+
+    <!--
+        account和
+    -->
+    <select id="selectAccountListJoinUserList" resultType="com.linayi.entity.account.Account">
+        select a.`account_id`, a.`user_name`, a.`mobile`, a.`password`, a.`open_id`, a.`user_type`, a.`user_id`,
+        a.`incorrect_times`, a.`status`, a.`create_time`, a.`last_login_time`, a.`update_time`, a.`creator_account_id`,
+        u.`real_name` from account a join user u on
+        a.`user_id` = u.`user_id`
+        <where>
+            <if test="accountId!=null and accountId!=''">
+                and a.account_id=#{accountId}
+            </if>
+            <if test="userName!=null and userName!=''">
+                and a.user_name=#{userName}
+            </if>
+            <if test="mobile!=null and mobile!=''">
+                and a.mobile=#{mobile}
+            </if>
+            <if test="password!=null and password!=''">
+                and a.password=#{password}
+            </if>
+            <if test="openId!=null and openId!=''">
+                and a.open_id=#{openId}
+            </if>
+            <if test="userType!=null and userType!=''">
+                and a.user_type=#{userType}
+            </if>
+            <if test="userId!=null and userId!=''">
+                and a.user_id=#{userId}
+            </if>
+            <if test="incorrectTimes!=null and incorrectTimes!=''">
+                and a.incorrect_times=#{incorrectTimes}
+            </if>
+            <if test="status!=null and status!=''">
+                and a.status=#{status}
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                and a.create_time=#{createTime}
+            </if>
+            <if test="lastLoginTime!=null and lastLoginTime!=''">
+                and a.last_login_time=#{lastLoginTime}
+            </if>
+            <if test="updateTime!=null and updateTime!=''">
+                and a.update_time=#{updateTime}
+            </if>
+            <if test="creatorAccountId!=null and creatorAccountId!=''">
+                and a.creator_account_id=#{creatorAccountId}
+            </if>
+            <if test="realName!=null and realName!=''">
+                and u.real_name=#{realName}
+            </if>
+        </where>
+        order by a.account_id desc
+    </select>
+
+    <!--<select id="selectAdminAccountListJoinUserList" resultType="com.linayi.entity.account.Account">
+        select a.`account_id`, a.`user_name`, a.`mobile`, a.`password`,  a.`user_type`, a.`user_id`,
+        a.`incorrect_times`, a.`status`, a.`create_time`, a.`last_login_time`, a.`update_time`, a.`creator_account_id` from `admin_account` a
+        <where>
+            <if test="accountId!=null and accountId!=''">
+                and a.account_id=#{accountId}
+            </if>
+            <if test="userName!=null and userName!=''">
+                and a.user_name=#{userName}
+            </if>
+            <if test="mobile!=null and mobile!=''">
+                and a.mobile=#{mobile}
+            </if>
+            <if test="password!=null and password!=''">
+                and a.password=#{password}
+            </if>
+            <if test="openId!=null and openId!=''">
+                and a.open_id=#{openId}
+            </if>
+            <if test="userType!=null and userType!=''">
+                and a.user_type=#{userType}
+            </if>
+            <if test="userId!=null and userId!=''">
+                and a.user_id=#{userId}
+            </if>
+            <if test="incorrectTimes!=null and incorrectTimes!=''">
+                and a.incorrect_times=#{incorrectTimes}
+            </if>
+            <if test="status!=null and status!=''">
+                and a.status=#{status}
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                and a.create_time=#{createTime}
+            </if>
+            <if test="lastLoginTime!=null and lastLoginTime!=''">
+                and a.last_login_time=#{lastLoginTime}
+            </if>
+            <if test="updateTime!=null and updateTime!=''">
+                and a.update_time=#{updateTime}
+            </if>
+            <if test="creatorAccountId!=null and creatorAccountId!=''">
+                and a.creator_account_id=#{creatorAccountId}
+            </if>
+            &lt;!&ndash;<if test="realName!=null and realName!=''">
+                and u.real_name=#{realName}
+            </if>&ndash;&gt;
+        </where>
+        order by a.account_id desc
+    </select>-->
+
+    <update id="updateAccountByaccountId" parameterType="com.linayi.entity.account.Account">
+        update `account`
+        <set>
+            <if test="userName!=null and userName!=''">
+                `user_name`=#{userName},
+            </if>
+            <if test="mobile!=null and mobile!=''">
+                `mobile`=#{mobile},
+            </if>
+            <if test="password!=null and password!=''">
+                `password`=#{password},
+            </if>
+            <if test="openId!=null and openId!=''">
+                `open_id`=#{openId},
+            </if>
+            <if test="userType!=null and userType!=''">
+                `user_type`=#{userType},
+            </if>
+            <if test="userId!=null and userId!=''">
+                `user_id`=#{userId},
+            </if>
+            <if test="incorrectTimes!=null and incorrectTimes!=''">
+                `incorrect_times`=#{incorrectTimes},
+            </if>
+            <if test="status!=null and status!=''">
+                `status`=#{status},
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                `create_time`=#{createTime},
+            </if>
+            <if test="lastLoginTime!=null and lastLoginTime!=''">
+                `last_login_time`=#{lastLoginTime},
+            </if>
+            <if test="updateTime!=null and updateTime!=''">
+                `update_time`=#{updateTime},
+            </if>
+            <if test="creatorAccountId!=null and creatorAccountId!=''">
+                `creator_account_id`=#{creatorAccountId},
+            </if>
+        </set>
+        where account_id=#{accountId}
+    </update>
+    <!--<update id="updateAccountAllByaccountId" parameterType="com.linayi.entity.account.Account">
+ 		update `admin_account` set
+ 		`mobile`=#{mobile},`password`=#{password}
+ 		where account_id=#{accountId}
+ 	</update>-->
+    <delete id="deleteAccountByaccountId">
+ 		delete from `account` where account_id=#{value}
+ 	</delete>
+
+    <!--<delete id="deleteAccountAdminByaccountId">
+ 		delete from `admin_account` where account_id=#{value}
+ 	</delete>-->
+
+    <insert id="insertAccount" parameterType="com.linayi.entity.account.Account" useGeneratedKeys="true"
+                      keyProperty="accountId">
+ 		insert into `account`(`account_id`,`user_name`,`mobile`,`password`,`open_id`,`user_type`,`user_id`,`incorrect_times`,`status`,`create_time`,`last_login_time`,`update_time`,`creator_account_id`)
+ 		values (#{accountId},#{userName},#{mobile},#{password},#{openId},#{userType},#{userId},#{incorrectTimes},#{status},#{createTime},#{lastLoginTime},#{updateTime},#{creatorAccountId})
+ 	</insert>
+
+   <!-- <insert id="insertAccountAdmin" parameterType="com.linayi.entity.account.Account" useGeneratedKeys="true"
+            keyProperty="accountId">
+ 		insert into `admin_account`(`account_id`,`user_name`,`mobile`,`password`,`user_type`,`user_id`,`incorrect_times`,`status`,`create_time`,`last_login_time`,`update_time`,`creator_account_id`)
+ 		values (#{accountId},#{userName},#{mobile},#{password},#{userType},#{userId},#{incorrectTimes},#{status},#{createTime},#{lastLoginTime},#{updateTime},#{creatorAccountId})
+ 	</insert>-->
+
+    <select id="selectByName" resultType="com.linayi.entity.account.Account" parameterType="String">
+        select * from `admin_account` where `user_name` = #{userName}
+    </select>
+    <update id="updateStatus" parameterType="com.linayi.entity.account.Account">
+        update `account` set `status`=#{status} where account_id=#{accountId}
+    </update>
+
+   <!-- <update id="updateAdminStatus" parameterType="com.linayi.entity.account.Account">
+        update `admin_account` set `status`=#{status} where account_id=#{accountId}
+    </update>-->
+
+    <update id="resetPassword" parameterType="com.linayi.entity.account.Account">
+        update `account` set `password`='123456' where account_id=#{accountId}
+    </update>
+
+    <!--<update id="resetAdminPassword" parameterType="com.linayi.entity.account.Account">
+        update `admin_account` set `password`='123456' where account_id=#{accountId}
+    </update>-->
+
+    <!--<select id="selectRole" resultType="com.linayi.entity.account.Role">
+        select `role_name` , `role_id`, `status` from `role`
+    </select>
+    <select id="selectIdbyRoleName" parameterType="String">
+        select `role_id` from `role` where `role_name`=#{roleName}
+    </select>
+    <insert id="insertAccountRole" parameterType="com.linayi.entity.account.Account">
+        insert into `account_role` (`account_id`,`role_id`) values(#{accountId},#{roleId})
+    </insert>
+    <select id="selectByAccountId" parameterType="Integer" resultType="Integer">
+    select `account_role_id` from `account_role` where `account_id` = #{accountId}
+    </select>
+    <select id="selectByAr" parameterType="Integer" resultType="Integer">
+        select `account_id` from `account_role` where `account_role_id` = #{accountRoleId}
+    </select>-->
+
+    <select id="selectUserIdByAccount" parameterType="Integer" resultType="Integer">
+        select `user_id` from `account` where `account_id` =#{accountId}
+    </select>
+    <select id="getAccountById" parameterType="Integer" resultType="com.linayi.entity.account.Account">
+        select * from `account` where `account_id` =#{accountId}
+    </select>
+    <!--通过社区ID查看社区的信息-->
+    <select id="selectAccountBycommunityId" parameterType="Integer" resultType="com.linayi.entity.account.Account">
+        select `user_name`,`mobile`,`status`,`create_time` from `account` where `user_id` =#{communityId} AND `user_type`="COMMUNITY";
+    </select>
+    
+    <!--  通过手机号查询userId
+		Integer getUserIdByMobile(String mobile);-->
+	<select id="getUserIdByMobile" resultType="java.lang.Integer">
+		select
+			user_id
+		from 
+			account
+		where
+			mobile=#{mobile}
+		and 
+		 user_type ='USER'
+	</select>
+</mapper>

@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.goods.CategoryMapper">
+	
+	<!-- 根据主键categoryId修改信息 -->
+	<update id="updateBycategoryId">
+		UPDATE
+			category
+		SET
+		<if test="categoryId != null">
+			category_id=#{categoryId},
+		</if>
+
+		category_id=category_id,
+
+		<if test="name != null">
+			name=#{name},
+		</if>
+
+		name=name,
+
+		<if test="parentId != null">
+			parent_id=#{parentId},
+		</if>
+
+		parent_id=parent_id,
+
+		<if test="logo != null">
+			logo=#{logo},
+		</if>
+
+		logo=logo,
+
+		<if test="orderNo != null">
+			order_no=#{orderNo},
+		</if>
+
+		order_no=order_no,
+
+		<if test="level != null">
+			level=#{level},
+		</if>
+
+		level=level,
+
+		<if test="status != null">
+			status=#{status},
+		</if>
+
+		status=status,
+
+		<if test="updateTime != null">
+			update_time=#{updateTime},
+		</if>
+
+		update_time=update_time,
+
+		<if test="createTime != null">
+			create_time=#{createTime},
+		</if>
+
+		create_time=create_time
+
+		WHERE
+		
+			category_id=#{categoryId}
+	</update>
+
+	<!-- 根据level查询Category对象集合 -->
+	<select id="getCategorysByLevel" 
+			resultType="com.linayi.entity.goods.Category">
+		select
+			category_id categoryId,
+			name,
+			parent_id parentId,
+			logo,
+			order_no orderNo,
+			level,
+			status, 
+			update_time updateTime,
+			create_time createTime
+		from
+			category
+		WHERE
+			level = #{level} AND status = 'NORMAL'
+	</select>
+	
+	<!-- 根据ParentId查询Category对象集合 -->
+	<select id="getCategorysByParentId" 
+			resultType="com.linayi.entity.goods.Category">
+		select 
+			category_id categoryId,
+			name,
+			parent_id parentId,
+			logo,
+			order_no orderNo,
+			level,
+			status,
+			update_time updateTime,
+			create_time createTime
+		from
+			category
+		WHERE
+			parent_id = #{parentId} AND status = 'NORMAL'
+	</select>
+	
+	<!-- 根据ParentId查询categoryId对象集合 -->
+	<select id="getCategoryIdsByParentId" 
+			resultType="com.linayi.entity.goods.Category">
+		select 
+			category_id categoryId,
+		from
+			category
+		WHERE
+			parent_id = #{parentId}
+	</select>
+	<sql id="Base_Column_List">
+    category_id, `NAME`, parent_id, logo, order_no, `LEVEL`, `STATUS`, update_time, create_time
+  	</sql>
+	<select id="getCategoryById" parameterType="java.lang.Integer"
+		resultType="com.linayi.entity.goods.Category">
+		select <include refid="Base_Column_List"/>
+		from category WHERE status = 'NORMAL' and
+		category_id = #{categoryId}
+	</select>
+	<select id="getCategorysByCate" resultType="com.linayi.entity.goods.Category">
+		select category_id categoryId, name, parent_id parentId, logo,
+		order_no orderNo, level, status, update_time updateTime, create_time
+		createTime
+		from category WHERE status = 'NORMAL'
+		<if test="level != null">
+			AND level = #{level}
+		</if>
+		<if test="name != null">
+			AND name like #{name}
+		</if>
+	</select>
+
+
+	<insert id="insert" parameterType="com.linayi.entity.goods.Category" useGeneratedKeys="true" keyProperty="categoryId">
+		insert into category
+		(category_id, NAME, parent_id,
+		logo, order_no, LEVEL,
+		STATUS,
+		update_time, create_time
+		)
+		values (#{categoryId,jdbcType=INTEGER},
+		#{name,jdbcType=VARCHAR},
+		#{parentId,jdbcType=VARCHAR},
+		#{logo,jdbcType=VARCHAR}, #{orderNo,jdbcType=INTEGER},
+		#{level,jdbcType=SMALLINT},
+		#{status,jdbcType=VARCHAR},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{createTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.linayi.entity.goods.Category"
+		useGeneratedKeys="true" keyProperty="categoryId">
+		insert into category
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="categoryId != null">
+				category_id,
+			</if>
+			<if test="name != null">
+				NAME,
+			</if>
+			<if test="parentId != null">
+				parent_id,
+			</if>
+			<if test="logo != null">
+				logo,
+			</if>
+			<if test="orderNo != null">
+				order_no,
+			</if>
+			<if test="level != null">
+				LEVEL,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="categoryId != null">
+				#{categoryId,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				#{parentId,jdbcType=VARCHAR},
+			</if>
+			<if test="logo != null">
+				#{logo,jdbcType=VARCHAR},
+			</if>
+			<if test="orderNo != null">
+				#{orderNo,jdbcType=INTEGER},
+			</if>
+			<if test="level != null">
+				#{level,jdbcType=SMALLINT},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	
+	
+	<!-- 根据品牌id查找分类 -->
+	<!-- List<Category>getCategoryByBrandId(Integer brandId) -->
+	<select id="getCategoryByBrandId" resultType="com.linayi.entity.goods.Category">
+		SELECT
+		    distinct  c.NAME as name,
+			c.category_id as categoryId,
+			c.parent_id as parentId,
+			c.logo,
+			c.order_no orderNo,
+			c.LEVEL,
+			c.STATUS,
+			c.update_time updateTime,
+			c.create_time createTime
+		FROM
+			goods_sku gs,category c
+		WHERE
+			gs.category_id = c.category_id
+		AND
+			gs.brand_id=#{brandId}				
+
+	</select>
+
+	<!-- 根据父级ID查询子级分类 -->
+	<!-- List<Category> findAllCategory(Integer parentId) -->
+	<select id="findAllCategory" resultType="com.linayi.entity.goods.Category">
+		SELECT
+			category_id as categoryId,
+			NAME as name,
+			parent_id as parentId,
+			logo,
+			order_no as orderNo,
+			LEVEL,
+			STATUS,
+			update_time updateTime,
+			create_time createTime
+		FROM category WHERE
+			parent_id=#{parentId}
+	</select>
+
+	<!-- 查找最高级数 -->
+	<!-- Integer findMaxLevenl() -->
+	<select id="findMaxLevenl" resultType="java.lang.Integer">
+		SELECT
+			LEVEL
+		FROM category order by level desc limit 0,1
+	</select>
+	
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linayi.dao.user.MessageMapper" >
+  <resultMap id="BaseResultMap" type="com.linayi.entity.user.Message" >
+    <id column="message_id" property="messageId" jdbcType="BIGINT" />
+    <result column="message_type" property="messageType" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_type" property="userType" jdbcType="VARCHAR" />
+    <result column="view_status" property="viewStatus" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <!-- 将消息插入消息表 -->
+  <insert id="sendAllMessage"  parameterType="com.linayi.entity.user.Message"
+          useGeneratedKeys="true"
+          keyProperty="id">
+        INSERT INTO message (
+            message_type,title,content,user_id,user_type,view_status,update_time,create_time
+		) VALUES (
+			#{messageType},#{title},#{content},#{userId},#{userType},#{viewStatus},#{updateTime},#{createTime}
+		)
+  </insert>
+
+<select id="selectMessageByUserId" resultType="com.linayi.entity.user.Message">
+  SELECT
+    message_id,message_type,title,content,user_id,user_type,view_status,update_time,create_time
+  FROM
+    message
+  WHERE
+    user_id=#{userId}
+  ORDER BY
+    message_id
+  DESC
+</select>
+
+<update id="updateMessageStatusByMessageId">
+UPDATE
+  message
+SET
+  view_status=#{viewStatus},
+  update_time=#{updateTime}
+WHERE
+  message_id=#{messageId}
+</update>
+</mapper>

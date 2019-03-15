@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.promoter.OrderManMemberMapper">
+  <insert id="insert" parameterType="com.linayi.entity.promoter.OrderManMember">
+    insert into order_man_member (order_man_member_id, order_man_id, member_id,
+      update_time, create_time)
+    values (#{orderManMemberId,jdbcType=INTEGER}, #{orderManId,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER},
+      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <sql id="base_column">
+    order_man_member_id, order_man_id, member_id, update_time, create_time
+  </sql>
+  
+  <select id="getOrderManMemberList" resultType="com.linayi.entity.promoter.OrderManMember">
+    select omi.user_id userId
+    from order_man_member omm join open_member_info omi on omi.open_member_info_id = omm.member_id
+    join user u on omi.user_id = u.user_id AND u.is_member = 'TRUE'
+    <where>
+      <if test="orderManId != null">
+        AND omm.order_man_id  = #{orderManId}
+      </if>
+      <!--<if test="createTimeStart != null and createTimeStart != ''">
+        AND omi.create_time  <![CDATA[ >= ]]> #{createTimeStart}
+      </if>-->
+      <if test="createTimeEnd != null and createTimeEnd != ''">
+        AND omi.create_time  <![CDATA[ <= ]]> #{createTimeEnd}
+      </if>
+    </where>
+    GROUP BY omi.user_id
+  </select>
+
+ <select id="getOrderManMemberListByOrderManId" resultType="com.linayi.entity.promoter.OrderManMember">
+ 	select omi.user_id memberId
+    from order_man_member omm
+    join open_member_info omi on omm.member_id = open_member_info_id
+    join user u on omi.user_id = u.user_id AND u.is_member = 'TRUE'
+ 	WHERE
+ 		omm.order_man_id=#{orderManId}
+ 		<if test="createTime != null">
+          and omi.end_time <![CDATA[ >= ]]> #{createTime}
+        </if>
+ 	GROUP BY omi.user_id
+ </select>
+</mapper>

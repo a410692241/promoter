@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.account.RoleMenuMapper">
+  <delete id="deleteByMenuIdAndRoleId" parameterType="com.linayi.entity.account.RoleMenu">
+    delete from role_menu
+    <where>
+      <if test="roleId != null">
+        role_id = #{roleId}
+      </if>
+      <if test="menuId != null">
+        AND menu_id = #{menuId}
+      </if>
+    </where>
+  </delete>
+  <insert id="insert" parameterType="com.linayi.entity.account.RoleMenu">
+    insert into role_menu (role_menu_id, role_id, menu_id
+      )
+    values (#{roleMenuId,jdbcType=BIGINT}, #{roleId,jdbcType=INTEGER}, #{menuId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linayi.entity.account.RoleMenu">
+    insert into role_menu
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="roleMenuId != null">
+        role_menu_id,
+      </if>
+      <if test="roleId != null">
+        role_id,
+      </if>
+      <if test="menuId != null">
+        menu_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="roleMenuId != null">
+        #{roleMenuId,jdbcType=BIGINT},
+      </if>
+      <if test="roleId != null">
+        #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="menuId != null">
+        #{menuId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

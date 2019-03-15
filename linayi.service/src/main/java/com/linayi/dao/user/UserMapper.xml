@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.linayi.dao.user.UserMapper">
+    <resultMap id="BaseResultMap" type="com.linayi.entity.user.User">
+        <id column="user_id" jdbcType="INTEGER" property="userId" />
+        <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+        <result column="head_image" jdbcType="VARCHAR" property="headImage" />
+        <result column="sex" jdbcType="VARCHAR" property="sex" />
+        <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+        <result column="qq" jdbcType="VARCHAR" property="qq" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="is_sharer" jdbcType="VARCHAR" property="isSharer" />
+        <result column="real_name" jdbcType="VARCHAR" property="realName" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="is_sharer" jdbcType="VARCHAR" property="isSharer" />
+        <result column="default_receive_address_id" jdbcType="INTEGER"
+                property="defaultReceiveAddressId" />
+    </resultMap>
+
+    <select id="selectEmployeeById" resultType="com.linayi.entity.account.Account">
+        select `mobile`,`email`,`nickname`, `qq`,`real_name`,`employee_id` from `employee`
+where `employee_id` =#{employeeId}
+    </select>
+
+    <select id="selectUserByuserId" resultType="com.linayi.entity.user.User">
+ 		select
+`user_id`,`nickname`,`is_sharer`,`is_procurer`,`head_image`,`birthday`,`sex`,`mobile`,`qq`,
+`email`,`real_name`,`create_time`,`update_time`,default_receive_address_id from `user`
+where user_id=#{userId}
+ 	</select>
+
+    <select id="selectEmployIdByNick" parameterType="String" resultType="Integer">
+        select `employee_id` from `employee` where `nickname` = #{nickname}
+    </select>
+
+    <select id="selectAccountList" resultType="com.linayi.entity.account.Account">
+        select `employee_id`, `nickname` , `qq` , `email` , `mobile`, `real_name`, `create_time`
+        ,`update_time` from `employee`
+        <where>
+            <!-- <if test="accountId!=null and accountId!=''">
+                 and a.account_id=#{accountId}
+             </if>-->
+            <if test="nickname!=null and nickname!=''">
+                and nickname=#{nickname}
+            </if>
+            <if test="mobile!=null and mobile!=''">
+                and mobile=#{mobile}
+            </if>
+            <!--<if test="password!=null and password!=''">
+                and a.password=#{password}
+            </if>
+            <if test="openId!=null and openId!=''">
+                and a.open_id=#{openId}
+            </if>
+            <if test="userType!=null and userType!=''">
+                and a.user_type=#{userType}
+            </if>
+            <if test="userId!=null and userId!=''">
+                and a.user_id=#{userId}
+            </if>-->
+            <!--<if test="incorrectTimes!=null and incorrectTimes!=''">
+                and a.incorrect_times=#{incorrectTimes}
+            </if>-->
+            <!--<if test="status!=null and status!=''">
+                and a.status=#{status}
+            </if>-->
+            <if test="createTime!=null and createTime!=''">
+                and create_time=#{createTime}
+            </if>
+            <!--<if test="lastLoginTime!=null and lastLoginTime!=''">
+                and a.last_login_time=#{lastLoginTime}
+            </if>-->
+            <if test="updateTime!=null and updateTime!=''">
+                and a.update_time=#{updateTime}
+            </if>
+            <!-- <if test="creatorAccountId!=null and creatorAccountId!=''">
+                 and a.creator_account_id=#{creatorAccountId}
+             </if>-->
+            <if test="realName!=null and realName!=''">
+                and real_name=#{realName}
+            </if>
+        </where>
+        order by `employee_id` desc
+    </select>
+    <select id="selectUserList" resultType="com.linayi.entity.user.User">
+        select
+        `user_id`,`nickname`,`head_image`,`sex`,`mobile`,`qq`,`email`,`real_name`,`create_time`,`up
+        date_time` from `user`
+        <where>
+            <if test="userId!=null and userId!=''">
+                and user_id=#{userId}
+            </if>
+            <if test="nickname!=null and nickname!=''">
+                and nickname=#{nickname}
+            </if>
+            <if test="sex!=null and sex!=''">
+                and sex=#{sex}
+            </if>
+            <if test="mobile!=null and mobile!=''">
+                and mobile=#{mobile}
+            </if>
+            <if test="qq!=null and qq!=''">
+                and qq=#{qq}
+            </if>
+            <if test="email!=null and email!=''">
+                and email=#{email}
+            </if>
+            <if test="realName!=null and realName!=''">
+                and real_name=#{realName}
+            </if>
+            <if test="createTimeStart!=null ">
+                <![CDATA[
+                and `create_time` >= #{createTimeStart}
+                ]]>
+            </if>
+            <if test="createTimeEnd!=null ">
+                <![CDATA[
+                and `create_time` <= #{createTimeEnd}
+                ]]>
+            </if>
+            <!--<if test="createTimeEnd!=null ">
+            	and create_time - #{createTimeEnd} &lt;0
+            </if>-->
+        </where>
+        order by user_id desc
+    </select>
+    <update id="updateUserByuserId" parameterType="com.linayi.entity.user.User">
+        update `user`
+        <set>
+            <if test="idCardBack!=null and idCardBack!=''">
+                `id_card_back`=#{idCardBack},
+            </if>
+            <if test="idCardFront!=null and idCardFront!=''">
+                `id_card_front`=#{idCardFront},
+            </if>
+            <if test="isSharer!=null and isSharer!=''">
+                `is_sharer`=#{isSharer},
+            </if>
+            <if test="nickname!=null and nickname!=''">
+                `nickname`=#{nickname},
+            </if>
+            <if test="sex!=null and sex!=''">
+                `sex`=#{sex},
+            </if>
+            <if test="mobile!=null and mobile!=''">
+                `mobile`=#{mobile},
+            </if>
+            <if test="qq!=null and qq!=''">
+                `qq`=#{qq},
+            </if>
+            <if test="headImage!=null and headImage!=''">
+                `head_image`=#{headImage},
+            </if>
+            <if test="birthday!=null">
+                `birthday`=#{birthday,jdbcType=TIMESTAMP},
+            </if>
+            <if test="email!=null and email!=''">
+                `email`=#{email},
+            </if>
+            <if test="realName!=null and realName!=''">
+                `real_name`=#{realName},
+            </if>
+            <if test="createTime!=null">
+                `create_time`=#{createTime},
+            </if>
+            <if test="updateTime!=null">
+                `update_time`=#{updateTime},
+            </if>
+            <if test="isProcurer!=null and isProcurer!=''">
+                `is_procurer`=#{isProcurer},
+            </if>
+            <if test="memberLevel!=null and memberLevel!=''">
+                `member_level`=#{memberLevel},
+            </if>
+            <if test="openMemberInfoId !=null ">
+                `open_member_info_id`=#{openMemberInfoId},
+            </if>
+            <if test="isMember !=null ">
+                `is_member`=#{isMember},
+            </if>
+        </set>
+        where user_id=#{userId}
+    </update>
+    <update id="updateUserAllByuserId" parameterType="com.linayi.entity.user.User">
+ 		update `user` set
+ 		`nickname`=#{nickname},`sex`=#{sex},`mobile`=#{mobile},`qq`=#
+{qq},`email`=#{email},`real_name`=#{realName},`create_time`=#{createTime},`update_time`=#
+{updateTime}
+ 		where user_id=#{userId}
+ 	</update>
+    <delete id="deleteUserByuserId">
+ 		delete from `user` where user_id=#{value}
+ 	</delete>
+
+    <delete id="deleteEmployeeById" parameterType="com.linayi.entity.account.Account">
+        delete from `employee` where `employee_id`=#{employeeId}
+    </delete>
+
+    <insert id="insertEmployee" parameterType="com.linayi.entity.user.User"
+            useGeneratedKeys="true" keyProperty="userId" >
+ 		insert into `employee`
+(`nickname`,`mobile`,`qq`,`email`,`real_name`,`create_time`,`update_time`)
+ 		values (#{nickname},#{mobile},#{qq},#{email},#{realName},#{createTime},#
+{updateTime})
+ 	</insert>
+
+    <insert id="insertUser" parameterType="com.linayi.entity.user.User"
+            useGeneratedKeys="true" keyProperty="userId" >
+ 		insert into `user`(`user_id`, `head_image`,`nickname`, `sex`, `mobile`,
+`qq`, `email`, `real_name`, `create_time`, `update_time`, `default_receive_address_id`)
+ 		values ( #{userId,jdbcType=INTEGER}, #{headImage,jdbcType=VARCHAR}, #
+{nickname,jdbcType=VARCHAR},#{sex,jdbcType=VARCHAR},
+            #{mobile,jdbcType=VARCHAR}, #{qq,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
+#{realName,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+            #{defaultReceiveAddressId,jdbcType=INTEGER})
+ 	</insert>
+
+    <!-- 通过userID和下单员等级获取user信息  User getUserByIdAndOrderManLevel(Integer
+userId); -->
+    <select id="getUserByIdAndOrderManLevel" resultType="com.linayi.entity.user.User">
+ 		select
+ 			user_id,`mobile`,`email`,`nickname`, `qq`,`real_name`
+ 		from
+ 			user
+ 		where
+ 			user_id=#{userId}
+ 		and
+ 			is_order_man ='TRUE'
+ 	</select>
+    <!-- 通过userId查询用户是否已是会员
+   User getUserByIdAndMemberLevel(Integer userId);  -->
+    <select id="getUserByIdAndMemberLevel" resultType="com.linayi.entity.user.User">
+    	select
+ 			user_id,`mobile`,`email`,`nickname`, `qq`,`real_name`
+ 		from
+ 			user
+ 		where
+ 			user_id=#{userId}
+ 		and
+ 			is_member='TRUE'
+    </select>
+
+    <!-- 查询出是会员的信息
+    List<User> getUserByIsMember();  -->
+    <select id="getUserByIsMember" resultType="com.linayi.entity.user.User">
+    	select
+    		user_id,open_member_info_id
+    	from
+    		user
+    	where
+    		is_member='TRUE'
+    </select>
+    <!-- 处理失效的会员
+    Integer updateMemberById(Integer userId); -->
+    <update id="updateMemberById">
+    	update
+    		user
+    	set
+    		is_member="FALSE"
+    	where
+    	 user_id=#{userId}
+    </update>
+    <!-- 通过userId获取开通下单员信息表Id
+   Integer getOpenOrderManInfoIdByUserId(Integer userId); -->
+    <select id="getOpenOrderManInfoIdByUserId" resultType="java.lang.Integer">
+    	select
+    		open_order_man_info_id
+    	from
+    		user
+    	where
+    		user_id=#{userId}
+    </select>
+</mapper>

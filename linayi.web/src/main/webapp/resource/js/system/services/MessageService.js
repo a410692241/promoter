@@ -1,0 +1,66 @@
+'use strict';
+app.service('messageService', [function() {
+	
+	function ajax( options ){
+		$.ajax({
+			url:options.url,
+			data:options.data,
+			dataType: options.dataType ? options.dataType : "json",
+			type: options.type ? options.type : "post",
+			success: options.success,
+	    	contentType : options.contentType ? options.contentType : "application/x-www-form-urlencoded",
+			error: options.error ? options.error : function(){}
+		}).then(function( data ){
+			if( options.then ){
+				options.then.call( this,data );
+			}
+		});
+	}
+	
+	function save( options ){
+		var data = options.data;
+		
+	    if( data.title == ""){
+			throw new BusinessException("title不能为空");
+		}
+	    if( data.content == ""){
+			throw new BusinessException("content不能为空");
+		}
+	    if( data.type == ""){
+			throw new BusinessException("type不能为空");
+		}
+	    if( data.adminId == ""){
+			throw new BusinessException("adminId不能为空");
+		}
+	    if( data.createTime == ""){
+			throw new BusinessException("createTime不能为空");
+		}
+		
+		options.data = {
+			messageId:data.messageId,
+			title:data.title,
+			content:data.content,
+			type:data.type,
+			adminId:data.adminId,
+			createTime:new Date( data.createTime ).format('yyyy-MM-dd HH:mm:ss'),
+		}
+		options.url = urls.ms+"/system/message/save.do";
+		ajax( options );
+	}
+	
+	function getById( options ){
+		options.url = urls.ms+"/system/message/get.do";
+		ajax( options );
+	}
+	
+	function remove( options ){
+		options.url = urls.ms+"/system/message/delete.do";
+		ajax( options );
+	}
+	
+	return {
+		remove:remove,
+		getById:getById,
+		save:save
+	};
+}]);

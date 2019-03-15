@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.account.ModuleMapper">
+  <resultMap id="BaseResultMap" type="com.linayi.entity.account.Module">
+    <result column="module_id" jdbcType="INTEGER" property="moduleId" />
+    <result column="module_name" jdbcType="VARCHAR" property="moduleName" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <select id="getList" resultMap="BaseResultMap">
+    select module_id, module_name,status,create_time from module
+  </select>
+  <insert id="insert" parameterType="com.linayi.entity.account.Module">
+    insert into module (module_id, module_name, update_time,status,create_time
+      )
+    values (#{moduleId,jdbcType=INTEGER}, #{moduleName,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+    		#{status,jdbcType=TIMESTAMP},#{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linayi.entity.account.Module">
+    insert into module
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="moduleId != null">
+        module_id,
+      </if>
+      <if test="moduleName != null">
+        module_name,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="moduleId != null">
+        #{moduleId,jdbcType=INTEGER},
+      </if>
+      <if test="moduleName != null">
+        #{moduleName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 根据模块ID修改模块信息 Integer changeModule(Module module); -->
+  <update id="changeModule">
+  	UPDATE 
+  		module
+  	SET
+  		module_name=#{moduleName},status=#{status},update_time=#{updateTime}
+  	WHERE
+  		module_id=#{moduleId}
+  </update>
+</mapper>

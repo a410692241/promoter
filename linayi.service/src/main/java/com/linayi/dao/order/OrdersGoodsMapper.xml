@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.order.OrdersGoodsMapper">
+  <resultMap id="BaseResultMap" type="com.linayi.entity.order.OrdersGoods">
+    <result column="orders_goods_id" jdbcType="BIGINT" property="ordersGoodsId" />
+    <result column="orders_id" jdbcType="BIGINT" property="ordersId" />
+    <result column="supermarket_id" jdbcType="INTEGER" property="supermarketId" />
+    <result column="goods_sku_id" jdbcType="INTEGER" property="goodsSkuId" />
+    <result column="price" jdbcType="INTEGER" property="price" />
+    <result column="procure_status" jdbcType="INTEGER" property="procureStatus" />
+    <result column="quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="actual_quantity" jdbcType="INTEGER" property="actualQuantity" />
+    <result column="supermarket_list" jdbcType="VARCHAR" property="supermarketList" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <select id="getOrdersGoodsByOrdersId" resultMap="BaseResultMap">
+    select orders_goods_id, orders_id, supermarket_id, goods_sku_id, price, quantity, actual_quantity, supermarket_list, procure_status, update_time, create_time from orders_goods where orders_id = #{ordersId}
+  </select>
+  <select id="getOrdersGoodsById" resultMap="BaseResultMap">
+    select orders_goods_id, orders_id, supermarket_id, goods_sku_id, price, quantity, actual_quantity, supermarket_list,procure_status, update_time, create_time from orders_goods where orders_goods_id = #{ordersId}
+  </select>
+  <insert id="insert" parameterType="com.linayi.entity.order.OrdersGoods" useGeneratedKeys="true" keyProperty="ordersGoodsId">
+    insert into orders_goods (orders_goods_id, orders_id, supermarket_id,
+      goods_sku_id, price, quantity,
+      actual_quantity, supermarket_list, procure_status, update_time, create_time
+      )
+    values (#{ordersGoodsId,jdbcType=BIGINT}, #{ordersId,jdbcType=BIGINT}, #{supermarketId,jdbcType=INTEGER},
+      #{goodsSkuId,jdbcType=INTEGER}, #{price,jdbcType=INTEGER}, #{quantity,jdbcType=INTEGER},
+      #{actualQuantity,jdbcType=INTEGER}, #{supermarketList,jdbcType=VARCHAR}, #{procureStatus,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linayi.entity.order.OrdersGoods">
+    insert into orders_goods
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ordersGoodsId != null">
+        orders_goods_id,
+      </if>
+      <if test="ordersId != null">
+        orders_id,
+      </if>
+      <if test="supermarketId != null">
+        supermarket_id,
+      </if>
+      <if test="goodsSkuId != null">
+        goods_sku_id,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="quantity != null">
+        quantity,
+      </if>
+      <if test="actualQuantity != null">
+        actual_quantity,
+      </if>
+      <if test="supermarketList != null">
+        supermarket_list,
+      </if>
+      <if test="procureStatus != null">
+        procure_status,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="createTime != null">
+        create_time
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ordersGoodsId != null">
+        #{ordersGoodsId,jdbcType=BIGINT},
+      </if>
+      <if test="ordersId != null">
+        #{ordersId,jdbcType=BIGINT},
+      </if>
+      <if test="supermarketId != null">
+        #{supermarketId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsSkuId != null">
+        #{goodsSkuId,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=INTEGER},
+      </if>
+      <if test="quantity != null">
+        #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="actualQuantity != null">
+        #{actualQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="supermarketList != null">
+        #{supermarketList,jdbcType=VARCHAR},
+      </if>
+      <if test="procureStatus != null">
+      #{procure_status,jdbcType=VARCHAR},
+    </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </insert>
+  <update id="updateOrdersGoodsById" parameterType="com.linayi.entity.order.OrdersGoods">
+    update orders_goods
+    <set>
+      <if test="ordersId != null">
+        orders_id = #{ordersId},
+      </if>
+      <if test="supermarketId != null">
+        supermarket_id = #{supermarketId},
+      </if>
+      <if test="goodsSkuId != null">
+        goods_sku_id = #{goodsSkuId},
+      </if>
+      <if test="price != null">
+        price = #{price},
+      </if>
+      <if test="quantity != null">
+        quantity = #{quantity},
+      </if>
+      <if test="actualQuantity != null">
+        actual_quantity = #{actualQuantity},
+      </if>
+      <if test="supermarketList != null">
+        supermarket_list = #{supermarketList},
+      </if>
+      <if test="procureStatus != null">
+        procure_status = #{procureStatus},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime}
+      </if>
+    </set>
+    where orders_goods_id = #{ordersGoodsId}
+  </update>
+  <select id="getOrdersGoodsByOrdersGoods" parameterType="com.linayi.entity.order.OrdersGoods" resultMap="BaseResultMap">
+    select orders_goods_id, orders_id, supermarket_id, goods_sku_id, price, quantity, actual_quantity, supermarket_list,procure_status, update_time, create_time from orders_goods
+      <where>
+        <if test="supermarketId != null">
+          supermarket_id = #{supermarketId}
+        </if>
+        <if test="ordersGoodsId != null">
+          and orders_goods_id = #{ordersGoodsId}
+        </if>
+         <if test="procureStatus == 'FINISHED'">
+           and procure_status != 'WAIT_PROCURE'
+         </if>
+        <if test="procureStatus == 'WAIT_PROCURE'">
+          and procure_status = 'WAIT_PROCURE'
+        </if>
+      </where>
+  </select>
+
+  <select id="query" parameterType="com.linayi.entity.order.OrdersGoods" resultMap="BaseResultMap">
+    select orders_goods_id, orders_id, supermarket_id, goods_sku_id, price, quantity, actual_quantity, supermarket_list,procure_status, update_time, create_time from orders_goods
+    <where>
+    <if test="ordersId != null">
+         orders_id = #{ordersId}
+    </if>
+    <if test="supermarketId != null">
+      and supermarket_id = #{supermarketId}
+    </if>
+    <if test="goodsSkuId != null">
+      and goods_sku_id = #{goodsSkuId}
+    </if>
+    <if test="price != null">
+      and price = #{price}
+    </if>
+    <if test="quantity != null">
+      and  quantity = #{quantity}
+    </if>
+    <if test="actualQuantity != null">
+      and actual_quantity = #{actualQuantity}
+    </if>
+    <if test="supermarketList != null">
+      and supermarket_list = #{supermarketList}
+    </if>
+    <if test="status != null">
+      and status = #{status}
+    </if>
+    <if test="updateTime != null">
+      and update_time = #{updateTime}
+    </if>
+    <if test="createTime != null">
+      and create_time = #{createTime}
+    </if>
+    <if test="procureStatus == 'FINISHED'">
+      and procure_status != 'WAIT_PROCURE'
+    </if>
+    <if test="procureStatus == 'WAIT_PROCURE'">
+      and procure_status = 'WAIT_PROCURE'
+    </if>
+    </where>
+  </select>
+
+  <!--
+      查询未发布采买任务的orderGoods
+  -->
+  <select id="getNoProcumentTaskOrders" resultMap="BaseResultMap">
+  SELECT DISTINCT
+	o.`orders_goods_id`,
+	o.`orders_id`,
+	o.`supermarket_id`,
+	o.`goods_sku_id`,
+	o.`price`,
+	o.`quantity`,
+	o.`actual_quantity`,
+	o.`supermarket_list`,
+	o.`procure_status`,
+	o.`procure_fail_status`
+FROM
+	orders_goods o
+	LEFT JOIN procurement_task p ON o.orders_id = p.orders_id
+	AND o.goods_sku_id = p.goods_sku_id
+WHERE
+	p.orders_id IS NULL
+	AND p.goods_sku_id IS NULL
+	AND o.procure_status = 'WAIT_PROCURE'
+  </select>
+</mapper>

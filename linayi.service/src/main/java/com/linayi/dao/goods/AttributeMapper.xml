@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.goods.AttributeMapper">
+
+  <select id="getAttributesList" resultType="com.linayi.entity.goods.Attribute">
+      select a.attribute_id, a.name, a.status, a.update_time, a.create_time, av.value attributeValue from `attribute` a, attribute_value av,goods_attr_value gav
+      where a.status = 'NORMAL' AND a.attribute_id = av.attribute_id AND gav.goods_sku_id = #{goodsSkuId} AND gav.attr_value_id = av.value_id
+  </select>
+
+
+  <select id="getAttributes" resultType="com.linayi.entity.goods.Attribute">
+    select `attribute_id`, `name`, `status`, `update_time`, `create_time` from `attribute` where status = 'NORMAL' order by attribute_id ASC
+  </select>
+
+  <select id="getAttributeByName" resultType="com.linayi.entity.goods.Attribute">
+    select `attribute_id`, `name`, `status`, `update_time`, `create_time` from `attribute` where name = #{attrName} and status = 'NORMAL'
+  </select>
+  
+  <select id="selectAttributeList" resultType="com.linayi.entity.goods.Attribute">
+ 		select `attribute_id`,`NAME`,`STATUS`,`update_time`,`create_time` from `attribute`
+ 		<where>
+	 			<if test="attributeId!=null and attributeId!=''">
+	 				and attribute_id=#{attributeId} 
+	 			</if>
+	 			<if test="name!=null and name!=''">
+	 				and NAME like concat ('%',#{name},'%')
+	 			</if>
+	 			<if test="status!=null and status!=''">
+	 				and STATUS=#{status} 
+	 			</if>
+	 			<if test="updateTime!=null and updateTime!=''">
+	 				and update_time=#{updateTime} 
+	 			</if>
+	 			<if test="createTime!=null and createTime!=''">
+	 				and create_time=#{createTime} 
+	 			</if>
+	 			<if test="attributeIdList != null and attributeIdList.size() > 0">
+	 				and attribute_id
+	 				<foreach collection="attributeIdList" item="item" open=" in(" close=")" separator=",">
+	 					${item}
+	 				</foreach>
+	 			</if>
+ 		</where>
+ 		order by create_time desc
+  </select>
+  <!--通过id单条查找数据  -->
+  <select id="selectAttributeById" resultType="com.linayi.entity.goods.Attribute">
+ 		select `attribute_id`,`NAME`,`STATUS`,`update_time`,`create_time` from `attribute` where attribute_id=#{attributeId}
+ 		order by create_time desc
+  </select>
+ <!--通过id查找  -->
+ <select id="get" resultType="com.linayi.entity.goods.Attribute">
+ 		select `attribute_id`,`NAME`,`STATUS`,`update_time`,`create_time` from `attribute` where attribute_id=#{value}
+ </select>
+<!--  -通过id删除  
+ <delete id="delete">
+ 		delete from attribute a,attribute_value av where a.`attribute_id`=av.`attribute_id` and a.`attribute_id`=#{value}
+ </delete> 
+ -->
+ 
+  <!--添加一条数据  -->
+  <insert id="insert" parameterType="com.linayi.entity.goods.Attribute" useGeneratedKeys="true" keyProperty="attributeId">
+    insert into attribute (attribute_id, NAME, STATUS, 
+      update_time, create_time)
+    values (#{attributeId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <!--修改  -->
+  <update id="updateAttributeByattributeId" parameterType="com.linayi.entity.goods.Attribute">
+ 		update `attribute`
+ 		<set>
+		    	<if test="name!=null and name!=''">
+ 		 		`NAME`=#{name},
+ 		 		</if>
+ 		 		<if test="status!=null and status!=''">
+ 		 		`STATUS`=#{status},
+ 		 		</if>
+		    	<!-- <if test="adminId!=null and adminId!=''">
+ 		 		`admin_id`=#{adminId},
+ 		 		</if> -->
+		    	<if test="updateTime!=null and updateTime!=''">
+ 		 		`update_time`=#{updateTime},
+ 		 		</if>
+		    	<if test="createTime!=null and createTime!=''">
+ 		 		`create_time`=#{createTime},
+ 		 		</if>
+ 		</set>
+ 		where attribute_id=#{attributeId}
+ 	</update>
+  
+  <insert id="insertSelective" parameterType="com.linayi.entity.goods.Attribute">
+    insert into attribute
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="attributeId != null">
+        attribute_id,
+      </if>
+      <if test="name != null">
+        NAME,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="attributeId != null">
+        #{attributeId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>

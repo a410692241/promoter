@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<!-- jqGrid组件基础样式包-必要 -->
+<link rel="stylesheet" href="css/ui.jqgrid.css" />
+
+<!-- jqGrid主题包-非必要 --> 
+<!-- 在jqgrid/css/css这个目录下还有其他的主题包，可以尝试更换看效果 -->
+
+<link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.8.16.custom.css" />
+
+<!-- jquery插件包-必要 -->
+<!-- 这个是所有jquery插件的基础，首先第一个引入 -->
+<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+
+<!-- jqGrid插件包-必要 -->
+<script type="text/javascript" src="js/jquery.jqGrid.min.js"></script>
+
+<!-- jqGrid插件的多语言包-非必要 -->
+<!-- 在jqgrid/js/i18n下还有其他的多语言包，可以尝试更换看效果 -->
+<script type="text/javascript" src="js/i18n/grid.locale-cn.js"></script>
+
+<style type="text/css">
+.ui-jqgrid,.ui-jqgrid-view,.ui-jqgrid-hdiv,.ui-jqgrid-htable,.ui-jqgrid-bdiv,.ui-jqgrid-pager{
+	width:100% !important;
+}
+.ui-jqgrid-bdiv table {
+	width:calc( 100% - 20px ) !important;
+}
+.ui-jqgrid-bdiv{
+ 	height: auto !important; 
+}
+</style>
+
+</head>
+<body>
+<table id="list2" style="width: 100%"></table>
+<div id="pager2"></div>
+<script>
+$.extend(true,$.jgrid.defaults,{
+	datatype: "json",
+	mtype: "post",
+	autowidth:true,
+	hidegrid:false,
+	rownumbers:true,
+	viewrecords:true,
+	rowNum : 10,
+	rowList : [ 10, 20, 30,40,50 ],
+	prmNames: {
+		page:"currentPage",
+		rows:"pageSize", 
+		sort: null,
+		order: null, 
+		search:null, 
+		nd:null, 
+		id:"id",
+		oper:"oper",
+		editoper:"edit",
+		addoper:"add",
+		deloper:"del", 
+		subgridid:"id", 
+		npage: null, 
+		totalrows:"total"
+	},
+	beforeProcessing:function(data, status, xhr){
+		var rowNum = $( this ).jqGrid("getGridParam").rowNum;
+		var page = $( this ).jqGrid("getGridParam").page;
+		var total = data.total;
+		var rows = data.rows;
+		if( total && rowNum ){
+			total =  Math.floor(total/rowNum) + ( total % rowNum > 0 ? 1 : 0 )
+			data.total  = total;
+		}else{
+			data.total  = 1;
+		}
+		for( var i = 0; i < rows.length; i++ ){
+			var id = null;
+			if( rowNum && page ){
+				id = rowNum * ( page - 1 ) + i;
+			}
+			id = i;
+			data.rows[i] = {
+				id:id,
+				cell:data.rows[i]
+			}
+		}
+	}
+});
+$(function(){
+	//页面加载完成之后执行
+	pageInit();
+});
+function pageInit(){
+	//创建jqGrid组件
+	$("#list2").jqGrid(
+			{
+				url : 'data/JSONData.json',//组件创建完成之后请求数据的url
+				postData:{name:'jobd'},
+				mtype : "get",
+				colModel : [
+				             {label:"主键",name : 'id',sortable:false}, 
+				             {label:"日期",name : 'invdate',sortable:false}, 
+				             {label:"姓名",name : 'name',sortable:false}, 
+				             {label:"金额",name : 'amount',sortable:false}, 
+				             {label:"标签",name : 'tax',sortable:false}, 
+				             {label:"总数",name : 'total',sortable:false}, 
+				             {label:"提示",name : 'note',sortable:false} ,
+				             {label:"操作",name:"",sortable:false,formatter:function(cellvalue, options, rowObject){
+								console.info( rowObject );
+				            	 return "<a href='#' onclick='alert(11)'>[编辑]</a>";	            	 
+				             }}
+				],
+				pager : '#pager2',//表格页脚的占位符(一般是div)的id
+			});
+	/*创建jqGrid的操作按钮容器*/
+	/*可以控制界面上增删改查的按钮是否显示*/
+	//$("#list2").jqGrid('navGrid', '#pager2', {edit : false,add : false,del : false,search:false});
+
+}
+
+</script>
+
+</body>
+</html>

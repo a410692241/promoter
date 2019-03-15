@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<bean id="jobFactory" class="com.linayi.util.MyJobFactory"></bean>
+
+	<bean id="priceAffectTimerJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.linayi.timer.PriceAffectTimer"></property>
+	</bean>
+
+	<bean id="priceAffectTimerCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="priceAffectTimerJobDetail"/>
+		<property name="startDelay" value="10000"></property>
+		<property name="cronExpression" value="${priceAffectTimerCronExpression}"/>
+	</bean>
+	<bean id="priceExpireTimerJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.linayi.timer.PriceExpireTimer"></property>
+	</bean>
+	<bean id="purchaseTaskTimerJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.linayi.timer.PurchaseTaskGenerator"></property>
+	</bean>
+
+	<bean id="priceExpireTimerCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="priceExpireTimerJobDetail"/>
+		<property name="startDelay" value="10000"></property>
+		<property name="cronExpression" value="${priceExpireTimerCronExpression}"/>
+	</bean>
+
+	<bean id="purchaseTaskGenerator" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="purchaseTaskTimerJobDetail"/>
+		<property name="startDelay" value="10000"></property>
+		<property name="cronExpression" value="${purchaseTaskTimerCronExpression}"/>
+	</bean>
+
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+		            <ref bean="priceAffectTimerCronTrigger"/>
+		            <ref bean="priceExpireTimerCronTrigger"/>
+		            <!-- <ref bean="purchaseTaskGenerator"/> -->
+
+		    </list>
+		</property>
+		<property name="jobFactory" ref="jobFactory"></property>
+		<property name="quartzProperties">
+			<props>
+			   	<!-- 主要是这个参数 -->
+			    <prop key="org.quartz.scheduler.skipUpdateCheck">false</prop>
+			</props>
+		</property>
+	</bean>
+</beans>

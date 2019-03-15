@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd  
+            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!-- 开启注解 -->
+    <mvc:annotation-driven />
+    <mvc:resources mapping="/swagger-resources/**" location="/WEB-INF/" />
+    <mvc:resources mapping="swagger-ui.html" location="classpath:/META-INF/resources/" />
+    <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/" />
+    <bean class="com.linayi.config.SwaggerConfig"/>
+
+    <!-- 让扫描spring扫描这个包下所有的类，让标注spring注解的类生效 -->
+    <context:component-scan base-package="com.linayi.controller,com.linayi.interceptor"></context:component-scan>
+    <aop:aspectj-autoproxy />
+    <!-- 视图解析器 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/views/" />
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+
+    <!--针对businessException的异常处理类-->
+    <bean id="exceptionHandler" class="com.linayi.exception.BusinessExceptionHandler" />
+
+
+</beans>

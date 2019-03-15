@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.linayi.dao.tags.TagsMapper">
+    <select id="categoryList" resultType="java.util.Map">
+        select category_id code, NAME name from category where status = 'NORMAL'
+        <if test="categoryId != null">
+            AND category_id = #{categoryId}
+        </if>
+        <if test="level != null">
+            AND level = #{level}
+        </if>
+    </select>
+    <select id="brandList" resultType="java.util.Map">
+		select brand_id code, Name name from brand where status = 'NORMAL'
+	</select>
+    <select id="selectCommunityList" resultType="java.util.Map">
+		select community_id code, Name name from community where status = 'NORMAL'
+	</select>
+    <select id="selectSupermarket" resultType="java.util.Map">
+	select supermarket_id code,name from supermarket where status = 'NORMAL'
+</select>
+
+
+</mapper>

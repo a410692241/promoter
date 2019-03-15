@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.correct.SupermarketGoodsVersionMapper">
+  <insert id="insert" parameterType="com.linayi.entity.correct.SupermarketGoodsVersion">
+  		INSERT INTO supermarket_goods_version(supermarket_id, goods_sku_id, version) 
+  		VALUES (#{supermarketId}, #{goodsSkuId}, 0)
+  </insert>
+  <select id="getVersion" resultType="com.linayi.entity.correct.SupermarketGoodsVersion">
+    SELECT * FROM supermarket_goods_version
+    where 1=1
+    and supermarket_id = #{supermarketId}
+    and goods_sku_id = #{goodsSkuId}
+  </select>
+  <update id="updateVersion" parameterType="com.linayi.entity.correct.SupermarketGoodsVersion">
+  		UPDATE supermarket_goods_version s SET s.version = s.version + 1 
+  		WHERE s.supermarket_goods_id=#{supermarketGoodsId,jdbcType=BIGINT} AND s.version = #{version,jdbcType=INTEGER}
+  </update>
+  
+</mapper>

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.community.CommunityMapper">
+  <resultMap id="BaseResultMap" type="com.linayi.entity.community.Community">
+    <result column="community_id" jdbcType="INTEGER" property="communityId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="qq" jdbcType="VARCHAR" property="qq" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <insert id="insert" parameterType="com.linayi.entity.community.Community">
+    insert into community (community_id, name, mobile, 
+      qq, email, address, 
+      status, area_code,create_time, update_time
+      )
+    values (#{communityId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
+      #{qq,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR},#{areaCode,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linayi.entity.community.Community">
+    insert into community
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="communityId != null">
+        community_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="mobile != null">
+        mobile,
+      </if>
+      <if test="qq != null">
+        qq,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="communityId != null">
+        #{communityId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null">
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null">
+        #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+
+  <!-- 根据搜索条件获取小区信息List<Community> getCommunityList(Community community); -->
+  <select id="getCommunityList" resultType="com.linayi.entity.community.Community">
+  		SELECT 
+  			community_id AS communityId,mobile, name,qq, 
+     		address,email,status,area_code,create_time AS createTime, 
+     		update_time AS updateTime
+     	FROM
+     		community
+     	<where>
+     		status="NORMAL"
+     	<if	test="communityId != '' and communityId != null"> 
+     		AND	community_id=#{communityId}
+     	</if>
+     	<if	test="mobile != '' and mobile != null">
+     		AND mobile=#{mobile}  
+     	</if>
+     	<if	test="address != '' and address != null">
+     		AND address LIKE concat('%',#{address},'%')
+     	</if>
+     	<if	test="email != '' and email != null">
+     		AND email=#{email}  
+     	</if>
+     	<if	test="name != '' and name != null">
+     		AND
+     			name LIKE concat('%',#{name},'%')
+     	</if>
+     	</where>
+     	ORDER BY community_id DESC
+  </select>
+  
+  <!-- 获取社区信息 Community getCommunity(Community community); -->
+  <select id="getCommunity" resultType="com.linayi.entity.community.Community">
+  	SELECT 
+  			community_id,mobile, name,qq, 
+     		address,email,status,area_code,create_time, 
+     		update_time
+     	FROM
+     		community
+     	<where>
+     		status="NORMAL"
+     	<if	test="communityId != '' and communityId != null"> 
+     		AND	community_id=#{communityId}
+     	</if>
+     	<if	test="mobile != '' and mobile != null">
+     		AND mobile=#{mobile}  
+     	</if>
+     	<if	test="address != '' and address != null">
+     		AND address LIKE concat('%',#{address},'%')
+     	</if>
+     	<if	test="email != '' and email != null">
+     		AND email=#{email}  
+     	</if>
+     	<if	test="name != '' and name != null">
+     		AND
+     			name LIKE concat('%',#{name},'%')
+     	</if>
+     	<if	test="qq != '' and qq != null">
+     		AND
+     			qq = #{qq}
+     	</if>
+     	</where>
+  </select>
+  
+  <!-- 修改社区信息 Integer updateCommunity(Community community); -->
+  <update id="updateCommunity" parameterType="com.linayi.entity.community.Community">
+  	UPDATE
+  		community
+  	<set>
+     	<if	test="mobile != '' and mobile != null">
+     		mobile=#{mobile}, 
+     	</if>
+     	<if	test="address != '' and address != null">
+     		address=#{address},
+     	</if>
+     	<if	test="email != '' and email != null">
+     		email=#{email},
+     	</if>
+     	<if	test="name != '' and name != null">
+     		name = #{name},
+     	</if>
+     	<if	test="qq != '' and qq != null">
+     		qq = #{qq},
+     	</if>
+     	<if	test="qq != '' and qq != null">
+     		qq = #{qq},
+     	</if>
+     	<if	test="areaCode != null">
+     		area_code = #{areaCode},
+     	</if>
+     </set>	
+     WHERE 
+     	community_id=#{communityId}
+  </update>
+  
+  <!-- 通过社区名搜索社区Id  List<Integer> getCommunityIdList(String name); -->
+  <select id="getCommunityIdList" resultType="java.lang.Integer" parameterType="com.linayi.entity.community.Community">
+  	SELECT
+  		community_id
+  	FROM 
+  		community
+  	WHERE
+  		name LIKE concat('%',#{name},'%')
+  </select>
+  
+  <!-- 通过社区Id改变状态 达到删除社区功能 Integer removeCommunity(Integer communityId); -->
+  <update id="removeCommunity">
+  		UPDATE  
+  			community
+  		set
+   			status = 'REMOVED'
+   		WHERE 
+   			community_id = #{communityId}	
+  </update>
+  
+
+	<!--通过用户uid获取社区id  -->
+ 	 <select id="getcommunityIdByuserId" resultType="java.lang.Integer">
+  		SELECT
+  			ac.community_id
+  		FROM
+  			user u JOIN receive_address ra ON u.default_receive_address_id=ra.receive_address_id JOIN small_community ac ON ac.small_community_id=ra.address_one
+  		WHERE
+  			u.user_id=#{userId}
+
+  	</select>
+  
+
+  
+
+  
+  
+</mapper>

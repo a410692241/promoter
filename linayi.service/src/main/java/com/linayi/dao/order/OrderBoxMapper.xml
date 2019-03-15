@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linayi.dao.order.OrderBoxMapper" >
+ 
+  <!--通过订单id获取OrderBox  OrderBox getOrderBoxList(Long ordersId);  -->
+  <select id="getOrderBoxList" resultType="com.linayi.entity.order.OrderBox">
+  	select 
+  		order_box_id,orders_id,box_no,box_time,image
+  	from 
+  		order_box
+  	where 
+  		orders_id=#{ordersId}
+  </select>
+  
+  <insert id="insert" useGeneratedKeys="true" keyProperty="orderBoxId" 
+  	parameterType="com.linayi.entity.order.OrderBox" >
+    insert into order_box (orders_id, box_no, 
+      image, box_time)
+    values (#{ordersId,jdbcType=BIGINT}, #{boxNo,jdbcType=VARCHAR}, 
+      #{image,jdbcType=VARCHAR}, #{boxTime,jdbcType=TIMESTAMP})
+  </insert>
+  <!--通过订单Id修改封箱图片  Integer updateImage(OrderBox orderBox);  -->
+  <update id="updateImage" parameterType="com.linayi.entity.order.OrderBox">
+  	update
+  		order_box
+  	set
+  		image=#{image} 
+  	where
+  		orders_id=#{ordersId}
+  	and
+  		box_no = #{boxNo}
+  </update>
+</mapper>

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linayi.dao.order.SelfOrderMapper">
+    <resultMap id="BaseResultMap" type="com.linayi.entity.order.SelfOrder">
+        <id column="self_order_id" property="selfOrderId" jdbcType="BIGINT"/>
+        <result column="goods_name" property="goodsName" jdbcType="VARCHAR"/>
+        <result column="brand_name" property="brandName" jdbcType="VARCHAR"/>
+        <result column="attr_value" property="attrValue" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="sharers" property="sharers" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="is_order_success" property="isOrderSuccess" jdbcType="VARCHAR"/>
+        <result column="min_price" property="minPrice" jdbcType="INTEGER"/>
+        <result column="max_price" property="maxPrice" jdbcType="INTEGER"/>
+        <result column="num" property="num" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!-- 插入信息 -->
+    <!-- Integer insertUserMessage(SelfOrder selfOrder) -->
+    <insert id="insertUserMessage"
+            parameterType="com.linayi.entity.order.SelfOrder"
+            useGeneratedKeys="true"
+            keyProperty="selfOrderId">
+		INSERT INTO self_order (
+			goods_name,brand_name,attr_value,status,user_id,sharers,update_time,create_time
+		) VALUES (
+			#{goodsName},#{brandName},#{attrValue},#{status},#{userId},#{sharers},#{updateTime},#{createTime}
+		)
+  </insert>
+
+    <!-- 根据超市id获取超市信息 -->
+    <!-- List<Supermarket> findSupermarketById(Integer supermarketId);-->
+    <select id="findSupermarketById" resultType="com.linayi.entity.supermarket.Supermarket">
+      select
+        supermarket_id,
+        name,
+        area_code,
+        address,
+        status,
+        logo,
+        order_no,
+        user_id userId,
+        update_time,
+        create_time
+      from
+        supermarket
+      where
+        supermarket_id=#{supermarketId}
+  </select>
+
+
+    <!-- 根据用户id获取自定义下单列表 -->
+    <select id="getSelfOrderByUserId" resultType="com.linayi.entity.order.SelfOrder">
+  			SELECT
+				 self_order_id,
+				 goods_name,
+				 brand_name,
+				 attr_value,
+				 status,
+				 user_id,
+				 sharers,
+				 update_time,
+				 is_order_success,
+				 create_time   			
+	  		FROM
+	  			self_order
+	  		WHERE
+	  			user_id=#{userId}
+	  		ORDER BY
+	  			self_order_id desc		
+	
+  		</select>
+
+
+    <!-- 根据主键id查询自定义下单表 -->
+    <select id="selectByPrimaryKey" resultType="com.linayi.entity.order.SelfOrder">
+  			SELECT
+				 self_order_id,goods_name,brand_name,attr_value,status,
+				 user_id,sharers, update_time,create_time   			
+	  		FROM
+	  			self_order
+	  		WHERE
+	  			self_order_id=#{selfOrderId}	
+  		</select>
+
+    <!-- 获取自定义下单列表 -->
+    <select id="getList" resultType="com.linayi.entity.order.SelfOrder">
+        select
+        self_order_id,goods_name,brand_name,attr_value,status,user_id,sharers, update_time,create_time,
+        is_order_success, min_price, max_price, num
+        from
+        self_order
+        <where>
+            <if test="selfOrderId!=null and selfOrderId!=''">
+                and self_order_id=#{selfOrderId}
+            </if>
+            <if test="goodsName!=null and goodsName!=''">
+                and goods_name like concat("%",#{goodsName},"%")
+            </if>
+            <if test="brandName!=null and brandName!=''">
+                and brand_name like concat("%",#{brandName},"%")
+            </if>
+            <if test="attrValue!=null and attrValue!=''">
+                and attr_value=#{attrValue}
+            </if>
+            <if test="status!=null and status!=''">
+                and status=#{status}
+            </if>
+            <if test="userId!=null and userId!=''">
+                and user_id=#{userId}
+            </if>
+            <if test="sharers!=null and sharers!=''">
+                and sharers=#{sharers}
+            </if>
+            <if test="createTimeStart!=null ">
+                <![CDATA[
+                and `create_time` >= #{createTimeStart}
+                ]]>
+            </if>
+            <if test="createTimeEnd!=null ">
+                <![CDATA[
+                and `update_time` <= #{createTimeEnd}
+                ]]>
+            </if>
+            <if test="isOrderSuccess!=null and isOrderSuccess!=''">
+                and `is_order_success` = #{isOrderSuccess}
+            </if>
+        </where>
+        order by self_order_id desc
+    </select>
+
+    <!-- 根据主键id修改状态并更新时间 -->
+    <update id="updateSelfOrderStatusByPrimaryKey">
+UPDATE
+	self_order
+SET
+	status=#{status},
+	update_time=#{updateTime}
+WHERE
+	self_order_id =#{selfOrderId}
+</update>
+
+    <select id="getSelfOrder" resultType="com.linayi.entity.order.SelfOrder">
+        SELECT
+        self_order_id,goods_name,brand_name,attr_value,status,user_id,sharers, update_time,create_time,
+        is_order_success, min_price, max_price, num
+        FROM
+        self_order
+        <where>
+            <if test="selfOrderId!=null and selfOrderId!=''">
+                and self_order_id=#{selfOrderId}
+            </if>
+            <if test="goodsName!=null and goodsName!=''">
+                and goods_name like concat("%",#{goodsName},"%")
+            </if>
+            <if test="brandName!=null and brandName!=''">
+                and brand_name like concat("%",#{brandName},"%")
+            </if>
+            <if test="attrValue!=null and attrValue!=''">
+                and attr_value=#{attrValue}
+            </if>
+            <if test="status!=null and status!=''">
+                and status=#{status}
+            </if>
+            <if test="userId!=null and userId!=''">
+                and user_id=#{userId}
+            </if>
+            <if test="sharers!=null and sharers!=''">
+                and sharers=#{sharers}
+            </if>
+            <if test="createTimeStart!=null ">
+                <![CDATA[
+                and `create_time` >= #{createTimeStart}
+                ]]>
+            </if>
+            <if test="createTimeEnd!=null ">
+                <![CDATA[
+                and `update_time` <= #{createTimeEnd}
+                ]]>
+            </if>
+            <if test="isOrderSuccess!=null and isOrderSuccess!=''">
+                and `is_order_success` = #{isOrderSuccess}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateSelfOrder" parameterType="com.linayi.entity.order.SelfOrder">
+        update self_order
+        <set>
+            <if test="goodsName!=null and goodsName!=''">
+                goods_name = #{goodsName},
+            </if>
+            <if test="brandName!=null and brandName!=''">
+                brand_name = #{brandName},
+            </if>
+            <if test="attrValue!=null and attrValue!=''">
+                attr_value=#{attrValue},
+            </if>
+            <if test="status!=null and status!=''">
+                status=#{status},
+            </if>
+            <if test="userId!=null and userId!=''">
+                user_id=#{userId},
+            </if>
+            <if test="sharers!=null and sharers!=''">
+                sharers=#{sharers},
+            </if>
+            <if test="isOrderSuccess!=null and isOrderSuccess!=''">
+                `is_order_success` = #{isOrderSuccess},
+            </if>
+            <if test="minPrice!=null">
+                `min_price` = #{minPrice},
+            </if>
+            <if test="maxPrice!=null">
+                `max_price` = #{maxPrice},
+            </if>
+            <if test="num!=null">
+                `num` = #{num},
+            </if>
+            <if test="updateTime!=null">
+                `update_time` = #{updateTime},
+            </if>
+        </set>
+        where self_order_id = #{selfOrderId}
+    </update>
+
+    <select id="listSelfOrderMessage" resultType="Map">
+		select
+		  message_id,
+		  case when u.nickname is null then '' else u.nickname end as nickname,
+		  case when sm.name is null then '' else sm.name end as supermarket,
+		  som.status as status,
+		  som.view_status as view_status
+		from self_order_message som
+			   left join `user` u on u.user_id = som.user_id
+			   left join `supermarket` sm on sm.user_id = som.user_id
+		where self_order_id =#{selfOrderId}
+	</select>
+
+</mapper>

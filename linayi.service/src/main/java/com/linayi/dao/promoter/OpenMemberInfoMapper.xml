@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.promoter.OpenMemberInfoMapper">
+  <insert id="insert" parameterType="com.linayi.entity.promoter.OpenMemberInfo" useGeneratedKeys="true" keyProperty="openMemberInfoId">
+    insert into open_member_info (open_member_info_id, user_id, member_level, 
+      start_time, end_time, order_man_id, 
+      create_time,free_times,open_order_man_info_id)
+    values (#{openMemberInfoId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{memberLevel,jdbcType=VARCHAR}, 
+      #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{orderManId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP},#{freeTimes,jdbcType=TIMESTAMP},#{openOrderManInfoId,jdbcType=TIMESTAMP})
+  </insert>
+  <!--  根据主键Id更新会员有效时间
+    Integer updateValidTimeById(OpenMemberInfo openMemberInfo);-->
+    <update id="updateValidTimeById" parameterType="com.linayi.entity.promoter.OpenMemberInfo">
+    	update
+    		open_member_info
+    	set
+    		start_time =#{startTime},end_time=#{endTime}
+    	where
+    		open_member_info_id=#{openMemberInfoId}
+    </update>
+    <sql id="base_column">
+        open_member_info_id, user_id, member_level, start_time, end_time, order_man_id, create_time,open_order_man_info_id
+    </sql>
+    <select id="getMemberInfo" resultType="com.linayi.entity.promoter.OpenMemberInfo">
+        select <include refid="base_column"/> from open_member_info
+        <where>
+            <if test="openMemberInfoId != null">
+                open_member_info_id = #{openMemberInfoId}
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="memberLevel != null">
+                AND member_level = #{memberLevel}
+            </if>
+            <if test="startTime != null">
+                AND start_time = #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND end_time = #{endTime}
+            </if>
+            <if test="orderManId != null">
+                AND order_man_id = #{orderManId}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+    <update id="updateById" parameterType="com.linayi.entity.promoter.OpenMemberInfo" >
+        update open_member_info
+        <set>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="memberLevel != null">
+                member_level = #{memberLevel},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+            <if test="orderManId != null">
+                order_man_id = #{orderManId}
+            </if>
+        </set>
+        where open_member_info_id = #{openMemberInfoId}
+    </update>
+    
+    <!-- 通过会员id获取会员开通信息（开始时间倒序） -->
+    <!-- List<OpenMemberInfo> getMemberStartTimeByUserId(Integer userId) -->
+    <select id="getMemberStartTimeByUserId" resultType="com.linayi.entity.promoter.OpenMemberInfo">
+    	SELECT
+    		 open_member_info_id, user_id, member_level, start_time, end_time, order_man_id, create_time
+    	FROM
+    		open_member_info
+    	WHERE
+    		user_id=#{userId}
+    	ORDER BY
+    		start_time desc
+    </select>
+</mapper>

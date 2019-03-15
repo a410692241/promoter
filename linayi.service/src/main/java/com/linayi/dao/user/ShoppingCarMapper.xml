@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.user.ShoppingCarMapper">
+    <resultMap id="BaseResultMap" type="com.linayi.entity.user.ShoppingCar">
+        <result column="shopping_car_id" jdbcType="BIGINT" property="shoppingCarId"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="goods_sku_id" jdbcType="INTEGER" property="goodsSkuId"/>
+        <result column="quantity" jdbcType="INTEGER" property="quantity"/>
+        <result column="receive_address_id" jdbcType="INTEGER" property="receiveAddressId"/>
+        <result column="select_status" jdbcType="VARCHAR" property="selectStatus"/>
+    </resultMap>
+    <select id="getShopCar" resultMap="BaseResultMap">
+        select shopping_car_id, user_id, goods_sku_id, quantity, receive_address_id, select_status from shopping_car
+        <where>
+            <if test="shoppingCarId != null">
+                shopping_car_id = #{shoppingCarId}
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="goodsSkuId != null">
+                AND goods_sku_id = #{goodsSkuId}
+            </if>
+            <if test="receiveAddressId != null">
+                AND receive_address_id = #{receiveAddressId}
+            </if>
+            <if test="selectStatus != null and selectStatus != ''">
+                AND select_status = #{selectStatus}
+            </if>
+        </where>
+    </select>
+    <select id="getShopCarById" resultMap="BaseResultMap">
+    select shopping_car_id, user_id, goods_sku_id, quantity, receive_address_id, select_status from shopping_car where shopping_car_id = #{shoppingCarId}
+  </select>
+    <select id="getAllCarByReceiveAddressId" resultMap="BaseResultMap">
+        select shopping_car_id, user_id, goods_sku_id, quantity, receive_address_id, select_status from shopping_car
+        <where>
+            <if test="receiveAddressId != null">
+                receive_address_id = #{receiveAddressId}
+            </if>
+            <if test="selectStatus != null and selectStatus != ''">
+                AND select_status = #{selectStatus}
+            </if>
+            <if test="userId != null and selectStatus != ''">
+                AND user_id = #{userId}
+            </if>
+        </where>
+    </select>
+    <update id="updateShopCar">
+        update shopping_car
+        <set>
+            <if test="quantity != null">
+                quantity=#{quantity},
+            </if>
+            <if test="selectStatus != null and selectStatus != ''">
+                select_status=#{selectStatus}
+            </if>
+        </set>
+        where shopping_car_id = #{shoppingCarId}
+    </update>
+    <delete id="deleteCarById">
+    delete from shopping_car  where shopping_car_id = #{shoppingCarId}
+  </delete>
+    <insert id="insert" parameterType="com.linayi.entity.user.ShoppingCar">
+    insert into shopping_car (shopping_car_id, user_id, goods_sku_id, 
+      quantity, receive_address_id, select_status
+      )
+    values (#{shoppingCarId,jdbcType=BIGINT}, #{userId,jdbcType=INTEGER}, #{goodsSkuId,jdbcType=INTEGER}, 
+      #{quantity,jdbcType=INTEGER}, #{receiveAddressId,jdbcType=INTEGER}, #{selectStatus,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.linayi.entity.user.ShoppingCar">
+        insert into shopping_car
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="shoppingCarId != null">
+                shopping_car_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="goodsSkuId != null">
+                goods_sku_id,
+            </if>
+            <if test="quantity != null">
+                quantity,
+            </if>
+            <if test="receiveAddressId != null">
+                receive_address_id,
+            </if>
+            <if test="selectStatus != null and selectStatus != ''">
+                select_status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="shoppingCarId != null">
+                #{shoppingCarId,jdbcType=BIGINT},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="goodsSkuId != null">
+                #{goodsSkuId,jdbcType=INTEGER},
+            </if>
+            <if test="quantity != null">
+                #{quantity,jdbcType=INTEGER},
+            </if>
+            <if test="receiveAddressId != null">
+                #{receiveAddressId,jdbcType=INTEGER},
+            </if>
+            <if test="selectStatus != null and selectStatus != ''">
+                #{selectStatus,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+</mapper>

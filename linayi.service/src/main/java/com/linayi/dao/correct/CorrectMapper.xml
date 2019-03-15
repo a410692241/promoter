@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.correct.CorrectMapper">
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.linayi.entity.correct.Correct" id="BaseResultMap">
+        <result property="correctId" column="correct_id"/>
+        <result property="supermarketId" column="supermarket_id"/>
+        <result property="goodsSkuId" column="goods_sku_id"/>
+        <result property="price" column="price"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="userId" column="user_id"/>
+        <result property="userType" column="user_type"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="image" column="image"/>
+        <result property="priceType" column="price_type"/>
+        <result property="status" column="status"/>
+        <result property="actualStartTime" column="actual_start_time"/>
+        <result property="actualEndTime" column="actual_end_time"/>
+        <result property="type" column="type"/>
+        <result property="mobile" column="mobile"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createTime" column="create_time"/>
+        <association property="user" resultMap="com.linayi.dao.user.UserMapper.BaseResultMap"/>
+        <association property="supermarket" resultMap="com.linayi.dao.supermarket.SupermarketMapper.BaseResultMap"/>
+        <association property="goodsSku" resultMap="com.linayi.dao.goods.GoodsSkuMapper.BaseResultMap"/>
+        <association property="adminAccount" resultMap="com.linayi.dao.account.AdminAccountMapper.BaseResultMap"/>
+    </resultMap>
+
+    <!--
+      数据库表的基本查询列名集合
+    -->
+    <sql id="Base_Column_List">
+        correct_id, supermarket_id, goods_sku_id, price, start_time, end_time, user_id, user_type, parent_id, image, price_type,
+        status, actual_start_time, actual_end_time, type, update_time, create_time
+    </sql>
+
+    <!--
+      根据主键查询数据库表
+    -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from correct
+        where correct_id = #{correctId,jdbcType=BIGINT}
+    </select>
+    
+    <!-- 根据用户id查询correct对象集合 -->
+    <select id="selectCorrectListByUserId" parameterType="java.lang.Integer" resultType="com.linayi.entity.correct.Correct">
+        select
+        	c.correct_id, 
+        	c.supermarket_id, 
+        	c.goods_sku_id, 
+        	c.price, 
+        	c.start_time, 
+        	c.end_time, 
+        	c.user_id,
+        	c.user_type,
+        	c.parent_id, 
+        	c.image, 
+        	c.price_type,
+        	c.status, 
+        	c.actual_start_time, 
+        	c.actual_end_time, 
+        	c.type, 
+        	c.update_time, 
+        	c.create_time,
+        	g.name fullName,
+        	s.name supermarkerName
+        from correct c,goods_sku g,supermarket s
+        <where>
+        	c.goods_sku_id=g.goods_sku_id
+        AND
+        	s.supermarket_id=c.supermarket_id	
+        AND    
+        	c.user_id = #{userId,jdbcType=INTEGER}
+        </where>
+        order by c.create_time desc
+    </select>
+
+    <!--
+      添加一条记录到数据库表中
+    -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="correctId"
+            parameterType="com.linayi.entity.correct.Correct">
+        insert into correct
+        (correct_id, supermarket_id, goods_sku_id, price, start_time, end_time, user_id, user_type, parent_id, image, price_type,
+        status, actual_start_time, actual_end_time, type, update_time, create_time)
+        values (
+            #{correctId,jdbcType=BIGINT},
+            #{supermarketId,jdbcType=INTEGER},
+            #{goodsSkuId,jdbcType=INTEGER},
+            #{price,jdbcType=INTEGER},
+            #{startTime,jdbcType=TIMESTAMP},
+            #{endTime,jdbcType=TIMESTAMP},
+            #{userId,jdbcType=INTEGER},
+            #{userType,jdbcType=VARCHAR},
+            #{parentId,jdbcType=BIGINT},
+            #{image,jdbcType=VARCHAR},
+            #{priceType,jdbcType=VARCHAR},
+            #{status,jdbcType=VARCHAR},
+            #{actualStartTime,jdbcType=TIMESTAMP},
+            #{actualEndTime,jdbcType=TIMESTAMP},
+            #{type,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP},
+            #{createTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+
+    <!--
+      根据主键更新数据库表
+    -->
+    <update id="updateByPrimaryKey"
+            parameterType="com.linayi.entity.correct.Correct">
+        update correct
+        <set>
+            <if test="correctId != null">
+                correct_id = #{correctId,jdbcType=BIGINT},
+            </if>
+            <if test="supermarketId != null">
+                supermarket_id = #{supermarketId,jdbcType=INTEGER},
+            </if>
+            <if test="goodsSkuId != null">
+                goods_sku_id = #{goodsSkuId,jdbcType=INTEGER},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=INTEGER},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId,jdbcType=BIGINT},
+            </if>
+            <if test="image != null">
+                image = #{image,jdbcType=VARCHAR},
+            </if>
+            <if test="priceType != null">
+                price_type = #{priceType,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="actualStartTime != null">
+                actual_start_time = #{actualStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="actualEndTime != null">
+                actual_end_time = #{actualEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </set>
+        where correct_id = #{correctId,jdbcType=BIGINT}
+    </update>
+
+    <!--
+      批量添加记录到数据库表中
+    -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into correct
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            correct_id, supermarket_id, goods_sku_id, price, start_time, end_time, user_id, user_type, parent_id, image,
+            price_type, status, actual_start_time, actual_end_time, type, update_time, create_time
+        </trim>
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.correctId,jdbcType=BIGINT}, #{item.supermarketId,jdbcType=INTEGER},
+                #{item.goodsSkuId,jdbcType=INTEGER}, #{item.price,jdbcType=INTEGER},
+                #{item.startTime,jdbcType=TIMESTAMP}, #{item.endTime,jdbcType=TIMESTAMP},
+                #{item.userId,jdbcType=INTEGER}, #{item.userType,jdbcType=VARCHAR}, #{item.parentId,jdbcType=BIGINT}, #{item.image,jdbcType=VARCHAR},
+                #{item.priceType,jdbcType=VARCHAR}, #{item.status,jdbcType=VARCHAR},
+                #{item.actualStartTime,jdbcType=TIMESTAMP}, #{item.actualEndTime,jdbcType=TIMESTAMP},
+                #{item.type,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP},
+                #{item.createTime,jdbcType=TIMESTAMP}
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--
+      根据主键批量更新数据库表中的记录
+    -->
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="list" index="index" item="item" separator=";">
+            update correct
+            <set>
+                <trim suffixOverrides=",">
+                    <if test="item.correctId != null">
+                        correct_id = #{correctId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.supermarketId != null">
+                        supermarket_id = #{supermarketId,jdbcType=INTEGER},
+                    </if>
+                    <if test="item.goodsSkuId != null">
+                        goods_sku_id = #{goodsSkuId,jdbcType=INTEGER},
+                    </if>
+                    <if test="item.price != null">
+                        price = #{price,jdbcType=INTEGER},
+                    </if>
+                    <if test="item.startTime != null">
+                        start_time = #{startTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.endTime != null">
+                        end_time = #{endTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.userId != null">
+                        user_id = #{userId,jdbcType=INTEGER},
+                    </if>
+                    <if test="item.parentId != null">
+                        parent_id = #{parentId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.image != null">
+                        image = #{image,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.priceType != null">
+                        price_type = #{priceType,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.status != null">
+                        status = #{status,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.actualStartTime != null">
+                        actual_start_time = #{actualStartTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.actualEndTime != null">
+                        actual_end_time = #{actualEndTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.type != null">
+                        type = #{type,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.updateTime != null">
+                        update_time = #{updateTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.createTime != null">
+                        create_time = #{createTime,jdbcType=TIMESTAMP}
+                    </if>
+                </trim>
+            </set>
+            <where>
+                <trim suffixOverrides=",">
+                    where correct_id = #{correctId,jdbcType=BIGINT}
+                </trim>
+            </where>
+        </foreach>
+    </update>
+
+    <!--
+      查询纠错数据,关联超市,用户
+    -->
+
+    <select id="query" resultType="com.linayi.entity.correct.Correct"
+            parameterType="com.linayi.entity.correct.Correct">
+        select
+	        correct_id, supermarket_id, goods_sku_id, price, start_time, end_time, user_id, parent_id, image, price_type,
+	        status, actual_start_time, actual_end_time, type, update_time, create_time
+        from correct
+        <where>
+	        <if test="correctId != null">
+	            and correct_id = #{correctId,jdbcType=BIGINT}
+	        </if>
+	        <if test="supermarketId != null">
+	            and supermarket_id = #{supermarketId,jdbcType=INTEGER}
+	        </if>
+	        <if test="goodsSkuId != null">
+	            and goods_sku_id = #{goodsSkuId,jdbcType=INTEGER}
+	        </if>
+	        <if test="price != null">
+	            and price = #{price,jdbcType=INTEGER}
+	        </if>
+	        <if test="startTime != null">
+	            and start_time &gt; #{startTime,jdbcType=TIMESTAMP}
+	        </if>
+	        <if test="endTime != null">
+	            and end_time &lt; #{endTime,jdbcType=TIMESTAMP}
+	        </if>
+	        <if test="userId != null">
+	            and user_id = #{userId,jdbcType=INTEGER}
+	        </if>
+	        <if test="parentId != null">
+	            and parent_id = #{parentId,jdbcType=BIGINT}
+	        </if>
+	        <if test="image != null">
+	            and image = #{image,jdbcType=VARCHAR}
+	        </if>
+	        <if test="priceType != null">
+	            and price_type = #{priceType,jdbcType=VARCHAR}
+	        </if>
+	        <if test="status != null">
+	            and status = #{status,jdbcType=VARCHAR}
+	        </if>
+	        <if test="actualStartTime != null">
+	            and actual_start_time = #{actualStartTime,jdbcType=TIMESTAMP}
+	        </if>
+	        <if test="actualEndTime != null">
+	            and actual_end_time = #{actualEndTime,jdbcType=TIMESTAMP}
+	        </if>
+	        <if test="type != null">
+	            and type = #{type,jdbcType=VARCHAR}
+	        </if>
+	        <if test="updateTime != null">
+	            and update_time = #{updateTime,jdbcType=TIMESTAMP}
+	        </if>
+	        <if test="createTime != null">
+	            and create_time = #{createTime,jdbcType=TIMESTAMP}
+	        </if>
+	        <if test="statusList != null and statusList.size() > 0">
+	            and status in
+	            <foreach item="status" index="index" collection="statusList"
+	                     open="(" separator="," close=")">
+	                #{status}
+	            </foreach>
+	        </if>
+        </where>
+    </select>
+
+    <!--
+         查询后台管理纠错列表分页
+    -->
+    <select id="queryPage" resultMap="BaseResultMap"
+            parameterType="com.linayi.entity.correct.Correct">
+        SELECT
+            c.correct_id,c.goods_sku_id,u.real_name,u.mobile,s.supermarket_id,c.`status`,g.`NAME`,c.type,c.price,c.price_type,c.start_time,c.end_time,c.create_time
+        FROM
+            `correct` c left join USER u on c.user_id = u.user_id left join supermarket s on c.supermarket_id = s.supermarket_id
+            left join  goods_sku g on c.goods_sku_id = g.goods_sku_id where c.user_type in ("USER","")
+         <where>
+            <if test="mobile !=null and mobile != ''">
+                and u.mobile like concat('%',#{mobile,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="nickName !=null and nickName != ''">
+                and u.nickname like concat('%', #{nickName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="name!=null and name!=''">
+            	and s.name like concat('%',#{name},'%') 
+            </if>
+            <if test="status !=null and status != ''">
+                and c.status = #{status}
+            </if>
+            <if test="startTime != null">
+                and c.start_time &gt;= #{startTime}
+            </if>
+            <if test="endTime !=null">
+                and c.end_time &lt;= #{endTime}
+            </if>
+            <if test="priceType !=null and priceType != ''">
+                and c.price_type = #{priceType}
+            </if>
+             <if test="createTimeStart != null and createTimeStart != ''">
+           		and c.create_time <![CDATA[ >= ]]> #{createTimeStart}
+       		 </if>
+      		 <if test="createTimeEnd != null and createTimeEnd != ''">
+          		and c.create_time <![CDATA[ <= ]]> #{createTimeEnd}
+        	</if>
+        </where>
+        order by c.correct_id desc
+    </select>
+    <select id="queryAdminPage" resultMap="BaseResultMap"
+            parameterType="com.linayi.entity.correct.Correct">
+        SELECT
+        c.correct_id,c.goods_sku_id,u.user_name,u.mobile,s.supermarket_id,c.`status`,g.`NAME`,c.type,c.price,c.price_type,c.start_time,c.end_time,c.create_time
+        FROM
+        `correct` c left join `admin_account` u on c.user_id = u.account_id left join supermarket s on c.supermarket_id = s.supermarket_id left join  goods_sku g on c.goods_sku_id = g.goods_sku_id where c.user_type="ADMIN"
+        <where>
+            <if test="mobile !=null and mobile != ''">
+                and u.mobile like concat('%',#{mobile,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="name!=null and name!=''">
+                and s.name like concat('%',#{name},'%')
+            </if>
+            <if test="status !=null and status != ''">
+                and c.status = #{status}
+            </if>
+            <if test="startTime != null">
+                and c.start_time &gt;= #{startTime}
+            </if>
+            <if test="endTime !=null">
+                and c.end_time &lt;= #{endTime}
+            </if>
+            <if test="priceType !=null and priceType != ''">
+                and c.price_type = #{priceType}
+            </if>
+            <if test="createTimeStart != null and createTimeStart != ''">
+                and c.create_time <![CDATA[ >= ]]> #{createTimeStart}
+            </if>
+            <if test="createTimeEnd != null and createTimeEnd != ''">
+                and c.create_time <![CDATA[ <= ]]> #{createTimeEnd}
+            </if>
+        </where>
+        order by c.correct_id desc
+    </select>
+	<update id="updateCorrect" parameterType="com.linayi.entity.correct.Correct">
+		update `correct` set
+	    <trim suffixOverrides=",">
+	    <if test="price !=null ">
+	        `price` = #{price,jdbcType=INTEGER},
+	    </if>
+	    <if test="startTime !=null ">
+	        `start_time` = #{startTime,jdbcType=TIMESTAMP},
+	    </if>
+	    <if test="endTime !=null ">
+	        `end_time` = #{endTime,jdbcType=TIMESTAMP},
+	    </if>
+	    <if test="userId !=null ">
+	        `user_id` = #{userId,jdbcType=INTEGER},
+	    </if>
+	    <if test="image !=null ">
+	        `image` = #{image,jdbcType=VARCHAR},
+	    </if>
+	    <if test="priceType !=null ">
+	        `price_type` = #{priceType,jdbcType=VARCHAR},
+	    </if>
+	    <if test="status !=null ">
+	        `status` = #{status,jdbcType=VARCHAR},
+	    </if>
+	    <if test="actualStartTime !=null ">
+	        `actual_start_time` = #{actualStartTime,jdbcType=TIMESTAMP},
+	    </if>
+	    <if test="actualEndTime !=null ">
+	        `actual_end_time` = #{actualEndTime,jdbcType=TIMESTAMP},
+	    </if>
+	    <if test="type !=null ">
+	        `type` = #{type,jdbcType=VARCHAR},
+	    </if>
+	    <if test="updateTime !=null ">
+	        `update_time` = #{updateTime,jdbcType=TIMESTAMP},
+	    </if>
+	    </trim>
+	    where `correct_id` = #{correctId}
+	</update>
+
+
+	
+	<!--根据超市id和商品id查询纠错表信息  -->
+   <select id="selectCorrect" resultType="com.linayi.entity.correct.Correct"
+            parameterType="com.linayi.entity.correct.Correct">
+        SELECT
+         <include refid="Base_Column_List"/>
+        FROM 
+        	correct
+       WHERE
+       		supermarket_id=#{supermarketId}
+       	AND
+       		goods_sku_id=#{goodsSkuId}	
+    </select>
+    
+    
+    
+  	<!--根据条件查看商品价格纠错表 -->
+    <select id="getCorrect" resultType="com.linayi.entity.correct.Correct">
+    select
+    <include refid="Base_Column_List"/>
+    from
+      correct
+    where
+      status=#{status,jdbcType=VARCHAR}
+</select>
+	
+
+    <!-- 根据父级id查询correct表 -->
+    <select id="selectCorrectByParentId" resultType="com.linayi.entity.correct.Correct">
+	SELECT
+		correct_id, supermarket_id, goods_sku_id, price, start_time, end_time, user_id, user_type, parent_id, image, price_type,
+        status, actual_start_time, actual_end_time, type, update_time, create_time
+    FROM
+    	correct
+    WHERE
+    	parent_id=#{parentId} AND
+    	(status='WAIT_AUDIT' OR
+    	 status='AUDIT_SUCCESS')
+	</select>
+
+	<!-- 根据商品名获取纠错表信息 -->
+	<!-- List<Correct> selectCorrectListByGoodsName(Correct correct) -->
+	<select id="selectCorrectListByGoodsName" resultType="com.linayi.entity.correct.Correct">
+		SELECT
+			c.correct_id, c.supermarket_id, s.name, g.image goodsImage, c.goods_sku_id, g.full_name, c.price, c.start_time, c.end_time, c.user_id, c.user_type, c.parent_id, c.image, c.price_type,
+	        c.status, c.actual_start_time, c.actual_end_time, c.type, c.update_time, c.create_time
+        FROM 
+        	correct c 
+        	JOIN goods_sku g ON c.goods_sku_id=g.goods_sku_id 
+        	JOIN supermarket s ON c.supermarket_id=s.supermarket_id
+        <where>
+        	c.user_id=#{userId}
+        	 <if test="fullName !=null and fullName != '' ">
+        	AND g.full_name like concat('%',#{fullName},'%')
+        	</if>	
+        </where>
+        ORDER BY c.create_time desc
+	</select>
+
+</mapper>

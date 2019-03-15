@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.account.AdminAccountMapper">
+    <resultMap type="com.linayi.entity.account.AdminAccount" id="BaseResultMap">
+        <result property="userId" column="user_id"/>
+        <result property="userType" column="user_type"/>
+        <result property="userName" column="user_name"/>
+        <result property="status" column="status"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.linayi.entity.account.AdminAccount">
+    insert into admin_account (account_id, user_name, password, 
+      mobile, user_type, user_id, 
+      incorrect_times, status, creator_account_id, 
+      create_time, last_login_time, update_time
+      )
+    values (#{accountId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{mobile,jdbcType=VARCHAR}, #{userType,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
+      #{incorrectTimes,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, #{creatorAccountId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{lastLoginTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+    <select id="selectAdminIdByUserId" parameterType="Integer" resultType="com.linayi.entity.account.AdminAccount">
+     select * from `admin_account` where `user_id`=#{employeeId}
+  </select>
+    <insert id="insertSelective" parameterType="com.linayi.entity.account.AdminAccount">
+        insert into admin_account
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="accountId != null">
+                account_id,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="userType != null">
+                user_type,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="incorrectTimes != null">
+                incorrect_times,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="creatorAccountId != null">
+                creator_account_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="lastLoginTime != null">
+                last_login_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="accountId != null">
+                #{accountId,jdbcType=INTEGER},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="userType != null">
+                #{userType,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="incorrectTimes != null">
+                #{incorrectTimes,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorAccountId != null">
+                #{creatorAccountId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastLoginTime != null">
+                #{lastLoginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <select id="selectAdminAccountList" resultType="com.linayi.entity.account.AdminAccount">
+        select
+        `account_id`,`user_name`,`password`,`mobile`,`user_type`,`user_id`,`incorrect_times`,`status`,`creator_account_id`,`create_time`,`last_login_time`,`update_time`
+        from `admin_account`
+        <where>
+            <if test="accountId!=null and accountId!=''">
+                and account_id=#{accountId}
+            </if>
+            <if test="userName!=null and userName!=''">
+                and user_name=#{userName}
+            </if>
+            <if test="password!=null and password!=''">
+                and password=#{password}
+            </if>
+            <if test="mobile!=null and mobile!=''">
+                and mobile=#{mobile}
+            </if>
+            <if test="userType!=null and userType!=''">
+                and user_type=#{userType}
+            </if>
+            <if test="userId!=null and userId!=''">
+                and user_id=#{userId}
+            </if>
+            <if test="incorrectTimes!=null and incorrectTimes!=''">
+                and incorrect_times=#{incorrectTimes}
+            </if>
+            <if test="status!=null and status!=''">
+                and status=#{status}
+            </if>
+            <if test="creatorAccountId!=null and creatorAccountId!=''">
+                and creator_account_id=#{creatorAccountId}
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                and create_time=#{createTime}
+            </if>
+            <if test="lastLoginTime!=null and lastLoginTime!=''">
+                and last_login_time=#{lastLoginTime}
+            </if>
+            <if test="updateTime!=null and updateTime!=''">
+                and update_time=#{updateTime}
+            </if>
+        </where>
+        order by account_id desc
+    </select>
+    <select id="selectAdminAccountListJoinUserList" resultType="com.linayi.entity.account.Account">
+        select a.`account_id`, a.`user_name`, a.`mobile`, a.`password`, a.`user_type`, a.`user_id`,
+        a.`incorrect_times`, a.`status`, a.`create_time`, a.`last_login_time`, a.`update_time`, a.`creator_account_id`
+        from `admin_account` a
+        <where>
+            <if test="accountId!=null and accountId!=''">
+                and a.account_id=#{accountId}
+            </if>
+            <if test="userName!=null and userName!=''">
+                and a.user_name=#{userName}
+            </if>
+            <if test="mobile!=null and mobile!=''">
+                and a.mobile=#{mobile}
+            </if>
+            <if test="password!=null and password!=''">
+                and a.password=#{password}
+            </if>
+            <if test="openId!=null and openId!=''">
+                and a.open_id=#{openId}
+            </if>
+            <if test="userType!=null and userType!=''">
+                and a.user_type=#{userType}
+            </if>
+            <if test="userId!=null and userId!=''">
+                and a.user_id=#{userId}
+            </if>
+            <if test="incorrectTimes!=null and incorrectTimes!=''">
+                and a.incorrect_times=#{incorrectTimes}
+            </if>
+            <if test="status!=null and status!=''">
+                and a.status=#{status}
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                and a.create_time=#{createTime}
+            </if>
+            <if test="lastLoginTime!=null and lastLoginTime!=''">
+                and a.last_login_time=#{lastLoginTime}
+            </if>
+            <if test="updateTime!=null and updateTime!=''">
+                and a.update_time=#{updateTime}
+            </if>
+            <if test="creatorAccountId!=null and creatorAccountId!=''">
+                and a.creator_account_id=#{creatorAccountId}
+            </if>
+            <!--<if test="realName!=null and realName!=''">
+                and u.real_name=#{realName}
+            </if>-->
+        </where>
+        order by a.account_id desc
+    </select>
+
+    <select id="selectAdminAccountByaccountId" resultType="com.linayi.entity.account.Account">
+ 		select `account_id`,`user_name`,`mobile`,`password`,`user_type`,`user_id`,`incorrect_times`,`status`,`create_time`,`last_login_time`,`update_time`,`creator_account_id` from `admin_account` where account_id=#{value}
+ 	</select>
+
+    <delete id="deleteAccountAdminByaccountId">
+ 		delete from `admin_account` where account_id=#{value}
+ 	</delete>
+
+    <update id="updateAccountAllByaccountId" parameterType="com.linayi.entity.account.Account">
+ 		update `admin_account` set
+ 		`mobile`=#{mobile},`password`=#{password}
+ 		where account_id=#{accountId}
+ 	</update>
+
+    <select id="selectAccountByaccountId" resultType="com.linayi.entity.account.Account">
+ 		select `mobile` from `admin_account` where account_id=#{accountId}
+ 	</select>
+    <select id="selectByName" resultType="com.linayi.entity.account.Account" parameterType="String">
+        select * from `admin_account` where `user_name` = #{userName}
+    </select>
+
+    <insert id="insertAccountAdmin" parameterType="com.linayi.entity.account.Account" useGeneratedKeys="true"
+            keyProperty="accountId">
+ 		insert into `admin_account`(`account_id`,`user_name`,`mobile`,`password`,`user_type`,`user_id`,`incorrect_times`,`status`,`create_time`,`last_login_time`,`update_time`,`creator_account_id`)
+ 		values (#{accountId},#{userName},#{mobile},#{password},#{userType},#{userId},#{incorrectTimes},#{status},#{createTime},#{lastLoginTime},#{updateTime},#{creatorAccountId})
+ 	</insert>
+
+    <update id="updateAdminStatus" parameterType="com.linayi.entity.account.Account">
+        update `admin_account` set `status`=#{status} where account_id=#{accountId}
+    </update>
+
+    <update id="resetAdminPassword" parameterType="com.linayi.entity.account.Account">
+        update `admin_account` set `password`=#{password} where account_id=#{accountId}
+    </update>
+
+</mapper>

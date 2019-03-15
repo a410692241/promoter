@@ -1,0 +1,12 @@
+.ui-jqgrid{
+	margin-top: 10px !important; 
+}
+.ui-jqgrid,.ui-jqgrid-view,.ui-jqgrid-hdiv,.ui-jqgrid-htable,.ui-jqgrid-bdiv,.ui-jqgrid-pager{
+	width:100% !important;
+}
+.ui-jqgrid-bdiv table {
+	width:calc( 100% - 20px ) !important;
+}
+.ui-jqgrid-bdiv{
+ 	height: auto !important; 
+}

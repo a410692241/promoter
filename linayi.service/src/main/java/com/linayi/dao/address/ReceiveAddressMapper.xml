@@ -1,0 +1,636 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.address.ReceiveAddressMapper">
+    <resultMap id="BaseResultMap" type="com.linayi.entity.user.ReceiveAddress">
+        <result column="receive_address_id" jdbcType="INTEGER" property="receiveAddressId"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="receiver_name" jdbcType="VARCHAR" property="receiverName"/>
+        <result column="sex" jdbcType="VARCHAR" property="sex"/>
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="address_one" jdbcType="VARCHAR" property="addressOne"/>
+        <result column="address_two" jdbcType="VARCHAR" property="addressTwo"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="address_type" jdbcType="VARCHAR" property="addressType"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.linayi.entity.user.ReceiveAddress">
+    insert into receive_address (receive_address_id, user_id, receiver_name, 
+      sex, mobile, address_one, 
+      address_two, status, update_time, 
+      create_time,address_type)
+    values (#{receiveAddressId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{receiverName,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{addressOne,jdbcType=VARCHAR}, 
+      #{addressTwo,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP},#{addressType,jdbcType=TIMESTAMP})
+  </insert>
+    <insert id="insertSelective" parameterType="com.linayi.entity.user.ReceiveAddress">
+        insert into receive_address
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="receiveAddressId != null">
+                receive_address_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="receiverName != null">
+                receiver_name,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="addressOne != null">
+                address_one,
+            </if>
+            <if test="addressTwo != null">
+                address_two,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="receiveAddressId != null">
+                #{receiveAddressId,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="receiverName != null">
+                #{receiverName,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="addressOne != null">
+                #{addressOne,jdbcType=VARCHAR},
+            </if>
+            <if test="addressTwo != null">
+                #{addressTwo,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <!--
+         数据库表的基本查询列名集合
+       -->
+    <sql id="Base_Column_List">
+        receive_address_id, receiver_name, sex, mobile, address_one, address_two, status, update_time, create_time , address_type
+    </sql>
+
+    <!--
+        Where子句
+      -->
+    <sql id="Base_Query_Where">
+        <if test="receiveAddressId != null">
+            and receive_address_id = #{receiveAddressId,jdbcType=INTEGER}
+        </if>
+        <if test="userId != null">
+            and user_id = #{userId,jdbcType=INTEGER}
+        </if>
+        <if test="receiverName != null">
+            and receiver_name = #{receiverName,jdbcType=VARCHAR}
+        </if>
+        <if test="sex != null">
+            and sex = #{sex,jdbcType=VARCHAR}
+        </if>
+        <if test="mobile != null">
+            and mobile = #{mobile,jdbcType=VARCHAR}
+        </if>
+        <if test="addressOne != null">
+            and address_one = #{addressOne,jdbcType=VARCHAR}
+        </if>
+        <if test="addressTwo != null">
+            and address_two = #{addressTwo,jdbcType=VARCHAR}
+        </if>
+        <if test="status != null">
+            and status = #{status,jdbcType=VARCHAR}
+        </if>
+        <if test="updateTime != null">
+            and update_time = #{updateTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="createTime != null">
+            and create_time = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+    </sql>
+
+    <!--
+        基本更新字段
+    -->
+    <sql id="Base_Update_Column">
+        <set>
+            <if test="receiveAddressId != null">
+                receive_address_id = #{receiveAddressId,jdbcType=INTEGER},
+            </if>
+            <if test="receiverName != null">
+                receiver_name = #{receiverName,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                sex = #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="addressOne != null">
+                address_one = #{addressOne,jdbcType=VARCHAR},
+            </if>
+            <if test="addressTwo != null">
+                address_two = #{addressTwo,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </set>
+    </sql>
+
+
+    <!--
+      根据主键查询数据库表
+    -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from receive_address
+        where receive_address_id = #{receiveAddressId,jdbcType=INTEGER}
+    </select>
+
+
+    <!--
+      根据主键删除数据库表中的记录
+    -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete FROM receive_address
+        where receive_address_id = #{receiveAddressId,jdbcType=INTEGER}
+    </delete>
+
+
+    <!--
+      根据主键有选择的更新数据库表
+    -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.linayi.entity.user.ReceiveAddress">
+        update receive_address
+        <include refid="Base_Update_Column"></include>
+        where receive_address_id = #{receiveAddressId,jdbcType=INTEGER}
+    </update>
+
+
+    <!--
+      根据主键更新数据库表
+    -->
+    <update id="updateByPrimaryKey" parameterType="com.linayi.entity.user.ReceiveAddress">
+        update receive_address
+        <set>
+            <if test="receiveAddressId != null">
+                receive_address_id = #{receiveAddressId,jdbcType=INTEGER},
+            </if>
+            <if test="receiverName != null">
+                receiver_name = #{receiverName,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                sex = #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="addressOne != null">
+                address_one = #{addressOne,jdbcType=VARCHAR},
+            </if>
+            <if test="addressTwo != null">
+                address_two = #{addressTwo,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </set>
+        where receive_address_id = #{receiveAddressId,jdbcType=INTEGER}
+    </update>
+
+    <!--
+      批量添加记录到数据库表中
+    -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into receive_address
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            receive_address_id, receiver_name, sex, mobile, address_one, address_two, status, update_time, create_time
+        </trim>
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.receiveAddressId,jdbcType=INTEGER}, #{item.receiverName,jdbcType=VARCHAR},
+                #{item.sex,jdbcType=VARCHAR}, #{item.mobile,jdbcType=VARCHAR}, #{item.addressOne,jdbcType=VARCHAR},
+                #{item.addressTwo,jdbcType=VARCHAR}, #{item.status,jdbcType=VARCHAR},
+                #{item.updateTime,jdbcType=TIMESTAMP}, #{item.createTime,jdbcType=TIMESTAMP}
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--
+      根据主键批量更新数据库表中的记录
+    -->
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="list" index="index" item="item" separator=";">
+            update receive_address
+            <set>
+                <trim suffixOverrides=",">
+                    <if test="item.receiveAddressId != null">
+                        receive_address_id = #{receiveAddressId,jdbcType=INTEGER},
+                    </if>
+                    <if test="item.receiverName != null">
+                        receiver_name = #{receiverName,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.sex != null">
+                        sex = #{sex,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.mobile != null">
+                        mobile = #{mobile,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.addressOne != null">
+                        address_one = #{addressOne,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.addressTwo != null">
+                        address_two = #{addressTwo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.status != null">
+                        status = #{status,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.updateTime != null">
+                        update_time = #{updateTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.createTime != null">
+                        create_time = #{createTime,jdbcType=TIMESTAMP}
+                    </if>
+                </trim>
+            </set>
+            <where>
+                <trim suffixOverrides=",">
+                    where receive_address_id = #{receiveAddressId,jdbcType=INTEGER}
+                </trim>
+            </where>
+        </foreach>
+    </update>
+
+    <!--
+     使用给定的字段名定义Where子句
+   -->
+    <sql id="Identifiers_Array_Conditions">
+        <foreach collection="array" index="index" item="item" separator=" and ">
+            <if test="item == receiveAddressId">
+                receive_address_id = #{receiveAddressId,jdbcType=INTEGER}
+            </if>
+            <if test="item == receiverName">
+                receiver_name = #{receiverName,jdbcType=VARCHAR}
+            </if>
+            <if test="item == sex">
+                sex = #{sex,jdbcType=VARCHAR}
+            </if>
+            <if test="item == mobile">
+                mobile = #{mobile,jdbcType=VARCHAR}
+            </if>
+            <if test="item == addressOne">
+                address_one = #{addressOne,jdbcType=VARCHAR}
+            </if>
+            <if test="item == addressTwo">
+                address_two = #{addressTwo,jdbcType=VARCHAR}
+            </if>
+            <if test="item == status">
+                status = #{status,jdbcType=VARCHAR}
+            </if>
+            <if test="item == updateTime">
+                update_time = #{updateTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="item == createTime">
+                create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </foreach>
+    </sql>
+
+    <sql id="Base_Select_User">
+        <if test="userId != null and userId != ''">
+            `user_id` = #{userId}
+        </if>
+    </sql>
+
+    <!--
+      存在即更新否则插入
+    -->
+    <update id="upsert" parameterType="com.linayi.entity.user.ReceiveAddress">
+        insert into receive_address
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            receive_address_id, receiver_name, sex, mobile, address_one, address_two, status, update_time, create_time
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{receiveAddressId,jdbcType=INTEGER}, #{receiverName,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR},
+            #{mobile,jdbcType=VARCHAR}, #{addressOne,jdbcType=VARCHAR}, #{addressTwo,jdbcType=VARCHAR},
+            #{status,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}
+        </trim>
+        on duplicate key update
+        <trim suffixOverrides=",">
+            #{receiveAddressId,jdbcType=INTEGER}, #{receiverName,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR},
+            #{mobile,jdbcType=VARCHAR}, #{addressOne,jdbcType=VARCHAR}, #{addressTwo,jdbcType=VARCHAR},
+            #{status,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}
+        </trim>
+    </update>
+
+
+    <!--
+      带有空值检查的存在即更新否则插入
+    -->
+    <update id="upsertSelective" parameterType="com.linayi.entity.user.ReceiveAddress">
+        insert into receive_address
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="receiveAddressId !=null ">
+                receive_address_id,
+            </if>
+            <if test="receiverName !=null ">
+                receiver_name,
+            </if>
+            <if test="sex !=null ">
+                sex,
+            </if>
+            <if test="mobile !=null ">
+                mobile,
+            </if>
+            <if test="addressOne !=null ">
+                address_one,
+            </if>
+            <if test="addressTwo !=null ">
+                address_two,
+            </if>
+            <if test="status !=null ">
+                status,
+            </if>
+            <if test="updateTime !=null ">
+                update_time,
+            </if>
+            <if test="createTime !=null ">
+                create_time
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="receiveAddressId !=null ">
+                receive_address_id = #{receiveAddressId,jdbcType=INTEGER},
+            </if>
+            <if test="receiverName !=null ">
+                receiver_name = #{receiverName,jdbcType=VARCHAR},
+            </if>
+            <if test="sex !=null ">
+                sex = #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile !=null ">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="addressOne !=null ">
+                address_one = #{addressOne,jdbcType=VARCHAR},
+            </if>
+            <if test="addressTwo !=null ">
+                address_two = #{addressTwo,jdbcType=VARCHAR},
+            </if>
+            <if test="status !=null ">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime !=null ">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime !=null ">
+                create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        on duplicate key update
+        <trim suffixOverrides=",">
+            <if test="receiveAddressId !=null ">
+                receive_address_id = #{receiveAddressId,jdbcType=INTEGER},
+            </if>
+            <if test="receiverName !=null ">
+                receiver_name = #{receiverName,jdbcType=VARCHAR},
+            </if>
+            <if test="sex !=null ">
+                sex = #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile !=null ">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="addressOne !=null ">
+                address_one = #{addressOne,jdbcType=VARCHAR},
+            </if>
+            <if test="addressTwo !=null ">
+                address_two = #{addressTwo,jdbcType=VARCHAR},
+            </if>
+            <if test="status !=null ">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime !=null ">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime !=null ">
+                create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+    </update>
+
+    <select id="query" resultMap="BaseResultMap" parameterType="com.linayi.entity.user.ReceiveAddress">
+        select
+        <include refid="Base_Column_List"/>
+        from receive_address
+        <where>
+        	and status = 'NORMAL' 
+            <include refid="Base_Query_Where"></include>
+        </where>
+    </select>
+
+    <select id="queryAddress" resultMap="BaseResultMap" parameterType="com.linayi.entity.user.User">
+        select
+        <include refid="Base_Column_List"/>
+        from receive_address
+        <where>
+        and status = 'NORMAL' and
+            <include refid="Base_Select_User"></include>
+           
+        </where>
+    </select>
+
+<select id="querySmallComunity" resultType="com.linayi.entity.area.SmallCommunity" parameterType="Integer">
+select * from `small_community` where `small_community_id` =#{smallCommunityId}
+</select>
+
+<select id="queryArea" parameterType="String" resultType="com.linayi.entity.area.Area">
+select * from `area` where `code` =#{code}
+</select>
+
+<select id="queryAreaParent" parameterType="String" resultType="com.linayi.entity.area.Area">
+select * from `area` where `code` =#{parent}
+</select>
+
+    <update id="accGoodsAddrDef" parameterType="com.linayi.entity.user.ReceiveAddress">
+      update `user` set `default_receive_address_id` = #{receiveAddressId} where `user_id` =#{userId}
+    </update>
+
+    <update id="delAccGoodsAddrDef" parameterType="com.linayi.entity.user.ReceiveAddress">
+      update `user` set `default_receive_address_id` = null where `user_id` =#{userId}
+    </update>
+
+    <select id="selectAddbyacGdAdId" parameterType="com.linayi.entity.user.ReceiveAddress" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from `receive_address`
+        <where>
+            <if test="receiveAddressId != null">
+                receive_address_id = #{receiveAddressId}
+            </if>
+            <if test="userId != null">
+               AND user_id = #{userId}
+            </if>
+            <if test="receiverName != null">
+                AND receiver_name = #{receiverName}
+            </if>
+            <if test="sex != null">
+                AND sex = #{sex}
+            </if>
+            <if test="addressType != null">
+                AND address_Type = #{addressType}
+            </if>
+            <if test="mobile != null">
+                AND mobile = #{mobile}
+            </if>
+            <if test="addressOne != null">
+                AND address_one = #{addressOne}
+            </if>
+            <if test="addressTwo != null and addressTwo != ''">
+                AND  address_two = #{addressTwo}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="getAddressListByAddress" parameterType="com.linayi.entity.user.ReceiveAddress" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from `receive_address`
+        <where>
+            <if test="receiveAddressId != null">
+                receive_address_id = #{receiveAddressId}
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="addressType != null">
+                AND address_type = #{addressType}
+            </if>
+            <if test="receiverName != null">
+                AND receiver_name = #{receiverName}
+            </if>
+            <if test="sex != null">
+                AND sex = #{sex}
+            </if>
+            <if test="mobile != null">
+                AND mobile = #{mobile}
+            </if>
+            <if test="addressOne != null">
+                AND address_one = #{addressOne}
+            </if>
+            <if test="addressTwo != null and addressTwo != ''">
+                AND  address_two = #{addressTwo}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="createTimeStart != null and createTimeStart != ''">
+                AND create_time <![CDATA[ >= ]]> #{createTimeStart}
+            </if>
+            <if test="createTimeEnd != null and createTimeEnd != ''">
+                AND create_time <![CDATA[ <= ]]> #{createTimeEnd}
+            </if>
+        </where>
+    </select>
+
+    <update id="saveAccGoodsAddr" parameterType="com.linayi.entity.user.ReceiveAddress">
+        update
+        `receive_address`
+        <include refid="Base_Update_Column"/>
+        where `receive_address_id` = #{receiveAddressId}
+    </update>
+<select id="selectAreaCodebyName" parameterType="String" resultType="String">
+select `code` from `area` where name=#{name}
+</select>
+    <select id="queryTotal" resultType="long">
+        select num(*) from receive_address
+    </select>
+
+
+    <delete id="deleteBatch">
+        delete from receive_address where receive_address_id in
+        <foreach item="receiveAddressId" collection="list" open="(" separator="," close=")">
+            #{receiveAddressId}
+        </foreach>
+    </delete>
+	<!--删除默认收货地址 Integer removedReceiveAddress(ReceiveAddress receiveAddress);  -->
+	<update id="removedReceiveAddress">
+		update
+			receive_address
+		set
+			status = 'REMOVED'
+		where
+			user_id = #{userId}
+		and
+			receive_address_id = #{receiveAddressId}
+	</update>
+	<!-- 通过用户ID和地址类型获取收货地址列表
+	List<ReceiveAddress> getListReceiveAddressByUserIdAndAdderssType(ReceiveAddress receiveAddress);  -->
+	<select id="getListReceiveAddressByUserIdAndAdderssType" resultType="com.linayi.entity.user.ReceiveAddress">
+		select 
+			receive_address_id,receiver_name,address_one,address_two,mobile
+		from
+			receive_address
+		where
+			user_id=#{userId}
+		and 
+			status='NORMAL'
+		and
+			address_type='CUSTOMER'
+		ORDER BY create_time DESC
+	</select>
+	<select id="getReceiveAddressById" resultType="com.linayi.entity.user.ReceiveAddress">
+        select
+			receive_address_id,receiver_name,address_one,address_two
+		from
+			receive_address
+		where
+			user_id=#{userId}
+    </select>
+</mapper>

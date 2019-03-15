@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.community.CommunitySupermarketMapper">
+  <insert id="insert" parameterType="com.linayi.entity.community.CommunitySupermarket">
+    insert into community_supermarket (community_supermarket_id, community_id, 
+      supermarket_id)
+    values (#{communitySupermarketId,jdbcType=BIGINT}, #{communityId,jdbcType=INTEGER}, 
+      #{supermarketId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linayi.entity.community.CommunitySupermarket">
+    insert into community_supermarket
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="communitySupermarketId != null">
+        community_supermarket_id,
+      </if>
+      <if test="communityId != null">
+        community_id,
+      </if>
+      <if test="supermarketId != null">
+        supermarket_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="communitySupermarketId != null">
+        #{communitySupermarketId,jdbcType=BIGINT},
+      </if>
+      <if test="communityId != null">
+        #{communityId,jdbcType=INTEGER},
+      </if>
+      <if test="supermarketId != null">
+        #{supermarketId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  <!--通过社区Id获取超市Id集合 List<Integer> getSupermarketIdList(Integer communityId);-->
+  <select id="getSupermarketIdList" resultType="java.lang.Integer">
+  	SELECT 
+      	supermarket_id
+    FROM
+    	community_supermarket
+ 	WHERE
+    	community_id = #{communityId}
+ 
+  </select>
+  
+  <!-- 删除数据，通过超市ID和社区ID Integer deleteCommunitySupermarket(CommunitySupermarket communitySupermarket); -->
+  <delete id="deleteCommunitySupermarket">
+  		DELETE FROM
+  			community_supermarket
+  		WHERE
+  			community_id = #{communityId} 
+  		AND
+  			supermarket_id = #{supermarketId}	
+  </delete>
+  
+  
+    <!-- 根据社区id获取绑定的超市id集合 -->
+  <select id="getsupermarketIdBycommunityId" resultType="java.lang.Integer">
+  	SELECT distinct
+  		supermarket_id
+  	FROM
+  		community_supermarket
+  	WHERE
+  		community_id=#{communityId}			
+  </select>
+
+  <select id="getCommunityIdBysupermarketId" resultType="java.lang.Integer">
+    SELECT
+	community_id
+FROM
+	community_supermarket
+WHERE
+	supermarket_id=#{supermarketId,jdbcType=INTEGER}
+  </select>
+  
+</mapper>

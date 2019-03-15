@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.goods.BrandMapper">
+    <select id="getBrandById" parameterType="java.lang.Integer" resultType="com.linayi.entity.goods.Brand">
+    select brand_id brandId, name, logo, order_no orderNo, status, update_time updateTime, create_time createTime
+    from brand where status = 'NORMAL' and brand_id = #{brandId}
+  </select>
+
+    <select id="getBrandAll" resultType="com.linayi.entity.goods.Brand">
+        select brand_id brandId, `NAME`, logo, order_no orderNo, status, update_time updateTime, create_time createTime
+        from brand
+        <where>
+            <if test="name != null and name !=''">
+                `NAME` = #{name}
+            </if>
+        </where>
+    </select>
+
+    <select id="getBrandsByName" resultType="com.linayi.entity.goods.Brand">
+        select brand_id brandId, `NAME`, logo, order_no orderNo, status, update_time updateTime, create_time createTime
+        from brand
+        <where>
+            <if test="name != null">
+                `NAME` = #{name}
+            </if>
+        </where>
+        <if test="offset != null">
+            LIMIT #{offset},#{num}
+        </if>
+    </select>
+    <insert id="insert" parameterType="com.linayi.entity.goods.Brand" useGeneratedKeys="true" keyProperty="brandId">
+    insert into brand (brand_id, NAME, logo, 
+      order_no, STATUS, update_time, 
+      create_time)
+    values (#{brandId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, 
+      #{orderNo,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+    <insert id="insertSelective" parameterType="com.linayi.entity.goods.Brand" useGeneratedKeys="true"
+            keyProperty="brandId">
+        insert into brand
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="brandId != null">
+                brand_id,
+            </if>
+            <if test="name != null">
+                NAME,
+            </if>
+            <if test="logo != null">
+                logo,
+            </if>
+            <if test="orderNo != null">
+                order_no,
+            </if>
+            <if test="status != null">
+                STATUS,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="brandId != null">
+                #{brandId,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="logo != null">
+                #{logo,jdbcType=VARCHAR},
+            </if>
+            <if test="orderNo != null">
+                #{orderNo,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+
+    <!-- 根据品牌名模糊查找品牌 -->
+    <!--List<Brand> getBrandByName(String brandName) -->
+    <select id="getBrandByName" resultType="com.linayi.entity.goods.Brand">
+  	SELECT
+  		brand_id brandId,
+        name,
+		logo,
+   		order_no orderNo,
+   		status,
+   		update_time updateTime,
+   		create_time createTime
+  	FROM
+  		brand
+  	WHERE 
+  		name like concat('%',#{name},'%')	
+
+  	</select>
+    <delete id="deleteByBrandId" parameterType="Integer">
+    delete from `brand` where `brand_id` =#{brandId}
+  </delete>
+
+    <insert id="insertBrandExcel" parameterType="String">
+    insert into `brand` (`name`) values(#{name})
+  </insert>
+
+    <insert id="insertBrand" parameterType="com.linayi.entity.goods.Brand">
+    insert into `brand` (`name`,`status`) values (#{name},#{status})
+  </insert>
+    <select id="selectBrandByName" parameterType="String" resultType="com.linayi.entity.goods.Brand">
+  select * from `brand` where `name`=#{name}
+</select>
+
+</mapper>

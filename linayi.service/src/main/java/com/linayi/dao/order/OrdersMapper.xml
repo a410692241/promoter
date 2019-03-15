@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.order.OrdersMapper">
+  <resultMap id="BaseResultMap" type="com.linayi.entity.order.Orders">
+    <result column="orders_id" jdbcType="BIGINT" property="ordersId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="receiver_name" jdbcType="VARCHAR" property="receiverName" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="address_one" jdbcType="VARCHAR" property="addressOne" />
+    <result column="address_two" jdbcType="VARCHAR" property="addressTwo" />
+    <result column="address_three" jdbcType="VARCHAR" property="addressThree" />
+    <result column="pay_way" jdbcType="VARCHAR" property="payWay" />
+    <result column="save_amount" jdbcType="INTEGER" property="saveAmount" />
+    <result column="service_fee" jdbcType="INTEGER" property="serviceFee" />
+    <result column="extra_fee" jdbcType="INTEGER" property="extraFee" />
+    <result column="arrive_time" jdbcType="TIMESTAMP" property="arriveTime" />
+    <result column="actual_arrive_time" jdbcType="TIMESTAMP" property="actualArriveTime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="amount" jdbcType="INTEGER" property="amount" />
+    <result column="user_status" jdbcType="VARCHAR" property="userStatus" />
+    <result column="community_status" jdbcType="VARCHAR" property="communityStatus" />
+    <result column="community_id" jdbcType="INTEGER" property="communityId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="delivery_finish_time" jdbcType="TIMESTAMP" property="deliveryFinishTime" />
+    <result column="deliverer_id" jdbcType="INTEGER" property="delivererId" />
+  <result column="order_type" jdbcType="VARCHAR" property="orderType"/>
+  </resultMap>
+  <update id="updateOrderById" parameterType="com.linayi.entity.order.Orders">
+    update orders
+    <set>
+      <if test="receiverName != null">receiver_name=#{receiverName},</if>
+      <if test="mobile != null">mobile=#{mobile},</if>
+      <if test="addressOne != null">address_one=#{addressOne},</if>
+      <if test="addressTwo != null">address_two=#{addressTwo},</if>
+      <if test="addressThree != null">address_three=#{addressThree},</if>
+      <if test="payWay != null">pay_way=#{payWay},</if>
+      <if test="saveAmount != null">save_amount=#{saveAmount},</if>
+      <if test="extraFee != null">extra_fee=#{extraFee},</if>
+      <if test="serviceFee != null">service_fee=#{serviceFee},</if>
+      <if test="arriveTime != null">email=#{arriveTime},</if>
+      <if test="actualArriveTime != null">actual_arrive_time=#{actualArriveTime},</if>
+      <if test="remark != null">remark=#{remark},</if>
+      <if test="quantity != null">email=#{quantity},</if>
+      <if test="amount != null">amount=#{amount},</if>
+      <if test="userStatus != null">user_status=#{userStatus},</if>
+      <if test="communityStatus != null">community_status=#{communityStatus},</if>
+      <if test="communityId != null">community_id=#{communityId},</if>
+      <if test="userId != null">user_id=#{userId}</if>
+    </set>
+    where orders_id=#{ordersId}
+  </update>
+  <select id="getOrderList" resultMap="BaseResultMap">
+    select orders_id, user_id, receiver_name, mobile, address_one, address_two, address_three, pay_way, save_amount, service_fee, extra_fee, arrive_time, actual_arrive_time,
+    remark, quantity, amount, user_status, community_status, community_id, update_time, create_time from orders
+    <where>
+    <if test="userStatus == 'ALL'">
+      and user_status NOT IN ('REFUNDED','REFUSED')
+    </if>
+    <if test="userStatus == 'FINISHED'">
+      and community_status = 'DELIVER_FINISHED'
+    </if>
+     <if test="userStatus == 'IN_PROGRESS'">
+      and community_status != 'DELIVER_FINISHED'
+    </if>
+     <if test="userStatus == 'CANCELED'">
+      and user_Status = 'CANCELED'
+    </if>
+     <if test="userStatus == 'REFUND'">
+      and user_Status IN ('REFUSED','REFUNDED')
+    </if>
+    <if test="ordersId != null">
+      and orders_id = #{ordersId}
+    </if>
+    <if test="userId != null">
+      AND user_id = #{userId}
+    </if>
+    <if test="receiverName != null">
+      AND receiver_name = #{receiverName}
+    </if>
+    <if test="mobile != null and mobile != ''">
+      AND mobile = #{mobile}
+    </if>
+    <if test="addressOne != null">
+      AND address_one = #{addressOne}
+    </if>
+    <if test="addressTwo != null">
+      AND address_two = #{addressTwo}
+    </if><if test="addressThree != null">
+    AND address_three = #{addressThree}
+  </if>
+    <if test="payWay != null">
+      AND pay_way = #{payWay}
+    </if>
+    <if test="saveAmount != null">
+      AND save_amount = #{saveAmount}
+    </if>
+    <if test="serviceFee != null">
+      AND service_fee = #{serviceFee}
+    </if>
+    <if test="extraFee != null">
+      AND extra_fee = #{extraFee}
+    </if>
+    <if test="arriveTime != null">
+      AND arrive_time = #{arriveTime}
+    </if>
+    <if test="actualArriveTime != null">
+      AND actual_arrive_time = #{actualArriveTime}
+    </if>
+    <if test="remark != null">
+      AND remark = #{remark}
+    </if>
+    <if test="quantity != null">
+      AND quantity = #{quantity}
+    </if>
+    <if test="amount != null">
+      AND amount = #{amount}
+    </if>
+    <if test="communityStatus != null and communityStatus == 'PROCURING'">
+      AND community_status = #{communityStatus}
+    </if>
+    <if test="communityStatus != null and communityStatus == 'DELIVERING'">
+      AND community_status IN ('PROCURE_FINISHED','RECEIVED','PACKED','DELIVERING')
+    </if>
+    <if test="communityStatus == 'CANCELED'">
+        and community_status = 'CANCELED'
+    </if>
+    <if test="communityId != null">
+      AND community_id = #{communityId}
+    </if>
+    <if test="updateTime != null">
+      AND update_time = #{updateTime}
+    </if>
+    <if test="createTimeStart != null and createTimeStart != ''">
+      AND create_time <![CDATA[ >= ]]> #{createTimeStart}
+    </if>
+    <if test="createTimeEnd != null and createTimeEnd != ''">
+      AND create_time <![CDATA[ <= ]]> #{createTimeEnd}
+    </if>
+    </where>
+    order by `create_time` desc
+  </select>
+    <select id="getALLOrder" resultMap="BaseResultMap">
+        select orders_id, user_id, receiver_name, mobile, address_one, address_two, address_three, pay_way, save_amount, service_fee, extra_fee, arrive_time, actual_arrive_time,
+        remark, quantity, amount, user_status, community_status, community_id, update_time, create_time from orders
+        <where>
+            <if test="userStatus != null and userStatus != ''">
+                and user_status = #{userStatus}
+            </if>
+            <if test="ordersId != null">
+                and orders_id = #{ordersId}
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="addressType != null">
+                AND address_Type = #{addressType}
+            </if>
+            <if test="receiverName != null">
+                AND receiver_name = #{receiverName}
+            </if>
+            <if test="mobile != null and mobile != ''">
+                AND mobile = #{mobile}
+            </if>
+            <if test="addressOne != null">
+                AND address_one = #{addressOne}
+            </if>
+            <if test="addressTwo != null">
+                AND address_two = #{addressTwo}
+            </if>
+            <if test="addressThree != null">
+              AND address_three = #{addressThree}
+            </if>
+            <if test="payWay != null">
+                AND pay_way = #{payWay}
+            </if>
+            <if test="saveAmount != null">
+                AND save_amount = #{saveAmount}
+            </if>
+            <if test="serviceFee != null">
+                AND service_fee = #{serviceFee}
+            </if>
+            <if test="extraFee != null">
+                AND extra_fee = #{extraFee}
+            </if>
+            <if test="arriveTime != null">
+                AND arrive_time = #{arriveTime}
+            </if>
+            <if test="actualArriveTime != null">
+                AND actual_arrive_time = #{actualArriveTime}
+            </if>
+            <if test="remark != null">
+                AND remark = #{remark}
+            </if>
+            <if test="quantity != null">
+                AND quantity = #{quantity}
+            </if>
+            <if test="amount != null">
+                AND amount = #{amount}
+            </if>
+            <if test="communityStatus != null and communityStatus != ''">
+                AND community_status = #{communityStatus}
+            </if>
+            <if test="communityId != null">
+                AND community_id = #{communityId}
+            </if>
+            <if test="updateTime != null">
+                AND update_time = #{updateTime}
+            </if>
+            <if test="createTimeStart != null and createTimeStart != ''">
+                AND create_time <![CDATA[ >= ]]> #{createTimeStart}
+            </if>
+            <if test="createTimeEnd != null and createTimeEnd != ''">
+                AND create_time <![CDATA[ <= ]]> #{createTimeEnd}
+            </if>
+            <if test="receiveAddressId != null">
+                AND receive_address_id = #{receiveAddressId}
+            </if>
+        </where>
+        order by `create_time` desc
+    </select>
+    <select id="getALLOrderByOrderMan" resultMap="BaseResultMap">
+        select o.orders_id, o.user_id, o.receiver_name,o.mobile, o.address_one, o.address_two, o.address_three, o.pay_way, o.save_amount, o.service_fee, o.extra_fee, o.arrive_time, o.actual_arrive_time,
+        o.remark, o.quantity, o.amount, o.user_status, o.community_status, o.community_id, o.update_time, o.create_time from orders o
+        join member_order mo on mo.orders_id = o.orders_id
+        join open_member_info omi on omi.open_member_info_id = mo.open_member_id AND omi.order_man_id = #{orderManId}
+        <where>
+            <if test="userId != null">
+                o.user_id = #{userId}
+            </if>
+            <if test="receiveAddressId != null">
+                o.receive_address_id = #{receiveAddressId}
+            </if>
+        </where>
+    </select>
+
+  <insert id="insert" parameterType="com.linayi.entity.order.Orders" useGeneratedKeys="true" keyProperty="ordersId">
+    insert into orders (orders_id, user_id, receiver_name, 
+      mobile, address_one, address_two, address_three,
+      pay_way, save_amount, service_fee, 
+      extra_fee, arrive_time, actual_arrive_time, 
+      remark, quantity, amount, receive_address_id,
+      user_status, community_status, community_id, address_type,
+      update_time, create_time <if test="orderType!=null and orderType!=''">,order_type</if>)
+    values (#{ordersId,jdbcType=BIGINT}, #{userId,jdbcType=INTEGER}, #{receiverName,jdbcType=VARCHAR}, 
+      #{mobile,jdbcType=VARCHAR}, #{addressOne,jdbcType=VARCHAR}, #{addressTwo,jdbcType=VARCHAR}, #{addressThree,jdbcType=VARCHAR},
+      #{payWay,jdbcType=VARCHAR}, #{saveAmount,jdbcType=INTEGER}, #{serviceFee,jdbcType=INTEGER}, 
+      #{extraFee,jdbcType=INTEGER}, #{arriveTime,jdbcType=TIMESTAMP}, #{actualArriveTime,jdbcType=TIMESTAMP},
+      #{remark,jdbcType=VARCHAR}, #{quantity,jdbcType=INTEGER}, #{amount,jdbcType=INTEGER}, #{receiveAddressId,jdbcType=INTEGER},
+      #{userStatus,jdbcType=VARCHAR}, #{communityStatus,jdbcType=VARCHAR}, #{communityId,jdbcType=INTEGER}, #{addressType,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}<if test="orderType!=null and orderType!=''">,#{orderType}</if>)
+  </insert>
+  <insert id="insertSelective" parameterType="com.linayi.entity.order.Orders">
+    insert into orders
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ordersId != null">
+        orders_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="receiverName != null">
+        receiver_name,
+      </if>
+      <if test="mobile != null">
+        mobile,
+      </if>
+      <if test="addressOne != null">
+        address_one,
+      </if>
+      <if test="addressTwo != null">
+        address_two,
+      </if><if test="addressThree != null">
+      address_three,
+    </if>
+      <if test="payWay != null">
+        pay_way,
+      </if>
+      <if test="saveAmount != null">
+        save_amount,
+      </if>
+      <if test="serviceFee != null">
+        service_fee,
+      </if>
+      <if test="extraFee != null">
+        extra_fee,
+      </if>
+      <if test="arriveTime != null">
+        arrive_time,
+      </if>
+      <if test="actualArriveTime != null">
+        actual_arrive_time,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="quantity != null">
+        quantity,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="userStatus != null">
+        user_status,
+      </if>
+      <if test="communityStatus != null">
+        community_status,
+      </if>
+      <if test="communityId != null">
+        community_id,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ordersId != null">
+        #{ordersId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="receiverName != null">
+        #{receiverName,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null">
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="addressOne != null">
+        #{addressOne,jdbcType=VARCHAR},
+      </if>
+      <if test="addressTwo != null">
+        #{addressTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="addressThree != null">
+        #{addressThree,jdbcType=VARCHAR},
+      </if>
+      <if test="payWay != null">
+        #{payWay,jdbcType=VARCHAR},
+      </if>
+      <if test="saveAmount != null">
+        #{saveAmount,jdbcType=INTEGER},
+      </if>
+      <if test="serviceFee != null">
+        #{serviceFee,jdbcType=INTEGER},
+      </if>
+      <if test="extraFee != null">
+        #{extraFee,jdbcType=INTEGER},
+      </if>
+      <if test="arriveTime != null">
+        #{arriveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actualArriveTime != null">
+        #{actualArriveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null">
+        #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="userStatus != null">
+        #{userStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="communityStatus != null">
+        #{communityStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="communityId != null">
+        #{communityId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="getAfterOrderList" resultMap="BaseResultMap">
+    select orders_id, user_id, receiver_name, mobile, address_one, address_two, address_three, pay_way, save_amount, service_fee, extra_fee, arrive_time, actual_arrive_time,
+    remark, quantity, amount, user_status, community_status, community_id, update_time, create_time
+    from orders
+    where user_id = #{userId} AND (user_status = #{refusReceive} OR user_status = #{refunded})
+    order by create_time desc
+  </select>
+
+  <select id="getGoodsOrderSku" resultType="com.linayi.entity.order.OrdersSku">
+     select
+      o.orders_id ordersId,og.orders_goods_id ordersGoodsId,gs.goods_sku_id goodsSkuId,pt.price price,gs.image,o.community_id communityId,gs.NAME goodsName,o.user_status receiveOption,s.name supermarketName,o.create_time createTime,og.quantity,o.community_status communityStatus,pt.procure_status procureStatus
+    from
+      orders o join orders_goods og on o.orders_id=og.orders_id join goods_sku gs on  og.goods_sku_id=gs.goods_sku_id join procurement_task pt on pt.orders_goods_id = og.orders_goods_id join supermarket s on s.supermarket_id=pt.supermarket_id
+    where
+      o.orders_id = #{ordersId} and pt.procurement_task_id  in
+			(SELECT max(procurement_task_id) procurement_task_id FROM procurement_task where orders_id = o.orders_id GROUP BY orders_goods_id) ORDER BY og.orders_goods_id asc
+  </select>
+
+  <select id="getAllGoodsOrderSku" resultType="com.linayi.entity.order.OrdersSku">
+    select
+      o.orders_id ordersId,o.community_id communityId,gs.NAME goodsName,o.user_status receiveOption,gs.goods_sku_id goodsSkuId, og.price,s.name supermarketName,o.create_time createTime,og.quantity,og.procure_status procureStatus,o.community_status communityStatus,og.orders_goods_id ordersGoodsId
+    from
+      orders o join orders_goods og on o.orders_id=og.orders_id join goods_sku gs on  og.goods_sku_id=gs.goods_sku_id join supermarket s on s.supermarket_id=og.supermarket_id
+  </select>
+
+  <select id="getBuyOrderList" resultMap="BaseResultMap">
+    select os.orders_id, os.user_id, os.receiver_name, os.mobile, os.address_one, os.address_two, os.address_three, os.pay_way, os.save_amount, os.service_fee, os.extra_fee, os.arrive_time, os.actual_arrive_time,
+    os.remark, os.quantity, os.amount, os.user_status, os.community_status, os.community_id, os.update_time, os.create_time
+    from orders os join orders_goods ogs on ogs.orders_id = os.orders_id where ogs.supermarket_id = #{supermarketId} and os.community_status = 'PROCURING'
+  </select>
+
+  <select id="getOrderSupermarketList" resultType="com.linayi.entity.order.OrdersSku">
+    select
+      orders_goods_id ordersGoodsId,supermarket_list
+    from
+      orders_goods
+    where
+      orders_id=#{ordersId}
+    and
+      goods_sku_id=#{goodsSkuId}
+  </select>
+  <select id="getOrderById" resultMap="BaseResultMap">
+    select orders_id, user_id, receiver_name, mobile, address_one, address_two, address_three, pay_way, save_amount, service_fee, extra_fee, arrive_time, actual_arrive_time,
+    remark, quantity, amount, user_status, community_status, community_id,deliverer_id,delivery_finish_time, update_time, create_time from orders where orders_id = #{ordersId}
+  </select>
+
+  <!-- 根据社区id和社区状态为已收货  查询订单表 -->
+  <!-- List<Orders> getOrderListByCommunityIdAndRECEIVED(Orders order) -->
+  <select id="getOrderListByCommunityIdAndRECEIVED" resultType="com.linayi.entity.order.Orders">
+    SELECT
+      orders_id, user_id, receiver_name, mobile, address_one, address_two, address_three, pay_way, save_amount, service_fee, extra_fee, arrive_time, actual_arrive_time,
+        remark, quantity, amount, user_status, community_status, community_id, update_time, create_time
+      FROM
+        orders
+      WHERE
+          community_status = 'RECEIVED'
+          AND community_id = #{communityId}
+  </select>
+<!--通过订单Id修改状态为配送中   Integer updateStatusByOrdersId(Long ordersId); -->
+	<update id="updateStatusByOrdersId">
+		update
+			orders
+		set
+			community_status='DELIVERING'
+		where
+			orders_id = #{ordersId}
+	</update>
+
+	<!-- 通过订单ordersId查询订单信息 -->
+	<select id="getOrdersByOrdersId" resultType="com.linayi.entity.order.Orders">
+	  SELECT
+		  orders_id,
+		  user_id,
+		  receiver_name, 
+		  mobile, 
+		  address_one, 
+		  address_two, 
+		  address_three, 
+		  pay_way, 
+		  save_amount, 
+		  service_fee, 
+		  extra_fee, 
+		  arrive_time, 
+		  actual_arrive_time,
+          remark, 
+          quantity, 
+          amount, 
+          user_status, 
+          community_status, 
+          community_id, 
+          update_time, 
+          create_time
+       FROM
+       		orders
+       WHERE
+			orders_id=#{ordersId}
+
+	</select>
+
+<!--通过订单Id修改状态为已装箱   Integer updateStatusByOrdersId2(Long ordersId); -->
+	<update id="updateStatusByOrdersId2">
+		update
+			orders
+		set
+			deliverer_id=#{delivererId},
+			community_status='PACKED'
+		where
+			orders_id = #{ordersId}
+	</update>
+
+	<update id="updateFinishedStatusByOrdersId">
+      update
+			orders
+		set
+			community_status='DELIVER_FINISHED'
+		where
+			orders_id = #{ordersId}
+    </update>
+
+	<select id="getOrdersBydelivererIdAndStatus" parameterType="com.linayi.entity.order.Orders" resultType="com.linayi.entity.order.Orders">
+      SELECT
+        o.orders_id,o.user_id,o.receiver_name,o.mobile,o.address_one,o.address_two,o.address_three,o.pay_way,o.save_amount,o.service_fee,o.arrive_time,
+        o.actual_arrive_time,o.remark,o.quantity,o.amount,o.user_status,o.community_status,o.community_id,o.deliverer_id,o.delivery_finish_time,
+        o.update_time,o.create_time
+      FROM
+        orders o JOIN order_box ob ON o.orders_id=ob.orders_id
+      WHERE
+        o.community_status IN ('PACKED','DELIVERING')
+      AND
+        o.community_id = 1
+      <if test="delivererId != null">
+      AND
+      o.deliverer_id = #{delivererId}
+    </if>
+      ORDER BY
+        o.community_status = 'PACKED',ob.box_time DESC
+    </select>
+
+<select id="getOrdersByUserIdAndFinishStatus" parameterType="com.linayi.entity.order.Orders" resultType="com.linayi.entity.order.Orders">
+  SELECT
+    o.orders_id,o.user_id,o.receiver_name,o.mobile,o.address_one,o.address_two,o.address_three,o.pay_way,o.save_amount,o.service_fee,o.arrive_time,
+    o.actual_arrive_time,o.remark,o.quantity,o.amount,o.user_status,o.community_status,o.community_id,o.deliverer_id,o.delivery_finish_time,
+    o.update_time,o.create_time
+  FROM
+    orders o JOIN order_box ob ON o.orders_id=ob.orders_id
+  WHERE
+    o.community_status=#{communityStatus}
+  <if test="delivererId != null">
+  AND
+    o.deliverer_id = #{delivererId}
+  </if>
+  ORDER BY
+    ob.box_time DESC
+</select>
+
+<update id="updateOrdersCommunityStatusByOrdersId">
+  UPDATE
+    orders
+  SET
+    community_status = #{communityStatus},
+    delivery_finish_time = #{deliveryFinishTime}
+  WHERE
+    orders_id = #{ordersId}
+</update>
+<select id="getOrderListDelivery" resultMap="BaseResultMap">
+    select orders_id, user_id, receiver_name, mobile, address_one, address_two, address_three, pay_way, save_amount, service_fee, extra_fee, arrive_time, actual_arrive_time,
+    remark, quantity, amount, user_status, community_status, community_id, update_time, create_time from orders
+   	where
+    <if test="communityStatus != null and communityStatus != ''">
+       community_status = #{communityStatus}
+    </if>
+    <if test="communityId != null">
+      AND community_id = #{communityId}
+    </if>
+    order by create_time desc
+  </select>
+  <select id="getOrdersByOrderMan" resultMap="BaseResultMap">
+      select o.orders_id ordersId,o.amount amount from orders o
+      join member_order mo on mo.orders_id = o.orders_id
+      join open_member_info omi on omi.open_member_info_id =  mo.open_member_id
+      join order_man_member omm on omm.open_member_id = mo.open_member_id
+      <where>
+          <if test="orderManId != null">
+              omm.order_man_id = #{orderManId}
+          </if>
+          <if test="userId != null">
+              AND o.user_id = #{userId}
+          </if>
+          <if test="createTimeStart != null and createTimeStart != ''">
+              AND o.create_time <![CDATA[ >= ]]> #{createTimeStart}
+          </if>
+          <if test="createTimeEnd != null and createTimeEnd != ''">
+              AND o.create_time <![CDATA[ <= ]]> #{createTimeEnd}
+          </if>
+      </where>
+  </select>
+</mapper>

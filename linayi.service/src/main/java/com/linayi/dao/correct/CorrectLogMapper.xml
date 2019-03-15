@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.correct.CorrectLogMapper">
+  <insert id="insert" parameterType="com.linayi.entity.correct.CorrectLog">
+    insert into correct_log ( correct_id, operation,
+      operator_id, operator_type, create_time
+      )
+    values ( #{correctId,jdbcType=INTEGER}, #{operateStatus,jdbcType=VARCHAR},
+      #{operatorId,jdbcType=INTEGER}, #{operatorType,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linayi.entity.correct.CorrectLog">
+    insert into correct_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="correctLogId != null">
+        correct_log_id,
+      </if>
+      <if test="correctId != null">
+        correct_id,
+      </if>
+      <if test="operateStatus != null">
+        operation,
+      </if>
+      <if test="operatorId != null">
+        operator_id,
+      </if>
+      <if test="operatorType != null">
+        operator_type,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="correctLogId != null">
+        #{correctLogId,jdbcType=BIGINT},
+      </if>
+      <if test="correctId != null">
+        #{correctId,jdbcType=INTEGER},
+      </if>
+      <if test="operateStatus != null">
+        #{operateStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorId != null">
+        #{operatorId,jdbcType=INTEGER},
+      </if>
+      <if test="operatorType != null">
+        #{operatorType,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>

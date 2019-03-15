@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linayi.dao.delivery.DeliveryBoxGoodsMapper" >
+  <resultMap id="BaseResultMap" type="com.linayi.entity.delivery.DeliveryBoxGoods" >
+    <id column="delivery_box_goods_id" property="deliveryBoxGoodsId" jdbcType="BIGINT" />
+    <result column="delivery_box_id" property="deliveryBoxId" jdbcType="BIGINT" />
+    <result column="goods_sku_id" property="goodsSkuId" jdbcType="INTEGER" />
+    <result column="quantity" property="quantity" jdbcType="INTEGER" />
+    <result column="supermarket_id" property="supermarketId" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+    <sql id="Base_Column_List" >
+    delivery_box_goods_id,delivery_box_id,supermarket_id, goods_sku_id,price,quantity, update_time, create_time
+  </sql>
+  
+  <!--通过DeliveryBoxId获取DeliveryBoxGoods DeliveryBoxGoods getDeliveryBoxGoods(Long DeliveryBoxId);  -->
+  <select id="getDeliveryBoxGoods" resultMap="BaseResultMap">
+  	select
+  		<include refid="Base_Column_List" />
+  	from 
+  		delivery_box_goods
+  	where
+  		delivery_box_id = #{deliveryBoxId}
+  </select>
+  
+  <!-- 插入 -->
+  <insert id="insert" useGeneratedKeys="true" keyProperty="deliveryBoxGoodsId"
+            parameterType="com.linayi.entity.delivery.DeliveryBoxGoods">
+        INSERT INTO 
+        	delivery_box_goods
+        	(delivery_box_id, goods_sku_id, quantity, supermarket_id, price, create_time)
+        VALUES (
+            #{deliveryBoxId,jdbcType=BIGINT},
+            #{goodsSkuId,jdbcType=INTEGER},
+            #{quantity,jdbcType=INTEGER},
+            #{supermarketId,jdbcType=INTEGER},
+            #{price,jdbcType=INTEGER},
+            #{createTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+</mapper>

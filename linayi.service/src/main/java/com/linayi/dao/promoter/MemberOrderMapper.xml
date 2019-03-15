@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.promoter.MemberOrderMapper">
+  <resultMap id="BaseResultMap" type="com.linayi.entity.promoter.MemberOrder">
+      <result column="member_orderId" jdbcType="INTEGER" property="memberOrderId" />
+      <result column="open_member_id" jdbcType="INTEGER" property="openMemberId" />
+      <result column="orders_id" jdbcType="BIGINT" property="ordersId" />
+  </resultMap>
+  <select id="getMemberOrderList" resultMap="BaseResultMap">
+      select member_orderId, open_member_id, orders_id from member_order
+      <where>
+          <if test="memberOrderId != null">
+              member_orderId = #{memberOrderId}
+          </if>
+          <if test="openMemberId != null">
+              AND open_member_id = #{openMemberId}
+          </if>
+          <if test="ordersId != null">
+              AND orders_id = #{ordersId}
+          </if>
+      </where>
+  </select>
+  <insert id="addMemberOrder" parameterType="com.linayi.entity.promoter.MemberOrder">
+      insert into member_order
+      <trim prefix="(" suffix=")" suffixOverrides=",">
+          <if test="memberOrderId != null">
+              member_orderId,
+          </if>
+          <if test="openMemberId != null">
+              open_member_id,
+          </if>
+          <if test="ordersId != null">
+              orders_id,
+          </if>
+      </trim>
+      <trim prefix="values(" suffix=")" suffixOverrides=",">
+          <if test="memberOrderId != null">
+              #{memberOrderId,jdbcType=INTEGER},
+          </if>
+          <if test="openMemberId != null">
+              #{openMemberId,jdbcType=INTEGER},
+          </if>
+          <if test="ordersId != null">
+              #{ordersId,jdbcType=BIGINT},
+          </if>
+      </trim>
+  </insert>
+</mapper>

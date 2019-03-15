@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.account.AccountMenuMapper">
+  <insert id="insert" parameterType="com.linayi.entity.account.AccountMenu">
+    insert into account_menu (account_menu_id, account_id, menu_id
+      )
+    values (#{accountMenuId,jdbcType=BIGINT}, #{accountId,jdbcType=INTEGER}, #{menuId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linayi.entity.account.AccountMenu">
+    insert into account_menu
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="accountMenuId != null">
+        account_menu_id,
+      </if>
+      <if test="accountId != null">
+        account_id,
+      </if>
+      <if test="menuId != null">
+        menu_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="accountMenuId != null">
+        #{accountMenuId,jdbcType=BIGINT},
+      </if>
+      <if test="accountId != null">
+        #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="menuId != null">
+        #{menuId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 通过账号ID获取对应模块Id与之对应的模块名 -->
+  <select id="getAllModule" resultType="com.linayi.entity.account.MenuTree" >
+ 		select 
+ 			module_id id,module_name text,status
+ 		from 
+ 			 module 
+ 		<if test="status != null">
+ 			where status=#{status}
+ 		</if>
+	 	GROUP BY module_id	
+ 	</select>
+ 	
+ 	<!--通过模块ID获取对应的菜单信息 -->
+ 	<select id="getMenuByModuleId" resultType="com.linayi.entity.account.MenuTree" >
+ 		select 
+ 			menu_id id,menu_name text,url url,status
+ 		from 
+			 menu 
+ 		where
+	 		module_id=#{moduleId} 
+ 	</select>
+ 	
+ 	<!--根据账号ID添加菜单Integer insertMenu(Menu menu)  -->
+ 	<insert id="insertMenu" parameterType="com.linayi.entity.account.Menu" 
+ 		keyProperty="menuId" useGeneratedKeys="true" >
+    insert into menu (menu_id, menu_name, url,module_id,status,create_time
+      )
+    values (#{menuId}, #{menuName}, #{url},#{moduleId},#{status},#{createTime}
+      )
+  </insert>
+
+  <!-- 根据账号ID和菜单ID编辑菜单 Integer changeMenu(Menu menu); -->
+  <update id="changeMenu" parameterType="com.linayi.entity.account.Menu">
+  	UPDATE 
+  		menu 
+	SET
+  		menu_name=#{menuName},url=#{url},status=#{status}
+  	<if test="updateTime != null">
+  		,update_time=#{updateTime}
+  	</if>
+  	WHERE
+  		 menu_id=#{menuId}
+  </update>
+  
+  <!-- 根据账号ID和菜单ID删除菜单
+  	Integer deleteMenu(@Param("accountId")Integer accountId,@Param("menuId")Integer menuId); -->
+  <delete id="deleteMenu">
+  	
+  </delete>
+
+	<!-- 根据账号ID在账号菜单拿到菜单ID集合 List<Integer> getMenuIdListByAccountId(Integer accountId);; -->
+	<select id="getMenuIdListByAccountId" resultType="java.lang.Integer">
+		SELECT 
+			menu.menu_id 
+		FROM
+ 			account_menu am join menu on menu.menu_id = am.menu_id
+ 		WHERE
+ 			account_id = #{accountId}
+ 		AND
+ 			menu.status = 'ENABLED'
+ 		GROUP BY menu_id
+	</select>
+<!-- 根据账号ID在角色菜单拿到菜单ID集合 List<Integer> gainMenuIdListByAccountId(Integer accountId);; -->
+	<select id="gainMenuIdListByAccountId" resultType="java.lang.Integer">
+		SELECT 
+			menu.menu_id 
+		FROM
+ 			account_role ar join role on ar.role_id = role.role_id
+ 			join role_menu rm on rm.role_id = ar.role_id 
+ 			join menu on menu.menu_id = rm.menu_id
+ 		WHERE
+ 			account_id = #{accountId}
+ 		AND
+ 			role.status = 'ENABLED'
+ 		AND
+ 			menu.status = 'ENABLED'
+	</select>
+	<!-- 通过模块ID和菜单ID集合获取对应的菜单信息，是否展示禁用的菜单
+	List<MenuTree> getMenuByModuleIdAndMenuIdList(@Param("moduleId")Integer moduleId,
+			@Param("menuIdList")List<Integer> menuIdList); -->
+	<select id="getMenuByModuleIdAndMenuIdList" resultType="com.linayi.entity.account.MenuTree" >
+ 		select 
+ 			menu_id id,menu_name text,url url,status
+ 		from 
+			 menu 
+ 		where
+	 		module_id=#{moduleId} 
+	 	AND
+	 		menu_id in
+	 		<foreach collection="menuIdList" index="index" item="item" open="(" separator="," close=")">
+	 			${item}
+	 		</foreach>
+ 	</select>
+</mapper>
