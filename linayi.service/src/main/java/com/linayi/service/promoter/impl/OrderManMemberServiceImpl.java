@@ -54,6 +54,7 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 		Integer userId = accountMapper.getUserIdByMobile(mobile);
 		User info = userMapper.getUserByIdAndMemberLevel(userId);
 		 User user = new User();
+		User newUser = new User();
 		//如果用户已是会员 返回null
 		if(info != null){
 			return null;
@@ -80,10 +81,13 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 		        accountMapper.insertAccount(accountTB);
 		        
 		        userId =user.getUserId();
+		        newUser.setIsRegist("FALSE");
+		}else{
+			newUser.setIsRegist("TRUE");
 		}
 		
 		//插入会员信息
-		User newUser = new User();
+
 		user = userMapper.selectUserByuserId(userId);
 		newUser.setUserId(userId);
 		newUser.setNickname(user.getNickname());
