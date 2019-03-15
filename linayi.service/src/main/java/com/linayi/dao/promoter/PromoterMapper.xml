@@ -9,4 +9,5 @@
       #{qq,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{promoterLevel,jdbcType=VARCHAR}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
+  <sql id="Base_Column">promoter_id, name, mobile, qq, email, promoter_level,  update_time, create_time</sql>
 </mapper>

@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.linayi.dao.address.ReceiveAddressMapper;
+import com.linayi.dao.promoter.PromoterMapper;
+import com.linayi.entity.promoter.Promoter;
 import com.linayi.entity.user.ReceiveAddress;
 import com.linayi.service.address.ReceiveAddressService;
 import org.apache.xmlbeans.impl.xb.xsdschema.Public;
@@ -37,8 +39,6 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     @Autowired
     private OrdersMapper ordersMapper;
     @Autowired
-    private OrdersGoodsMapper ordersGoodsMapper;
-    @Autowired
     private OrderManMemberMapper orderManMemberMapper;
     @Autowired
     private UserService userService;
@@ -46,7 +46,6 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     private OpenMemberInfoMapper openMemberInfoMapper;
     @Autowired
     private ReceiveAddressMapper receiveAddressMapper;
-
 
     @Override
     public PromoterOrderMan promoterIndex(PromoterOrderMan promoterOrderMan) {
@@ -130,7 +129,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     public List<OrderManMember> memberList(PromoterOrderMan promoterOrderMan) {
         // 根据下单员id查询他的所有会员
         promoterOrderMan.setCreateTime(new Date());
-        List<OrderManMember> memberList = orderManMemberMapper.getOrderManMemberListByOrderManId(promoterOrderMan);
+        List<OrderManMember> memberList = orderManMemberMapper.getOrderManMemberListByPromoterId(promoterOrderMan.getOrderManId());
         // 遍历所有会员，获取相应信息
         for (OrderManMember member : memberList) {
             // 获取会员昵称头像
@@ -218,12 +217,12 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
                     numberOfMembers += tongji.getNumberOfMembers() == null ? 0 : tongji.getNumberOfMembers();
                     totalSum += tongji.getTotalSum();
                     numberOfOrders += tongji.getNumberOfOrders();
-                    promoterOrderMan.setNumberOfOrderMan(numberOfOrderMan);
-                    promoterOrderMan.setNumberOfMembers(numberOfMembers);
-                    promoterOrderMan.setTotalSum(totalSum);
-                    promoterOrderMan.setNumberOfOrders(numberOfOrders);
                 }
             }
+            promoterOrderMan.setNumberOfOrderMan(numberOfOrderMan);
+            promoterOrderMan.setNumberOfMembers(numberOfMembers);
+            promoterOrderMan.setTotalSum(totalSum);
+            promoterOrderMan.setNumberOfOrders(numberOfOrders);
         }
         return promoterOrderMan;
     }
@@ -237,19 +236,38 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             //统计所有
             ReceiveAddress receiveAddress = new ReceiveAddress();
             OrderManMember orderManMember = new OrderManMember();
+            //推广商
+            promoterOrderMan.setOrderManId(orderManId);
+            List<PromoterOrderMan>  promoterOrderManList = promoterOrderManMapper.getPromoterOrderManList(promoterOrderMan);
+            if(promoterOrderManList != null && promoterOrderManList.size() > 0){
+                promoterOrderMan = promoterOrderManList.get(0);
+            }
+            orders.setAddressType("CUSTOMER");
+            List<Orders> allOrder = null;
+
+            List<OrderManMember> orderManMemberList = null;
             if("ORDER_MAN".equals(identity)){
+                //下单员
                 orderManMember.setOrderManId(orderManId);
                 receiveAddress.setUserId(orderManId);
                 orders.setUserId(orderManId);
                 orders.setOrderManId(orderManId);
+                allOrder = ordersMapper.getOrdersByOrderMan(orders);
+                //查找所有会员
+                orderManMemberList = orderManMemberMapper.getOrderManMemberListByOrderManId(promoterOrderMan);
+            }else if("LEGAL_MAN".equals(identity)){
+                //法人
+                orders.setPromoterId(promoterOrderMan.getPromoterId());
+                receiveAddress.setPromoterId(promoterOrderMan.getPromoterId());
+                allOrder = ordersMapper.getOrderByPromoter(orders);
+                //查找所有会员
+                orderManMemberList = orderManMemberMapper.getOrderManMemberListByPromoterId(promoterOrderMan.getPromoterId());
             }
             //顾客
             receiveAddress.setAddressType("CUSTOMER");
-            List<ReceiveAddress> receiveAddresses = receiveAddressMapper.getAddressListByAddress(receiveAddress);
+            List<ReceiveAddress> receiveAddresses = receiveAddressMapper.getAddressListByPromoter(receiveAddress);
             if (receiveAddresses != null && receiveAddresses.size() > 0){
                 promoterOrderMan.setNumberOfMembers(receiveAddresses.size());
-                orders.setAddressType("CUSTOMER");
-                List<Orders> allOrder = ordersMapper.getALLOrder(orders);
                 if (allOrder != null && allOrder.size() > 0){
                     numberOfOrders += allOrder.size();
                     for (Orders orders2 : allOrder) {
@@ -257,17 +275,12 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
                     }
                 }
             }
-            //会员
 
-            orderManMember.setCreateTimeEnd(DateUtil.date2String(new Date(), "yyyy-MM-dd HH:mm:ss"));
-            //查找所有有效会员
-            List<OrderManMember>  orderManMemberList = orderManMemberMapper.getOrderManMemberList(orderManMember);
             if (orderManMemberList != null && orderManMemberList.size() > 0){
                 numberOfMembers += orderManMemberList.size();
             }
             //所有下单员会员所有的订单数
-
-            List<Orders> ordersList = ordersMapper.getOrdersByOrderMan(orders);
+            List<Orders> ordersList = ordersMapper.getOrdersByPromoter(orders);
             if(ordersList != null && ordersList.size() > 0){
                 numberOfOrders +=ordersList.size();
                 for (Orders orders1 : ordersList) {
@@ -302,14 +315,14 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             orderManMember.setOrderManId(orderManId);
             orderManMember.setCreateTimeEnd(orders.getCreateTimeEnd());
             orderManMember.setCreateTimeStart(orders.getCreateTimeStart());
-            //查找所有有效会员
+            //查找所有会员
             List<OrderManMember>  orderManMemberList = orderManMemberMapper.getOrderManMemberList(orderManMember);
             if (orderManMemberList != null && orderManMemberList.size() > 0){
                 numberOfMembers += orderManMemberList.size();
             }
             //下单员会员订单数
             orders.setOrderManId(orderManId);
-            List<Orders> ordersList = ordersMapper.getOrdersByOrderMan(orders);
+            List<Orders> ordersList = ordersMapper.getOrdersByPromoter(orders);
             if(ordersList != null && ordersList.size() > 0){
                 numberOfOrders +=ordersList.size();
                 for (Orders orders1 : ordersList) {
@@ -317,19 +330,21 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
                 }
             }
         }else if("ALLVIP".equals(type)){
+            //推广商
+            promoterOrderMan.setOrderManId(orderManId);
+            List<PromoterOrderMan>  promoterOrderManList = promoterOrderManMapper.getPromoterOrderManList(promoterOrderMan);
+            if(promoterOrderManList != null && promoterOrderManList.size() > 0){
+                promoterOrderMan = promoterOrderManList.get(0);
+            }
             //会员
-            OrderManMember orderManMember = new OrderManMember();
-//            orderManMember.setOrderManId(orderManId);
-            orderManMember.setCreateTimeEnd(orders.getCreateTimeEnd());
-            orderManMember.setCreateTimeStart(orders.getCreateTimeStart());
-            //查找所有有效会员
-            List<OrderManMember>  orderManMemberList = orderManMemberMapper.getOrderManMemberList(orderManMember);
+            //查找所有会员
+            List<OrderManMember> orderManMemberList = orderManMemberMapper.getOrderManMemberListByPromoterId(promoterOrderMan.getPromoterId());
             if (orderManMemberList != null && orderManMemberList.size() > 0){
                 numberOfMembers += orderManMemberList.size();
             }
+            orders.setPromoterId(promoterOrderMan.getPromoterId());
             //下单员会员订单数
-            //orders.setOrderManId(orderManId);
-            List<Orders> ordersList = ordersMapper.getOrdersByOrderMan(orders);
+            List<Orders> ordersList = ordersMapper.getOrdersByPromoter(orders);
             if(ordersList != null && ordersList.size() > 0){
                 numberOfOrders +=ordersList.size();
                 for (Orders orders1 : ordersList) {
@@ -359,211 +374,4 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         }
         return orders;
     }
- /*
-    public PromoterOrderMan getStatisOrderALL(Integer manId, String range) {
-
-
-
-        return null;
-    }*/
-   /* @Override
-    public PromoterOrderMan getStatisALL(Integer manId, String range) {
-    	Boolean isLegalMan = false;
-    	Boolean isLegalMember = false;
-    	Boolean isSelf = false;
-    	Boolean isCustomer = false;
-    	Boolean isOkOrder = false;
-    	if(range.contains("OK")) {
-    		range = range.replace("OK", "");
-    		isLegalMan = true;
-    	}
-    	if (range.contains("LEGAL_MEMBER")){
-            range = range.replace("LEGAL_MEMBER", "");
-            isLegalMember = true;
-        }
-        if(range.contains("VIP")) {
-            range = range.replace("VIP", "");
-            isSelf = true;
-        }
-        if(range.contains("CUSTOMER")) {
-            range = range.replace("CUSTOMER", "");
-            isCustomer = true;
-        }
-        if(range.contains("ORDER")) {
-            range = range.replace("ORDER", "");
-            isOkOrder = true;
-        }
-        PromoterOrderMan promoterOrderMan = new PromoterOrderMan();
-        promoterOrderMan.setOrderManId(manId);
-        promoterOrderMan = promoterOrderManMapper.getPromoterOrderMan(promoterOrderMan);
-        Orders orders = new Orders();
-        if (isSelf){
-            orders.setOrderType("VIP");
-        }
-        if (isCustomer){
-            orders.setOrderType("CUSTOMER");
-        }
-        if ("MONTH".equals(range)) {
-            Calendar cl = Calendar.getInstance();
-            cl.setTime(new Date());
-            cl.set(Calendar.DAY_OF_MONTH, 1);
-            cl.set(Calendar.HOUR_OF_DAY, 0);
-            cl.set(Calendar.MINUTE, 0);
-            cl.set(Calendar.SECOND, 0);
-            orders.setCreateTimeStart(DateUtil.date2String(cl.getTime(), "yyyy-MM-dd HH:mm:ss"));
-            cl.add(Calendar.MONTH, 1);
-            orders.setCreateTimeEnd(DateUtil.date2String(cl.getTime(), "yyyy-MM-dd HH:mm:ss"));
-        }
-        if (promoterOrderMan != null) {
-            //不是会员
-            String identity = promoterOrderMan.getIdentity();
-            Integer orderManId = promoterOrderMan.getOrderManId();
-            Integer numberOfOrderMan = 0;    //下单员数量(通用)
-            Integer numberOfOrders = 0;    //订单数(通用)
-            Integer totalSum = 0;    //订单合计金额(通用)
-            Integer numberOfMembers = 0;    //会员数量(通用)
-
-            if ("ORDER_MAN".equals(identity)) {
-                //下单员
-                if(isCustomer){
-                    orders.setOrderType("CUSTOMER");
-                }else {
-                    orders.setOrderType("VIP");
-                }
-
-                if (isLegalMember || isOkOrder){
-                    orders.setOrderType(null);
-                }
-                promoterOrderMan = Tongji(orderManId, orders);
-            } else if ("LEGAL_MAN".equals(identity)) {
-                //法人
-                PromoterOrderMan promoterOrderMan1 = new PromoterOrderMan();
-                promoterOrderMan1.setPromoterId(promoterOrderMan.getPromoterId());
-                if(!isLegalMan && isLegalMember) {
-                	promoterOrderMan1.setOrderManId(orderManId);
-                }
-                if(!isLegalMan && isCustomer || isOkOrder) {
-                    promoterOrderMan1.setOrderManId(orderManId);
-                }
-                //此推广商下的下单员(包含法人)
-                List<PromoterOrderMan>  promoterOrderManList = promoterOrderManMapper.getPromoterOrderManList(promoterOrderMan1);
-                if (promoterOrderManList != null && promoterOrderManList.size() > 0) {
-                    numberOfOrderMan = promoterOrderManList.size();
-                    for (PromoterOrderMan orderMan : promoterOrderManList) {
-                        //下单员自己下的单
-                        PromoterOrderMan tongji = Tongji(orderMan.getOrderManId(), orders);
-                        numberOfMembers += tongji.getNumberOfMembers() == null ? 0 : tongji.getNumberOfMembers();
-                        totalSum += tongji.getTotalSum();
-                        numberOfOrders += tongji.getNumberOfOrders();
-                    }
-                    promoterOrderMan.setNumberOfOrderMan(numberOfOrderMan);
-                    promoterOrderMan.setNumberOfMembers(numberOfMembers);
-                    promoterOrderMan.setTotalSum(totalSum);
-                    promoterOrderMan.setNumberOfOrders(numberOfOrders);
-                }
-            }
-        }else {
-            //是会员
-            orders.setOrderType("VIPUSER");
-            promoterOrderMan = Tongji(manId, orders);
-        }
-        return promoterOrderMan;
-    }
-
-    private PromoterOrderMan Tongji(Integer orderManId, Orders orders) {
-        int totalSum = 0;	//订单合计金额(通用)
-        int numberOfOrders = 0; // 订单数(通用)
-        //下单员
-        PromoterOrderMan promoterOrderMan = new PromoterOrderMan();
-        if (orders.getOrderType() != null && "VIP".equals(orders.getOrderType())){
-//            orders.setOrderType(null);
-//            promoterOrderMan = getPromoterOrderMan(orderManId, orders);
-//            totalSum += promoterOrderMan.getTotalSum();
-//            numberOfOrders += promoterOrderMan.getNumberOfOrders();
-            ReceiveAddress receiveAddress = new ReceiveAddress();
-            receiveAddress.setUserId(orderManId);
-            receiveAddress.setAddressType("CUSTOMER");
-            List<ReceiveAddress> receiveAddresses = receiveAddressMapper.getAddressListByAddress(receiveAddress);
-            if (receiveAddresses != null && receiveAddresses.size() > 0){
-                //promoterOrderMan.setNumberOfMembers(receiveAddresses.size());
-                Orders orders1 = new Orders();
-                orders1.setUserId(orderManId);
-                orders1.setAddressType("CUSTOMER");
-                List<Orders> allOrder = ordersMapper.getALLOrder(orders1);
-                if (allOrder != null && allOrder.size() > 0){
-                    numberOfOrders = allOrder.size();
-                    for (Orders orders2 : allOrder) {
-                        totalSum += orders2.getAmount();
-                    }
-                }
-            }
-        } if (orders.getOrderType() != null && "VIPUSER".equals(orders.getOrderType())){
-            promoterOrderMan = getPromoterOrderMan(orderManId, orders);
-            totalSum += promoterOrderMan.getTotalSum();
-            numberOfOrders += promoterOrderMan.getNumberOfOrders();
-        }
-        if (orders.getOrderType() != null && "CUSTOMER".equals(orders.getOrderType())){
-            ReceiveAddress receiveAddress = new ReceiveAddress();
-            receiveAddress.setUserId(orderManId);
-            receiveAddress.setAddressType("CUSTOMER");
-            List<ReceiveAddress> receiveAddresses = receiveAddressMapper.getAddressListByAddress(receiveAddress);
-            if (receiveAddresses != null && receiveAddresses.size() > 0){
-                promoterOrderMan.setNumberOfMembers(receiveAddresses.size());
-                Orders orders1 = new Orders();
-                orders1.setAddressType("CUSTOMER");
-                orders1.setUserId(orderManId);
-                List<Orders> allOrder = ordersMapper.getALLOrder(orders1);
-                if (allOrder != null && allOrder.size() > 0){
-                    numberOfOrders = allOrder.size();
-                    for (Orders orders2 : allOrder) {
-                        totalSum += orders2.getAmount();
-                    }
-                }
-            }
-
-        }else {
-            OrderManMember orderManMember = new OrderManMember();
-            orderManMember.setOrderManId(orderManId);
-
-            //查找会员
-            List<OrderManMember>  orderManMemberList = orderManMemberMapper.getOrderManMemberList(orderManMember);
-            //下单员的会员下的单
-            if (orderManMemberList != null && orderManMemberList.size() > 0){
-                for (OrderManMember manMember : orderManMemberList) {
-                    Integer memberId = manMember.getMemberId();
-                    promoterOrderMan = getPromoterOrderMan(memberId, orders);
-                    totalSum += promoterOrderMan.getTotalSum();
-                    numberOfOrders += promoterOrderMan.getNumberOfOrders();
-                }
-                promoterOrderMan.setNumberOfMembers(orderManMemberList.size());
-            }
-        }
-        promoterOrderMan.setTotalSum(totalSum);
-        promoterOrderMan.setNumberOfOrders(numberOfOrders);
-
-        return promoterOrderMan;
-    }
-
-        private PromoterOrderMan getPromoterOrderMan(Integer orderManId, Orders orders) {
-            PromoterOrderMan promoterOrderMan = new PromoterOrderMan();
-            int totalSum = 0;	//订单合计金额(通用)
-            int numberOfOrders = 0; // 订单数(通用)
-            promoterOrderMan.setOrderManId(orderManId);
-            PromoterOrderMan new_promoterOrderMan = promoterOrderManMapper.getPromoterOrderMan(promoterOrderMan);
-            if (new_promoterOrderMan != null){
-                orders.setAddressType("CUSTOMER");
-            }
-            orders.setUserId(orderManId);
-            List<Orders> allOrder = ordersMapper.getALLOrder(orders);
-            //订单数
-            if (allOrder != null && allOrder.size() > 0){
-                numberOfOrders = allOrder.size();
-                for (Orders orders1 : allOrder) {
-                    totalSum += orders1.getAmount();
-                }
-            }
-            promoterOrderMan.setTotalSum(totalSum);
-            promoterOrderMan.setNumberOfOrders(numberOfOrders);
-            return promoterOrderMan;
-        }*/
 }

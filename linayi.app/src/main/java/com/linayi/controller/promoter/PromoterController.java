@@ -85,7 +85,7 @@ public class PromoterController extends BaseController {
 	}
 
 	// 我的团队-下单员列表
-	@ApiOperation(value = "我的团队-下单员列表", notes = "",produces = "application/xml,application/json")
+	@ApiOperation(value = "我的团队-下单员列表", produces = "application/xml,application/json")
 	@RequestMapping(value="/orderManList.do",method=RequestMethod.POST)
 	public Object orderManList(@RequestBody PageVo  promoterOrderMan) {
 		PageResult<PromoterOrderMan> pageResult = new PageResult<>();
