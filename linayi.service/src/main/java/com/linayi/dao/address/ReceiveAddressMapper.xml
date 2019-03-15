@@ -636,14 +636,14 @@ select `code` from `area` where name=#{name}
 	<select id="getAddressListByPromoter" resultType="com.linayi.entity.user.ReceiveAddress">
         select ra.receive_address_id receiveAddressId  from  receive_address ra
         <if test="promoterId != null">
-        join promoter_order_man pom on pom.promoter_id = #{promoterId} and ra.userId =  pom.order_man_id
+        join promoter_order_man pom on pom.promoter_id = #{promoterId} and ra.user_id =  pom.order_man_id
         </if>
         <where>
             <if test="promoterId == null and userId != null">
-                and ra.userId = #{userId}
+                ra.user_id = #{userId}
             </if>
-            <if test="AddressType != null">
-                ra.address_type = #{AddressType}
+            <if test="addressType != null">
+                and ra.address_type = #{addressType}
             </if>
         </where>
     </select>

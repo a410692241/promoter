@@ -27,7 +27,7 @@
   </select>
 
  <select id="getOrderManMemberListByOrderManId" resultType="com.linayi.entity.promoter.OrderManMember">
- 	select omi.user_id memberId from order_man_member omm
+ 	select omm.member_id memberId from order_man_member omm
     join user u on omm.member_id = u.user_id AND u.is_member = 'TRUE'
  	WHERE
  		omm.order_man_id=#{orderManId}
@@ -35,6 +35,6 @@
  <select id="getOrderManMemberListByPromoterId" resultType="com.linayi.entity.promoter.OrderManMember">
      select omm.member_id memberId from order_man_member omm
      join promoter_order_man pom on pom.order_man_id = omm.order_man_id and pom.promoter_id = #{promoterId}
-     join user u on u.is_member = 'TRUE' and u.userId = omm.member_id
+     join user u on u.is_member = 'TRUE' and u.user_id = omm.member_id
  </select>
 </mapper>

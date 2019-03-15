@@ -223,7 +223,7 @@
     <select id="getOrderByPromoter" resultMap="BaseResultMap">
         select o.orders_id, o.user_id, o.receiver_name,o.mobile, o.address_one, o.address_two, o.address_three, o.pay_way, o.save_amount, o.service_fee, o.extra_fee, o.arrive_time, o.actual_arrive_time,
         o.remark, o.quantity, o.amount, o.user_status, o.community_status, o.community_id, o.update_time, o.create_time from orders o
-        join promoter_order_man pom on pom .promoter_id = #{promoterId} and pom.order_man_id = o.userId
+        join promoter_order_man pom on pom .promoter_id = #{promoterId} and pom.order_man_id = o.user_id
         <where>
             <if test="addressType != null">
                 o.address_type = #{addressType}
@@ -233,16 +233,13 @@
     <select id="getALLOrderByOrderMan" resultMap="BaseResultMap">
         select o.orders_id, o.user_id, o.receiver_name,o.mobile, o.address_one, o.address_two, o.address_three, o.pay_way, o.save_amount, o.service_fee, o.extra_fee, o.arrive_time, o.actual_arrive_time,
         o.remark, o.quantity, o.amount, o.user_status, o.community_status, o.community_id, o.update_time, o.create_time from orders o
-        join member_order mo on mo.orders_id = o.orders_id
-        join open_member_info omi on omi.open_member_info_id = mo.open_member_id AND omi.order_man_id = #{orderManId}
-        <where>
             <if test="userId != null">
-                o.user_id = #{userId}
+                join order_man_member omm on omm.order_man_id = #{orderManId}
+                where o.user_id = #{userId} and omm.member_id = #{userId} and omm.create_time <![CDATA[ <= ]]> o.create_time
             </if>
             <if test="receiveAddressId != null">
-                o.receive_address_id = #{receiveAddressId}
+                where o.receive_address_id = #{receiveAddressId} AND o.address_type = 'CUSTOMER' AND o.userId = #{orderManId}
             </if>
-        </where>
     </select>
 
   <insert id="insert" parameterType="com.linayi.entity.order.Orders" useGeneratedKeys="true" keyProperty="ordersId">
@@ -584,10 +581,10 @@
       select o.orders_id ordersId,o.amount amount from orders o
       <if test="promoterId != null">
           join promoter_order_man pom on pom.promoter_id = #{promoterId}
-          join order_man_member omm on omm.order_man_id = pom.order_man_id and o.userId = omm.member_id
+          join order_man_member omm on omm.order_man_id = pom.order_man_id and o.user_id = omm.member_id
       </if>
       <if test="orderManId != null">
-          join order_man_member omm on omm.order_man_id = #{orderManId} and o.userId = omm.member_id
+          join order_man_member omm on omm.order_man_id = #{orderManId} and o.user_id = omm.member_id
       </if>
       where o.create_time <![CDATA[ >= ]]> omm.create_time
       <if test="createTimeStart != null and createTimeStart != ''">

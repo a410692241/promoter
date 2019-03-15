@@ -318,13 +318,7 @@ public class OrderServiceImpl implements OrderService {
             cl.add(Calendar.MONTH,1);
             orders.setCreateTimeEnd(DateUtil.date2String(cl.getTime(),"yyyy-MM-dd HH:mm:ss"));
         }
-        List<Orders> ordersList = null;
-        if(orders.getUserId() != null){
-            ordersList = ordersMapper.getALLOrderByOrderMan(orders);
-        }else if(orders.getReceiveAddressId() != null){
-            ordersList = ordersMapper.getALLOrder(orders);
-        }
-
+        List<Orders> ordersList = ordersMapper.getALLOrderByOrderMan(orders);
         List<Orders> orders3 = getOrdersList(ordersList, "orderList");
         PageResult<Orders> ordersPageResult = new PageResult<>(orders3,orders);
         return ordersPageResult;

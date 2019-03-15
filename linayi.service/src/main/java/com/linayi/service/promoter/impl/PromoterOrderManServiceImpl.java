@@ -91,6 +91,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         // 获取当前下单员的推广商id，根据推广商id查询该推广商下的所有下单员信息
         PromoterOrderMan currentPromoterOrderMan = promoterOrderManMapper.getPromoterOrderManByOrderManId(promoterOrderMan.getOrderManId());
         promoterOrderMan.setPromoterId(currentPromoterOrderMan.getPromoterId());
+        promoterOrderMan.setOrderManId(null);
         List<PromoterOrderMan> orderManList = promoterOrderManMapper.getPromoterOrderManList(promoterOrderMan);
         String range = "ALL";
         // 遍历所有下单员，获取相应信息
@@ -129,7 +130,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     public List<OrderManMember> memberList(PromoterOrderMan promoterOrderMan) {
         // 根据下单员id查询他的所有会员
         promoterOrderMan.setCreateTime(new Date());
-        List<OrderManMember> memberList = orderManMemberMapper.getOrderManMemberListByPromoterId(promoterOrderMan.getOrderManId());
+        List<OrderManMember> memberList = orderManMemberMapper.getOrderManMemberListByOrderManId(promoterOrderMan);
         // 遍历所有会员，获取相应信息
         for (OrderManMember member : memberList) {
             // 获取会员昵称头像
@@ -170,7 +171,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         //下单员会员订单数
         orders.setOrderManId(orderManId);
         orders.setUserId(userId);
-        List<Orders> ordersList = ordersMapper.getOrdersByOrderMan(orders);
+        List<Orders> ordersList = ordersMapper.getOrdersByPromoter(orders);
         if(ordersList != null && ordersList.size() > 0){
             numberOfOrders +=ordersList.size();
             for (Orders orders1 : ordersList) {
