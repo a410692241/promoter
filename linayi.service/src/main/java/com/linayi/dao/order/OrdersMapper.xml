@@ -594,4 +594,20 @@
           AND o.create_time <![CDATA[ <= ]]> #{createTimeEnd}
       </if>
   </select>
+  <select id="getOrdersByUserIdAndOrderManId" resultMap="BaseResultMap">
+      select o.orders_id ordersId,o.amount amount from orders o
+      <if test="orderManId != null">
+          join order_man_member omm on omm.order_man_id = #{orderManId} and o.user_id = omm.member_id
+      </if>
+      where o.create_time <![CDATA[ >= ]]> omm.create_time
+      <if test="createTimeStart != null and createTimeStart != ''">
+          AND o.create_time <![CDATA[ >= ]]> #{createTimeStart}
+      </if>
+      <if test="createTimeEnd != null and createTimeEnd != ''">
+          AND o.create_time <![CDATA[ <= ]]> #{createTimeEnd}
+      </if>
+      <if test="userId != null">
+          AND o.user_id = #{userId}
+      </if>
+  </select>
 </mapper>

@@ -171,7 +171,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         //下单员会员订单数
         orders.setOrderManId(orderManId);
         orders.setUserId(userId);
-        List<Orders> ordersList = ordersMapper.getOrdersByPromoter(orders);
+        List<Orders> ordersList = ordersMapper.getOrdersByUserIdAndOrderManId(orders);
         if(ordersList != null && ordersList.size() > 0){
             numberOfOrders +=ordersList.size();
             for (Orders orders1 : ordersList) {
@@ -218,12 +218,12 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
                     numberOfMembers += tongji.getNumberOfMembers() == null ? 0 : tongji.getNumberOfMembers();
                     totalSum += tongji.getTotalSum();
                     numberOfOrders += tongji.getNumberOfOrders();
+                    promoterOrderMan.setNumberOfOrderMan(numberOfOrderMan);
+                    promoterOrderMan.setNumberOfMembers(numberOfMembers);
+                    promoterOrderMan.setTotalSum(totalSum);
+                    promoterOrderMan.setNumberOfOrders(numberOfOrders);
                 }
             }
-            promoterOrderMan.setNumberOfOrderMan(numberOfOrderMan);
-            promoterOrderMan.setNumberOfMembers(numberOfMembers);
-            promoterOrderMan.setTotalSum(totalSum);
-            promoterOrderMan.setNumberOfOrders(numberOfOrders);
         }
         return promoterOrderMan;
     }

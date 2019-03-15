@@ -140,4 +140,11 @@ public interface OrdersMapper {
      * @return
      */
     List<Orders> getOrdersByPromoter(Orders orders);
+
+    /**
+     * 通过用户的会员的Id和下单员id查找订单
+     * @param orders
+     * @return
+     */
+    List<Orders> getOrdersByUserIdAndOrderManId(Orders orders);
 }

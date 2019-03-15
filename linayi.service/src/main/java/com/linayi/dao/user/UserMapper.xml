@@ -206,17 +206,79 @@ where user_id=#{userId}
  		values (#{nickname},#{mobile},#{qq},#{email},#{realName},#{createTime},#
 {updateTime})
  	</insert>
-
     <insert id="insertUser" parameterType="com.linayi.entity.user.User"
             useGeneratedKeys="true" keyProperty="userId" >
- 		insert into `user`(`user_id`, `head_image`,`nickname`, `sex`, `mobile`,
-`qq`, `email`, `real_name`, `create_time`, `update_time`, `default_receive_address_id`)
- 		values ( #{userId,jdbcType=INTEGER}, #{headImage,jdbcType=VARCHAR}, #
-{nickname,jdbcType=VARCHAR},#{sex,jdbcType=VARCHAR},
-            #{mobile,jdbcType=VARCHAR}, #{qq,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
-#{realName,jdbcType=VARCHAR},
-            #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
-            #{defaultReceiveAddressId,jdbcType=INTEGER})
+        insert into user
+        <trim suffix=")" prefix="(" suffixOverrides=",">
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="headImage != null">
+                head_image,
+            </if>
+            <if test="nickname != null">
+                nickname,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="qq != null">
+                qq,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="realName != null">
+            real_name,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="defaultReceiveAddressId != null">
+                default_receive_address_id,
+            </if>
+        </trim>
+        <trim suffix=")" prefix="values (" suffixOverrides=",">
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="headImage != null">
+                #{headImage,jdbcType=VARCHAR},
+            </if>
+            <if test="nickname != null">
+                #{nickname,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="qq != null">
+                #{qq,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="realName != null">
+                #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="defaultReceiveAddressId != null">
+                #{defaultReceiveAddressId,jdbcType=INTEGER}
+            </if>
+        </trim>
  	</insert>
 
     <!-- 通过userID和下单员等级获取user信息  User getUserByIdAndOrderManLevel(Integer
