@@ -130,6 +130,8 @@ public class Orders extends BaseEntity {
     @ApiModelProperty(value = "下单员Id", hidden = true)
     private Integer orderManId;
 
+    private Integer promoterId;
+
     public String getCreateTimeStart() {
         return createTimeStart;
     }
@@ -651,5 +653,13 @@ public class Orders extends BaseEntity {
 
     public void setOrderManId(Integer orderManId) {
         this.orderManId = orderManId;
+    }
+
+    public Integer getPromoterId() {
+        return promoterId;
+    }
+
+    public void setPromoterId(Integer promoterId) {
+        this.promoterId = promoterId;
     }
 }

@@ -127,4 +127,24 @@ public interface OrdersMapper {
 
     List<Orders> getALLOrder(Orders orders);
 
+    /**
+     * 查询推广商下所有的代下单
+     * @param orders
+     * @return
+     */
+    List<Orders> getOrderByPromoter(Orders orders);
+
+    /**
+     * 获取下单员或推广商所下的订单
+     * @param orders
+     * @return
+     */
+    List<Orders> getOrdersByPromoter(Orders orders);
+
+    /**
+     * 通过用户的会员的Id和下单员id查找订单
+     * @param orders
+     * @return
+     */
+    List<Orders> getOrdersByUserIdAndOrderManId(Orders orders);
 }

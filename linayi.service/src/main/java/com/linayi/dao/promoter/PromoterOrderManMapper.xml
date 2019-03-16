@@ -31,16 +31,15 @@
     </where>
   </select>
   <select id="getPromoterOrderManList" parameterType="com.linayi.entity.promoter.PromoterOrderMan" resultType="com.linayi.entity.promoter.PromoterOrderMan">
-    select oomi.order_man_id orderManId from open_order_man_info oomi join  user u on u.user_id = oomi.order_man_id and u.is_order_man = 'TRUE'
+    select pom.order_man_id orderManId,pom.promoter_id from promoter_order_man pom join  user u on u.user_id = pom.order_man_id and u.is_order_man = 'TRUE'
     <where>
       <if test="orderManId != null">
-        oomi.order_man_id = #{orderManId}
+        pom.order_man_id = #{orderManId}
       </if>
       <if test="promoterId != null">
-        AND oomi.promoter_id = #{promoterId}
+        AND pom.promoter_id = #{promoterId}
       </if>
     </where>
-    GROUP BY oomi.order_man_id
   </select>
   <!--  通过下单员Id获取PromoterOrderMan  PromoterOrderMan getPromoterOrderManByOrderManId(Integer orderManId); -->
   <select id="getPromoterOrderManByOrderManId" resultType="com.linayi.entity.promoter.PromoterOrderMan">

@@ -10,7 +10,6 @@ import com.linayi.dao.goods.GoodsSkuMapper;
 import com.linayi.dao.order.OrdersGoodsMapper;
 import com.linayi.dao.order.OrdersMapper;
 import com.linayi.dao.procurement.ProcurementTaskMapper;
-import com.linayi.dao.promoter.MemberOrderMapper;
 import com.linayi.dao.promoter.OpenMemberInfoMapper;
 import com.linayi.dao.promoter.PromoterOrderManMapper;
 import com.linayi.dao.supermarket.SupermarketMapper;
@@ -82,13 +81,10 @@ public class OrderServiceImpl implements OrderService {
     private PromoterOrderManMapper promoterOrderManMapper;
     @Autowired
     private OpenMemberInfoMapper openMemberInfoMapper;
-    @Autowired
-    private MemberOrderMapper memberOrderMapper;
 
     @Transactional
     @Override
     public void addOrder(Map<String, Object> param) {
-        boolean isVip = false;
         Integer userId = (Integer) param.get("userId");
         User user = userMapper.selectUserByuserId(userId);
         Integer receiveAddressId = user.getDefaultReceiveAddressId();
@@ -102,8 +98,8 @@ public class OrderServiceImpl implements OrderService {
         //判断是否为下单员
         PromoterOrderMan promoterOrderMan = promoterOrderManMapper.getPromoterOrderManByOrderManId(userId);
         OpenMemberInfo openMemberInfo = new OpenMemberInfo();
-       String addressType = "MINE";
-         if (promoterOrderMan != null){
+        String addressType = "MINE";
+        if (promoterOrderMan != null){
             //下单员
             ReceiveAddress receiveAddress = new ReceiveAddress();
             receiveAddress.setReceiveAddressId(receiveAddressId);
@@ -120,7 +116,6 @@ public class OrderServiceImpl implements OrderService {
                 Date endTime = openMemberInfo.getEndTime();
                 if (endTime.getTime() > System.currentTimeMillis()){
                     //是会员
-                    isVip =true;
                     Integer freeTimes = openMemberInfo.getFreeTimes();
                     if (freeTimes != null && freeTimes > 0){
                         freeTimes --;
@@ -155,13 +150,6 @@ public class OrderServiceImpl implements OrderService {
         Orders order = generateOrders(userId, payWay, remark, amount, saveAmount, extraFee, serviceFee, num, receiveAddress, smallCommunity,receiveAddressId,addressType);
         // 插入订单
         ordersMapper.insert(order);
-
-        if (isVip){
-            MemberOrder memberOrder = new MemberOrder();
-            memberOrder.setOrdersId(order.getOrdersId());
-            memberOrder.setOpenMemberId(openMemberInfo.getOpenMemberInfoId());
-            memberOrderMapper.addMemberOrder(memberOrder);
-        }
 
         //新增订单商品
         for (ShoppingCar car : shoppingCars) {
@@ -330,13 +318,7 @@ public class OrderServiceImpl implements OrderService {
             cl.add(Calendar.MONTH,1);
             orders.setCreateTimeEnd(DateUtil.date2String(cl.getTime(),"yyyy-MM-dd HH:mm:ss"));
         }
-        List<Orders> ordersList = null;
-        if(orders.getUserId() != null){
-            ordersList = ordersMapper.getALLOrderByOrderMan(orders);
-        }else if(orders.getReceiveAddressId() != null){
-            ordersList = ordersMapper.getALLOrder(orders);
-        }
-
+        List<Orders> ordersList = ordersMapper.getALLOrderByOrderMan(orders);
         List<Orders> orders3 = getOrdersList(ordersList, "orderList");
         PageResult<Orders> ordersPageResult = new PageResult<>(orders3,orders);
         return ordersPageResult;
