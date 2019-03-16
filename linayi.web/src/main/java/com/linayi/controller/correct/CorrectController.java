@@ -194,11 +194,8 @@ public class CorrectController extends BaseController {
      * excel 导出
      */
     @RequestMapping(value = "/exportShareRecord.do",method = RequestMethod.GET)
-    public void exportExcel() {
-        Correct correct = new Correct();
-        correct.setPageSize(20000);
-        correct.setCurrentPage(1);
-        PageResult<Correct> correctPageResult = correctService.page(correct);
+    public void exportExcel(Correct correct) {
+       List<Correct> correctPageResult = correctService.getList(correct);
         try {
             getRequest().setCharacterEncoding("UTF-8");//设置request的编码方式，防止中文乱码
             String fileName = null;
@@ -216,7 +213,7 @@ public class CorrectController extends BaseController {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 StringBuilder tableHtml = new StringBuilder("<table><tr><td>真实姓名</td><td>手机号</td><td>状态</td><td>商品</td><td>超市</td>" +
                         "<td>类型</td><td>价格（元）</td><td>价格类型</td><td>有效开始时间</td><td>有效结束时间</td><td>创建时间</td></tr>");
-                for (Correct cre : correctPageResult.getRows()) {
+                for (Correct cre : correctPageResult) {
                     //用户相关信息
                     if (cre.getUser() != null) {
                         tableHtml = tableHtml.append("<tr><td>" + cre.getUser().getRealName() + "</td>");
@@ -291,7 +288,7 @@ public class CorrectController extends BaseController {
                     }
                 }
                 if (!StringUtils.isEmpty(tableHtml)) {
-                    tempsb = "<meta http-equiv=\"content-type\" content=\"application/ms-excel; charset=UTF-8\"/>" + tableHtml + "</table>";
+                    tempsb = "<meta http-equiv=\"content-type\" content=\"application/ms-excel; charset=UTF-8\"/>" + tableHtml.toString().replaceAll("null","") + "</table>";
                 }
             }
             sos.write(tempsb.getBytes("utf-8"));

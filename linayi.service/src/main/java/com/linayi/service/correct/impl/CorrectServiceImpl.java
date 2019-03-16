@@ -362,7 +362,7 @@ public class CorrectServiceImpl implements CorrectService {
         Map<Integer, List<Supermarket>> supermarketMap = supermarketList.stream().collect(Collectors.groupingBy(Supermarket::getSupermarketId));
         corrects.parallelStream().forEach(item -> {
             Supermarket supermarket = supermarketMap.get(item.getSupermarketId()).stream().findFirst().orElse(null);
-            ;
+
             if (supermarket != null) {
                 String name = supermarket.getName();
                 item.getSupermarket().setName(name);
@@ -382,6 +382,42 @@ public class CorrectServiceImpl implements CorrectService {
         }
         PageResult<Correct> page = new PageResult<>(correctResp, corrects.size());
         return page;
+    }
+
+
+    @Override
+    public List<Correct> getList(Correct correct) {
+        List<Correct> corrects = correctMapper.queryPage(correct);
+        List<Correct> correctList1 = correctMapper.queryAdminPage(correct);
+        correctList1.stream().forEach(item -> {
+            AdminAccount adminAccount = item.getAdminAccount();
+            User user = new User();
+            if (adminAccount != null) {
+                user.setRealName(adminAccount.getUserName());
+                user.setMobile(item.getMobile());
+            }else {
+                user.setRealName("");
+                user.setMobile("");
+            }
+
+            item.setUser(user);
+        });
+        corrects.addAll(correctList1);
+        List<Supermarket> supermarketList = supermarketMapper.selectAll(new Supermarket());
+        //转化成key为supermarketId的hashMap
+        Map<Integer, List<Supermarket>> supermarketMap = supermarketList.stream().collect(Collectors.groupingBy(Supermarket::getSupermarketId));
+        corrects.parallelStream().forEach(item -> {
+            Supermarket supermarket = supermarketMap.get(item.getSupermarketId()).stream().findFirst().orElse(null);
+
+            if (supermarket != null) {
+                String name = supermarket.getName();
+                item.getSupermarket().setName(name);
+            }
+        });
+        corrects.sort((a, b) -> {
+            return b.getCreateTime().compareTo(a.getCreateTime());
+        });
+        return corrects;
     }
 
     @Override

@@ -232,7 +232,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
                     return $.param(data);
                 }
             }).success(function (data) {
-            	list();
+                list();
                 modalInstance.close();
                 if (data.success) {
                     toaster.success("", data.msg, 3000);
@@ -415,27 +415,77 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
         });
     }
     function exportData() {
-        $.ajax({
-            url: urls.ms + "/correct/correct/exportShareRecord.do",
-            type: "post",
-            data: {
-                "correctId": $scope.correct.correctId,
-                "communityId": $scope.search.communityId,
-                "price": $scope.correct.price /** 100*/,
-                "priceType": $scope.correct.priceType,
-                "startTime": new Date($scope.correct.startTime).format("yyyy-MM-dd") + " 00:00:00",
-                "endTime": new Date($scope.correct.endTime).format("yyyy-MM-dd") + " 00:00:00",
-            },
-            dataType: "JSON",
-            success: function (data) {
-                if (data.respCode === "S") {
-                    $("#correctList").trigger("reloadGrid");
-                    $modalInstance.close();
-                    toaster.success("", "操作成功", 3000);
-                }
-            }
+        var realName= $scope.search.realName;
+        var mobile = $scope.search.mobile;
+        var status = $scope.search.status;
+        var priceType = $scope.search.priceType;
+        var name = $scope.search.name;
+        var createTimeStart =  $scope.search.createTimeStart;
+        var startTime = $scope.search.startTime;
+        var endTime = $scope.search.endTime;
+        debugger;
+        var data ='';
+        var sum = 0;
+        if (realName === undefined || realName == ''){
+            realName = null;
+            sum ++;
+        }else {
+            data+='&realName=' + realName;
+        }
+        if (priceType === undefined || priceType == ''){
+            priceType = null;
+            sum ++;
+        }else{
+            data+='&priceType=' + priceType;
+        }
+        if (mobile === undefined || mobile == ''){
+            mobile = null;
+            sum ++;
+        }else {
+            data+='&mobile=' + mobile;
+        }
+        if (status === undefined || status == ''){
+            status = null;
+            sum ++;
+        }else {
+            data+='&status=' + status;
+        }
+        if (name === undefined || name == ''){
+            name = null;sum ++;
 
-        })
+        }else {
+            data +='&name=' + name;
+        }
+        if (createTimeStart === undefined || createTimeStart == ''){
+            createTimeStart = null;
+            sum ++;
+        }else {
+            data +='&createTimeStart=' + createTimeStart;
+        }
+        if (startTime === undefined || startTime == ''){
+            startTime = null;
+            sum ++;
+        }
+        if (endTime === undefined || endTime == ''){
+            endTime = null;
+            sum ++;
+        }
+
+        if (sum == 8) {
+            toaster.error("", "请输入搜索条件后导出!", 3000);
+            return;
+        }
+        if (!(startTime === null || startTime == '')){
+            startTime = new Date($scope.search.startTime).format("yyyy-MM-dd") + " 00:00:00";
+            data +='&startTime=' + startTime;
+        }
+        if (!(endTime === null || endTime == '')){
+            endTime = new Date($scope.search.endTime).format("yyyy-MM-dd") + " 00:00:00";
+            data +='&endTime=' + endTime;
+        }
+        window.location.href=urls.ms + "/correct/correct/exportShareRecord.do?" + data.replace("&","");
+        toaster.success("", "导出成功!", 1000);
+
     }
 
     init();
