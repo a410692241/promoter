@@ -190,6 +190,9 @@ public class CorrectController extends BaseController {
         }
     }
 
+    /**
+     * excel 导出
+     */
     @RequestMapping(value = "/exportShareRecord.do",method = RequestMethod.GET)
     public void exportExcel() {
         Correct correct = new Correct();
