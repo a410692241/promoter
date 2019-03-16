@@ -5,19 +5,21 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.linayi.controller.BaseController;
 import com.linayi.entity.account.AdminAccount;
 import com.linayi.entity.correct.Correct;
 import com.linayi.entity.correct.SupermarketGoodsVersion;
@@ -32,7 +34,7 @@ import com.linayi.util.ResponseData;
 
 @Controller
 @RequestMapping("correct/correct")
-public class CorrectController {
+public class CorrectController extends BaseController{
 
     @Autowired
     private CorrectService correctService;
@@ -186,5 +188,37 @@ public class CorrectController {
 			e.printStackTrace();
 		}
 	}
+    
+    @RequestMapping("/exportShareRecord.do")
+    public void exportShareRecord() {
+		try {
+			getRequest().setCharacterEncoding("UTF-8");//设置request的编码方式，防止中文乱码
+			
+			String fileName =null;
+			
+			fileName ="666666";//设置导出的文件名称
+			
+			String contentType = "application/vnd.ms-excel";//定义导出文件的格式的字符串
+			String recommendedName = new String(fileName.getBytes(),"iso_8859_1");//设置文件名称的编码格式
+			getResponse().setContentType(contentType);//设置导出文件格式
+			getResponse().setHeader("Content-Disposition", "attachment; filename=" + recommendedName + ".xls");
+			getResponse().setCharacterEncoding("utf-8");
+			getResponse().resetBuffer();
+			//利用输出输入流导出文件
+			ServletOutputStream sos = getResponse().getOutputStream();
+			String tempsb="";
+			String tableHtml = "<table><tr><td>sdgsdhdsh888888888888</td></tr><tr><td>99999999999</td></tr></table>";
+			if(!StringUtils.isEmpty(tableHtml)){
+//				tempsb="<meta http-equiv=\"content-type\" content=\"application/ms-excel; charset=UTF-8\"/>"+tableHtml;
+				tempsb="<meta http-equiv=\"content-type\" content=\"application/ms-excel; charset=UTF-8\"/>"+tableHtml;
+			}
+			sos.write(tempsb.getBytes("utf-8"));
+			sos.flush();
+			sos.close();
+		} catch (Exception e) {
+			
+		}
+	}
+
    
 }

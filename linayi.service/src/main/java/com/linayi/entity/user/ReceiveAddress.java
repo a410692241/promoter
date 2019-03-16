@@ -44,6 +44,8 @@ public class ReceiveAddress extends BaseEntity{
     /*创建结束时间*/
     private String createTimeEnd;
 
+    private Integer promoterId;
+
     public String getSmallName() {
         return smallName;
     }
@@ -191,5 +193,13 @@ public class ReceiveAddress extends BaseEntity{
 
     public void setCreateTimeStart(String createTimeStart) {
         this.createTimeStart = createTimeStart;
+    }
+
+    public Integer getPromoterId() {
+        return promoterId;
+    }
+
+    public void setPromoterId(Integer promoterId) {
+        this.promoterId = promoterId;
     }
 }

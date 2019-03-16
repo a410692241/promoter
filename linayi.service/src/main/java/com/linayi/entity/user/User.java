@@ -97,6 +97,8 @@ public class User extends BaseEntity implements Serializable {
 	private Integer openMemberInfoId;
 	
 	private Integer openOrderManInfoId;
+
+	private String isRegist;
 	
 	/**
 	 * 查询时间止
@@ -402,4 +404,11 @@ public class User extends BaseEntity implements Serializable {
 		this.openOrderManInfoId = openOrderManInfoId;
 	}
 
+    public String getIsRegist() {
+        return isRegist;
+    }
+
+    public void setIsRegist(String isRegist) {
+        this.isRegist = isRegist;
+    }
 }

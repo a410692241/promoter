@@ -72,4 +72,11 @@ public interface ReceiveAddressMapper {
 	List<ReceiveAddress> getListReceiveAddressByUserIdAndAdderssType(ReceiveAddress receiveAddress);
 
     ReceiveAddress getReceiveAddressById(Integer receiveAddressId);
+
+    /**
+     * 根据推广商查顾客收货地址
+     * @param receiveAddress
+     * @return
+     */
+    List<ReceiveAddress> getAddressListByPromoter(ReceiveAddress receiveAddress);
 }
