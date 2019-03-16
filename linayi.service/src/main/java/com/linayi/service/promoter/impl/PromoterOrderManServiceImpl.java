@@ -169,7 +169,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         PromoterOrderMan promoterOrderMan = new PromoterOrderMan();
         Orders orders = getTimeRange(range);
         //下单员会员订单数
-        orders.setOrderManId(orderManId);
+        //orders.setOrderManId(orderManId);
         orders.setUserId(userId);
         List<Orders> ordersList = ordersMapper.getOrdersByUserIdAndOrderManId(orders);
         if(ordersList != null && ordersList.size() > 0){

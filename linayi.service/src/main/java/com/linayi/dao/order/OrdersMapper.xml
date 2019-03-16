@@ -234,8 +234,8 @@
         select o.orders_id, o.user_id, o.receiver_name,o.mobile, o.address_one, o.address_two, o.address_three, o.pay_way, o.save_amount, o.service_fee, o.extra_fee, o.arrive_time, o.actual_arrive_time,
         o.remark, o.quantity, o.amount, o.user_status, o.community_status, o.community_id, o.update_time, o.create_time from orders o
             <if test="userId != null">
-                join order_man_member omm on omm.order_man_id = #{orderManId}
-                where o.user_id = #{userId} and omm.member_id = #{userId} and omm.create_time <![CDATA[ <= ]]> o.create_time
+                join order_man_member omm on omm.member_id = #{userId}
+                where o.user_id = #{userId} and omm.create_time <![CDATA[ <= ]]> o.create_time
             </if>
             <if test="receiveAddressId != null">
                 where o.receive_address_id = #{receiveAddressId} AND o.address_type = 'CUSTOMER' AND o.userId = #{orderManId}
@@ -596,9 +596,7 @@
   </select>
   <select id="getOrdersByUserIdAndOrderManId" resultMap="BaseResultMap">
       select o.orders_id ordersId,o.amount amount from orders o
-      <if test="orderManId != null">
-          join order_man_member omm on omm.order_man_id = #{orderManId} and o.user_id = omm.member_id
-      </if>
+      join order_man_member omm on  o.user_id = omm.member_id
       where o.create_time <![CDATA[ >= ]]> omm.create_time
       <if test="createTimeStart != null and createTimeStart != ''">
           AND o.create_time <![CDATA[ >= ]]> #{createTimeStart}

@@ -292,7 +292,6 @@ public class PromoterController extends BaseController {
 		try {
 			ParamValidUtil<Orders> pv = new ParamValidUtil<>(orders);
 			Orders orders1 = pv.transObject(Orders.class);
-			orders1.setOrderManId(getUserId());
 			ordersList = orderService.getOrdersList(orders1);
 			return new ResponseData(ordersList);
 		} catch (Exception e) {
@@ -302,7 +301,7 @@ public class PromoterController extends BaseController {
 	}
 
 	// 订单列表-用户详情
-	@ApiOperation(value = "订单列表-用户详情", notes = "", produces = "application/xml,application/json")
+	@ApiOperation(value = "订单列表-订单统计", produces = "application/xml,application/json")
 	@RequestMapping(value = "/memberDetails.do", method = RequestMethod.POST)
 	public Object memberDetails(@RequestBody PromoterVo.MemberDetailsObj orderManMember) {
 		OrderManMember currentOrderManMember = new OrderManMember();
