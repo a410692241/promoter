@@ -137,11 +137,9 @@ public class PromoterController extends BaseController {
 		try {
 			ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(promoterOrderMan);
 			PromoterOrderMan promoterOrderMan1 = pv.transObject(PromoterOrderMan.class);
-
 			if (promoterOrderMan1.getPageSize() == null) {
 				promoterOrderMan1.setPageSize(8);
 			}
-
 			if (promoterOrderMan1.getOrderManId() == null) {
 				Integer userId = getUserId();
 				promoterOrderMan1.setOrderManId (userId);
