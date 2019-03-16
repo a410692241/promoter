@@ -503,7 +503,7 @@
                    });
                    $("#preview").empty();
                    $("input[type='radio']").removeAttr('checked');
-               }if(data.respCode == "T"){
+               }else if(data.respCode == "T"){
                     alert("商品已存在！");
                 }else{
                    alert("添加失败！");
@@ -522,8 +522,6 @@
         }
         templateform.open({
             title:"价格分享",
-
-
             url:url,
             scope:$scope,
             onOpen:function( $modalInstance, data ,$scope){
