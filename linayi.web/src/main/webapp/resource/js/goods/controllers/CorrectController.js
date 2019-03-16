@@ -9,7 +9,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
         $scope.edit = edit;
         $scope.audit = audit;
         $scope.batchAudit = batchAudit;
-        $scope.exportExcel = exportExcel;
+        // $scope.exportExcel = exportExcel;
         $scope.cancel = cancel;
         $scope.save = save;
         list();
@@ -414,22 +414,22 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
     }
 
     // 导出Excel
-    function exportExcel() {
-        var params = "";
-        $.ajax({
-            url:urls.ms + "/correct/correct/exportShareRecord.do",
-            data:params,
-            dataType : 'text',
-            type: "POST",
-            success:function(data){
-                if (data.respCode==="S"){
-                    toaster.success("", "操作成功", 3000);
-                }else{
-                    toaster.error("", "操作失败", 3000);
-                }
-            }
-        });
-    }
+    // function exportExcel() {
+    //     var params = "";
+    //     $.ajax({
+    //         url:urls.ms + "/correct/correct/exportShareRecord.do",
+    //         data:params,
+    //         dataType : 'text',
+    //         type: "POST",
+    //         success:function(data){
+    //             if (data.respCode==="S"){
+    //                 toaster.success("", "操作成功", 3000);
+    //             }else{
+    //                 toaster.error("", "操作失败", 3000);
+    //             }
+    //         }
+    //     });
+    // }
 
     init();
 });
