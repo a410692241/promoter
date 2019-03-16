@@ -64,7 +64,7 @@
                             </ui-select>
                         </div>
                     </div>
-                     <div class="form-group form-group-margin">
+                    <div class="form-group form-group-margin">
                         <div class="input-group">
                             <span class="input-group-addon">超市</span>
                             <input ng-model="search.name" type="text" class="form-control">
@@ -83,13 +83,13 @@
                             <input ng-model="search.endTime" datetimepicker type="text" class="form-control" style="min-width: 150px">
                         </div>
                     </div>
-                       <div class="form-group form-group-margin">
+                    <div class="form-group form-group-margin">
                         <div class="input-group">
                             <span class="input-group-addon">创建时间</span> <input type="text"
                                                                                class="form-control" datetimepicker
                                                                                ng-model="search.createTimeStart"/>
                         </div>
-                        
+
                         至
                         <div class="input-group">
                             <input type="text" class="form-control" datetimepicker
@@ -101,7 +101,8 @@
                         <i class="fa fa-search"></i>搜索
                     </a>
                     <a ng-click="batchAudit()" class="btn btn-primary form-group-margin" href="javascript:void(0);"></i>批量审核</a>
-                    <a class="btn btn-primary form-group-margin" href="/web/correct/correct/exportShareRecord.do"></i>导出列表</a>
+                    <a ng-click="exportData()" class="btn btn-primary form-group-margin" href="javascript:void(0);"></i>导出列表</a>
+                    <%--<a class="btn btn-primary form-group-margin" href="/web/correct/correct/exportShareRecord.do"></i>导出列表</a>--%>
                 </form>
 
                 <!-- 表格 -->
