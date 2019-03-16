@@ -10,7 +10,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>linayi.app</artifactId>
-	<name>app</name>
+	<name>wherebuy.app</name>
 	<url>http://maven.apache.org</url>
 	<packaging>war</packaging>
 	<properties>
