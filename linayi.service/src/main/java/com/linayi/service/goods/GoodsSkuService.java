@@ -17,7 +17,7 @@ public interface GoodsSkuService {
 
 
     /*新增商品*/
-    GoodsSku addGoods(String category, String brand, GoodsSku goods, String [] attribute,Integer creatorId);
+    GoodsSku addGoods(String category, String brand, GoodsSku goods, String [] attribute,Integer creatorId,MultipartFile file) throws Exception;
 
     /*分页查询*/
     List<GoodsSku> getGoodsList(GoodsSku goods);

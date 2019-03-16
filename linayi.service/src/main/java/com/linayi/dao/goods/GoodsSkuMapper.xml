@@ -220,7 +220,49 @@
         </set>
         where goods_sku_id = #{goodsSkuId}
     </update>
+    <select id="getGoodsByGoods" resultMap="BaseResultMap">
+        select
+        <include refid="columnList"/>
+        from goods_sku where STATUS = 'NORMAL'
+        <if test="goodsSkuId != null and goodsSkuId != ''">
+            and goods_sku_id = #{goodsSkuId}
+        </if>
+        <if test="name != null and name != ''">
+            and name like #{name}
+        </if>
+        <if test="fullName != null and fullName != ''">
+            and full_name like #{fullName}
+        </if>
+        <if test="barcode != null and barcode != ''">
+            and barcode = #{barcode}
+        </if>
+        <if test="categoryId != null and categoryId != ''">
+            and category_id = #{categoryId}
+        </if>
 
+        <if test="brandId != null and brandId != ''">
+            and brand_id = #{brandId}
+        </if>
+        <if test="status != null and status != ''">
+            and status = #{status}
+        </if>
+
+        <if test="image != null and image != ''">
+            and image = #{image}
+        </if>
+        <if test="updateTime != null and updateTime != ''">
+            and update_time = #{updateTime}
+        </if>
+        <if test="createTimeStart != null and createTimeStart != ''">
+            and create_time <![CDATA[ >= ]]> #{createTimeStart}
+        </if>
+        <if test="createTimeEnd != null and createTimeEnd != ''">
+            and create_time <![CDATA[ <= ]]> #{createTimeEnd}
+        </if>
+        <if test="creatorId != null and creatorId != ''">
+            and creator_id = #{creatorId}
+        </if>
+    </select>
     <select id="getGoodsList" parameterType="com.linayi.entity.goods.GoodsSku" resultMap="BaseResultMap">
         select
         <include refid="columnList"/>

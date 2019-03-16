@@ -465,6 +465,7 @@
         var classifyName = $("#makeInput").val();
         var brandName = $("#makeInput1").val();
         var goodsName = $("#goodsName").val();
+        var barcode = $("#barcode").val();
 
         if(classifyName == null || classifyName == ""){
             alert("请选择或输入分类");
@@ -476,6 +477,10 @@
         }
         if(goodsName == null || goodsName == ""){
             alert("请输入商品名！");
+            return false;
+        }
+        if(barcode == null || barcode == ""){
+            alert("请输入商品条形码！");
             return false;
         }
         var form = new FormData(document.getElementById("add_goods"));
@@ -498,7 +503,9 @@
                    });
                    $("#preview").empty();
                    $("input[type='radio']").removeAttr('checked');
-               }else{
+               }if(data.respCode == "T"){
+                    alert("商品已存在！");
+                }else{
                    alert("添加失败！");
                }
             },

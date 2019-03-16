@@ -103,6 +103,11 @@ public class GoodsSkuController {
         try {
             // 插入商品sku
             goodsSku = goodsService.insertGoods(modelMap, file, category, brand, goods, attribute, httpRequest);
+            if (goodsSku == null){
+                ResponseData responseData = new ResponseData(ErrorType.SYSTEM_ERROR);
+                responseData.setRespCode("T");
+                return responseData;
+            }
             // 分享价格
             if (supermarketId != null && price != null && priceType != null) {
                 Long goodsSkuId = goodsSku.getGoodsSkuId();

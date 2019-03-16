@@ -100,12 +100,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		AdminAccount adminAccount=(AdminAccount)httpRequest.getSession().getAttribute("loginAccount");
 		Integer creatorId=adminAccount.getAccountId();
 		MultipartHttpServletRequest request = (MultipartHttpServletRequest) httpRequest;
-		if (file != null) {
-			String image = null;
-			image = ImageUtil.handleUpload(file);
-			goods.setImage(image);
-		}
-		return addGoods(category, brand, goods, attribute,creatorId);
+		return addGoods(category, brand, goods, attribute,creatorId,file);
 	}
 
 	@Override
@@ -142,7 +137,22 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		return goodsSku;
 	}
 	@Override
-	public GoodsSku addGoods(String category, String brand, GoodsSku goods, String [] attribute,Integer creatorId) {
+	public GoodsSku addGoods(String category, String brand, GoodsSku goods, String [] attribute,Integer creatorId, MultipartFile file) throws Exception {
+		//判断条形码是否存在
+		String barcode = goods.getBarcode();
+		GoodsSku goodsSku = new GoodsSku();
+		goodsSku.setBarcode(barcode);
+		GoodsSku goodsByGoods = goodsSkuMapper.getGoodsByGoods(goodsSku);
+		if (goodsByGoods != null){
+			return null;
+		}
+		goodsSku.setBarcode(null);
+
+		if (file != null) {
+			String image = null;
+			image = ImageUtil.handleUpload(file);
+			goods.setImage(image);
+		}
 		// 调用品牌和分类业务层方法，获取品牌id和分类id
 		Integer brandId = null;
 		List<Brand> brandList = brandMapper.getBrandsByName(null, null, brand);
@@ -168,6 +178,8 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 			category1.setStatus("NORMAL");
 			categoryMapper.insert(category1);
 		}
+
+
 		if (goods.getName() != null && !"".equals(goods.getName())) {
 			goods.setBrandId(brandId);
 			goods.setCategoryId(categoryId);
@@ -192,7 +204,15 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 					goodsAttrValueMapper.insert(goodsAttrValue);
 				}
 			}
-			goods.setFullName(getGoodsName(goods));
+			//判断商品全称是否存在
+			String fullName = getGoodsName(goods);
+			goodsSku.setFullName(fullName);
+			goodsByGoods = goodsSkuMapper.getGoodsByGoods(goodsSku);
+			if (goodsByGoods != null){
+				goodsSkuMapper.deleteGoodsById(Integer.parseInt(goods.getGoodsSkuId() + ""));
+				return null;
+			}
+			goods.setFullName(fullName);
 			goodsSkuMapper.updateGoodsFullName(goods);
 		}
 		return goods;

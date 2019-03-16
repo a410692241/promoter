@@ -10,6 +10,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
         $scope.audit = audit;
         $scope.batchAudit = batchAudit;
         $scope.cancel = cancel;
+        $scope.exportData = exportData;
         $scope.save = save;
         list();
         $scope.search = {
@@ -242,6 +243,8 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
         });
     }
 
+
+
     /**审核*/
     function audit(rowId) {
         var rowData = $("#correctList").jqGrid("getRowData", rowId);
@@ -410,6 +413,29 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
                 }).trigger("reloadGrid");
             }
         });
+    }
+    function exportData() {
+        $.ajax({
+            url: urls.ms + "/correct/correct/exportShareRecord.do",
+            type: "post",
+            data: {
+                "correctId": $scope.correct.correctId,
+                "communityId": $scope.search.communityId,
+                "price": $scope.correct.price /** 100*/,
+                "priceType": $scope.correct.priceType,
+                "startTime": new Date($scope.correct.startTime).format("yyyy-MM-dd") + " 00:00:00",
+                "endTime": new Date($scope.correct.endTime).format("yyyy-MM-dd") + " 00:00:00",
+            },
+            dataType: "JSON",
+            success: function (data) {
+                if (data.respCode === "S") {
+                    $("#correctList").trigger("reloadGrid");
+                    $modalInstance.close();
+                    toaster.success("", "操作成功", 3000);
+                }
+            }
+
+        })
     }
 
     init();
