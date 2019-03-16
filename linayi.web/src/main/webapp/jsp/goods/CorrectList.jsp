@@ -24,8 +24,8 @@
                 <form class="form-inline" id="correct">
                     <div class="form-group form-group-margin">
                         <div class="input-group">
-                            <span class="input-group-addon">昵称</span>
-                            <input ng-model="search.nickName" type="text" class="form-control">
+                            <span class="input-group-addon">真实姓名</span>
+                            <input ng-model="search.realName" type="text" class="form-control">
                         </div>
                     </div>
                     <div class="form-group form-group-margin">

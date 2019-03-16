@@ -11,6 +11,15 @@ import java.util.Date;
 import java.util.List;
 
 public class Correct extends BaseEntity {
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
+
+    private String realName;
     private Long userName;
 
     public Long getUserName() {
@@ -30,26 +39,25 @@ public class Correct extends BaseEntity {
      * [超市ID]
      */
     private Integer supermarketId;
-    
+
     private String supermarkerName;
 
- 
 
-	public String getSupermarkerName() {
-		return supermarkerName;
-	}
+    public String getSupermarkerName() {
+        return supermarkerName;
+    }
 
-	public void setSupermarkerName(String supermarkerName) {
-		this.supermarkerName = supermarkerName;
-	}
+    public void setSupermarkerName(String supermarkerName) {
+        this.supermarkerName = supermarkerName;
+    }
 
-	private Supermarket supermarket;
-    
+    private Supermarket supermarket;
+
     /**
      * [超市名]
      */
     private String name;
-    
+
     /**
      * [商品ID]
      */
@@ -59,7 +67,7 @@ public class Correct extends BaseEntity {
      * [商品名]
      */
     private String fullName;
-    
+
     /**
      * [商品图片]
      */
@@ -75,41 +83,41 @@ public class Correct extends BaseEntity {
     /**
      * [价格生效时间]
      */
-    @DateTimeFormat( pattern = "yyyy-MM-dd HH:mm" )
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date startTime;
 
     /**
      * [价格过期时间]
      */
-    @DateTimeFormat( pattern = "yyyy-MM-dd HH:mm" )
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date endTime;
 
     private String strStartTime;
-    
+
     private String strEndTime;
-    
+
     /*创建开始时间*/
     private String createTimeStart;
     /*创建结束时间*/
     private String createTimeEnd;
-    
+
     public String getCreateTimeStart() {
-		return createTimeStart;
-	}
+        return createTimeStart;
+    }
 
-	public void setCreateTimeStart(String createTimeStart) {
-		this.createTimeStart = createTimeStart;
-	}
+    public void setCreateTimeStart(String createTimeStart) {
+        this.createTimeStart = createTimeStart;
+    }
 
-	public String getCreateTimeEnd() {
-		return createTimeEnd;
-	}
+    public String getCreateTimeEnd() {
+        return createTimeEnd;
+    }
 
-	public void setCreateTimeEnd(String createTimeEnd) {
-		this.createTimeEnd = createTimeEnd;
-	}
+    public void setCreateTimeEnd(String createTimeEnd) {
+        this.createTimeEnd = createTimeEnd;
+    }
 
-	/**
+    /**
      * [用户ID]
      */
     private Integer userId;
@@ -138,8 +146,8 @@ public class Correct extends BaseEntity {
      * [价格类型] 正常价：NORMAL  促销价：PROMOTION  处理价：DEAL  会员价：MEMBER
      */
     private String priceType;
-    
-    
+
+
     private String priceTypeForCha;
 
     /**
@@ -150,13 +158,13 @@ public class Correct extends BaseEntity {
     /**
      * [价格实际生效时间]
      */
-    @DateTimeFormat( pattern = "yyyy-MM-dd HH:mm" )
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date actualStartTime;
 
     /**
      * [价格实际过期时间]
      */
-    @DateTimeFormat( pattern = "yyyy-MM-dd HH:mm" )
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date actualEndTime;
 
     /**
@@ -172,11 +180,11 @@ public class Correct extends BaseEntity {
     /**
      * [创建时间]
      */
-    @DateTimeFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     private AdminAccount adminAccount;
-    
+
     /**
      * 纠错历史列表按钮类型
      */
@@ -187,7 +195,7 @@ public class Correct extends BaseEntity {
     private String nickName;
 
     private String mobile;
-    
+
     private String isRecall;
 
     private static final long serialVersionUID = 1L;
@@ -241,16 +249,16 @@ public class Correct extends BaseEntity {
     public void setSupermarket(Supermarket supermarket) {
         this.supermarket = supermarket;
     }
-    
+
     public String getName() {
-		return name;
-	}
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Long getCorrectId() {
+    public Long getCorrectId() {
         return correctId;
     }
 
@@ -273,24 +281,24 @@ public class Correct extends BaseEntity {
     public void setGoodsSkuId(Long goodsSkuId) {
         this.goodsSkuId = goodsSkuId;
     }
-    
+
     public String getFullName() {
-		return fullName;
-	}
+        return fullName;
+    }
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
-	public String getGoodsImage() {
-		return goodsImage;
-	}
+    public String getGoodsImage() {
+        return goodsImage;
+    }
 
-	public void setGoodsImage(String goodsImage) {
-		this.goodsImage = goodsImage;
-	}
+    public void setGoodsImage(String goodsImage) {
+        this.goodsImage = goodsImage;
+    }
 
-	public Integer getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
@@ -353,18 +361,17 @@ public class Correct extends BaseEntity {
     public void setPriceType(String priceType) {
         this.priceType = priceType;
     }
-    
-    
+
 
     public String getPriceTypeForCha() {
-		return priceTypeForCha;
-	}
+        return priceTypeForCha;
+    }
 
-	public void setPriceTypeForCha(String priceTypeForCha) {
-		this.priceTypeForCha = priceTypeForCha;
-	}
+    public void setPriceTypeForCha(String priceTypeForCha) {
+        this.priceTypeForCha = priceTypeForCha;
+    }
 
-	public String getStatus() {
+    public String getStatus() {
         return status;
     }
 
@@ -413,14 +420,14 @@ public class Correct extends BaseEntity {
     }
 
     public String getHistoryButtonType() {
-		return historyButtonType;
-	}
+        return historyButtonType;
+    }
 
-	public void setHistoryButtonType(String historyButtonType) {
-		this.historyButtonType = historyButtonType;
-	}
-	
-	public String getParentImage() {
+    public void setHistoryButtonType(String historyButtonType) {
+        this.historyButtonType = historyButtonType;
+    }
+
+    public String getParentImage() {
         return parentImage;
     }
 
@@ -428,35 +435,32 @@ public class Correct extends BaseEntity {
         this.parentImage = parentImage;
     }
 
-	public String getIsRecall() {
-		return isRecall;
-	}
+    public String getIsRecall() {
+        return isRecall;
+    }
 
-	public void setIsRecall(String isRecall) {
-		this.isRecall = isRecall;
-	}
-	
-	
+    public void setIsRecall(String isRecall) {
+        this.isRecall = isRecall;
+    }
 
-	
 
-	public String getStrStartTime() {
-		return strStartTime;
-	}
+    public String getStrStartTime() {
+        return strStartTime;
+    }
 
-	public void setStrStartTime(String strStartTime) {
-		this.strStartTime = strStartTime;
-	}
+    public void setStrStartTime(String strStartTime) {
+        this.strStartTime = strStartTime;
+    }
 
-	public String getStrEndTime() {
-		return strEndTime;
-	}
+    public String getStrEndTime() {
+        return strEndTime;
+    }
 
-	public void setStrEndTime(String strEndTime) {
-		this.strEndTime = strEndTime;
-	}
+    public void setStrEndTime(String strEndTime) {
+        this.strEndTime = strEndTime;
+    }
 
-	@Override
+    @Override
     public String toString() {
         return "Correct{" +
                 "correctId=" + correctId +
@@ -485,9 +489,9 @@ public class Correct extends BaseEntity {
                 '}';
     }
 
-	public Correct() {
-		super();
-	}
+    public Correct() {
+        super();
+    }
 
     public AdminAccount getAdminAccount() {
         return adminAccount;
