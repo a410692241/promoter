@@ -332,16 +332,16 @@
     <select id="queryPage" resultMap="BaseResultMap"
             parameterType="com.linayi.entity.correct.Correct">
         SELECT
-            c.correct_id,c.goods_sku_id,u.real_name,u.mobile,s.supermarket_id,c.`status`,g.`NAME`,c.type,c.price,c.price_type,c.start_time,c.end_time,c.create_time
+            c.correct_id,c.goods_sku_id,u.real_name,u.mobile,s.supermarket_id,c.`status`,g.`full_name`,c.type,c.price,c.price_type,c.start_time,c.end_time,c.create_time
         FROM
             `correct` c left join USER u on c.user_id = u.user_id left join supermarket s on c.supermarket_id = s.supermarket_id
-            left join  goods_sku g on c.goods_sku_id = g.goods_sku_id where c.user_type in ("USER","")
-         <where>
+            left join  goods_sku g on c.goods_sku_id = g.goods_sku_id where c.user_type = "USER"
+
             <if test="mobile !=null and mobile != ''">
                 and u.mobile like concat('%',#{mobile,jdbcType=VARCHAR},'%')
             </if>
-            <if test="nickName !=null and nickName != ''">
-                and u.nickname like concat('%', #{nickName,jdbcType=VARCHAR},'%')
+            <if test="realName !=null and realName != ''">
+                and u.real_name like concat('%', #{realName,jdbcType=VARCHAR},'%')
             </if>
             <if test="name!=null and name!=''">
             	and s.name like concat('%',#{name},'%') 
@@ -364,21 +364,21 @@
       		 <if test="createTimeEnd != null and createTimeEnd != ''">
           		and c.create_time <![CDATA[ <= ]]> #{createTimeEnd}
         	</if>
-        </where>
+
         order by c.correct_id desc
     </select>
     <select id="queryAdminPage" resultMap="BaseResultMap"
             parameterType="com.linayi.entity.correct.Correct">
         SELECT
-        c.correct_id,c.goods_sku_id,u.user_name,u.mobile,s.supermarket_id,c.`status`,g.`NAME`,c.type,c.price,c.price_type,c.start_time,c.end_time,c.create_time
+        c.correct_id,c.goods_sku_id,u.user_name,u.mobile,s.supermarket_id,c.`status`,g.`full_name`,c.type,c.price,c.price_type,c.start_time,c.end_time,c.create_time
         FROM
         `correct` c left join `admin_account` u on c.user_id = u.account_id left join supermarket s on c.supermarket_id = s.supermarket_id left join  goods_sku g on c.goods_sku_id = g.goods_sku_id where c.user_type="ADMIN"
-        <where>
+
             <if test="mobile !=null and mobile != ''">
                 and u.mobile like concat('%',#{mobile,jdbcType=VARCHAR},'%')
             </if>
-            <if test="name!=null and name!=''">
-                and s.name like concat('%',#{name},'%')
+            <if test="realName!=null and realName!=''">
+                and u.user_name like concat('%',#{realName},'%')
             </if>
             <if test="status !=null and status != ''">
                 and c.status = #{status}
@@ -398,7 +398,7 @@
             <if test="createTimeEnd != null and createTimeEnd != ''">
                 and c.create_time <![CDATA[ <= ]]> #{createTimeEnd}
             </if>
-        </where>
+
         order by c.correct_id desc
     </select>
 	<update id="updateCorrect" parameterType="com.linayi.entity.correct.Correct">

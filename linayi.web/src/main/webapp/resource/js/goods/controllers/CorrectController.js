@@ -63,7 +63,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
                 },
                 {name: 'userId', label: '用户id', sortable: false, hidden: true},
                 {name: 'goodsSkuId', label: '商品id', sortable: false, hidden: true},
-                {name: 'goodsSku.name', label: '商品', sortable: false},
+                {name: 'goodsSku.fullName', label: '商品', sortable: false},
                 {name: 'supermarketId', label: '超市id', sortable: false, hidden: true},
                 {name: 'supermarket.name', label: '超市', sortable: false},
                 {
