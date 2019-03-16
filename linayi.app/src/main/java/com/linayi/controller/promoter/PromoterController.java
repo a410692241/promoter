@@ -290,6 +290,7 @@ public class PromoterController extends BaseController {
 		try {
 			ParamValidUtil<Orders> pv = new ParamValidUtil<>(orders);
 			Orders orders1 = pv.transObject(Orders.class);
+			orders1.setOrderManId(getUserId());
 			ordersList = orderService.getOrdersList(orders1);
 			return new ResponseData(ordersList);
 		} catch (Exception e) {
