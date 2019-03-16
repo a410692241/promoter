@@ -55,4 +55,5 @@ public interface CorrectService {
 	 * @return
 	 */
 	List<Correct> selectCorrectListByGoodsName(Correct correct);
+    List<Correct> getList(Correct correct);
 }
