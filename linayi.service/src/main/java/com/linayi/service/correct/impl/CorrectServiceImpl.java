@@ -372,7 +372,14 @@ public class CorrectServiceImpl implements CorrectService {
             return b.getCreateTime().compareTo(a.getCreateTime());
         });
         int fromIndex = (currentPage - 1) * pageSize;
-        List<Correct> correctResp = corrects.subList(fromIndex, currentPage * pageSize);
+        List<Correct> correctResp = null;
+        int toIndex = currentPage * pageSize;
+
+        if (corrects.size() <= toIndex) {
+            correctResp = corrects.subList(fromIndex, fromIndex + (corrects.size() % pageSize));
+        }else{
+            correctResp = corrects.subList(fromIndex, toIndex);
+        }
         PageResult<Correct> page = new PageResult<>(correctResp, corrects.size());
         return page;
     }
