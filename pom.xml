@@ -5,8 +5,8 @@
 	<modelVersion>4.0.0</modelVersion>
 			<groupId>com.linayi</groupId>
 		<version>0.0.1-SNAPSHOT</version>
-	<artifactId>linayi</artifactId>
-	<name>parent</name>
+	<artifactId>linayi.wherebuy</artifactId>
+	<name>wherebuy</name>
 	<url>http://maven.apache.org</url>
 	<packaging>pom</packaging>
 	<properties>

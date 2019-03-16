@@ -101,6 +101,7 @@
                         <i class="fa fa-search"></i>搜索
                     </a>
                     <a ng-click="batchAudit()" class="btn btn-primary form-group-margin" href="javascript:void(0);"></i>批量审核</a>
+                    <a class="btn btn-primary form-group-margin" href="/web/correct/correct/exportShareRecord.do"></i>导出列表</a>
                 </form>
 
                 <!-- 表格 -->

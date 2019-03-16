@@ -137,11 +137,9 @@ public class PromoterController extends BaseController {
 		try {
 			ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(promoterOrderMan);
 			PromoterOrderMan promoterOrderMan1 = pv.transObject(PromoterOrderMan.class);
-
 			if (promoterOrderMan1.getPageSize() == null) {
 				promoterOrderMan1.setPageSize(8);
 			}
-
 			if (promoterOrderMan1.getOrderManId() == null) {
 				Integer userId = getUserId();
 				promoterOrderMan1.setOrderManId (userId);
@@ -292,6 +290,7 @@ public class PromoterController extends BaseController {
 		try {
 			ParamValidUtil<Orders> pv = new ParamValidUtil<>(orders);
 			Orders orders1 = pv.transObject(Orders.class);
+			orders1.setOrderManId(getUserId());
 			ordersList = orderService.getOrdersList(orders1);
 			return new ResponseData(ordersList);
 		} catch (Exception e) {

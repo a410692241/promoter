@@ -238,7 +238,7 @@
                 where o.user_id = #{userId} and omm.create_time <![CDATA[ <= ]]> o.create_time
             </if>
             <if test="receiveAddressId != null">
-                where o.receive_address_id = #{receiveAddressId} AND o.address_type = 'CUSTOMER' AND o.userId = #{orderManId}
+                where o.receive_address_id = #{receiveAddressId} AND o.address_type = 'CUSTOMER' AND o.user_id = #{orderManId}
             </if>
     </select>
 

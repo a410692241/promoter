@@ -87,8 +87,7 @@ where user_id=#{userId}
     </select>
     <select id="selectUserList" resultType="com.linayi.entity.user.User">
         select
-        `user_id`,`nickname`,`head_image`,`sex`,`mobile`,`qq`,`email`,`real_name`,`create_time`,`up
-        date_time` from `user`
+        `user_id`,`nickname`,`head_image`,`sex`,`mobile`,`qq`,`email`,`real_name`,`create_time`,`update_time` from `user`
         <where>
             <if test="userId!=null and userId!=''">
                 and user_id=#{userId}
