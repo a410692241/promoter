@@ -100,7 +100,7 @@ public interface OrdersMapper {
      * @param orders
      * @return
      */
-   List<Orders> getOrdersBydelivererIdAndStatus(Orders orders);
+   List<Orders> getOrdersBySmallCommunityIdAndStatus(Orders orders);
 
     /**
      * 根据userId和成功状态查询派送任务
