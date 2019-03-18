@@ -302,9 +302,4 @@ public class CorrectController extends BaseController {
                         }
             }
 
-            public static void main(String[] args) {
-                        System.out.println(1680 / 100);
-                        System.out.println(((double) 1680) / 100);
-            }
-
 }
