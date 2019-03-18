@@ -87,7 +87,17 @@ public class GoodsSku extends BaseEntity {
     private Integer communityId; //社区id
     
     private String  valueName; //规格名
-    
+
+
+    public String getEstablishName() {
+        return establishName;
+    }
+
+    public void setEstablishName(String establishName) {
+        this.establishName = establishName;
+    }
+
+    private String establishName;
     
 	public Integer getCreatorId() {
 		return creatorId;
