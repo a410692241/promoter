@@ -494,7 +494,6 @@
 		update
 			orders
 		set
-			deliverer_id=#{delivererId},
 			community_status='PACKED'
 		where
 			orders_id = #{ordersId}

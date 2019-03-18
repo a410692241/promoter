@@ -93,7 +93,7 @@ public interface OrdersMapper {
     * @param ordersId
     * @return
     */
-   Integer updateStatusByOrdersId2(@Param("delivererId")Integer delivererId,@Param("ordersId")Long ordersId);
+   Integer updateStatusByOrdersId2(Long ordersId);
 
     /**
      * 通过配送员ID和配送状态查询配送订单列表
