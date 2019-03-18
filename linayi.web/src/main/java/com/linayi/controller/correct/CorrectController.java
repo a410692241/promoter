@@ -264,7 +264,8 @@ public class CorrectController extends BaseController {
                                                             }
 
                                                             // 价格
-                                                            tableHtml = tableHtml.append("<td>" + Double.valueOf(cre.getPrice() / 100) + "" + "</td>");
+
+                                                            tableHtml = tableHtml.append("<td>" + ((double) (cre.getPrice()) / 100) + "</td>");
                                                             // 价格类型
                                                             if ("NORMAL".equals(cre.getPriceType())) {
                                                                         tableHtml = tableHtml.append("<td>" + "正常价" + "</td>");
@@ -301,5 +302,9 @@ public class CorrectController extends BaseController {
                         }
             }
 
+            public static void main(String[] args) {
+                        System.out.println(1680 / 100);
+                        System.out.println(((double) 1680) / 100);
+            }
 
 }
