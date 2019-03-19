@@ -269,8 +269,9 @@ public class GoodsSkuController {
 
     @RequestMapping("/edit.do")
     @ResponseBody
-    public Object edit(Long goodsSkuId) {
+    public Object edit(Long goodsSkuId,HttpServletRequest request) {
         GoodsSku goodsSku = goodsService.getGoodsSku(goodsSkuId);
+        request.getSession().setAttribute("goodsSku", goodsSku);
         return new ResponseData(goodsSku);
     }
 

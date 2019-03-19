@@ -2,6 +2,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib prefix="cl" uri="http://www.lay.com/option" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <form role="form" id="goodsSkuInfoForm" role="form" method="post" enctype="multipart/form-data">
 	<div class="row" style="max-height: 500px;overflow: auto;">
 		<div class="form-group col-lg-6 col-xs-6 col-sm-12">
@@ -14,15 +15,33 @@
 		<div class="form-group col-lg-6 col-xs-6 col-sm-12">
 			<label  class="col-sm-2 control-label no-padding-right" style="text-align: right;">分类</label>
 			<div class="col-sm-10">
-				<input ng-required="required" type="text" disabled
-					   ng-model="goods.categoryName" class="form-control"/>
+				<ui-select on-select="goods.categoryName=$item.name;"
+						   ng-init='options=<cl:selectBySQL sqlId="categoryList" param="{level:4}"/>;
+						   options.splice(0,0,{"code":${goodsSku.categoryId},"name":"${goodsSku.categoryName}"});
+						   tempCategoryName=options[0];'
+						   ng-model="tempCategoryName" style="min-width: 230px">
+					<ui-select-match>{{$select.selected.name}}</ui-select-match>
+					<ui-select-choices
+							repeat="item in options | filter:{name: $select.search}">
+						<span ng-bind-html="item.name | highlight: $select.search"></span>
+					</ui-select-choices>
+				</ui-select>
 			</div>
 		</div>
 		<div class="form-group col-lg-6 col-xs-6 col-sm-12">
 			<label  class="col-sm-2 control-label no-padding-right" style="text-align: right;">品牌</label>
 			<div class="col-sm-10">
-				<input ng-required="required" type="text" disabled
-					   ng-model="goods.brandName" class="form-control"/>
+				<ui-select on-select="goods.brandName=$item.name;"
+						   ng-init='options=<cl:selectBySQL sqlId="brandList"/>;
+ 						   options.splice(0,0,{"code":${goodsSku.brandId},"name":"${goodsSku.brandName}"});
+						   tempBrandName=options[0];'
+						   ng-model="tempBrandName" style="min-width: 230px">
+					<ui-select-match>{{$select.selected.name}}</ui-select-match>
+					<ui-select-choices
+							repeat="item in options | filter:{name: $select.search}">
+						<span ng-bind-html="item.name | highlight: $select.search"></span>
+					</ui-select-choices>
+				</ui-select>
 			</div>
 		</div>
 		<div class="form-group col-lg-6 col-xs-6 col-sm-12">
