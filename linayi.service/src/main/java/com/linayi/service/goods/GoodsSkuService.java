@@ -5,6 +5,7 @@ import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.goods.SupermarketGoods;
 
 import com.linayi.entity.supermarket.Supermarket;
+import com.linayi.entity.user.User;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +18,7 @@ public interface GoodsSkuService {
 
 
     /*新增商品*/
-    GoodsSku addGoods(String category, String brand, GoodsSku goods, String [] attribute,Integer creatorId,MultipartFile file) throws Exception;
+    GoodsSku addGoods(String category, String brand, GoodsSku goods, String [] attribute,MultipartFile file, Integer userId) throws Exception;
 
     /*分页查询*/
     List<GoodsSku> getGoodsList(GoodsSku goods);
@@ -35,7 +36,7 @@ public interface GoodsSkuService {
     GoodsSku getGoodsSku(Long goodsSkuId);
     Object getGoodsLists(GoodsSku goods,String userName);
 
-    GoodsSku insertGoods(ModelMap modelMap, MultipartFile file, String category, String brand, GoodsSku goods, String [] attribute, HttpServletRequest httpRequest) throws Exception;
+    GoodsSku insertGoods(ModelMap modelMap, MultipartFile file, String category, String brand, GoodsSku goods, String [] attribute, HttpServletRequest httpRequest, Integer userId) throws Exception;
     void getBrandAndVal(ModelMap model);
     
     

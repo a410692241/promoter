@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.linayi.entity.account.Account;
 import com.linayi.entity.supermarket.Supermarket;
+import com.linayi.entity.user.User;
 import com.linayi.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -88,20 +89,15 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 	private SupermarketGoodsMapper supermarketGoodsMapper;
 	@Autowired
 	private CommunityMapper communityMapper;
-	@Resource
-	private AdminAccountMapper adminAccountMapper;
 
 	@Override
 	public List<GoodsSku> getGoodsList(GoodsSku goods) {
 		return goodsSkuMapper.getGoodsList(goods);
 	}
 	@Override
-	public GoodsSku insertGoods(ModelMap modelMap, MultipartFile file, String category, String brand, GoodsSku goods, String [] attribute, HttpServletRequest httpRequest) throws Exception {
-		//获取创建者id
-		AdminAccount adminAccount=(AdminAccount)httpRequest.getSession().getAttribute("loginAccount");
-		Integer creatorId=adminAccount.getAccountId();
+	public GoodsSku insertGoods(ModelMap modelMap, MultipartFile file, String category, String brand, GoodsSku goods, String [] attribute, HttpServletRequest httpRequest, Integer userId) throws Exception {
 		MultipartHttpServletRequest request = (MultipartHttpServletRequest) httpRequest;
-		return addGoods(category, brand, goods, attribute,creatorId,file);
+		return addGoods(category, brand, goods, attribute,file,userId);
 	}
 
 	@Override
@@ -138,7 +134,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		return goodsSku;
 	}
 	@Override
-	public GoodsSku addGoods(String category, String brand, GoodsSku goods, String [] attribute,Integer creatorId, MultipartFile file) throws Exception {
+	public GoodsSku addGoods(String category, String brand, GoodsSku goods, String [] attribute,MultipartFile file, Integer userId) throws Exception {
 		//判断条形码是否存在
 		String barcode = goods.getBarcode();
 		GoodsSku goodsSku = new GoodsSku();
@@ -186,7 +182,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 			goods.setCategoryId(categoryId);
 			goods.setStatus("NORMAL");
 			goods.setCreateTime(new Date());
-			goods.setCreatorId(creatorId);
+			goods.setUserId(userId);
 			goodsSkuMapper.insert(goods);
 
 			List<Attribute> attributes = attributeMapper.getAttributes();
@@ -335,31 +331,12 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 
 	@Override
 	public Object getGoodsLists(GoodsSku goods,String userName) {
-		//通过用户名获取账号id,并放入goods中
-		AdminAccount adminAccount=new AdminAccount();
-		if(userName!=null && !"".equals(userName)) {
-			adminAccount.setUserName(userName);
-			List<AdminAccount> adminAccounts= adminAccountMapper.selectAdminAccountList(adminAccount);
-			Integer creatorId=null;
-			for(AdminAccount account:adminAccounts) {
-				creatorId=account.getAccountId();
-			}
-			goods.setCreatorId(creatorId);
-			System.out.println(creatorId);
-		}
 		String name = goods.getFullName();
 		if (name != null && !"".equals(name)){
 			goods.setFullName("%" + name + "%");
 		}
 
 		List<GoodsSku> goodsList = this.getGoodsList(goods);
-		for (GoodsSku goodsSku : goodsList) {
-			packGoodsSku(goodsSku);
-			Account account = adminAccountMapper.selectAdminAccountByaccountId(goodsSku.getCreatorId());
-			if(account != null) {
-				goodsSku.setEstablishName(account.getUserName());
-			}
-		}
 		PageResult<GoodsSku> pageResult = new PageResult<>(goodsList, goods.getTotal());
 		return pageResult;
 	}

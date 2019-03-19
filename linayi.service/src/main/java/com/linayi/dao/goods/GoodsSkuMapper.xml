@@ -19,7 +19,6 @@
         <result column="valid_date" jdbcType="TIMESTAMP" property="validDate"/>
         <result column="manufacturer" jdbcType="VARCHAR" property="manufacturer"/>
         <result column="other_attribute" jdbcType="VARCHAR" property="otherAttribute"/>
-        <result column="creator_id" jdbcType="INTEGER" property="creatorId"/>
     </resultMap>
     <insert id="insert" parameterType="com.linayi.entity.goods.GoodsSku" useGeneratedKeys="true" keyProperty="goodsSkuId">
     insert into goods_sku (goods_sku_id, name, full_name, barcode,
@@ -27,13 +26,13 @@
       image, update_time, create_time, 
       model, function, produce_address, 
       produce_date, valid_date, manufacturer, 
-      other_attribute,creator_id)
+      other_attribute,creator_id,user_id)
     values (#{goodsSkuId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{fullName,jdbcType=VARCHAR}, #{barcode,jdbcType=VARCHAR},
       #{categoryId,jdbcType=INTEGER}, #{brandId,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, 
       #{image,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
       #{model,jdbcType=VARCHAR}, #{function,jdbcType=VARCHAR}, #{produceAddress,jdbcType=VARCHAR}, 
       #{produceDate,jdbcType=TIMESTAMP}, #{validDate,jdbcType=TIMESTAMP}, #{manufacturer,jdbcType=VARCHAR}, 
-      #{otherAttribute,jdbcType=VARCHAR},#{creatorId,jdbcType=INTEGER})
+      #{otherAttribute,jdbcType=VARCHAR},#{userId,jdbcType=INTEGER})
   </insert>
     <insert id="insertSelective" parameterType="com.linayi.entity.goods.GoodsSku">
         insert into goods_sku
@@ -89,9 +88,6 @@
             <if test="otherAttribute != null">
                 other_attribute,
             </if>
-            <if test="creatorId != null">
-                creator_id,
-            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="goodsId != null">
@@ -145,13 +141,10 @@
             <if test="otherAttribute != null">
                 #{otherAttribute,jdbcType=VARCHAR},
             </if>
-             <if test="creatorId != null">
-                #{creatorId,jdbcType=INTEGER},
-            </if>
         </trim>
     </insert>
     <sql id="columnList">
-     goods_sku_id, NAME, full_name,barcode, category_id, brand_id, STATUS, image, update_time, create_time, model, FUNCTION, produce_address, produce_date, valid_date, manufacturer, other_attribute,creator_id
+     goods_sku_id, NAME, full_name,barcode, category_id, brand_id, STATUS, image, update_time, create_time, model, FUNCTION, produce_address, produce_date, valid_date, manufacturer, other_attribute
   </sql>
 
     <update id="updateGoodsFullName" parameterType="com.linayi.entity.goods.GoodsSku">
@@ -214,9 +207,6 @@
             <if test="otherAttribute != null">
                 other_attribute = #{otherAttribute},
             </if>
-            <if test="creatorId != null">
-                creator_id = #{creatorId},
-            </if>
         </set>
         where goods_sku_id = #{goodsSkuId}
     </update>
@@ -259,14 +249,10 @@
         <if test="createTimeEnd != null and createTimeEnd != ''">
             and create_time <![CDATA[ <= ]]> #{createTimeEnd}
         </if>
-        <if test="creatorId != null and creatorId != ''">
-            and creator_id = #{creatorId}
-        </if>
     </select>
-    <select id="getGoodsList" parameterType="com.linayi.entity.goods.GoodsSku" resultMap="BaseResultMap">
-        select
-        <include refid="columnList"/>
-        from goods_sku where STATUS = 'NORMAL'
+    <select id="getGoodsList" parameterType="com.linayi.entity.goods.GoodsSku" resultType="com.linayi.entity.goods.GoodsSku">
+        select goods_sku_id, NAME, full_name,barcode, category_id, brand_id, STATUS, image, gs.update_time, gs.create_time, model, FUNCTION, produce_address, produce_date, valid_date, manufacturer, other_attribute,creator_id
+        ,u.real_name from goods_sku gs left join employee e on gs.user_id = e.employee_id where gs.STATUS = 'NORMAL'
         <if test="goodsSkuId != null and goodsSkuId != ''">
             and goods_sku_id = #{goodsSkuId}
         </if>

@@ -33,10 +33,7 @@ public class GoodsSku extends BaseEntity {
     private String function;
 
     private String produceAddress;
-    
-    /*创建者id*/
-    private Integer creatorId;
-    
+
     /**商品数量*/
     private Integer quantity;
 
@@ -99,14 +96,6 @@ public class GoodsSku extends BaseEntity {
 
     private String establishName;
     
-	public Integer getCreatorId() {
-		return creatorId;
-	}
-
-	public void setCreatorId(Integer creatorId) {
-		this.creatorId = creatorId;
-	}
-
 	public String getValueName() {
 		return valueName;
 	}
@@ -371,6 +360,7 @@ public class GoodsSku extends BaseEntity {
                 ", model='" + model + '\'' +
                 ", function='" + function + '\'' +
                 ", produceAddress='" + produceAddress + '\'' +
+                ", quantity=" + quantity +
                 ", produceDate=" + produceDate +
                 ", validDate=" + validDate +
                 ", manufacturer='" + manufacturer + '\'' +
@@ -391,7 +381,10 @@ public class GoodsSku extends BaseEntity {
                 ", minPriceString='" + minPriceString + '\'' +
                 ", supermarketGoodsList=" + supermarketGoodsList +
                 ", spreadRateString='" + spreadRateString + '\'' +
-                ", creatorId='"+creatorId+'\''+
+                ", userId=" + userId +
+                ", communityId=" + communityId +
+                ", valueName='" + valueName + '\'' +
+                ", establishName='" + establishName + '\'' +
                 '}';
     }
 

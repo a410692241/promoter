@@ -1,5 +1,7 @@
 package com.linayi.controller.goods;
 
+import com.linayi.controller.BaseController;
+import com.linayi.dao.account.AccountMapper;
 import com.linayi.entity.account.AdminAccount;
 import com.linayi.entity.correct.Correct;
 import com.linayi.entity.correct.SupermarketGoodsVersion;
@@ -7,12 +9,15 @@ import com.linayi.entity.goods.Attribute;
 import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.goods.SupermarketGoods;
 import com.linayi.entity.supermarket.Supermarket;
+import com.linayi.entity.user.User;
 import com.linayi.enums.OperatorType;
 import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
+import com.linayi.service.account.AccountService;
 import com.linayi.service.correct.CorrectService;
 import com.linayi.service.correct.SupermarketGoodsVersionService;
 import com.linayi.service.goods.GoodsSkuService;
+import com.linayi.service.user.UserService;
 import com.linayi.util.PageResult;
 import com.linayi.util.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +32,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -42,6 +48,8 @@ public class GoodsSkuController {
     private CorrectService correctService;
     @Autowired
     private SupermarketGoodsVersionService supermarketGoodsVersionService;
+    @Autowired
+    private AccountService accountService;
 
     /**
      * 添加商品页面的入口
@@ -72,7 +80,7 @@ public class GoodsSkuController {
     public String addGoods(ModelMap modelMap, MultipartFile file, String category, String brand, HttpServletRequest httpRequest, GoodsSku goods, String[] attribute) {
         String result = "success";
         try {
-            goodsService.insertGoods(modelMap, file, category, brand, goods, attribute, httpRequest);
+            goodsService.insertGoods(modelMap, file, category, brand, goods, attribute, httpRequest, null);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,8 +109,11 @@ public class GoodsSkuController {
     ) {
         GoodsSku goodsSku;
         try {
+            HttpSession session = httpRequest.getSession();
+            AdminAccount adminAccount = (AdminAccount) session.getAttribute("loginAccount");
+            Integer userId = adminAccount.getUserId();
             // 插入商品sku
-            goodsSku = goodsService.insertGoods(modelMap, file, category, brand, goods, attribute, httpRequest);
+            goodsSku = goodsService.insertGoods(modelMap, file, category, brand, goods, attribute, httpRequest, userId);
             if (goodsSku == null){
                 ResponseData responseData = new ResponseData(ErrorType.SYSTEM_ERROR);
                 responseData.setRespCode("T");
@@ -135,7 +146,6 @@ public class GoodsSkuController {
                 correct.setStartTime(startDate);
                 correct.setEndTime(endDate);
                 // 线程安全并发处理
-                AdminAccount adminAccount=(AdminAccount)httpRequest.getSession().getAttribute("loginAccount");
                 Integer creatorId=adminAccount.getAccountId();
                 correct.setUserId(creatorId);
                 initVersion(correct);
