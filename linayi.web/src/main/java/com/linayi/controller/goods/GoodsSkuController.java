@@ -5,9 +5,7 @@ import com.linayi.dao.account.AccountMapper;
 import com.linayi.entity.account.AdminAccount;
 import com.linayi.entity.correct.Correct;
 import com.linayi.entity.correct.SupermarketGoodsVersion;
-import com.linayi.entity.goods.Attribute;
-import com.linayi.entity.goods.GoodsSku;
-import com.linayi.entity.goods.SupermarketGoods;
+import com.linayi.entity.goods.*;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.entity.user.User;
 import com.linayi.enums.OperatorType;
@@ -16,6 +14,8 @@ import com.linayi.exception.ErrorType;
 import com.linayi.service.account.AccountService;
 import com.linayi.service.correct.CorrectService;
 import com.linayi.service.correct.SupermarketGoodsVersionService;
+import com.linayi.service.goods.BrandService;
+import com.linayi.service.goods.CategoryService;
 import com.linayi.service.goods.GoodsSkuService;
 import com.linayi.service.user.UserService;
 import com.linayi.util.PageResult;
@@ -50,6 +50,10 @@ public class GoodsSkuController {
     private SupermarketGoodsVersionService supermarketGoodsVersionService;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private BrandService brandService;
 
     /**
      * 添加商品页面的入口
@@ -296,5 +300,29 @@ public class GoodsSkuController {
         } catch (Exception e) {
             return new ResponseData(ErrorType.SYSTEM_ERROR);
         }
+    }
+
+    @RequestMapping("/editeSpecification.do")
+    public String editeSpecification(Integer goodsSkuId, Model model){
+        GoodsSku goodsSku = goodsService.getGoodsSku(Long.parseLong(goodsSkuId + ""));
+        Category category= categoryService.getCategoryById(goodsSku.getCategoryId());
+        Brand brand = brandService.getBrandById(goodsSku.getBrandId());
+        model.addAttribute("goodsSkuId",goodsSkuId);
+        model.addAttribute("categoryName",category.getName());
+        model.addAttribute("brandName",brand.getName());
+        return "jsp/goods/EditeSpecification";
+    }
+
+    @RequestMapping("/editGoodsAttribute.do")
+    @ResponseBody
+    public Object editGoodsAttribute(String[] attribute,Integer goodsSkuId){
+        String attrName = null;
+        try {
+            attrName = goodsService.editGoodsAttribute(attribute,goodsSkuId);
+            return new ResponseData(attrName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseData(ErrorType.SYSTEM_ERROR);
     }
 }

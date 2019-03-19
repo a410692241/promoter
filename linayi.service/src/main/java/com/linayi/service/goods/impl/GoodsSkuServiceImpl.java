@@ -108,7 +108,9 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		// 获取品牌用于管理员选择
 		List<Brand> brands = brandService.getBrandsByName();
 		model.addAttribute("brands", brands);
-
+		// 获取商品名用于管理员选择
+		/*List<String> goodsNameList = goodsSkuMapper.getGoodsNameList();
+		model.addAttribute("goodsNames", goodsNameList);*/
 	}
 
 	@Override
@@ -138,6 +140,10 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		//判断条形码是否存在
 		String barcode = goods.getBarcode();
 		GoodsSku goodsSku = new GoodsSku();
+		int length = barcode.length();
+		for (int i = 0; i < 13 - length; i++) {
+			barcode = "0" + barcode;
+		}
 		goodsSku.setBarcode(barcode);
 		GoodsSku goodsByGoods = goodsSkuMapper.getGoodsByGoods(goodsSku);
 		if (goodsByGoods != null){
@@ -178,10 +184,8 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 
 
 		if (goods.getName() != null && !"".equals(goods.getName())) {
-			int length = barcode.length();
-			for (int i = 0; i < 13 - length; i++) {
-				barcode = "0" + barcode;
-			}
+
+
 			goods.setBarcode(barcode);
 			goods.setBrandId(brandId);
 			goods.setCategoryId(categoryId);
@@ -612,5 +616,38 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 	@Override
 	public List<Supermarket> listSupermarket(Supermarket supermarket) {
 		return supermarketMapper.selectAll(supermarket);
+	}
+
+	@Override
+	public String editGoodsAttribute(String[] attribute,Integer goodsSkuId) {
+		goodsAttrValueMapper.deleteByGoodsSkuId(goodsSkuId);
+		List<Attribute> attributes = attributeMapper.getAttributes();
+		for (int i = 0; i < attribute.length; i++) {
+			if (attribute[i] != null && !"".equals(attribute[i])){
+				GoodsAttrValue goodsAttrValue = new GoodsAttrValue();
+				Attribute attr = attributes.get(i);
+				AttributeValue attrbuteVal = null;
+				List<AttributeValue> attributeValue = attributeValueMapper.getAttributeValue(attr.getAttributeId(), attribute[i], null);
+				if (attributeValue != null && attributeValue.size() > 0) {
+					attrbuteVal = attributeValue.get(0);
+				}
+				goodsAttrValue.setAttrValueId(attrbuteVal.getValueId());
+				goodsAttrValue.setGoodsSkuId(goodsSkuId);
+				goodsAttrValue.setCreateTime(new Date());
+				goodsAttrValueMapper.insert(goodsAttrValue);
+			}
+		}
+
+		List<GoodsAttrValue> goodsAttrValues = goodsAttrValueService.getGoodsAttrValueByGoodsId(Long.parseLong(goodsSkuId + ""));
+		String attrs = "";
+		for (GoodsAttrValue goodsAttrValue : goodsAttrValues) {
+			AttributeValue attributeValue = attributeValueService.getAttrValsByAttrValId(goodsAttrValue.getAttrValueId());
+			if (attrs.equals("")){
+				attrs += attributeValue.getValue();
+			}else{
+				attrs += "," + attributeValue.getValue();
+			}
+		}
+		return attrs;
 	}
 }

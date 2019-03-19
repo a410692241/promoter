@@ -128,6 +128,14 @@
             <table class="form-center">
                 <tr>
                     <td style="width: 60px">商品名:</td>
+                    <%--<td>
+                        <input  name="name" type="text" id="goodsName" class="ww" onfocus="setDemo(this,event)" onkeyup="setContent(this,event);" placeholder="请选择或输入商品名称">
+                        <select id="hh" class="form-selectName" onclick="choose(this)" onkeyup="getfocus(this,event)" size="10" style="display:none;">
+                            <c:forEach items="${goodsNames}" var="goodsName">
+                                <option value="${goodsName}">${goodsName}</option>
+                            </c:forEach>
+                        </select>
+                    </td>--%>
                     <td><input type="text" id="goodsName" name="name" ></td>
                     <td><input type="button" id="specifications" value="从规格库选择" onclick="openwin()"></td>
                 </tr>

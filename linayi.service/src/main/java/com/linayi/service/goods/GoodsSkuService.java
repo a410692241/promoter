@@ -108,4 +108,12 @@ public interface GoodsSkuService {
     void edit(CommonsMultipartFile goodsImage, GoodsSku goodsSku);
 
     List<Supermarket> listSupermarket(Supermarket supermarket);
+
+	/**
+	 * 修改商品规格
+	 * @param attribute
+	 * @param goodsSkuId
+	 * @return
+	 */
+    String editGoodsAttribute(String[] attribute, Integer goodsSkuId);
 }

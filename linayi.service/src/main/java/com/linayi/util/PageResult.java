@@ -32,7 +32,7 @@ public class PageResult<T> extends  BaseEntity{
 		Integer total = baseEntity.getTotal();
 		Integer pageSize = baseEntity.getPageSize();
 		if ((total != null && pageSize != null) && (total > 0 && pageSize > 0)){
-			totalPage = (total + 1) / pageSize == 0 ? 1 : ((total + 1) / pageSize + 1);
+			totalPage = total % pageSize == 0 ? total / pageSize : total / pageSize + 1;
 		}
 	}
 

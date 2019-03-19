@@ -12,4 +12,10 @@ public interface GoodsAttrValueMapper {
     List<GoodsAttrValue> getGoodsAttrValueByGoodsId(Long goodsSkuId);
 
     void deleteById(Integer attrValueId);
+
+    /**
+     * 通过商品Id删除商品属性
+     * @param goodsSkuId
+     */
+    void deleteByGoodsSkuId(Integer goodsSkuId);
 }

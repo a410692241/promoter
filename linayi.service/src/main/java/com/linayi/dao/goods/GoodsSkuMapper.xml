@@ -210,6 +210,9 @@
         </set>
         where goods_sku_id = #{goodsSkuId}
     </update>
+    <select id="getGoodsNameList" resultType="java.lang.String">
+        select name from goods_sku
+    </select>
     <select id="getGoodsByGoods" resultMap="BaseResultMap">
         select
         <include refid="columnList"/>

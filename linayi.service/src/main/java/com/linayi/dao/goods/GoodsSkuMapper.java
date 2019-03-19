@@ -87,4 +87,10 @@ public interface GoodsSkuMapper {
 	 * @return
 	 */
 	GoodsSku getGoodsByGoods(GoodsSku goodsSku);
+
+	/**
+	 * 查询所有的商品名
+	 * @return
+	 */
+    List<String> getGoodsNameList();
 }

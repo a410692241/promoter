@@ -34,7 +34,7 @@ app.filter('skuAttributeSorter', function( ) {
 app.controller('goodsCtrl', function($q,$http,$scope,toaster,goodsService,messager,templateform,$templateCache ) {
 	
 	function init(){
-
+		$scope.editeAttribute = editeAttribute;
 		$scope.show = show;
 		$scope.edit = edit;
 		$scope.remove = remove;
@@ -369,7 +369,6 @@ app.controller('goodsCtrl', function($q,$http,$scope,toaster,goodsService,messag
 			dataType:"json",
 			type:"post",
 			success:function (data) {
-				console.log(data.data);
 				openEdit( data.data );
 			}
 		});
@@ -656,6 +655,12 @@ app.controller('goodsCtrl', function($q,$http,$scope,toaster,goodsService,messag
 				}
 			}
 		});
+	}
+	function editeAttribute(goodsSkuId) {
+    	debugger;
+		var param = "?goodsSkuId=" + goodsSkuId;
+		// 修改商品规格
+		window.open (urls.ms + "/goods/goods/editeSpecification.do" + param, "修改商品规格", "height=600, width=800,top=200,left=300, toolbar=no, menubar=no, scrollbars=yes, resizable=no, location=no, status=no")
 	}
     // 初始化
     init();

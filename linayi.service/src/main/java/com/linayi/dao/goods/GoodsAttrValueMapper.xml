@@ -12,6 +12,9 @@
     select goods_attr_value_id, goods_sku_id, attr_value_id, update_time, create_time from goods_attr_value
     where goods_sku_id = #{goodsSkuId}
   </select>
+  <delete id="deleteByGoodsSkuId">
+    delete from goods_attr_value where goods_sku_id = #{goodsSkuId}
+  </delete>
   <delete id="deleteById">
     delete from goods_attr_value where goods_attr_value_id = #{attrValueId}
   </delete>
