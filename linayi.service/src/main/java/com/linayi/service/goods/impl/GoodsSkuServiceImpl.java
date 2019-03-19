@@ -12,6 +12,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import com.linayi.entity.account.Account;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -354,6 +355,10 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		List<GoodsSku> goodsList = this.getGoodsList(goods);
 		for (GoodsSku goodsSku : goodsList) {
 			packGoodsSku(goodsSku);
+			Account account = adminAccountMapper.selectAdminAccountByaccountId(goodsSku.getCreatorId());
+			if(account != null) {
+				goodsSku.setEstablishName(account.getUserName());
+			}
 		}
 		PageResult<GoodsSku> pageResult = new PageResult<>(goodsList, goods.getTotal());
 		return pageResult;
