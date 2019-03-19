@@ -167,6 +167,16 @@ public class Correct extends BaseEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date actualEndTime;
 
+    public String getGoodsSkuName() {
+        return goodsSkuName;
+    }
+
+    public void setGoodsSkuName(String goodsSkuName) {
+        this.goodsSkuName = goodsSkuName;
+    }
+
+    private String goodsSkuName;
+
     /**
      * [类型] 分享：SHARE  纠错：CORRECT
      */
