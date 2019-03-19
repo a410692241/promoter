@@ -77,8 +77,8 @@ public class DeliveryBoxServiceImpl implements DeliveryBoxService {
 		}
 		//根据社区id和订单ID查询小区信息
 		SmallCommunity sc =smallCommunityMapper.getSmallCommunitybyCommunityId(procurementTaskList.get(0).getCommunityId(),procurementTaskList.get(0).getOrdersId());
-		// 修改订单社区状态为“已装箱”,插入配送员id
-		ordersMapper.updateStatusByOrdersId2(sc.getDelivererId(),procurementTaskList.get(0).getOrdersId());
+		// 修改订单社区状态为“已装箱”
+		ordersMapper.updateStatusByOrdersId2(procurementTaskList.get(0).getOrdersId());
 	}
 
 }

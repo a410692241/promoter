@@ -86,7 +86,7 @@ public class RedisTest {
     @Test
     public void testSpringRedis() {
 //    	redisTemplate.delete("myStr");
-    	redisUtil.set("key3", "3333333333");
+    	redisUtil.set("key3", "33333333335");
     	System.out.println();
         redisTemplate.opsForValue().set("myStr", "skyLine");
         System.out.println(redisTemplate.opsForValue().get("myStr"));

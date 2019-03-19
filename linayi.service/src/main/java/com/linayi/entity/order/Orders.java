@@ -131,6 +131,22 @@ public class Orders extends BaseEntity {
     private Integer orderManId;
 
     private Integer promoterId;
+    @ApiModelProperty(value = "小区Id", hidden = true)
+    private Integer smallCommunityId;
+    @ApiModelProperty(value = "小区Id集合")
+    private List<Integer> smallCommunityIdList;
+
+    public List<Integer> getSmallCommunityIdList() {
+        return smallCommunityIdList;
+    }
+
+    public void setSmallCommunityIdList(List<Integer> smallCommunityIdList) {
+        this.smallCommunityIdList = smallCommunityIdList;
+    }
+
+    public Integer getSmallCommunityId() { return smallCommunityId; }
+
+    public void setSmallCommunityId(Integer smallCommunityId) { this.smallCommunityId = smallCommunityId; }
 
     public String getCreateTimeStart() {
         return createTimeStart;
@@ -563,6 +579,17 @@ public class Orders extends BaseEntity {
                 ", serviceMobile='" + serviceMobile + '\'' +
                 ", deliverStatus='" + deliverStatus + '\'' +
                 ", delivererName='" + delivererName + '\'' +
+                ", status='" + status + '\'' +
+                ", orderType='" + orderType + '\'' +
+                ", range='" + range + '\'' +
+                ", addressType='" + addressType + '\'' +
+                ", createTimeStart='" + createTimeStart + '\'' +
+                ", createTimeEnd='" + createTimeEnd + '\'' +
+                ", customerName='" + customerName + '\'' +
+                ", orderManId=" + orderManId +
+                ", promoterId=" + promoterId +
+                ", smallCommunityId=" + smallCommunityId +
+                ", smallCommunityIdList=" + smallCommunityIdList +
                 '}';
     }
 

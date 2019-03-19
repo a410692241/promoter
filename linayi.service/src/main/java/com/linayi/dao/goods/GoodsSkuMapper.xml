@@ -151,7 +151,7 @@
         </trim>
     </insert>
     <sql id="columnList">
-     goods_sku_id, NAME, full_name,barcode, category_id, brand_id, STATUS, image, update_time, create_time, model, FUNCTION, produce_address, produce_date, valid_date, manufacturer, other_attribute
+     goods_sku_id, NAME, full_name,barcode, category_id, brand_id, STATUS, image, update_time, create_time, model, FUNCTION, produce_address, produce_date, valid_date, manufacturer, other_attribute,creator_id
   </sql>
 
     <update id="updateGoodsFullName" parameterType="com.linayi.entity.goods.GoodsSku">

@@ -2,6 +2,7 @@ package com.linayi.service.delivery.impl;
 
 
 import com.linayi.dao.area.AreaMapper;
+import com.linayi.dao.area.SmallCommunityMapper;
 import com.linayi.dao.delivery.DeliveryBoxGoodsMapper;
 import com.linayi.dao.delivery.DeliveryBoxMapper;
 import com.linayi.dao.delivery.DeliveryTaskMapper;
@@ -12,6 +13,7 @@ import com.linayi.dao.procurement.ProcurementTaskMapper;
 import com.linayi.dao.supermarket.SupermarketMapper;
 import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.area.Area;
+import com.linayi.entity.area.SmallCommunity;
 import com.linayi.entity.delivery.DeliveryBox;
 import com.linayi.entity.delivery.DeliveryBoxGoods;
 import com.linayi.entity.delivery.DeliveryTask;
@@ -64,6 +66,8 @@ public class DeliveryTaskServiceImpl implements DeliveryTaskService {
 	private ProcurementTaskMapper procurementTaskMapper;
 	@Resource
 	private OrderBoxMapper orderBoxMapper;
+    @Resource
+    private SmallCommunityMapper smallCommunityMapper;
 
 	@Override
 	public List<Orders> getListDeliveryTask(Orders orders) {
@@ -213,7 +217,15 @@ public class DeliveryTaskServiceImpl implements DeliveryTaskService {
     @Override
     public List<Orders> getOrdersBydelivererIdAndStatus(Orders orders) {
         if (UserStatusType.IN_PROGRESS.toString().equals(orders.getCommunityStatus())) {
-            List<Orders> ordersList = ordersMapper.getOrdersBydelivererIdAndStatus(orders);
+            if(orders.getDelivererId()!=null){
+                List<Integer> smallCommunityList = new ArrayList<>();
+                List<SmallCommunity> delivererList = smallCommunityMapper.getDeliverer(orders.getDelivererId());
+                for (SmallCommunity smallCommunity : delivererList) {
+                    smallCommunityList.add(smallCommunity.getSmallCommunityId());
+                }
+                orders.setSmallCommunityIdList(smallCommunityList);
+            }
+            List<Orders> ordersList = ordersMapper.getOrdersBySmallCommunityIdAndStatus(orders);
             return this.getOrderTotalPriceByOrdersList(ordersList);
         }else{
             List<Orders> ordersList = ordersMapper.getOrdersByUserIdAndFinishStatus(orders);
