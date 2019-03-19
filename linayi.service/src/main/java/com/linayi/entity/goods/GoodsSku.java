@@ -84,6 +84,7 @@ public class GoodsSku extends BaseEntity {
     private Integer communityId; //社区id
     
     private String  valueName; //规格名
+    private String  realName; //新增商品用户名
 
 
     public String getEstablishName() {
@@ -435,4 +436,12 @@ public class GoodsSku extends BaseEntity {
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
 }

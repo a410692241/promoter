@@ -178,6 +178,11 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 
 
 		if (goods.getName() != null && !"".equals(goods.getName())) {
+			int length = barcode.length();
+			for (int i = 0; i < 13 - length; i++) {
+				barcode = "0" + barcode;
+			}
+			goods.setBarcode(barcode);
 			goods.setBrandId(brandId);
 			goods.setCategoryId(categoryId);
 			goods.setStatus("NORMAL");
@@ -337,6 +342,9 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		}
 
 		List<GoodsSku> goodsList = this.getGoodsList(goods);
+		for (GoodsSku goodsSku : goodsList) {
+			packGoodsSku(goodsSku);
+		}
 		PageResult<GoodsSku> pageResult = new PageResult<>(goodsList, goods.getTotal());
 		return pageResult;
 	}

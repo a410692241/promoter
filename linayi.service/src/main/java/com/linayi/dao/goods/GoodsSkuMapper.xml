@@ -26,7 +26,7 @@
       image, update_time, create_time, 
       model, function, produce_address, 
       produce_date, valid_date, manufacturer, 
-      other_attribute,creator_id,user_id)
+      other_attribute,user_id)
     values (#{goodsSkuId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{fullName,jdbcType=VARCHAR}, #{barcode,jdbcType=VARCHAR},
       #{categoryId,jdbcType=INTEGER}, #{brandId,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, 
       #{image,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
@@ -251,47 +251,44 @@
         </if>
     </select>
     <select id="getGoodsList" parameterType="com.linayi.entity.goods.GoodsSku" resultType="com.linayi.entity.goods.GoodsSku">
-        select goods_sku_id, NAME, full_name,barcode, category_id, brand_id, STATUS, image, gs.update_time, gs.create_time, model, FUNCTION, produce_address, produce_date, valid_date, manufacturer, other_attribute,creator_id
-        ,u.real_name from goods_sku gs left join employee e on gs.user_id = e.employee_id where gs.STATUS = 'NORMAL'
+        select gs.goods_sku_id goodsSkuId, gs.name NAME, gs.full_name fullName,gs.barcode barcode, gs.category_id categoryId, gs.brand_id brandId, gs.status STATUS, gs.image image, gs.update_time updateTime, gs.create_time createTime, gs.model model, gs.function FUNCTION , gs.produce_address produceAddress, gs.produce_date produceDate, gs.valid_date validDate, gs.manufacturer manufacturer, gs.other_attribute otherAttribute
+        ,e.real_name realName from goods_sku gs left join employee e on gs.user_id = e.employee_id where gs.STATUS = 'NORMAL'
         <if test="goodsSkuId != null and goodsSkuId != ''">
-            and goods_sku_id = #{goodsSkuId}
+            and gs.goods_sku_id = #{goodsSkuId}
         </if>
         <if test="name != null and name != ''">
-            and name like #{name}
+            and gs.name like #{name}
         </if>
          <if test="fullName != null and fullName != ''">
-            and full_name like #{fullName}
+            and gs.full_name like #{fullName}
         </if>
         <if test="barcode != null and barcode != ''">
-            and barcode = #{barcode}
+            and gs.barcode = #{barcode}
         </if>
         <if test="categoryId != null and categoryId != ''">
-            and category_id = #{categoryId}
+            and gs.category_id = #{categoryId}
         </if>
 
         <if test="brandId != null and brandId != ''">
-            and brand_id = #{brandId}
+            and gs.brand_id = #{brandId}
         </if>
         <if test="status != null and status != ''">
-            and status = #{status}
+            and gs.status = #{status}
         </if>
 
         <if test="image != null and image != ''">
-            and image = #{image}
+            and gs.image = #{image}
         </if>
         <if test="updateTime != null and updateTime != ''">
-            and update_time = #{updateTime}
+            and gs.update_time = #{updateTime}
         </if>
         <if test="createTimeStart != null and createTimeStart != ''">
-            and create_time <![CDATA[ >= ]]> #{createTimeStart}
+            and gs.create_time <![CDATA[ >= ]]> #{createTimeStart}
         </if>
         <if test="createTimeEnd != null and createTimeEnd != ''">
-            and create_time <![CDATA[ <= ]]> #{createTimeEnd}
+            and gs.create_time <![CDATA[ <= ]]> #{createTimeEnd}
         </if>
-        <if test="creatorId != null and creatorId != ''">
-            and creator_id = #{creatorId}
-        </if>
-            order by update_time desc,goods_sku_id desc
+            order by gs.update_time desc,gs.goods_sku_id desc
     </select>
     
     <!-- 通过品牌id分类id商品名获取商品列表 -->
