@@ -596,6 +596,11 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 			goodsSku.setProduceDate(produceDate);
 			String createTimeEnd = goodsSku.getCreateTimeEnd();
 			Date validDate = DateUtil.string2Date(createTimeEnd, "yyyy-MM-dd HH:mm:ss");
+			String barcode = goodsSku.getBarcode();
+			for (int i = 0; i < 11 - barcode.length(); i++) {
+				barcode = "0" + barcode;
+			}
+			goodsSku.setBarcode(barcode);
 			goodsSku.setValidDate(validDate);
 			goodsSku.setImage(s);
 			goodsSkuMapper.update(goodsSku);

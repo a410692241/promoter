@@ -15,10 +15,9 @@
 		<div class="form-group col-lg-6 col-xs-6 col-sm-12">
 			<label  class="col-sm-2 control-label no-padding-right" style="text-align: right;">分类</label>
 			<div class="col-sm-10">
-				<ui-select on-select="goods.categoryName=$item.name;"
-						   ng-init='options=<cl:selectBySQL sqlId="categoryList" param="{level:4}"/>;
-						   options.splice(0,0,{"code":${goodsSku.categoryId},"name":"${goodsSku.categoryName}"});
-						   tempCategoryName=options[0];'
+				<ui-select on-select="goods.categoryId=$item.code;"
+						   ng-init='options=<cl:selectBySQL sqlId="categoryList" param="{'level':4}"/>;
+						   tempCategoryName={"name":"${goodsSku.categoryName}","code":"${goodsSku.categoryId}"};'
 						   ng-model="tempCategoryName" style="min-width: 230px">
 					<ui-select-match>{{$select.selected.name}}</ui-select-match>
 					<ui-select-choices
@@ -31,10 +30,9 @@
 		<div class="form-group col-lg-6 col-xs-6 col-sm-12">
 			<label  class="col-sm-2 control-label no-padding-right" style="text-align: right;">品牌</label>
 			<div class="col-sm-10">
-				<ui-select on-select="goods.brandName=$item.name;"
+				<ui-select on-select="goods.brandId=$item.code;"
 						   ng-init='options=<cl:selectBySQL sqlId="brandList"/>;
- 						   options.splice(0,0,{"code":${goodsSku.brandId},"name":"${goodsSku.brandName}"});
-						   tempBrandName=options[0];'
+						   tempBrandName={"name":"${goodsSku.brandName}","code":"${goodsSku.brandId}"};'
 						   ng-model="tempBrandName" style="min-width: 230px">
 					<ui-select-match>{{$select.selected.name}}</ui-select-match>
 					<ui-select-choices

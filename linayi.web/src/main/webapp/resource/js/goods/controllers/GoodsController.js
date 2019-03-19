@@ -495,8 +495,8 @@ app.controller('goodsCtrl', function($q,$http,$scope,toaster,goodsService,messag
 					$scope.goods = {
 						goodsSkuId:data.goodsSkuId,
 						fullName:data.fullName,
-						categoryName:data.categoryName,
-						brandName:data.brandName,
+						categoryId:data.categoryId,
+						brandId:data.brandId,
 						image:data.image,
 						model:data.model,
 						createTimeStart:data.produceDate,
@@ -537,11 +537,15 @@ app.controller('goodsCtrl', function($q,$http,$scope,toaster,goodsService,messag
 	/** 保存 */
     function save( $modalInstance,data, $scope ){
     	try{
-    		//判断配送费和采买费是否已填
+    		debugger;
     		if( !data.fullName ){
-    			toaster.error( "", "请填写商品名称", 3000 );
+    			toaster.error( "", "请填写商品名称!", 3000 );
     			return;
     		}
+			if( !data.barcode ){
+				toaster.error( "", "请填写条形码!", 3000 );
+				return;
+			}
 
 			$('#goodsSkuInfoForm').form("submit",{
 				url:urls.ms + "/goods/goods/save.do",
