@@ -47,7 +47,7 @@ public class CorrectController extends BaseController {
             @RequestMapping("/list.do")
             @ResponseBody
             public Object list(Correct correct) {
-                        return correctService.page(correct);
+                return correctService.page(correct);
             }
 
             @RequestMapping("/get.do")

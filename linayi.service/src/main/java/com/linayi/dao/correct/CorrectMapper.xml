@@ -364,6 +364,9 @@
       		 <if test="createTimeEnd != null and createTimeEnd != ''">
           		and c.create_time <![CDATA[ <= ]]> #{createTimeEnd}
         	</if>
+        	<if test="goodsSkuName != null and goodsSkuName != '' ">
+                and g.full_name like concat('%',#{goodsSkuName},'%')
+            </if>
 
         order by c.correct_id desc
     </select>
@@ -398,6 +401,9 @@
             <if test="createTimeEnd != null and createTimeEnd != ''">
                 and c.create_time <![CDATA[ <= ]]> #{createTimeEnd}
             </if>
+        <if test="goodsSkuName != null and goodsSkuName != '' ">
+            and g.full_name like concat('%',#{goodsSkuName},'%')
+        </if>
 
         order by c.correct_id desc
     </select>
