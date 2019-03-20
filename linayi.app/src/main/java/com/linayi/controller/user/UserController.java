@@ -92,4 +92,25 @@ public class UserController extends BaseController {
             return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
         }
     }
+
+    /**
+     * 提取去哪买用户信息
+     */
+    @RequestMapping(value = "/getQnmInfoToLinSheng.do",method = RequestMethod.POST)
+    @ResponseBody
+    public Object getQnmInfoToLinSheng (@RequestBody Map<String, Object> param) {
+        try {
+            ParamValidUtil<User> pa = new ParamValidUtil<>(param);
+            Integer userId = getUserId();
+            User user = pa.transObj(User.class);
+            user.setUserId(userId);
+            return new ResponseData(userService.userInfo(user)).toString();
+        } catch (BusinessException e) {
+            return new ResponseData(e.getErrorType()).toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+        }
+
+    }
 }
