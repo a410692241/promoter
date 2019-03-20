@@ -631,6 +631,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 			for (int i = 0; i < 11 - barcode.length(); i++) {
 				barcode = "0" + barcode;
 			}
+            goodsSku.setFullName(null);
 			goodsSku.setBarcode(barcode);
 			goodsSku.setValidDate(validDate);
 			goodsSku.setImage(s);
