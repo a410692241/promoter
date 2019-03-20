@@ -58,7 +58,7 @@
 	</c:if>
 
 </div>
-<%--<div class="specificationsClass">
+<div class="specificationsClass">
 	<form action="${pageContext.request.contextPath}/goods/goods/showSpecifications.do" method="post" onsubmit="return check();">
 		<span style="color: red">没有的规格先在此添加规格</span><br>
 		<select name="attributeId" id="attributeId">
@@ -73,10 +73,8 @@
 			<span style="color: green">${pass}</span>
 		</div>
 		<input type="submit" value="确认添加">&nbsp;&nbsp;
-		&lt;%&ndash;<button onclick="location.reload();">单击刷新页面</button>&ndash;%&gt;
-
 	</form>
-</div>--%>
+</div>
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 <script type="text/javascript">

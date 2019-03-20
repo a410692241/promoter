@@ -145,8 +145,8 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 			barcode = "0" + barcode;
 		}
 		goodsSku.setBarcode(barcode);
-		GoodsSku goodsByGoods = goodsSkuMapper.getGoodsByGoods(goodsSku);
-		if (goodsByGoods != null){
+		List<GoodsSku> goodsByGoods = goodsSkuMapper.getGoodsByGoods(goodsSku);
+		if (goodsByGoods != null && goodsByGoods.size() > 0){
 			return null;
 		}
 		goodsSku.setBarcode(null);
@@ -212,8 +212,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 			String fullName = getGoodsName(goods);
 			goodsSku.setFullName(fullName);
 			goodsByGoods = goodsSkuMapper.getGoodsByGoods(goodsSku);
-			if (goodsByGoods != null){
-				goodsSkuMapper.deleteGoodsById(Integer.parseInt(goods.getGoodsSkuId() + ""));
+			if (goodsByGoods != null && goodsByGoods.size() > 0){
 				return null;
 			}
 			goods.setFullName(fullName);
@@ -288,6 +287,44 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		modelMap.addAttribute("map",map);
 		return "jsp/goods/specifications";
 	}
+
+	@Override
+	public String toShowSpecifications(ModelMap modelMap, Integer attributeId, String value) {
+		/*查询所有的属性*/
+		List<Attribute> attributes = attributeService.getAttributes();
+		Map<Object, Object> map = new LinkedHashMap<>();
+		if (attributes != null && attributes.size() > 0){
+			modelMap.addAttribute("attributes", attributes);
+			List<AttributeValue> attrvlas;
+			if (value != null && !"".equals(value)){
+				/* 新增属性值*/
+				AttributeValue attributeValue = new AttributeValue();
+				AttributeValue attributeValue1 = attributeValueService.getAttributeValue(attributeId, value);
+				if (attributeValue1 == null){
+					attributeValue.setAttributeId(attributeId);
+					attributeValue.setValue(value);
+					attributeValue.setStatus("NORMAL");
+					attributeValue.setCreateTime(new Date());
+					attributeValueService.addAttributeValue(attributeValue);
+				}
+			}
+
+			for (Attribute attribute : attributes) {
+				/*根据属性Id获取所有属性值*/
+				attrvlas = attributeValueService.getAttrValsByAttrId(attribute.getAttributeId());
+				List<String> list = new ArrayList<>();
+				if (attrvlas != null && attrvlas.size() > 0){
+					for (AttributeValue attrvla : attrvlas) {
+						list.add(attrvla.getValue());
+					}
+				}
+				map.put(attribute.getName(),list);
+			}
+		}
+		modelMap.addAttribute("map",map);
+		return "jsp/goods/specificationsAdd";
+	}
+
 
 	@Override
 	public String specificationsAdd(String categoryName, String brandName, String attrStr) {
@@ -651,9 +688,8 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		//判断商品全称是否存在
 		String fullName = getGoodsName(goods);
 		goodsSku.setFullName(fullName);
-		GoodsSku goodsByGoods = goodsSkuMapper.getGoodsByGoods(goodsSku);
-		if (goodsByGoods != null){
-			goodsSkuMapper.deleteGoodsById(Integer.parseInt(goods.getGoodsSkuId() + ""));
+		List<GoodsSku> goodsByGoods = goodsSkuMapper.getGoodsByGoods(goodsSku);
+		if (goodsByGoods != null && goodsByGoods.size() > 0){
 			return "exist";
 		}
 		goods.setFullName(fullName);

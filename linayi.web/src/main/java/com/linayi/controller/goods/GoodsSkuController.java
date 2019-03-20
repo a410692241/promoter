@@ -195,6 +195,20 @@ public class GoodsSkuController {
     }
 
     /**
+     * 展示所有属性值和者新增属性值
+     *
+     * @param modelMap
+     * @param attributeId
+     * @param value
+     * @return
+     */
+    @Transactional
+    @RequestMapping("/toAhowSpecifications.do")
+    public String toShowSpecifications(ModelMap modelMap, Integer attributeId, String value) {
+        return goodsService.toShowSpecifications(modelMap, attributeId, value);
+    }
+
+    /**
      * 分类、品牌、属性值绑定
      *
      * @param categoryName
