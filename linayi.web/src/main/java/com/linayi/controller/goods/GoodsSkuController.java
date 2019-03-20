@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/goods/goods")
-public class GoodsSkuController {
+public class GoodsSkuController extends BaseController{
 
     @Resource
     private GoodsSkuService goodsService;
@@ -392,9 +392,12 @@ public class GoodsSkuController {
 
     @RequestMapping("/save.do")
     @ResponseBody
-    public Object save(@RequestParam(value = "goodsImage", required = false) CommonsMultipartFile goodsImage, GoodsSku goodsSku) {
+    public Object save(@RequestParam(value = "goodsImage", required = false) CommonsMultipartFile goodsImage, GoodsSku goodsSku,HttpServletRequest httpRequest) {
         try {
-            String edit = goodsService.edit(goodsImage, goodsSku);
+            HttpSession session = httpRequest.getSession();
+            AdminAccount adminAccount = (AdminAccount) session.getAttribute("loginAccount");
+            Integer userId = adminAccount.getUserId();
+            String edit = goodsService.edit(goodsImage, goodsSku,userId);
             return new ResponseData(edit);
         } catch (Exception e) {
             e.printStackTrace();

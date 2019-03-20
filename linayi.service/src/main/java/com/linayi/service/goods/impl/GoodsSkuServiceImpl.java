@@ -615,7 +615,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 	}
 
 	@Override
-	public String edit(CommonsMultipartFile goodsImage, GoodsSku goodsSku) {
+	public String edit(CommonsMultipartFile goodsImage, GoodsSku goodsSku, Integer userId) {
 		String s;
 		try {
 			//判断条形码是否存在
@@ -630,6 +630,14 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 			List<GoodsSku> goodsByGoods = goodsSkuMapper.getGoodsByGoods(goods);
 			if ((goodsByGoods != null && goodsByGoods.size() > 0) && !(goodsByGoods.get(0).getGoodsSkuId() + "").equals(goodsSku.getGoodsSkuId() + "")){
 				return "repeat";
+			}
+
+			GoodsSku goodsSku_new = goodsSkuMapper.getGoodsById(Integer.parseInt(goodsSku.getGoodsSkuId() +""));
+			if (!barcode.equals(goodsSku_new.getBarcode())){
+				if(goodsSku_new.getCreateTime().getTime() < DateUtil.string2Date("2019-03-21 00:00:00","yyyy-MM-dd HH:mm:ss").getTime()){
+					goodsSku.setCreateTime(new Date());
+					goodsSku.setUserId(userId);
+				}
 			}
 			goods.setFullName(null);
 			s = ImageUtil.handleUpload(goodsImage);
