@@ -184,8 +184,6 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 
 
 		if (goods.getName() != null && !"".equals(goods.getName())) {
-
-
 			goods.setBarcode(barcode);
 			goods.setBrandId(brandId);
 			goods.setCategoryId(categoryId);
@@ -648,6 +646,18 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 				attrs += "," + attributeValue.getValue();
 			}
 		}
-		return attrs;
+		GoodsSku goodsSku = new GoodsSku();
+		GoodsSku goods = goodsSkuMapper.getGoodsById(goodsSkuId);
+		//判断商品全称是否存在
+		String fullName = getGoodsName(goods);
+		goodsSku.setFullName(fullName);
+		GoodsSku goodsByGoods = goodsSkuMapper.getGoodsByGoods(goodsSku);
+		if (goodsByGoods != null){
+			goodsSkuMapper.deleteGoodsById(Integer.parseInt(goods.getGoodsSkuId() + ""));
+			return "exist";
+		}
+		goods.setFullName(fullName);
+		goodsSkuMapper.updateGoodsFullName(goods);
+		return attrs + ":" + fullName;
 	}
 }

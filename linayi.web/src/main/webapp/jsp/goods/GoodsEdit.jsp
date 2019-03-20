@@ -8,7 +8,7 @@
 		<div class="form-group col-lg-6 col-xs-6 col-sm-12">
 			<label  class="col-sm-2 control-label no-padding-right" style="text-align: right;">商品名称</label>
 			<div class="col-sm-10">
-				<input ng-required="required" type="text"
+				<input ng-required="required" id="fullName" type="text" readonly
 					   ng-model="goods.fullName" class="form-control"/>
 			</div>
 		</div>

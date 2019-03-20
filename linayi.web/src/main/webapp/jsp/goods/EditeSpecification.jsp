@@ -110,10 +110,14 @@
             processData:false,
             contentType:false,
             success:function(data){
-                if(data.respCode == "S"){
-                    debugger;
+                if(data.data == "exist"){
+                    alert("商品已存在！");
+                }else if(data.respCode == "S"){
                     alert("修改成功！");
-                    window .opener.document.getElementById("attrValues" ).value=data.data;
+                    var str = data.data;
+                    var strArr = str.split(":");
+                    window .opener.document.getElementById("attrValues" ).value=strArr[0];
+                    window .opener.document.getElementById("fullName" ).value=strArr[1];
                     window.close();
                 }else{
                     alert("添加失败！");
@@ -137,10 +141,10 @@
         <div>
             <div id="list"></div>
         </div>
-        <tr>
-            <td colspan="3"><input type="button" onclick="edit();" value="修改">&nbsp;&nbsp;</td>
-            <td colspan="3"><input type="button" onclick="cancel();" value="取消">&nbsp;&nbsp;</td>
-        </tr>
+        <div>
+            <input type="button" style="width: 80px;height: 30px;margin-bottom: 2px;" onclick="edit();" value="修改">&nbsp;&nbsp;<br>
+            <input type="button" style="width: 80px;height: 30px;margin-top: 2px;" onclick="cancel();" value="取消">&nbsp;&nbsp;
+        </div>
     </div>
     <div id="ddd">
         <table id="form-addgoodsRight">
