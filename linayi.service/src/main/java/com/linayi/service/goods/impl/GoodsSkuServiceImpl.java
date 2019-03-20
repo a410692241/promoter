@@ -220,9 +220,10 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 			if (goodsByGoods != null && goodsByGoods.size() > 0){
                 goodsSkuMapper.getGoodsById(Integer.parseInt(goods.getGoodsSkuId() + ""));
 				return null;
+			}else{
+				goods.setFullName(fullName);
+				goodsSkuMapper.updateGoodsFullName(goods);
 			}
-			goods.setFullName(fullName);
-			goodsSkuMapper.updateGoodsFullName(goods);
 		}
 		return goods;
 	}
