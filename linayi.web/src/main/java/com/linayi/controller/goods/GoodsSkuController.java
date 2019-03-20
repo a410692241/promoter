@@ -21,6 +21,7 @@ import com.linayi.service.user.UserService;
 import com.linayi.util.PageResult;
 import com.linayi.util.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -220,6 +221,12 @@ public class GoodsSkuController {
         return "jsp/goods/specificationsShow";
     }
 
+    /**
+     * 新增规格
+     * @param attributeId
+     * @param value
+     * @return
+     */
     @Transactional
     @RequestMapping("/addSpecifications.do")
     @ResponseBody

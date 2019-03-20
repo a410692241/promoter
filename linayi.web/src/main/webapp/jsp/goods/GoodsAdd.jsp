@@ -491,6 +491,9 @@
             alert("请输入商品条形码！");
             return false;
         }
+        for (var i = 0; i < 13 - barcode.length; i++) {
+            barcode = "0" + barcode;
+        }
         var form = new FormData(document.getElementById("add_goods"));
         $.ajax({
             url:"${pageContext.request.contextPath}/goods/goods/addGoodsForAdmin.do",

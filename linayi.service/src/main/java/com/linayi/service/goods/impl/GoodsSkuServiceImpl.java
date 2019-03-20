@@ -17,6 +17,7 @@ import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.entity.user.User;
 import com.linayi.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -94,6 +95,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 	public List<GoodsSku> getGoodsList(GoodsSku goods) {
 		return goodsSkuMapper.getGoodsList(goods);
 	}
+
 	@Override
 	public GoodsSku insertGoods(ModelMap modelMap, MultipartFile file, String category, String brand, GoodsSku goods, String [] attribute, HttpServletRequest httpRequest, Integer userId) throws Exception {
 		MultipartHttpServletRequest request = (MultipartHttpServletRequest) httpRequest;
@@ -117,6 +119,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 	public GoodsSku getGoodsSkuById(Long goodsSkuId) {
 		GoodsSku goodsSku = new GoodsSku();
 		goodsSku.setGoodsSkuId(Long.parseLong(goodsSkuId + ""));
+
 		List<GoodsSku> goodsList = goodsSkuMapper.getGoodsList(goodsSku);
 		if (goodsList != null && goodsList.size() > 0) {
 			goodsSku = goodsList.get(0);
@@ -140,11 +143,8 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		//判断条形码是否存在
 		String barcode = goods.getBarcode();
 		GoodsSku goodsSku = new GoodsSku();
-		int length = barcode.length();
-		for (int i = 0; i < 13 - length; i++) {
-			barcode = "0" + barcode;
-		}
 		goodsSku.setBarcode(barcode);
+		goodsSku.setStatus("NORMAL");
 		List<GoodsSku> goodsByGoods = goodsSkuMapper.getGoodsByGoods(goodsSku);
 		if (goodsByGoods != null && goodsByGoods.size() > 0){
 			return null;
@@ -676,6 +676,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		//判断商品全称是否存在
 		String fullName = getGoodsName(goods);
 		goodsSku.setFullName(fullName);
+		goodsSku.setStatus("NORMAL");
 		List<GoodsSku> goodsByGoods = goodsSkuMapper.getGoodsByGoods(goodsSku);
 		if (goodsByGoods != null && goodsByGoods.size() > 0){
 			return "exist";
