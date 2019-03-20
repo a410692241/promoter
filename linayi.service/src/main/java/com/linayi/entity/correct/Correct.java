@@ -212,6 +212,8 @@ public class Correct extends BaseEntity {
 
     private List<String> statusList;
 
+    private String correctType;//按钮类型
+
     public List<String> getStatusList() {
         return statusList;
     }
@@ -468,6 +470,14 @@ public class Correct extends BaseEntity {
 
     public void setStrEndTime(String strEndTime) {
         this.strEndTime = strEndTime;
+    }
+
+    public String getCorrectType() {
+        return correctType;
+    }
+
+    public void setCorrectType(String correctType) {
+        this.correctType = correctType;
     }
 
     @Override

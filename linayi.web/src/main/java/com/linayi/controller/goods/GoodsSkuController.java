@@ -1,5 +1,6 @@
 package com.linayi.controller.goods;
 
+import com.google.gson.Gson;
 import com.linayi.controller.BaseController;
 import com.linayi.dao.account.AccountMapper;
 import com.linayi.entity.account.AdminAccount;
@@ -17,6 +18,8 @@ import com.linayi.service.correct.SupermarketGoodsVersionService;
 import com.linayi.service.goods.BrandService;
 import com.linayi.service.goods.CategoryService;
 import com.linayi.service.goods.GoodsSkuService;
+import com.linayi.service.goods.SupermarketGoodsService;
+import com.linayi.service.goods.impl.SupermarketGoodsServiceImpl;
 import com.linayi.service.user.UserService;
 import com.linayi.util.PageResult;
 import com.linayi.util.ResponseData;
@@ -35,9 +38,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/goods/goods")
@@ -55,6 +57,8 @@ public class GoodsSkuController {
     private CategoryService categoryService;
     @Autowired
     private BrandService brandService;
+    @Autowired
+    private SupermarketGoodsService supermarketGoodsService;
 
     /**
      * 添加商品页面的入口
@@ -321,8 +325,20 @@ public class GoodsSkuController {
         Correct correct = new Correct();
         correct.setGoodsSkuId(Long.parseLong(goodsSkuId));
         ModelAndView modelAndView = new ModelAndView();
+        List<Supermarket> supermarkets = supermarketGoodsService.getPriceSupermarketBycommunityIdAndgoodsSkuId(null, Integer.parseInt(goodsSkuId));
+        List<Map> maps = new ArrayList<>();
+        supermarkets.forEach(item -> {
+        Map<String, Object> map = new HashMap<>();
+            map.put("code", item.getSupermarketId());
+            map.put("name", item.getName());
+            maps.add(map);
+        });
+        Gson gson = new Gson();
+        String supermarketSelect = gson.toJson(maps);
+
         modelAndView.setViewName("jsp/goods/goodShare");
         modelAndView.addObject("correct", correct);
+        modelAndView.addObject("supermarketSelect", supermarketSelect);
         return modelAndView;
     }
 

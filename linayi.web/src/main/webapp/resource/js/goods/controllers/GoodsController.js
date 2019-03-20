@@ -39,6 +39,7 @@ app.controller('goodsCtrl', function($q,$http,$scope,toaster,goodsService,messag
 		$scope.edit = edit;
 		$scope.remove = remove;
 		$scope.share = share;
+        $scope.getPrice = getPrice;
 		$scope.list = list;
 		$scope.addUI = addUI;
 		$scope.saveShare = saveShare;
@@ -569,22 +570,22 @@ app.controller('goodsCtrl', function($q,$http,$scope,toaster,goodsService,messag
 				}
 			});
 
-    		/*if( !goodsSku.produceDate ){
-    			toaster.error( "", "请填写生产日期", 3000 );
-    			return;
-    		}
-    		if( !goodsSku.validDate ){
-    			toaster.error( "", "请填写有效日期", 3000 );
-    			return;
-    		}
-    		if( !goodsSku.goodsName ){
-    			toaster.error( "", "请填写商品标题", 3000 );
-    			return;
-    		}
-    		if( !goodsSku.goodsName ){
-    			toaster.error( "", "请填写商品标题", 3000 );
-    			return;
-    		}*/
+                /*if( !goodsSku.produceDate ){
+                    toaster.error( "", "请填写生产日期", 3000 );
+                    return;
+                }
+                if( !goodsSku.validDate ){
+                    toaster.error( "", "请填写有效日期", 3000 );
+                    return;
+                }
+                if( !goodsSku.goodsName ){
+                    toaster.error( "", "请填写商品标题", 3000 );
+                    return;
+                }
+                if( !goodsSku.goodsName ){
+                    toaster.error( "", "请填写商品标题", 3000 );
+                    return;
+                }*/
 
 		/*<div ng-if="goods.goodImageFirst.firstImage == 1 || goods.goodImageFirst.firstImage == null">
 				<div  name="firstImages" style="width: 100%;" ui-imagebox ng-model="goods.goodImageFirst.imagePath"></div>
@@ -626,28 +627,36 @@ app.controller('goodsCtrl', function($q,$http,$scope,toaster,goodsService,messag
 		}
     }
 
-    /** 查看 */
-    function show( id ){
-    	var url = urls.ms + "/goods/goods/show.do?";
-		if( id ){
-			url = url + $.param( {goodsSkuId:id} );
-		}
-		templateform.open({
-			title:"Goods",
-			buttons:[],
-			backdrop: true,
-		    keyboard: true,
-			url:url
-		});
-    }
-    function saveShare( $modalInstance,data, $scope ){
-		$.ajax({
-			url: urls.ms +"/correct/correct/share.do",
-			data:$scope.correct,
-			dataType:"json",
-			type:"post",
-			success:function(data){
-				if (data.respCode === "S") {
+        /** 查看 */
+        function show(id) {
+            var url = urls.ms + "/goods/goods/show.do?";
+            if (id) {
+                url = url + $.param({goodsSkuId: id});
+            }
+            templateform.open({
+                title: "Goods",
+                buttons: [],
+                backdrop: true,
+                keyboard: true,
+                url: url
+            });
+        }
+
+        function saveShare($modalInstance, data, $scope) {
+            console.log($scope);
+            var correct = $scope.correct;
+            correct.price = $("#price").val() * 100;
+            var priceType = correct.priceType;
+            correct.correctType = $("#correctType").val();
+            correct.correctId = $("#correctId").val();
+
+            $.ajax({
+                url: urls.ms + "/correct/correct/updatePriceForAdmin.do",
+                data: $scope.correct,
+                dataType: "json",
+                type: "post",
+                success: function (data) {
+                    if (data.respCode === "S") {
 //					$modalInstance.close();
 					alert("分享成功!");
 				}else{
@@ -665,3 +674,42 @@ app.controller('goodsCtrl', function($q,$http,$scope,toaster,goodsService,messag
     // 初始化
     init();
 });
+                        alert("分享成功!");
+                    } else {
+                        alert("此超市已有人分享，暂时不能分享!");
+                    }
+                }
+            });
+        }
+
+        function editeAttribute(goodsSkuId) {
+            debugger;
+            var param = "?goodsSkuId=" + goodsSkuId;
+            // 修改商品规格
+            window.open(urls.ms + "/goods/goods/editeSpecification.do" + param, "修改商品规格", "height=600, width=800,top=200,left=300, toolbar=no, menubar=no, scrollbars=yes, resizable=no, location=no, status=no")
+        }
+
+        //通过超市id获取该超市的分享纠错的价格
+        function getPrice($item, supermarektMap) {
+            var supermarketId = $item.code;
+            // $scope.correct.supermarketId = supermarketId;
+            //分享价格绑定数据
+            console.log(supermarkets);
+            for (var i = 0; i < supermarkets.length; i++) {
+                var supermarket = supermarkets[i];
+                if (supermarket.supermarketId === supermarketId) {
+                    if (supermarket.goodsPrice != undefined) {
+                        $("#price").val(supermarket.goodsPrice / 100);
+                    }else{
+                        $("#price").val('');
+                    }
+                    $("#correctType").val(supermarket.correctType);
+                    $("#correctId").val(supermarket.correctId);
+
+                }
+            }
+        }
+
+        // 初始化
+        init();
+    });

@@ -166,4 +166,62 @@ public class SupermarketGoodsServiceImpl implements SupermarketGoodsService {
 		return supermarketGoodsMapper.getPriceSupermarketBycommunityIdAndgoodsSkuId(communityId, goodsSkuId);
 	}
 
+
+
+//	// 查询单个超市商品判断可以分享、纠错还是查看（后台修改价格用）
+//	@Override
+//	public List<Supermarket> getPriceSupermarketBySupermarketIdAndgoodsSkuId(Integer goodsSkuId,Integer supermarketId) {
+//// 通过超市id、商品id、状态为“生效”中查询纠错表
+//		Correct param = new Correct();
+//		param.setSupermarketId(supermarketId);
+//		param.setGoodsSkuId(Long.valueOf(goodsSkuId));
+//		param.setStatus(CorrectStatus.AFFECTED.toString());
+//		Correct currentCorrect = correctMapper.query(param).stream().findFirst().orElse(null);
+//		// 当查询结果不为null时，表示该商品有价格
+//		if (currentCorrect != null) {
+//			Correct param1 = new Correct();
+//			param1.setSupermarketId(supermarketId);
+//			param1.setGoodsSkuId(Long.valueOf(goodsSkuId));
+//			List<String> statusList = new ArrayList<>();
+//			statusList.add(CorrectStatus.WAIT_AUDIT.toString());
+//			statusList.add(CorrectStatus.AUDIT_SUCCESS.toString());
+//			param1.setStatusList(statusList);
+//			Correct currentCorrect1 = correctMapper.query(param1).stream().findFirst().orElse(null);
+//			if (currentCorrect1 != null) {
+//				supermarket.setCorrectType("VIEW");
+//				supermarket.setGoodsPrice(currentCorrect.getPrice().toString());
+//				supermarket.setCorrectId(currentCorrect1.getCorrectId());
+//			} else {
+//				supermarket.setCorrectType("CORRECT");
+//				supermarket.setGoodsPrice(currentCorrect.getPrice().toString());
+//				supermarket.setCorrectId(currentCorrect.getCorrectId());
+//			}
+//
+//			// 否则表示该商品无价格
+//		} else {
+//			// 通过超市id和商品id查询纠错表，如果结果为null则显示分享按钮
+//			List<Correct> correctList = correctMapper.selectCorrect(supermarket.getSupermarketId(),
+//					Long.valueOf(goodsSkuId));
+//			if (correctList.size() <= 0) {
+//				supermarket.setCorrectType("SHARE");
+//				// 否则遍历集合
+//			} else {
+//				Correct param2 = new Correct();
+//				param2.setSupermarketId(supermarket.getSupermarketId());
+//				param2.setGoodsSkuId(Long.valueOf(goodsSkuId));
+//				List<String> statusList = new ArrayList<>();
+//				statusList.add(CorrectStatus.WAIT_AUDIT.toString());
+//				statusList.add(CorrectStatus.AUDIT_SUCCESS.toString());
+//				param2.setStatusList(statusList);
+//				Correct currentCorrect2 = correctMapper.query(param2).stream().findFirst().orElse(null);
+//				if (currentCorrect2 != null) {
+//					supermarket.setCorrectType("VIEW");
+//					supermarket.setCorrectId(currentCorrect2.getCorrectId());
+//				} else {
+//					supermarket.setCorrectType("SHARE");
+//				}
+//			}
+//		}
+//	}
+
 }

@@ -257,7 +257,10 @@
 		AND sc.community_id=cs.community_id 
   		AND cs.supermarket_id = s.supermarket_id 
   		AND u.default_receive_address_id=ra.receive_address_id
-  		AND ra.user_id = #{userId}	
+		  <if test="userId!=null">
+			  AND ra.user_id = #{userId}
+		  </if>
+
   </select>
 
   <select id="getSupermarketByProcurerId" resultType="com.linayi.entity.supermarket.Supermarket">

@@ -20,7 +20,8 @@
 			<module>linayi.service</module>
 			<module>linayi.app</module>
 			<module>linayi.web</module>
-	</modules>
+        <module>text</module>
+    </modules>
 	<dependencyManagement>
 	<dependencies>
 		<dependency>
