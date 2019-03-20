@@ -355,8 +355,8 @@ public class GoodsSkuController {
         Category category= categoryService.getCategoryById(goodsSku.getCategoryId());
         Brand brand = brandService.getBrandById(goodsSku.getBrandId());
         model.addAttribute("goodsSkuId",goodsSkuId);
-        model.addAttribute("categoryName",category.getName());
-        model.addAttribute("brandName",brand.getName());
+        model.addAttribute("categoryId",category.getCategoryId());
+        model.addAttribute("brandId",brand.getBrandId());
         return "jsp/goods/EditeSpecification";
     }
 

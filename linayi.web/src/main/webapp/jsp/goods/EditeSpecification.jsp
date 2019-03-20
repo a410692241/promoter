@@ -137,6 +137,8 @@
 <form id="add_goods"
       enctype="multipart/form-data">
     <input type="hidden" name="goodsSkuId" value="${goodsSkuId}" />
+    <input type="hidden" name="brandId" value="${brandId}" />
+    <input type="hidden" name="categoryId" value="${categoryId}" />
     <div class="form-addgoods">
         <div>
             <div id="list"></div>
@@ -144,6 +146,9 @@
         <div>
             <input type="button" style="width: 80px;height: 30px;margin-bottom: 2px;" onclick="edit();" value="修改">&nbsp;&nbsp;<br>
             <input type="button" style="width: 80px;height: 30px;margin-top: 2px;" onclick="cancel();" value="取消">&nbsp;&nbsp;
+        </div>
+        <div>
+            <input type="button" style="width: 80px;height: 30px;margin-top: 2px;" onclick="addAttr();" value="新增规格">&nbsp;&nbsp;
         </div>
     </div>
     <div id="ddd">
@@ -153,7 +158,6 @@
 </form>
 <script type="text/javascript">
 
-    function attributes(){
         $.ajax({
             url: "${pageContext.request.contextPath}/goods/goods/getAttributeList.do",
             type:"post",
@@ -167,9 +171,7 @@
                 }
             }
         });
-    }
 
-    attributes();
 
     var brandName = "${brandName}";
     var categoryName = "${categoryName}";
@@ -208,14 +210,8 @@
         }
     });
 
-    function bindAttrVal(index){
-        $("#a" + index).each(function(){//给所有的input绑定事件
-            var l=[]; //创建空数组l
-            $("#a" + index + ":checked").each(function(i){l[i]=this.value});
-            //将所有的选中的值存放l
-            $("#attribute" + index).val(l);//将数据值联合字符串给显示对象附值 */
-        });
-    };
+        function addAttr (){
 
+        }
 </script>
 
