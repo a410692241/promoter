@@ -18,4 +18,6 @@ public interface GoodsAttrValueMapper {
      * @param goodsSkuId
      */
     void deleteByGoodsSkuId(Integer goodsSkuId);
+
+    List<GoodsAttrValue> getGoodsAttrValue(GoodsAttrValue goodsAttrValue);
 }

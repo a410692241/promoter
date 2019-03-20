@@ -12,6 +12,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.linayi.entity.account.Account;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.entity.user.User;
@@ -650,7 +651,9 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 
 	@Override
 	public String editGoodsAttribute(String[] attribute,Integer goodsSkuId) {
-		goodsAttrValueMapper.deleteByGoodsSkuId(goodsSkuId);
+
+		List<GoodsAttrValue> goodsAttrValueArrayList = new ArrayList<>();
+
 		List<Attribute> attributes = attributeMapper.getAttributes();
 		for (int i = 0; i < attribute.length; i++) {
 			if (attribute[i] != null && !"".equals(attribute[i])){
@@ -663,8 +666,12 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 				}
 				goodsAttrValue.setAttrValueId(attrbuteVal.getValueId());
 				goodsAttrValue.setGoodsSkuId(goodsSkuId);
-				goodsAttrValue.setCreateTime(new Date());
-				goodsAttrValueMapper.insert(goodsAttrValue);
+				List<GoodsAttrValue> goodsAttrValueList = goodsAttrValueMapper.getGoodsAttrValue(goodsAttrValue);
+				if (goodsAttrValueList == null || goodsAttrValueList.size() == 0){
+					goodsAttrValue.setCreateTime(new Date());
+					goodsAttrValueMapper.insert(goodsAttrValue);
+					goodsAttrValueArrayList.add(goodsAttrValue);
+				}
 			}
 		}
 
@@ -686,6 +693,11 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		goodsSku.setStatus("NORMAL");
 		List<GoodsSku> goodsByGoods = goodsSkuMapper.getGoodsByGoods(goodsSku);
 		if (goodsByGoods != null && goodsByGoods.size() > 0){
+			if(goodsAttrValueArrayList != null && goodsAttrValueArrayList.size() > 0){
+				goodsAttrValueArrayList.forEach(item ->{
+					goodsAttrValueMapper.deleteById(item.getGoodsAttrValueId());
+				});
+			}
 			return "exist";
 		}
 		goods.setFullName(fullName);

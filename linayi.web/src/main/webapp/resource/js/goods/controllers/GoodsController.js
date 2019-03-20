@@ -660,7 +660,7 @@ app.controller('goodsCtrl', function($q,$http,$scope,toaster,goodsService,messag
     	debugger;
 		var param = "?goodsSkuId=" + goodsSkuId;
 		// 修改商品规格
-		window.open (urls.ms + "/goods/goods/editeSpecification.do" + param, "修改商品规格", "height=600, width=800,top=200,left=300, toolbar=no, menubar=no, scrollbars=yes, resizable=no, location=no, status=no")
+		window.open (urls.ms + "/goods/goods/editeSpecification.do" + param, "修改商品规格", "height=600, width=800,top=300,left=400, toolbar=no, menubar=no, scrollbars=yes, resizable=no, location=no, status=no")
 	}
     // 初始化
     init();

@@ -102,6 +102,7 @@
     }
 
     function edit(){
+        debugger;
         var form = new FormData(document.getElementById("add_goods"));
         $.ajax({
             url:"${pageContext.request.contextPath}/goods/goods/editGoodsAttribute.do",
@@ -113,7 +114,6 @@
                 if(data.data == "exist"){
                     alert("商品已存在！");
                 }else if(data.respCode == "S"){
-                    alert("修改成功！");
                     var str = data.data;
                     var strArr = str.split(":");
                     window .opener.document.getElementById("attrValues" ).value=strArr[0];
@@ -134,45 +134,41 @@
         window.close();
     }
 </script>
-<form id="add_goods"
-      enctype="multipart/form-data">
-    <input type="hidden" name="goodsSkuId" value="${goodsSkuId}" />
-    <input type="hidden" name="brandId" value="${brandId}" />
-    <input type="hidden" name="categoryId" value="${categoryId}" />
-    <div class="form-addgoods">
-        <div>
-            <div id="list"></div>
-        </div>
-        <div>
-            <input type="button" style="width: 80px;height: 30px;margin-bottom: 2px;" onclick="edit();" value="修改">&nbsp;&nbsp;<br>
-            <input type="button" style="width: 80px;height: 30px;margin-top: 2px;" onclick="cancel();" value="取消">&nbsp;&nbsp;
-        </div>
-        <div>
-            <input type="button" style="width: 80px;height: 30px;margin-top: 2px;" onclick="addAttr();" value="新增规格">&nbsp;&nbsp;
-        </div>
+
+<div class="form-addgoods">
+    <div>
+        <div id="list"></div>
     </div>
+</div>
+<form id="add_goods" enctype="multipart/form-data">
+    <input type="hidden" name="goodsSkuId" value="${goodsSkuId}" />
     <div id="ddd">
         <table id="form-addgoodsRight">
         </table>
     </div>
+    <div style="position: absolute;top: 100px;left: 500px;">
+        <input type="button" style="width: 80px;height: 30px;margin-bottom: 2px;" onclick="edit();" value="修改">&nbsp;&nbsp;<br>
+        <input type="button" style="width: 80px;height: 30px;margin-top: 2px;" onclick="cancel();" value="取消">&nbsp;&nbsp;
+    </div>
 </form>
+<div>
+    <input type="button" style="width: 80px;height: 30px;margin-top: 2px;" onclick="addAttr();" value="新增规格">&nbsp;&nbsp;
+</div>
 <script type="text/javascript">
 
-        $.ajax({
-            url: "${pageContext.request.contextPath}/goods/goods/getAttributeList.do",
-            type:"post",
-            dataType:"json",
-            success:function (data) {
-                if (data) {
-                    for (var i = 0; i < data.length; i++) {
-                        var $input = $("<tr><td class='form-addgoodsRightTd'><td/><td>" + "<input class='qqq" + (i + 1) + "' type='hidden' name='attribute' id='attribute" + (i + 1) + "'  readonly=readonly size='6'></td></tr>");
-                        $input.appendTo("#form-addgoodsRight");
-                    }
+    $.ajax({
+        url: "${pageContext.request.contextPath}/goods/goods/getAttributeList.do",
+        type:"post",
+        dataType:"json",
+        success:function (data) {
+            if (data) {
+                for (var i = 0; i < data.length; i++) {
+                    var $input = $("<tr><td>" + "<input class='qqq" + (i + 1) + "' type='hidden' name='attribute' id='attribute" + (i + 1) + "'  readonly=readonly size='6'></td></tr>");
+                    $input.appendTo("#form-addgoodsRight");
                 }
             }
-        });
-
-
+        }
+    });
     var brandName = "${brandName}";
     var categoryName = "${categoryName}";
     $.ajax({
@@ -209,9 +205,20 @@
             }
         }
     });
+    function bindAttrVal(index){
+        $("#a" + index).each(function(){//给所有的input绑定事件
+            var l=[]; //创建空数组l
+            $("#a" + index + ":checked").each(function(i){l[i]=this.value});
+            //将所有的选中的值存放l
+            $("#attribute" + index).val(l);//将数据值联合字符串给显示对象附值 */
+        });
+    };
+
 
         function addAttr (){
-
+            var goodsSkuId = $("#goodsSkuId").val();
+            var params = "?goodsSkuId=" + goodsSkuId + "&brandName=" + brandName + "&categoryName=" + categoryName;
+            window.open ("${pageContext.request.contextPath }/goods/goods/toAddSpecifications.do" + params, "新增规格", "height=800, width=1000,top=0,left=0, toolbar=no, menubar=no, scrollbars=yes, resizable=no, location=no, status=no")
         }
 </script>
 

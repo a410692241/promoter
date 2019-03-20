@@ -18,6 +18,26 @@
   <delete id="deleteById">
     delete from goods_attr_value where goods_attr_value_id = #{attrValueId}
   </delete>
+  <select id="getGoodsAttrValue" resultMap="BaseResultMap">
+    select goods_attr_value_id, goods_sku_id, attr_value_id, update_time, create_time from goods_attr_value
+    <where>
+      <if test="goodsAttrValueId != null">
+        goods_attr_value_id = #{goodsAttrValueId}
+      </if>
+      <if test="goodsSkuId != null">
+        and goods_sku_id = #{goodsSkuId}
+      </if>
+      <if test="attrValueId != null">
+        and attr_value_id = #{attrValueId}
+      </if>
+      <if test="updateTime != null">
+        and update_time = #{updateTime}
+      </if>
+      <if test="createTime != null">
+        and create_time = #{createTime}
+      </if>
+    </where>
+  </select>
   <insert id="insert" parameterType="com.linayi.entity.goods.GoodsAttrValue" useGeneratedKeys="true" keyProperty="goodsAttrValueId">
     insert into goods_attr_value (goods_attr_value_id, goods_sku_id, attr_value_id,
       update_time, create_time)

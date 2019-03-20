@@ -201,8 +201,10 @@ public class GoodsSkuController {
      */
     @Transactional
     @RequestMapping("/toAddSpecifications.do")
-    public String toAddSpecifications(ModelMap modelMap){
+    public String toAddSpecifications(ModelMap modelMap,String brandName,String categoryName){
         goodsService.showSpecifications(modelMap, null, null);
+        modelMap.addAttribute("brandName",brandName);
+        modelMap.addAttribute("categoryName",categoryName);
         return "jsp/goods/specificationsAdd";
     }
 
@@ -250,8 +252,14 @@ public class GoodsSkuController {
     @Transactional
     @RequestMapping(value = "/specificationsAdd.do", method = RequestMethod.POST)
     @ResponseBody
-    public String specificationsAdd(String categoryName, String brandName, String attrStr) {
-        return goodsService.specificationsAdd(categoryName, brandName, attrStr);
+    public Object specificationsAdd(String categoryName, String brandName, String attrStr) {
+        try {
+            goodsService.specificationsAdd(categoryName, brandName, attrStr);
+            return new ResponseData("success");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseData(ErrorType.SYSTEM_ERROR);
     }
 
     /**
@@ -355,8 +363,8 @@ public class GoodsSkuController {
         Category category= categoryService.getCategoryById(goodsSku.getCategoryId());
         Brand brand = brandService.getBrandById(goodsSku.getBrandId());
         model.addAttribute("goodsSkuId",goodsSkuId);
-        model.addAttribute("categoryId",category.getCategoryId());
-        model.addAttribute("brandId",brand.getBrandId());
+        model.addAttribute("categoryName",category.getName());
+        model.addAttribute("brandName",brand.getName());
         return "jsp/goods/EditeSpecification";
     }
 
