@@ -219,7 +219,7 @@
         from goods_sku
         <where>
             <if test="status != null and status != ''">
-                gs.STATUS = #{status}
+                STATUS = #{status}
             </if>
             <if test="goodsSkuId != null and goodsSkuId != ''">
                 and goods_sku_id = #{goodsSkuId}

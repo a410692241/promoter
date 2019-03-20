@@ -498,6 +498,7 @@
         for (var i = 0; i < 13 - barcode.length; i++) {
             barcode = "0" + barcode;
         }
+        $("#barcode").val(barcode);
         var form = new FormData(document.getElementById("add_goods"));
         $.ajax({
             url:"${pageContext.request.contextPath}/goods/goods/addGoodsForAdmin.do",
