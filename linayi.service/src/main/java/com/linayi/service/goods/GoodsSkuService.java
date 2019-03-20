@@ -117,6 +117,7 @@ public interface GoodsSkuService {
 	 */
     String editGoodsAttribute(String[] attribute, Integer goodsSkuId);
 
-	String toShowSpecifications(ModelMap modelMap, Integer attributeId, String value);
+	void toShowSpecifications(ModelMap modelMap, Integer attributeId, String value);
 
+	void addSpecifications(Integer attributeId, String value);
 }

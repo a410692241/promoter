@@ -195,6 +195,17 @@ public class GoodsSkuController {
     }
 
     /**
+     * 进入新增规格页面
+     * @return
+     */
+    @Transactional
+    @RequestMapping("/toAddSpecifications.do")
+    public String toAddSpecifications(ModelMap modelMap){
+        goodsService.showSpecifications(modelMap, null, null);
+        return "jsp/goods/specificationsAdd";
+    }
+
+    /**
      * 展示所有属性值和者新增属性值
      *
      * @param modelMap
@@ -205,7 +216,21 @@ public class GoodsSkuController {
     @Transactional
     @RequestMapping("/toAhowSpecifications.do")
     public String toShowSpecifications(ModelMap modelMap, Integer attributeId, String value) {
-        return goodsService.toShowSpecifications(modelMap, attributeId, value);
+        goodsService.toShowSpecifications(modelMap, attributeId, value);
+        return "jsp/goods/specificationsShow";
+    }
+
+    @Transactional
+    @RequestMapping("/addSpecifications.do")
+    @ResponseBody
+    public Object addSpecifications(Integer attributeId, String value){
+        try {
+            goodsService.addSpecifications(attributeId, value);
+            return new ResponseData("success");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseData(ErrorType.SYSTEM_ERROR.getErrorMsg());
     }
 
     /**

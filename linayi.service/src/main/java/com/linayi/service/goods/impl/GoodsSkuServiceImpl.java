@@ -253,54 +253,22 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 
 	@Override
 	public String showSpecifications(ModelMap modelMap, Integer attributeId, String value) {
-		/*查询所有的属性*/
-		List<Attribute> attributes = attributeService.getAttributes();
-		Map<Object, Object> map = new LinkedHashMap<>();
-		if (attributes != null && attributes.size() > 0){
-			modelMap.addAttribute("attributes", attributes);
-			List<AttributeValue> attrvlas;
-			if (value != null && !"".equals(value)){
-				/* 新增属性值*/
-				AttributeValue attributeValue = new AttributeValue();
-				AttributeValue attributeValue1 = attributeValueService.getAttributeValue(attributeId, value);
-				if (attributeValue1 == null){
-					attributeValue.setAttributeId(attributeId);
-					attributeValue.setValue(value);
-					attributeValue.setStatus("NORMAL");
-					attributeValue.setCreateTime(new Date());
-					attributeValueService.addAttributeValue(attributeValue);
-				}
-			}
-
-			for (Attribute attribute : attributes) {
-				/*根据属性Id获取所有属性值*/
-				attrvlas = attributeValueService.getAttrValsByAttrId(attribute.getAttributeId());
-				List<String> list = new ArrayList<>();
-				if (attrvlas != null && attrvlas.size() > 0){
-					for (AttributeValue attrvla : attrvlas) {
-						list.add(attrvla.getValue());
-					}
-				}
-				map.put(attribute.getName(),list);
-			}
-		}
-		modelMap.addAttribute("map",map);
+		getAttributesMap(modelMap, attributeId, value);
 		return "jsp/goods/specifications";
 	}
 
-	@Override
-	public String toShowSpecifications(ModelMap modelMap, Integer attributeId, String value) {
+	private void getAttributesMap(ModelMap modelMap, Integer attributeId, String value) {
 		/*查询所有的属性*/
 		List<Attribute> attributes = attributeService.getAttributes();
 		Map<Object, Object> map = new LinkedHashMap<>();
-		if (attributes != null && attributes.size() > 0){
+		if (attributes != null && attributes.size() > 0) {
 			modelMap.addAttribute("attributes", attributes);
 			List<AttributeValue> attrvlas;
-			if (value != null && !"".equals(value)){
+			if (value != null && !"".equals(value)) {
 				/* 新增属性值*/
 				AttributeValue attributeValue = new AttributeValue();
 				AttributeValue attributeValue1 = attributeValueService.getAttributeValue(attributeId, value);
-				if (attributeValue1 == null){
+				if (attributeValue1 == null) {
 					attributeValue.setAttributeId(attributeId);
 					attributeValue.setValue(value);
 					attributeValue.setStatus("NORMAL");
@@ -313,18 +281,38 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 				/*根据属性Id获取所有属性值*/
 				attrvlas = attributeValueService.getAttrValsByAttrId(attribute.getAttributeId());
 				List<String> list = new ArrayList<>();
-				if (attrvlas != null && attrvlas.size() > 0){
+				if (attrvlas != null && attrvlas.size() > 0) {
 					for (AttributeValue attrvla : attrvlas) {
 						list.add(attrvla.getValue());
 					}
 				}
-				map.put(attribute.getName(),list);
+				map.put(attribute.getName(), list);
 			}
 		}
-		modelMap.addAttribute("map",map);
-		return "jsp/goods/specificationsAdd";
+		modelMap.addAttribute("map", map);
 	}
 
+	@Override
+	public void toShowSpecifications(ModelMap modelMap, Integer attributeId, String value) {
+		/*查询所有的属性*/
+		getAttributesMap(modelMap, attributeId, value);
+	}
+
+	@Override
+	public void addSpecifications(Integer attributeId, String value) {
+		if (value != null && !"".equals(value)) {
+			/* 新增属性值*/
+			AttributeValue attributeValue = new AttributeValue();
+			AttributeValue attributeValue1 = attributeValueService.getAttributeValue(attributeId, value);
+			if (attributeValue1 == null) {
+				attributeValue.setAttributeId(attributeId);
+				attributeValue.setValue(value);
+				attributeValue.setStatus("NORMAL");
+				attributeValue.setCreateTime(new Date());
+				attributeValueService.addAttributeValue(attributeValue);
+			}
+		}
+	}
 
 	@Override
 	public String specificationsAdd(String categoryName, String brandName, String attrStr) {
