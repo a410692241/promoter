@@ -143,7 +143,8 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		//判断条形码是否存在
 		String barcode = goods.getBarcode();
 		GoodsSku goodsSku = new GoodsSku();
-        for (int i = 0; i < 13 - barcode.length(); i++){
+        int len = 13 - barcode.length();
+        for (int i = 0; i < len; i++){
             barcode = "0" + barcode;
         }
 		goodsSku.setBarcode(barcode);
