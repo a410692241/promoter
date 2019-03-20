@@ -491,6 +491,10 @@
             alert("请输入商品条形码！");
             return false;
         }
+        if(barcode.length > 13){
+            alert("商品条形码长度不能超过13位!");
+            return false;
+        }
         for (var i = 0; i < 13 - barcode.length; i++) {
             barcode = "0" + barcode;
         }
