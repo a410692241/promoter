@@ -514,6 +514,7 @@
                            $(ele).val("");
                        }
                    });
+                   $('#list').empty();
                    $("#preview").empty();
                    $("input[type='radio']").removeAttr('checked');
                }else if(data.respCode == "T"){
