@@ -225,6 +225,7 @@ public class GoodsSkuController extends BaseController {
     			goodsSku.setPageSize(8);
     		}
 //    		goodsSku.setName(goodsName);
+			goodsSku.setStatus("NORMAL");
     		List<GoodsSku> vagueGoodsSkuList = goodsSkuService.getGoodsSkuByVagueGoodsName(goodsSku);
     		Integer totalPage = (int) Math.ceil(Double.valueOf(goodsSku.getTotal())/Double.valueOf(goodsSku.getPageSize()));
     		if(totalPage <= 0){

@@ -231,6 +231,7 @@ public class GoodsSkuController {
     @RequestMapping("/list.do")
     @ResponseBody
     public Object getGoodsList(GoodsSku goods, String userName) {
+        goods.setStatus("NORMAL");
         return goodsService.getGoodsLists(goods, userName);
     }
 
