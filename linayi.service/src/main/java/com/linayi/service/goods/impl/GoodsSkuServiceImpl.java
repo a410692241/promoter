@@ -322,14 +322,8 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 	}
 
 	@Override
-	public String specificationsAdd(String categoryName, String brandName, String attrStr) {
-		String result = "success";
-		try {
-			cateBrandValService.addCateBrandVal(categoryName, brandName, attrStr);
-		}catch (Exception e){
-			result = "defeate";
-		}
-		return result;
+	public String specificationsAdd(String categoryName, String brandName, String attrStr,Integer goodsSkuId) {
+		return cateBrandValService.addCateBrandVal(categoryName, brandName, attrStr, goodsSkuId);
 	}
 
 	@Override

@@ -71,9 +71,9 @@
 
     var brandName = "${brandName}";
     var categoryName = "${categoryName}";
+    var goodsSkuId = "${goodsSkuId}";
 
     function foo(){
-        debugger;
         var attrArr = new Array();
         $(".qqq").each(function(index,ele){
             var val = $(ele).val();
@@ -84,15 +84,20 @@
             }
         });
         var attrStr = attrArr.join(",");
-
+        debugger;
         $.ajax({
             type: "POST",//方法
-            url: "specificationsAdd.do",//表单接收url
-            data: {categoryName:categoryName,brandName:brandName,attrStr:attrStr},
+            url: "specificationsGoodsAdd.do",//表单接收url
+            data: {categoryName:categoryName,brandName:brandName,attrStr:attrStr,goodsSkuId:goodsSkuId},
             dataType:"json",
             success: function (data){
-                if(data.respCode == "S"){
-                    self.opener.location.reload();
+                debugger;
+                var s = data.data;
+                if(data.data == "repate"){
+                    alert("商品已存在");
+                }else if(data.respCode == "S"){
+                    window .opener.document.getElementById("attrValues").value=data.data.attrValues;
+                    window .opener.document.getElementById("fullName").value=data.data.fullName;
                     window .close();
                 }else if(data.respCode == "F") {
                     alert("新增失败!")

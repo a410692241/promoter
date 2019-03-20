@@ -697,7 +697,7 @@ app.controller('goodsCtrl'/**
             debugger;
             var param = "?goodsSkuId=" + goodsSkuId;
             // 修改商品规格
-            window.open(urls.ms + "/goods/goods/editeSpecification.do" + param, "修改商品规格", "height=600, width=800,top=200,left=300, toolbar=no, menubar=no, scrollbars=yes, resizable=no, location=no, status=no")
+            window.open(urls.ms + "/goods/goods/toAddSpecifications.do" + param, "修改商品规格", "height=800, width=1000,top=0,left=0, toolbar=no, menubar=no, scrollbars=yes, resizable=no, location=no, status=no")
         }
 
         //通过超市id获取该超市的分享纠错的价格

@@ -15,10 +15,7 @@ import com.linayi.exception.ErrorType;
 import com.linayi.service.account.AccountService;
 import com.linayi.service.correct.CorrectService;
 import com.linayi.service.correct.SupermarketGoodsVersionService;
-import com.linayi.service.goods.BrandService;
-import com.linayi.service.goods.CategoryService;
-import com.linayi.service.goods.GoodsSkuService;
-import com.linayi.service.goods.SupermarketGoodsService;
+import com.linayi.service.goods.*;
 import com.linayi.service.goods.impl.SupermarketGoodsServiceImpl;
 import com.linayi.service.user.UserService;
 import com.linayi.util.PageResult;
@@ -59,6 +56,10 @@ public class GoodsSkuController {
     private BrandService brandService;
     @Autowired
     private SupermarketGoodsService supermarketGoodsService;
+    @Autowired
+    private GoodsAttrValueService goodsAttrValueService;
+    @Autowired
+    private AttributeValueService attributeValueService;
 
     /**
      * 添加商品页面的入口
@@ -205,10 +206,14 @@ public class GoodsSkuController {
      */
     @Transactional
     @RequestMapping("/toAddSpecifications.do")
-    public String toAddSpecifications(ModelMap modelMap,String brandName,String categoryName){
+    public String toAddSpecifications(ModelMap modelMap,Integer goodsSkuId){
         goodsService.showSpecifications(modelMap, null, null);
-        modelMap.addAttribute("brandName",brandName);
-        modelMap.addAttribute("categoryName",categoryName);
+        GoodsSku goodsSku = goodsService.getGoodsSku(Long.parseLong(goodsSkuId + ""));
+        Category category= categoryService.getCategoryById(goodsSku.getCategoryId());
+        Brand brand = brandService.getBrandById(goodsSku.getBrandId());
+        modelMap.addAttribute("goodsSkuId",goodsSkuId);
+        modelMap.addAttribute("brandName",brand.getName());
+        modelMap.addAttribute("categoryName",category.getName());
         return "jsp/goods/specificationsAdd";
     }
 
@@ -258,8 +263,43 @@ public class GoodsSkuController {
     @ResponseBody
     public Object specificationsAdd(String categoryName, String brandName, String attrStr) {
         try {
-            goodsService.specificationsAdd(categoryName, brandName, attrStr);
+            goodsService.specificationsAdd(categoryName, brandName, attrStr,null);
             return new ResponseData("success");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseData(ErrorType.SYSTEM_ERROR);
+    }
+
+    /**
+     * 商品、分类、品牌、属性值绑定
+     *
+     * @param categoryName
+     * @param brandName
+     * @param
+     */
+    @Transactional
+    @RequestMapping(value = "/specificationsGoodsAdd.do", method = RequestMethod.POST)
+    @ResponseBody
+    public Object specificationsGoodsAdd(String categoryName, String brandName, String attrStr,Integer goodsSkuId) {
+        try {
+            String result = goodsService.specificationsAdd(categoryName, brandName, attrStr, goodsSkuId);
+            if ("repeat".equals(result)){
+                return new ResponseData("repeat");
+            }
+            GoodsSku goodsSku = goodsService.getGoodsSku(Long.parseLong(goodsSkuId + ""));
+            List<GoodsAttrValue> goodsAttrValues = goodsAttrValueService.getGoodsAttrValueByGoodsId(goodsSku.getGoodsSkuId());
+            String attrs = "";
+            for (GoodsAttrValue goodsAttrValue : goodsAttrValues) {
+                AttributeValue attributeValue = attributeValueService.getAttrValsByAttrValId(goodsAttrValue.getAttrValueId());
+                if (attrs.equals("")){
+                    attrs += attributeValue.getValue();
+                }else{
+                    attrs += "," + attributeValue.getValue();
+                }
+            }
+            goodsSku.setAttrValues(attrs);
+            return new ResponseData(goodsSku);
         } catch (Exception e) {
             e.printStackTrace();
         }

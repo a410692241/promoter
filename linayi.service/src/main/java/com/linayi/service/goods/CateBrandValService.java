@@ -3,12 +3,13 @@ package com.linayi.service.goods;
 import com.linayi.entity.goods.CateBrandVal;
 
 public interface CateBrandValService {
+
     /**
      * 新增分类品牌属性值中间表
      * @param
      * @return
      */
-    void addCateBrandVal(String categoryName, String brandName, String attrStr);
+    String addCateBrandVal(String categoryName, String brandName, String attrStr,Integer goodsSkuId);
 
     /**
      * 根据分类Id品牌Id属性值Id查询中间表

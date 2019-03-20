@@ -30,7 +30,7 @@ public interface GoodsSkuService {
 
     String showSpecifications(ModelMap modelMap, Integer attributeId, String value);
 
-    String specificationsAdd(String categoryName, String brandName, String attrStr);
+    String specificationsAdd(String categoryName, String brandName, String attrStr, Integer goodsSkuId);
 
     void view(Long goodsSkuId, Model model);
     GoodsSku getGoodsSku(Long goodsSkuId);
