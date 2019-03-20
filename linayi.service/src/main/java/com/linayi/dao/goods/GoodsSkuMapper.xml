@@ -218,11 +218,8 @@
         <include refid="columnList"/>
         from goods_sku
         <where>
-            <if test="status != null and status != ''">
-                STATUS = #{status}
-            </if>
             <if test="goodsSkuId != null and goodsSkuId != ''">
-                and goods_sku_id = #{goodsSkuId}
+                goods_sku_id = #{goodsSkuId}
             </if>
             <if test="name != null and name != ''">
                 and name like #{name}
