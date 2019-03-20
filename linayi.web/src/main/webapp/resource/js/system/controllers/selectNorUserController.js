@@ -322,6 +322,7 @@ app.controller('selectUserCtrl', function($scope,toaster,selectUserService,messa
 						}else{
 							$scope.$apply(function(){
 								toaster.error( "",data.msg,3000 );
+								$state.reload();
 							});
 						}
 					}
