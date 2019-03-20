@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.jsp.JspContext;
 import javax.servlet.jsp.JspWriter;
@@ -15,11 +16,15 @@ import java.util.Map;
 public class OptionTags extends SimpleTagSupport {
     private String sqlId;
     private String param;
-
+    private final static ApplicationContext applicationContext;
+    private final static SqlSessionTemplate sqlSessionTemplate;
+    static {
+        applicationContext =new ClassPathXmlApplicationContext("classpath:config/spring-context.xml");
+        sqlSessionTemplate = (SqlSessionTemplate) applicationContext.getBean("sqlSessionTemplate");
+    }
     @Override
     public void doTag() throws IOException {
-        ApplicationContext applicationContext=new ClassPathXmlApplicationContext("classpath:config/spring-context.xml");
-        SqlSessionTemplate sqlSessionTemplate = (SqlSessionTemplate) applicationContext.getBean("sqlSessionTemplate");
+
         JspContext jspContext = getJspContext();
         JspWriter out = jspContext.getOut();
         Gson gson = new Gson();
