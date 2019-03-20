@@ -165,6 +165,9 @@
             <if test="fullName != null">
                 full_name = #{fullName},
             </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
             <if test="barcode != null">
                 barcode = #{barcode},
             </if>

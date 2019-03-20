@@ -656,7 +656,6 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 				return "repeat";
 			}
 			goodsSku.setFullName(goodsName);
-			goodsSkuMapper.updateGoodsFullName(goods);
 			goodsSku.setBarcode(barcode);
 			goodsSku.setValidDate(validDate);
 			goodsSku.setImage(s);
