@@ -218,8 +218,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 			goodsSku.setFullName(fullName);
 			goodsByGoods = goodsSkuMapper.getGoodsByGoods(goodsSku);
 			if (goodsByGoods != null && goodsByGoods.size() > 0){
-                goodsAttrValueMapper.deleteByGoodsSkuId(Integer.parseInt(goodsSku.getGoodsSkuId() + ""));
-                goodsSkuMapper.getGoodsById(Integer.parseInt(goodsSku.getGoodsSkuId() + ""));
+                goodsSkuMapper.getGoodsById(Integer.parseInt(goods.getGoodsSkuId() + ""));
 				return null;
 			}
 			goods.setFullName(fullName);
