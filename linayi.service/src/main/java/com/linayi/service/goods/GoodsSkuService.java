@@ -105,7 +105,7 @@ public interface GoodsSkuService {
 	 * @param goodsImage
 	 * @param goodsSku
 	 */
-    void edit(CommonsMultipartFile goodsImage, GoodsSku goodsSku);
+	String edit(CommonsMultipartFile goodsImage, GoodsSku goodsSku);
 
     List<Supermarket> listSupermarket(Supermarket supermarket);
 

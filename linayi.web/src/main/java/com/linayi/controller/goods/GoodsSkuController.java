@@ -354,8 +354,8 @@ public class GoodsSkuController {
     @ResponseBody
     public Object save(@RequestParam(value = "goodsImage", required = false) CommonsMultipartFile goodsImage, GoodsSku goodsSku) {
         try {
-            goodsService.edit(goodsImage, goodsSku);
-            return new ResponseData("success");
+            String edit = goodsService.edit(goodsImage, goodsSku);
+            return new ResponseData(edit);
         } catch (Exception e) {
             e.printStackTrace();
         }

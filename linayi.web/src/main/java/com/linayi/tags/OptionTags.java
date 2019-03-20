@@ -24,7 +24,6 @@ public class OptionTags extends SimpleTagSupport {
     }
     @Override
     public void doTag() throws IOException {
-
         JspContext jspContext = getJspContext();
         JspWriter out = jspContext.getOut();
         Gson gson = new Gson();
