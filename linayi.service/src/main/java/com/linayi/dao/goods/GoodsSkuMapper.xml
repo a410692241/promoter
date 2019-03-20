@@ -216,7 +216,7 @@
     <select id="getGoodsByGoods" resultMap="BaseResultMap">
         select
         <include refid="columnList"/>
-        from goods_sku where STATUS = 'NORMAL'
+        from goods_sku where
         <if test="goodsSkuId != null and goodsSkuId != ''">
             and goods_sku_id = #{goodsSkuId}
         </if>
@@ -255,7 +255,10 @@
     </select>
     <select id="getGoodsList" parameterType="com.linayi.entity.goods.GoodsSku" resultType="com.linayi.entity.goods.GoodsSku">
         select gs.goods_sku_id goodsSkuId, gs.name NAME, gs.full_name fullName,gs.barcode barcode, gs.category_id categoryId, gs.brand_id brandId, gs.status STATUS, gs.image image, gs.update_time updateTime, gs.create_time createTime, gs.model model, gs.function FUNCTION , gs.produce_address produceAddress, gs.produce_date produceDate, gs.valid_date validDate, gs.manufacturer manufacturer, gs.other_attribute otherAttribute
-        ,e.real_name realName from goods_sku gs left join employee e on gs.user_id = e.employee_id where gs.STATUS = 'NORMAL'
+        ,e.real_name realName from goods_sku gs left join employee e on gs.user_id = e.employee_id where
+        <if test="status != null and status != ''">
+            gs.STATUS = #{status}
+        </if>
         <if test="goodsSkuId != null and goodsSkuId != ''">
             and gs.goods_sku_id = #{goodsSkuId}
         </if>
