@@ -642,10 +642,16 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 			goods.setFullName(null);
 			s = ImageUtil.handleUpload(goodsImage);
 			String createTimeStart = goodsSku.getCreateTimeStart();
-			Date produceDate = DateUtil.string2Date(createTimeStart, "yyyy-MM-dd HH:mm:ss");
-			goodsSku.setProduceDate(produceDate);
+			if(createTimeStart != null && !"".equals(createTimeStart)){
+                Date produceDate = DateUtil.string2Date(createTimeStart, "yyyy-MM-dd HH:mm:ss");
+                goodsSku.setProduceDate(produceDate);
+            }
+
 			String createTimeEnd = goodsSku.getCreateTimeEnd();
-			Date validDate = DateUtil.string2Date(createTimeEnd, "yyyy-MM-dd HH:mm:ss");
+            if(createTimeEnd != null && !"".equals(createTimeEnd)){
+                Date validDate = DateUtil.string2Date(createTimeEnd, "yyyy-MM-dd HH:mm:ss");
+                goodsSku.setValidDate(validDate);
+            }
 			GoodsSku goodsById = goodsSkuMapper.getGoodsById(Integer.parseInt(goodsSku.getGoodsSkuId() + ""));
 			goodsById.setName(goodsSku.getName());
 			String goodsName = getGoodsName(goodsById);
@@ -657,7 +663,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 			}
 			goodsSku.setFullName(goodsName);
 			goodsSku.setBarcode(barcode);
-			goodsSku.setValidDate(validDate);
+
 			goodsSku.setImage(s);
 			goodsSku.setUpdateTime(new Date());
 			goodsSkuMapper.update(goodsSku);
