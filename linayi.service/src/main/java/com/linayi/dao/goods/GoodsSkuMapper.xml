@@ -297,7 +297,7 @@
                 and gs.create_time <![CDATA[ <= ]]> #{createTimeEnd}
             </if>
         </where>
-            order by gs.update_time desc,gs.goods_sku_id desc
+            order by gs.create_time desc,gs.goods_sku_id desc
     </select>
     
     <!-- 通过品牌id分类id商品名获取商品列表 -->
