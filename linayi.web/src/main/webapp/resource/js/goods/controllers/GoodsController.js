@@ -693,10 +693,10 @@ app.controller('goodsCtrl'/**
                 type: "post",
                 success: function (data) {
                     if (data.respCode === "S") {
-//					$modalInstance.close();
-                        alert("分享成功!");
+					$modalInstance.close();
+                        alert("修改价格成功,等待审核!");
                     } else {
-                        alert("此超市已有人分享，暂时不能分享!");
+                        alert("修改价格失败");
                     }
                 }
             });
