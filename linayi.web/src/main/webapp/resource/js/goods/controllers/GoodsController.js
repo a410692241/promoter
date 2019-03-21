@@ -319,24 +319,33 @@ app.controller('goodsCtrl'/**
                 });
             });
         }
+        var supermarkets = [];
 
-	/** 分享 */
-	function share( id ){
-		var url = urls.ms + "/goods/goods/shareEdit.do?";
-		if( id ){
-			url = url + $.param( {goodsSkuId:id} );
-		}
-		templateform.open({
-			title:"价格分享",
-			url:url,
-			scope:$scope,
-			onOpen:function( $modalInstance, data ,$scope){
-
-			}
-		},function( $modalInstance,data, $scope ){
-			saveShare( $modalInstance,data, $scope );
-		});
-	}
+        /** 分享 */
+        function share(id) {
+            var url = urls.ms + "/goods/goods/shareEdit.do?";
+            if (id) {
+                url = url + $.param({goodsSkuId: id});
+            }
+            templateform.open({
+                title: "价格分享",
+                url: url,
+                scope: $scope,
+                onOpen: function ($modalInstance, data, $scope) {
+                    var url = urls.ms + "/correct/correct/priceSupermarket.do?";
+                    $.ajax({
+                        url: url,
+                        data: {"goodsSkuId": id},
+                        dataType: "json",
+                        success: function (datas) {
+                            supermarkets = datas.data;
+                        }
+                    });
+                }
+            }, function ($modalInstance, data, $scope) {
+                saveShare($modalInstance, data, $scope);
+            });
+        }
     /** 删除 */
     function removeList( ){
     	var selarrrow=$("#goodsList").jqGrid('getGridParam','selarrrow');
