@@ -639,7 +639,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 					goodsSku.setUserId(userId);
 				}
 			}
-			goods.setFullName(null);
+			goods.setBarcode(null);
 			s = ImageUtil.handleUpload(goodsImage);
 			String createTimeStart = goodsSku.getCreateTimeStart();
 			if(createTimeStart != null && !"".equals(createTimeStart)){

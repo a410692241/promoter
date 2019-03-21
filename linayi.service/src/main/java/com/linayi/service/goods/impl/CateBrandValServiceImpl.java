@@ -111,7 +111,7 @@ public class CateBrandValServiceImpl implements CateBrandValService {
                 goods.setFullName(goodsName);
                 goods.setStatus("NORMAL");
                 List<GoodsSku> goodsByGoods = goodsSkuMapper.getGoodsByGoods(goods);
-                if (goodsByGoods != null && goodsByGoods.size() > 0){
+                if ((goodsByGoods != null && goodsByGoods.size() > 0) && !(goodsByGoods.get(0).getGoodsSkuId() + "").equals(goodsSku.getGoodsSkuId() + "")){
                     goodsAttrValueMapper.deleteByGoodsSkuId(goodsSkuId);
                     if (goodsAttrValueByGoodsId != null && goodsAttrValueByGoodsId.size() > 0){
                         for (GoodsAttrValue attrValue : goodsAttrValueByGoodsId) {

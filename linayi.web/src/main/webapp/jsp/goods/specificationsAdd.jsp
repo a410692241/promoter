@@ -90,8 +90,9 @@
             data: {categoryName:categoryName,brandName:brandName,attrStr:attrStr,goodsSkuId:goodsSkuId},
             dataType:"json",
             success: function (data){
+                debugger;
                 var s = data.data;
-                if(data.data == "repate"){
+                if(data.data == "repeat"){
                     alert("商品已存在");
                 }else if(data.respCode == "S"){
                     window .opener.document.getElementById("attrValues").value=data.data.attrValues;
