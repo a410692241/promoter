@@ -407,23 +407,46 @@ public class CorrectController extends BaseController {
             //调用撤回方法
             Correct currentCorrect = correctService.recall(correct, userType);
 
-            //查询此商品有无价格
-            SupermarketGoods currentParam = new SupermarketGoods();
-            currentParam.setGoodsSkuId(correct.getGoodsSkuId());
-            currentParam.setSupermarketId(correct.getSupermarketId());
-            SupermarketGoods supermarketGoods = supermarketGoodsService.getSupermarketGoods(currentParam).stream().findFirst().orElse(null);
-            ;
+//            //查询此商品有无价格
+//            SupermarketGoods currentParam = new SupermarketGoods();
+//            currentParam.setGoodsSkuId(correct.getGoodsSkuId());
+//            currentParam.setSupermarketId(correct.getSupermarketId());
+//            SupermarketGoods supermarketGoods = supermarketGoodsService.getSupermarketGoods(currentParam).stream().findFirst().orElse(null);
+//
+//            //如果有价格，调用纠错方法
+//            if (supermarketGoods != null) {
+//                if(correct.getCorrectId() != null ){
+//                    correct.setCorrectId(null);
+//                }
+//                correct.setParentId(currentCorrect.getParentId());
+//                correctService.correct(correct, file, OperatorType.ADMIN.getOperatorTypeName());
+//            }
+//            //如果没价格，调用分享方法
+//            if (supermarketGoods == null) {
+//                if(correct.getCorrectId() != null ){
+//                    correct.setCorrectId(null);
+//                }
+//
+//                // 线程安全并发处理
+//                initVersion(correct);
+//                correctService.share(correct, file, OperatorType.ADMIN.getOperatorTypeName());
+//            }
 
-            //如果有价格，调用纠错方法
-            if (supermarketGoods != null) {
+
+
+            //撤回后,重新通过超市id和商品id查询该商品的状态(可纠错,可分享,可查看)
+            Supermarket supermarket = supermarketGoodsService.getCorrectTypeBySupermarketIdAndgoodsSkuId(correct.getGoodsSkuId(),correct.getSupermarketId());
+            if("VIEW".equals(supermarket.getCorrectType())){
+                throw new BusinessException(ErrorType.SYSTEM_ERROR);
+            }
+            if("CORRECT".equals(supermarket.getCorrectType())){
                 if(correct.getCorrectId() != null ){
                     correct.setCorrectId(null);
                 }
                 correct.setParentId(currentCorrect.getParentId());
                 correctService.correct(correct, file, OperatorType.ADMIN.getOperatorTypeName());
             }
-            //如果没价格，调用分享方法
-            if (supermarketGoods == null) {
+            if("SHARE".equals(supermarket.getCorrectType())){
                 if(correct.getCorrectId() != null ){
                     correct.setCorrectId(null);
                 }
