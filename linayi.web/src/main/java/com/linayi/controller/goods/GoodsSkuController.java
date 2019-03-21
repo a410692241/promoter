@@ -121,7 +121,7 @@ public class GoodsSkuController extends BaseController{
         try {
             HttpSession session = httpRequest.getSession();
             AdminAccount adminAccount = (AdminAccount) session.getAttribute("loginAccount");
-            Integer userId = adminAccount.getUserId();
+            Integer userId = adminAccount.getAccountId();
             // 插入商品sku
             goodsSku = goodsService.insertGoods(modelMap, file, category, brand, goods, attribute, httpRequest, userId);
             if (goodsSku == null){
