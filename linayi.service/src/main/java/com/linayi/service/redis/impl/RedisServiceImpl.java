@@ -149,12 +149,15 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public boolean validValidCode(String mobile,String validCode) {
         RedisConnection connection = redisTemplate.getConnectionFactory().getConnection();
-        String validCodeRedis = new String(connection.get((RedisConstant.Keys.VALIDATE_CODE + mobile).getBytes()));
-        connection.close();
-        if (validCode.equals(validCodeRedis.replaceAll("\"",""))) {
-            return true;
+        byte[] bytes = connection.get((RedisConstant.Keys.VALIDATE_CODE + mobile).getBytes());
+        String validCodeRedis = null;
+        if(bytes != null){
+            validCodeRedis = new String(bytes);
+            if (validCode.equals(validCodeRedis.replaceAll("\"",""))) {
+                return true;
+            }
         }
-
+        connection.close();
         return false;
     }
 
