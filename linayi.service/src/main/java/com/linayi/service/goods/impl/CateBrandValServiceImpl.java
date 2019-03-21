@@ -73,6 +73,8 @@ public class CateBrandValServiceImpl implements CateBrandValService {
             categoryId = category1.getCategoryId();
         }
         String[] attrArr = attrStr.split(",");
+        goodsAttrValueByGoodsId = goodsAttrValueMapper.getGoodsAttrValueByGoodsId(Long.parseLong(goodsSkuId + ""));
+        goodsAttrValueMapper.deleteByGoodsSkuId(goodsSkuId);
         List<Attribute> attributes = attributeMapper.getAttributes();
         if (attrArr != null && attrArr.length > 0){
             for (int i = 0; i < attrArr.length; i++) {
@@ -92,11 +94,6 @@ public class CateBrandValServiceImpl implements CateBrandValService {
                         cateBrandValMapper.insert(cateBrandVal);
                     }
                     if (goodsSkuId != null){
-                        if (i == 0){
-                            goodsAttrValueByGoodsId = goodsAttrValueMapper.getGoodsAttrValueByGoodsId(Long.parseLong(goodsSkuId + ""));
-                            goodsAttrValueMapper.deleteByGoodsSkuId(goodsSkuId);
-                        }
-
                         GoodsAttrValue goodsAttrValue = new GoodsAttrValue();
                         goodsAttrValue.setAttrValueId(attrbuteVal.getValueId());
                         goodsAttrValue.setCreateTime(new Date());
@@ -112,7 +109,7 @@ public class CateBrandValServiceImpl implements CateBrandValService {
                 goods.setFullName(goodsName);
                 goods.setStatus("NORMAL");
                 List<GoodsSku> goodsByGoods = goodsSkuMapper.getGoodsByGoods(goods);
-                if (goodsByGoods != null && goodsByGoods.size() > 0){
+                if ((goodsByGoods != null && goodsByGoods.size() > 0) && !(goodsByGoods.get(0).getGoodsSkuId() + "").equals(goodsSku.getGoodsSkuId() + "")){
                     goodsAttrValueMapper.deleteByGoodsSkuId(goodsSkuId);
                     if (goodsAttrValueByGoodsId != null && goodsAttrValueByGoodsId.size() > 0){
                         for (GoodsAttrValue attrValue : goodsAttrValueByGoodsId) {
@@ -121,8 +118,8 @@ public class CateBrandValServiceImpl implements CateBrandValService {
                     }
                     return "repeat";
                 }
-                goodsSku.setFullName(goodsName);
-                goodsSkuMapper.update(goodsSku);
+                goods.setGoodsSkuId(goodsSku.getGoodsSkuId());
+                goodsSkuMapper.update(goods);
             }
         }
         return "success";

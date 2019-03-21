@@ -201,7 +201,7 @@ app.controller('goodsCtrl'/**
                     {name: 'fullName', label: '商品名称', width: 120, sortable: false},
                     {name: 'categoryName', label: '类别', width: 60, sortable: false},
                     {name: 'brandName', label: '品牌', width: 60, sortable: false},
-                    {name: 'realName', label: '添加人', width: 60, sortable: false},
+                    {name: 'createName', label: '添加人', width: 60, sortable: false},
                     {
                         name: 'createTime',
                         label: '创建时间',
@@ -319,24 +319,33 @@ app.controller('goodsCtrl'/**
                 });
             });
         }
+        var supermarkets = [];
 
-	/** 分享 */
-	function share( id ){
-		var url = urls.ms + "/goods/goods/shareEdit.do?";
-		if( id ){
-			url = url + $.param( {goodsSkuId:id} );
-		}
-		templateform.open({
-			title:"价格分享",
-			url:url,
-			scope:$scope,
-			onOpen:function( $modalInstance, data ,$scope){
-
-			}
-		},function( $modalInstance,data, $scope ){
-			saveShare( $modalInstance,data, $scope );
-		});
-	}
+        /** 分享 */
+        function share(id) {
+            var url = urls.ms + "/goods/goods/shareEdit.do?";
+            if (id) {
+                url = url + $.param({goodsSkuId: id});
+            }
+            templateform.open({
+                title: "价格分享",
+                url: url,
+                scope: $scope,
+                onOpen: function ($modalInstance, data, $scope) {
+                    var url = urls.ms + "/correct/correct/priceSupermarket.do?";
+                    $.ajax({
+                        url: url,
+                        data: {"goodsSkuId": id},
+                        dataType: "json",
+                        success: function (datas) {
+                            supermarkets = datas.data;
+                        }
+                    });
+                }
+            }, function ($modalInstance, data, $scope) {
+                saveShare($modalInstance, data, $scope);
+            });
+        }
     /** 删除 */
     function removeList( ){
     	var selarrrow=$("#goodsList").jqGrid('getGridParam','selarrrow');
@@ -668,7 +677,7 @@ app.controller('goodsCtrl'/**
                 url: url
             });
         }
-
+        //商品列表确认分享
         function saveShare($modalInstance, data, $scope) {
             console.log($scope);
             var correct = $scope.correct;
@@ -684,10 +693,10 @@ app.controller('goodsCtrl'/**
                 type: "post",
                 success: function (data) {
                     if (data.respCode === "S") {
-//					$modalInstance.close();
-                        alert("分享成功!");
+					$modalInstance.close();
+                        alert("修改价格成功,等待审核!");
                     } else {
-                        alert("此超市已有人分享，暂时不能分享!");
+                        alert("修改价格失败");
                     }
                 }
             });
