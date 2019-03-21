@@ -634,7 +634,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 
 			GoodsSku goodsSku_new = goodsSkuMapper.getGoodsById(Integer.parseInt(goodsSku.getGoodsSkuId() +""));
 			if (!barcode.equals(goodsSku_new.getBarcode())){
-				if(goodsSku_new.getCreateTime().getTime() < DateUtil.string2Date("2019-03-21 00:00:00","yyyy-MM-dd HH:mm:ss").getTime()){
+				if(goodsSku_new.getCreateTime().getTime() < DateUtil.string2Date("2019-03-19 00:00:00","yyyy-MM-dd HH:mm:ss").getTime()){
 					goodsSku.setCreateTime(new Date());
 					goodsSku.setUserId(userId);
 				}
