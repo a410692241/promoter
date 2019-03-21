@@ -73,6 +73,8 @@ public class CateBrandValServiceImpl implements CateBrandValService {
             categoryId = category1.getCategoryId();
         }
         String[] attrArr = attrStr.split(",");
+        goodsAttrValueByGoodsId = goodsAttrValueMapper.getGoodsAttrValueByGoodsId(Long.parseLong(goodsSkuId + ""));
+        goodsAttrValueMapper.deleteByGoodsSkuId(goodsSkuId);
         List<Attribute> attributes = attributeMapper.getAttributes();
         if (attrArr != null && attrArr.length > 0){
             for (int i = 0; i < attrArr.length; i++) {
@@ -92,10 +94,6 @@ public class CateBrandValServiceImpl implements CateBrandValService {
                         cateBrandValMapper.insert(cateBrandVal);
                     }
                     if (goodsSkuId != null){
-                        if (i == 0){
-                            goodsAttrValueByGoodsId = goodsAttrValueMapper.getGoodsAttrValueByGoodsId(Long.parseLong(goodsSkuId + ""));
-                            goodsAttrValueMapper.deleteByGoodsSkuId(goodsSkuId);
-                        }
                         GoodsAttrValue goodsAttrValue = new GoodsAttrValue();
                         goodsAttrValue.setAttrValueId(attrbuteVal.getValueId());
                         goodsAttrValue.setCreateTime(new Date());
