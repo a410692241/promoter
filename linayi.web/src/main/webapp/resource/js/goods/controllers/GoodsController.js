@@ -677,7 +677,7 @@ app.controller('goodsCtrl'/**
                 url: url
             });
         }
-
+        //商品列表确认分享
         function saveShare($modalInstance, data, $scope) {
             console.log($scope);
             var correct = $scope.correct;
