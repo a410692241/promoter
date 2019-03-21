@@ -5,12 +5,12 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>com.linayi</groupId><artifactId>linayi</artifactId>
-
+		<groupId>com.linayi</groupId>
+        <artifactId>linayi</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>linayi.app</artifactId>
-	<name>wherebuy.app</name>
+	<name>app</name>
 	<url>http://maven.apache.org</url>
 	<packaging>war</packaging>
 	<properties>

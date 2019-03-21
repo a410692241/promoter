@@ -9,7 +9,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>linayi.service</artifactId>
-    <name>wherebuy.service</name>
+    <name>service</name>
     <url>http://maven.apache.org</url>
     <packaging>jar</packaging>
     <properties>
