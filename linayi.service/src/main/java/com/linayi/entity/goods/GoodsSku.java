@@ -33,10 +33,7 @@ public class GoodsSku extends BaseEntity {
     private String function;
 
     private String produceAddress;
-    
-    /*创建者id*/
-    private Integer creatorId;
-    
+
     /**商品数量*/
     private Integer quantity;
 
@@ -87,6 +84,7 @@ public class GoodsSku extends BaseEntity {
     private Integer communityId; //社区id
     
     private String  valueName; //规格名
+    private String  realName; //新增商品用户名
 
 
     public String getEstablishName() {
@@ -99,14 +97,6 @@ public class GoodsSku extends BaseEntity {
 
     private String establishName;
     
-	public Integer getCreatorId() {
-		return creatorId;
-	}
-
-	public void setCreatorId(Integer creatorId) {
-		this.creatorId = creatorId;
-	}
-
 	public String getValueName() {
 		return valueName;
 	}
@@ -371,6 +361,7 @@ public class GoodsSku extends BaseEntity {
                 ", model='" + model + '\'' +
                 ", function='" + function + '\'' +
                 ", produceAddress='" + produceAddress + '\'' +
+                ", quantity=" + quantity +
                 ", produceDate=" + produceDate +
                 ", validDate=" + validDate +
                 ", manufacturer='" + manufacturer + '\'' +
@@ -391,7 +382,10 @@ public class GoodsSku extends BaseEntity {
                 ", minPriceString='" + minPriceString + '\'' +
                 ", supermarketGoodsList=" + supermarketGoodsList +
                 ", spreadRateString='" + spreadRateString + '\'' +
-                ", creatorId='"+creatorId+'\''+
+                ", userId=" + userId +
+                ", communityId=" + communityId +
+                ", valueName='" + valueName + '\'' +
+                ", establishName='" + establishName + '\'' +
                 '}';
     }
 
@@ -442,4 +436,12 @@ public class GoodsSku extends BaseEntity {
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
 }

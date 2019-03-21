@@ -12,9 +12,33 @@
     select goods_attr_value_id, goods_sku_id, attr_value_id, update_time, create_time from goods_attr_value
     where goods_sku_id = #{goodsSkuId}
   </select>
-  <delete id="deleteById">
-    delete from goods_attr_value where goods_attr_value_id = #{attrValueId}
+  <delete id="deleteByGoodsSkuId">
+    delete from goods_attr_value where goods_sku_id = #{goodsSkuId}
   </delete>
+  <delete id="deleteById">
+    delete from goods_attr_value where goods_attr_value_id = #{goodsAttrValueId}
+  </delete>
+  <select id="getGoodsAttrValue" resultMap="BaseResultMap">
+    select gav.goods_attr_value_id, gav.goods_sku_id, gav.attr_value_id, gav.update_time, gav.create_time
+    from goods_attr_value gav join attribute_value av on av.attribute_id = #{attributeId} and gav.attr_value_id = av.value_id
+    <where>
+      <if test="goodsAttrValueId != null">
+        gav.goods_attr_value_id = #{goodsAttrValueId}
+      </if>
+      <if test="goodsSkuId != null">
+        and gav.goods_sku_id = #{goodsSkuId}
+      </if>
+      <if test="attrValueId != null">
+        and gav.attr_value_id = #{attrValueId}
+      </if>
+      <if test="updateTime != null">
+        and gav.update_time = #{updateTime}
+      </if>
+      <if test="createTime != null">
+        and gav.create_time = #{createTime}
+      </if>
+    </where>
+  </select>
   <insert id="insert" parameterType="com.linayi.entity.goods.GoodsAttrValue" useGeneratedKeys="true" keyProperty="goodsAttrValueId">
     insert into goods_attr_value (goods_attr_value_id, goods_sku_id, attr_value_id,
       update_time, create_time)

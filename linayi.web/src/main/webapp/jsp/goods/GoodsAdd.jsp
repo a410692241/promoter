@@ -128,6 +128,14 @@
             <table class="form-center">
                 <tr>
                     <td style="width: 60px">商品名:</td>
+                    <%--<td>
+                        <input  name="name" type="text" id="goodsName" class="ww" onfocus="setDemo(this,event)" onkeyup="setContent(this,event);" placeholder="请选择或输入商品名称">
+                        <select id="hh" class="form-selectName" onclick="choose(this)" onkeyup="getfocus(this,event)" size="10" style="display:none;">
+                            <c:forEach items="${goodsNames}" var="goodsName">
+                                <option value="${goodsName}">${goodsName}</option>
+                            </c:forEach>
+                        </select>
+                    </td>--%>
                     <td><input type="text" id="goodsName" name="name" ></td>
                     <td><input type="button" id="specifications" value="从规格库选择" onclick="openwin()"></td>
                 </tr>
@@ -465,6 +473,7 @@
         var classifyName = $("#makeInput").val();
         var brandName = $("#makeInput1").val();
         var goodsName = $("#goodsName").val();
+        var barcode = $("#barcode").val();
 
         if(classifyName == null || classifyName == ""){
             alert("请选择或输入分类");
@@ -478,6 +487,15 @@
             alert("请输入商品名！");
             return false;
         }
+        if(barcode == null || barcode == ""){
+            alert("请输入商品条形码！");
+            return false;
+        }
+        if(barcode.length > 13){
+            alert("商品条形码长度不能超过13位!");
+            return false;
+        }
+
         var form = new FormData(document.getElementById("add_goods"));
         $.ajax({
             url:"${pageContext.request.contextPath}/goods/goods/addGoodsForAdmin.do",
@@ -496,9 +514,12 @@
                            $(ele).val("");
                        }
                    });
+                   $('#list').empty();
                    $("#preview").empty();
                    $("input[type='radio']").removeAttr('checked');
-               }else{
+               }else if(data.respCode == "T"){
+                    alert("商品已存在！");
+                }else{
                    alert("添加失败！");
                }
             },
@@ -515,8 +536,6 @@
         }
         templateform.open({
             title:"价格分享",
-
-
             url:url,
             scope:$scope,
             onOpen:function( $modalInstance, data ,$scope){

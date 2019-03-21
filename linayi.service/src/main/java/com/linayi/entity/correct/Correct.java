@@ -167,6 +167,16 @@ public class Correct extends BaseEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date actualEndTime;
 
+    public String getGoodsSkuName() {
+        return goodsSkuName;
+    }
+
+    public void setGoodsSkuName(String goodsSkuName) {
+        this.goodsSkuName = goodsSkuName;
+    }
+
+    private String goodsSkuName;
+
     /**
      * [类型] 分享：SHARE  纠错：CORRECT
      */
@@ -201,6 +211,8 @@ public class Correct extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     private List<String> statusList;
+
+    private String correctType;//按钮类型
 
     public List<String> getStatusList() {
         return statusList;
@@ -458,6 +470,14 @@ public class Correct extends BaseEntity {
 
     public void setStrEndTime(String strEndTime) {
         this.strEndTime = strEndTime;
+    }
+
+    public String getCorrectType() {
+        return correctType;
+    }
+
+    public void setCorrectType(String correctType) {
+        this.correctType = correctType;
     }
 
     @Override

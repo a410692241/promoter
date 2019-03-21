@@ -1,21 +1,27 @@
 package com.linayi.controller.goods;
 
+import com.google.gson.Gson;
+import com.linayi.controller.BaseController;
+import com.linayi.dao.account.AccountMapper;
 import com.linayi.entity.account.AdminAccount;
 import com.linayi.entity.correct.Correct;
 import com.linayi.entity.correct.SupermarketGoodsVersion;
-import com.linayi.entity.goods.Attribute;
-import com.linayi.entity.goods.GoodsSku;
-import com.linayi.entity.goods.SupermarketGoods;
+import com.linayi.entity.goods.*;
 import com.linayi.entity.supermarket.Supermarket;
+import com.linayi.entity.user.User;
 import com.linayi.enums.OperatorType;
 import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
+import com.linayi.service.account.AccountService;
 import com.linayi.service.correct.CorrectService;
 import com.linayi.service.correct.SupermarketGoodsVersionService;
-import com.linayi.service.goods.GoodsSkuService;
+import com.linayi.service.goods.*;
+import com.linayi.service.goods.impl.SupermarketGoodsServiceImpl;
+import com.linayi.service.user.UserService;
 import com.linayi.util.PageResult;
 import com.linayi.util.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -27,14 +33,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/goods/goods")
-public class GoodsSkuController {
+public class GoodsSkuController extends BaseController{
 
     @Resource
     private GoodsSkuService goodsService;
@@ -42,6 +48,18 @@ public class GoodsSkuController {
     private CorrectService correctService;
     @Autowired
     private SupermarketGoodsVersionService supermarketGoodsVersionService;
+    @Autowired
+    private AccountService accountService;
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private BrandService brandService;
+    @Autowired
+    private SupermarketGoodsService supermarketGoodsService;
+    @Autowired
+    private GoodsAttrValueService goodsAttrValueService;
+    @Autowired
+    private AttributeValueService attributeValueService;
 
     /**
      * 添加商品页面的入口
@@ -72,7 +90,7 @@ public class GoodsSkuController {
     public String addGoods(ModelMap modelMap, MultipartFile file, String category, String brand, HttpServletRequest httpRequest, GoodsSku goods, String[] attribute) {
         String result = "success";
         try {
-            goodsService.insertGoods(modelMap, file, category, brand, goods, attribute, httpRequest);
+            goodsService.insertGoods(modelMap, file, category, brand, goods, attribute, httpRequest, null);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,8 +119,16 @@ public class GoodsSkuController {
     ) {
         GoodsSku goodsSku;
         try {
+            HttpSession session = httpRequest.getSession();
+            AdminAccount adminAccount = (AdminAccount) session.getAttribute("loginAccount");
+            Integer userId = adminAccount.getUserId();
             // 插入商品sku
-            goodsSku = goodsService.insertGoods(modelMap, file, category, brand, goods, attribute, httpRequest);
+            goodsSku = goodsService.insertGoods(modelMap, file, category, brand, goods, attribute, httpRequest, userId);
+            if (goodsSku == null){
+                ResponseData responseData = new ResponseData(ErrorType.SYSTEM_ERROR);
+                responseData.setRespCode("T");
+                return responseData;
+            }
             // 分享价格
             if (supermarketId != null && price != null && priceType != null) {
                 Long goodsSkuId = goodsSku.getGoodsSkuId();
@@ -130,7 +156,6 @@ public class GoodsSkuController {
                 correct.setStartTime(startDate);
                 correct.setEndTime(endDate);
                 // 线程安全并发处理
-                AdminAccount adminAccount=(AdminAccount)httpRequest.getSession().getAttribute("loginAccount");
                 Integer creatorId=adminAccount.getAccountId();
                 correct.setUserId(creatorId);
                 initVersion(correct);
@@ -176,6 +201,57 @@ public class GoodsSkuController {
     }
 
     /**
+     * 进入新增规格页面
+     * @return
+     */
+    @Transactional
+    @RequestMapping("/toAddSpecifications.do")
+    public String toAddSpecifications(ModelMap modelMap,Integer goodsSkuId){
+        goodsService.showSpecifications(modelMap, null, null);
+        GoodsSku goodsSku = goodsService.getGoodsSku(Long.parseLong(goodsSkuId + ""));
+        Category category= categoryService.getCategoryById(goodsSku.getCategoryId());
+        Brand brand = brandService.getBrandById(goodsSku.getBrandId());
+        modelMap.addAttribute("goodsSkuId",goodsSkuId);
+        modelMap.addAttribute("brandName",brand.getName());
+        modelMap.addAttribute("categoryName",category.getName());
+        return "jsp/goods/specificationsAdd";
+    }
+
+    /**
+     * 展示所有属性值和者新增属性值
+     *
+     * @param modelMap
+     * @param attributeId
+     * @param value
+     * @return
+     */
+    @Transactional
+    @RequestMapping("/toAhowSpecifications.do")
+    public String toShowSpecifications(ModelMap modelMap, Integer attributeId, String value) {
+        goodsService.toShowSpecifications(modelMap, attributeId, value);
+        return "jsp/goods/specificationsShow";
+    }
+
+    /**
+     * 新增规格
+     * @param attributeId
+     * @param value
+     * @return
+     */
+    @Transactional
+    @RequestMapping("/addSpecifications.do")
+    @ResponseBody
+    public Object addSpecifications(Integer attributeId, String value){
+        try {
+            goodsService.addSpecifications(attributeId, value);
+            return new ResponseData("success");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseData(ErrorType.SYSTEM_ERROR.getErrorMsg());
+    }
+
+    /**
      * 分类、品牌、属性值绑定
      *
      * @param categoryName
@@ -185,8 +261,49 @@ public class GoodsSkuController {
     @Transactional
     @RequestMapping(value = "/specificationsAdd.do", method = RequestMethod.POST)
     @ResponseBody
-    public String specificationsAdd(String categoryName, String brandName, String attrStr) {
-        return goodsService.specificationsAdd(categoryName, brandName, attrStr);
+    public Object specificationsAdd(String categoryName, String brandName, String attrStr) {
+        try {
+            goodsService.specificationsAdd(categoryName, brandName, attrStr,null);
+            return new ResponseData("success");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseData(ErrorType.SYSTEM_ERROR);
+    }
+
+    /**
+     * 商品、分类、品牌、属性值绑定
+     *
+     * @param categoryName
+     * @param brandName
+     * @param
+     */
+    @Transactional
+    @RequestMapping(value = "/specificationsGoodsAdd.do", method = RequestMethod.POST)
+    @ResponseBody
+    public Object specificationsGoodsAdd(String categoryName, String brandName, String attrStr,Integer goodsSkuId) {
+        try {
+            String result = goodsService.specificationsAdd(categoryName, brandName, attrStr, goodsSkuId);
+            if ("repeat".equals(result)){
+                return new ResponseData("repeat");
+            }
+            GoodsSku goodsSku = goodsService.getGoodsSku(Long.parseLong(goodsSkuId + ""));
+            List<GoodsAttrValue> goodsAttrValues = goodsAttrValueService.getGoodsAttrValueByGoodsId(goodsSku.getGoodsSkuId());
+            String attrs = "";
+            for (GoodsAttrValue goodsAttrValue : goodsAttrValues) {
+                AttributeValue attributeValue = attributeValueService.getAttrValsByAttrValId(goodsAttrValue.getAttrValueId());
+                if (attrs.equals("")){
+                    attrs += attributeValue.getValue();
+                }else{
+                    attrs += "," + attributeValue.getValue();
+                }
+            }
+            goodsSku.setAttrValues(attrs);
+            return new ResponseData(goodsSku);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseData(ErrorType.SYSTEM_ERROR);
     }
 
     /**
@@ -198,6 +315,7 @@ public class GoodsSkuController {
     @RequestMapping("/list.do")
     @ResponseBody
     public Object getGoodsList(GoodsSku goods, String userName) {
+        goods.setStatus("NORMAL");
         return goodsService.getGoodsLists(goods, userName);
     }
 
@@ -247,24 +365,40 @@ public class GoodsSkuController {
         Correct correct = new Correct();
         correct.setGoodsSkuId(Long.parseLong(goodsSkuId));
         ModelAndView modelAndView = new ModelAndView();
+        List<Supermarket> supermarkets = supermarketGoodsService.getPriceSupermarketBycommunityIdAndgoodsSkuId(null, Integer.parseInt(goodsSkuId));
+        List<Map> maps = new ArrayList<>();
+        supermarkets.forEach(item -> {
+        Map<String, Object> map = new HashMap<>();
+            map.put("code", item.getSupermarketId());
+            map.put("name", item.getName());
+            maps.add(map);
+        });
+        Gson gson = new Gson();
+        String supermarketSelect = gson.toJson(maps);
+
         modelAndView.setViewName("jsp/goods/goodShare");
         modelAndView.addObject("correct", correct);
+        modelAndView.addObject("supermarketSelect", supermarketSelect);
         return modelAndView;
     }
 
     @RequestMapping("/edit.do")
     @ResponseBody
-    public Object edit(Long goodsSkuId) {
+    public Object edit(Long goodsSkuId,HttpServletRequest request) {
         GoodsSku goodsSku = goodsService.getGoodsSku(goodsSkuId);
+        request.getSession().setAttribute("goodsSku", goodsSku);
         return new ResponseData(goodsSku);
     }
 
     @RequestMapping("/save.do")
     @ResponseBody
-    public Object save(@RequestParam(value = "goodsImage", required = false) CommonsMultipartFile goodsImage, GoodsSku goodsSku) {
+    public Object save(@RequestParam(value = "goodsImage", required = false) CommonsMultipartFile goodsImage, GoodsSku goodsSku,HttpServletRequest httpRequest) {
         try {
-            goodsService.edit(goodsImage, goodsSku);
-            return new ResponseData("success");
+            HttpSession session = httpRequest.getSession();
+            AdminAccount adminAccount = (AdminAccount) session.getAttribute("loginAccount");
+            Integer userId = adminAccount.getUserId();
+            String edit = goodsService.edit(goodsImage, goodsSku,userId);
+            return new ResponseData(edit);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -280,5 +414,29 @@ public class GoodsSkuController {
         } catch (Exception e) {
             return new ResponseData(ErrorType.SYSTEM_ERROR);
         }
+    }
+
+    @RequestMapping("/editeSpecification.do")
+    public String editeSpecification(Integer goodsSkuId, Model model){
+        GoodsSku goodsSku = goodsService.getGoodsSku(Long.parseLong(goodsSkuId + ""));
+        Category category= categoryService.getCategoryById(goodsSku.getCategoryId());
+        Brand brand = brandService.getBrandById(goodsSku.getBrandId());
+        model.addAttribute("goodsSkuId",goodsSkuId);
+        model.addAttribute("categoryName",category.getName());
+        model.addAttribute("brandName",brand.getName());
+        return "jsp/goods/EditeSpecification";
+    }
+
+    @RequestMapping("/editGoodsAttribute.do")
+    @ResponseBody
+    public Object editGoodsAttribute(String[] attribute,Integer goodsSkuId){
+        String attrName = null;
+        try {
+            attrName = goodsService.editGoodsAttribute(attribute,goodsSkuId);
+            return new ResponseData(attrName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseData(ErrorType.SYSTEM_ERROR);
     }
 }

@@ -9,6 +9,8 @@ public class GoodsAttrValue {
 
     private Integer attrValueId;
 
+    private Integer attributeId;
+
     private Date updateTime;
 
     private Date createTime;
@@ -51,5 +53,13 @@ public class GoodsAttrValue {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Integer getAttributeId() {
+        return attributeId;
+    }
+
+    public void setAttributeId(Integer attributeId) {
+        this.attributeId = attributeId;
     }
 }

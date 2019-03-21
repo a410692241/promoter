@@ -203,6 +203,14 @@ public class UserServiceImpl implements UserService {
     public User userInfo(User user) {
         Integer userId = user.getUserId();
         User userInfo  = userMapper.selectUserByuserId(userId);
+        Account account = new Account();
+        account.setUserId(userId);
+        Account accountDB = accountMapper.selectAccountList(account).stream().findFirst().orElse(null);
+        if(accountDB != null){
+            userInfo.setWeixinOpenId(accountDB.getOpenId());
+        }else {
+            userInfo.setWeixinOpenId("");
+        }
         if (userInfo.getHeadImage() == null){
             //设置默认头像
             userInfo.setHeadImage(ImageUtil.dealToShow(PropertiesUtil.getValueByKey(ConstantUtil.DEFAULT_AVATAR)));

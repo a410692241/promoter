@@ -33,4 +33,12 @@ public interface SupermarketGoodsService {
 	 * @return
 	 */
     List<SupermarketGoods> getSupermarketGoodsList(Integer goodsSkuId, Integer communityId);
+
+//	/**
+//	 * 查询单个超市商品判断可以分享、纠错还是查看（后台修改价格用）
+//	 * @param goodsSkuId
+//	 * @param supermarketId
+//	 * @return
+//	 */
+//	public List<Supermarket> getPriceSupermarketBySupermarketIdAndgoodsSkuId(Integer goodsSkuId,Integer supermarketId);
 }

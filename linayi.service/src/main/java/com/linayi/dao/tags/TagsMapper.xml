@@ -7,7 +7,7 @@
     <select id="categoryList" resultType="java.util.Map">
         select category_id code, NAME name from category where status = 'NORMAL'
         <if test="categoryId != null">
-            AND category_id = #{categoryId}
+            AND category_id != #{categoryId}
         </if>
         <if test="level != null">
             AND level = #{level}
@@ -15,6 +15,11 @@
     </select>
     <select id="brandList" resultType="java.util.Map">
 		select brand_id code, Name name from brand where status = 'NORMAL'
+		<where>
+            <if test="brandId != null">
+                brand_id != #{brandId}
+            </if>
+        </where>
 	</select>
     <select id="selectCommunityList" resultType="java.util.Map">
 		select community_id code, Name name from community where status = 'NORMAL'

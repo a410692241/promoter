@@ -424,7 +424,6 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
         var createTimeEnd = $scope.search.createTimeEnd;
         var startTime = $scope.search.startTime;
         var endTime = $scope.search.endTime;
-        debugger;
         var data = '';
         var sum = 0;
         if (realName === undefined || realName == '') {

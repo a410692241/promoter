@@ -80,4 +80,17 @@ public interface GoodsSkuMapper {
 	GoodsSku getGoodsSkuByGoodsSkuId(Integer goodsSkuId);
 
     void update(GoodsSku goodsSku);
+
+	/**
+	 * 根据条形码查找商品
+	 * @param goodsSku
+	 * @return
+	 */
+	List<GoodsSku> getGoodsByGoods(GoodsSku goodsSku);
+
+	/**
+	 * 查询所有的商品名
+	 * @return
+	 */
+    List<String> getGoodsNameList();
 }
