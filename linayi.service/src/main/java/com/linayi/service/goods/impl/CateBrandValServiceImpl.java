@@ -104,12 +104,13 @@ public class CateBrandValServiceImpl implements CateBrandValService {
             }
             if (goodsSkuId != null){
                 GoodsSku goods = new GoodsSku();
-                GoodsSku goodsSku = goodsSkuService.getGoodsSku(Long.parseLong(goodsSkuId + ""));
-                String goodsName = getGoodsName(goodsSku);
+                goods.setGoodsSkuId(Long.parseLong(goodsSkuId + ""));
+                List<GoodsSku> goodsSkus = goodsSkuService.getGoodsList(goods);
+                String goodsName = getGoodsName(goodsSkus.get(0));
                 goods.setFullName(goodsName);
                 goods.setStatus("NORMAL");
                 List<GoodsSku> goodsByGoods = goodsSkuMapper.getGoodsByGoods(goods);
-                if ((goodsByGoods != null && goodsByGoods.size() > 0) && !(goodsByGoods.get(0).getGoodsSkuId() + "").equals(goodsSku.getGoodsSkuId() + "")){
+                if ((goodsByGoods != null && goodsByGoods.size() > 0) && !(goodsByGoods.get(0).getGoodsSkuId() + "").equals(goodsSkus.get(0).getGoodsSkuId() + "")){
                     goodsAttrValueMapper.deleteByGoodsSkuId(goodsSkuId);
                     if (goodsAttrValueByGoodsId != null && goodsAttrValueByGoodsId.size() > 0){
                         for (GoodsAttrValue attrValue : goodsAttrValueByGoodsId) {
@@ -118,7 +119,7 @@ public class CateBrandValServiceImpl implements CateBrandValService {
                     }
                     return "repeat";
                 }
-                goods.setGoodsSkuId(goodsSku.getGoodsSkuId());
+                goods.setGoodsSkuId(goodsSkus.get(0).getGoodsSkuId());
                 goodsSkuMapper.update(goods);
             }
         }

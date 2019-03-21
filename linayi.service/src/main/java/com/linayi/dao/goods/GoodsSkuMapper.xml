@@ -261,6 +261,9 @@
         select gs.goods_sku_id goodsSkuId, gs.name NAME, gs.full_name fullName,gs.barcode barcode, gs.category_id categoryId, gs.brand_id brandId, gs.status STATUS, gs.image image, gs.update_time updateTime, gs.create_time createTime, gs.model model, gs.function FUNCTION , gs.produce_address produceAddress, gs.produce_date produceDate, gs.valid_date validDate, gs.manufacturer manufacturer, gs.other_attribute otherAttribute
         ,e.real_name createName from goods_sku gs left join admin_account aa on aa.account_id = gs.user_id left join employee e on aa.user_id = e.employee_id
         <where>
+            <if test="goodsSkuId != null and goodsSkuId != ''">
+                gs.goods_sku_id like #{goodsSkuId}
+            </if>
             <if test="name != null and name != ''">
                 and gs.name like #{name}
             </if>

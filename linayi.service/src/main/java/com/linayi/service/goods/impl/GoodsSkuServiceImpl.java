@@ -663,7 +663,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 			}
 			goodsSku.setFullName(goodsName);
 			goodsSku.setBarcode(barcode);
-
+			goodsSku.setGoodsSkuId(goodsSku.getGoodsSkuId());
 			goodsSku.setImage(s);
 			goodsSku.setUpdateTime(new Date());
 			goodsSkuMapper.update(goodsSku);
