@@ -16,13 +16,13 @@ public interface CorrectService {
     Correct share(Correct correct,MultipartFile file,String userType);
 
     /*添加纠错价格申请*/
-    Correct correct(Correct correct,MultipartFile file);
+    Correct correct(Correct correct,MultipartFile file,String userType);
 
     /*查看页面*/
     Correct showView(Long correctId);
 
     /*撤回*/
-    void recall(Correct correct,String userType);
+    Correct recall(Correct correct,String userType);
 
     /*纠错分享审核*/
     void audit(Correct correct);
@@ -56,4 +56,6 @@ public interface CorrectService {
 	 */
 	List<Correct> selectCorrectListByGoodsName(Correct correct);
     List<Correct> getList(Correct correct);
+
+//    void updatePriceForAdmin(Correct correct);
 }

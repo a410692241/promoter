@@ -165,6 +165,9 @@
             <if test="fullName != null">
                 full_name = #{fullName},
             </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
             <if test="barcode != null">
                 barcode = #{barcode},
             </if>
@@ -297,7 +300,7 @@
                 and gs.create_time <![CDATA[ <= ]]> #{createTimeEnd}
             </if>
         </where>
-            order by gs.update_time desc,gs.goods_sku_id desc
+            order by gs.goods_sku_id desc
     </select>
     
     <!-- 通过品牌id分类id商品名获取商品列表 -->

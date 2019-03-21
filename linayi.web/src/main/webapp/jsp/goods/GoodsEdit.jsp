@@ -13,6 +13,13 @@
 			</div>
 		</div>
 		<div class="form-group col-lg-6 col-xs-6 col-sm-12">
+			<label  class="col-sm-2 control-label no-padding-right" style="text-align: right;">商品名</label>
+			<div class="col-sm-10">
+				<input ng-required="required" id="name" type="text"
+					   ng-model="goods.name" class="form-control"/>
+			</div>
+		</div>
+		<div class="form-group col-lg-6 col-xs-6 col-sm-12">
 			<label  class="col-sm-2 control-label no-padding-right" style="text-align: right;">分类</label>
 			<div class="col-sm-10">
 				<ui-select on-select="goods.categoryId=$item.code;goods.categoryName=$item.name;"

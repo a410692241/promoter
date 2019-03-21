@@ -71,7 +71,8 @@ public class CorrectController extends BaseController {
 		
 			Integer userId = getUserId();
 			correct.setUserId(userId);
-			correctService.correct(correct, file);
+			String userType=OperatorType.USER.toString();
+			correctService.correct(correct, file, userType);
 			
 			return new ResponseData("您的纠错申请提交成功!").toString();
 		} catch (BusinessException e) {

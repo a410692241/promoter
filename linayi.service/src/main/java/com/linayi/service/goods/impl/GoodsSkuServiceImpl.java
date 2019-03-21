@@ -218,11 +218,12 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 			goodsSku.setFullName(fullName);
 			goodsByGoods = goodsSkuMapper.getGoodsByGoods(goodsSku);
 			if (goodsByGoods != null && goodsByGoods.size() > 0){
-                goodsSkuMapper.getGoodsById(Integer.parseInt(goods.getGoodsSkuId() + ""));
+                goodsSkuMapper.deleteGoodsById(Integer.parseInt(goods.getGoodsSkuId() + ""));
 				return null;
+			}else{
+				goods.setFullName(fullName);
+				goodsSkuMapper.updateGoodsFullName(goods);
 			}
-			goods.setFullName(fullName);
-			goodsSkuMapper.updateGoodsFullName(goods);
 		}
 		return goods;
 	}
@@ -321,14 +322,8 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 	}
 
 	@Override
-	public String specificationsAdd(String categoryName, String brandName, String attrStr) {
-		String result = "success";
-		try {
-			cateBrandValService.addCateBrandVal(categoryName, brandName, attrStr);
-		}catch (Exception e){
-			result = "defeate";
-		}
-		return result;
+	public String specificationsAdd(String categoryName, String brandName, String attrStr,Integer goodsSkuId) {
+		return cateBrandValService.addCateBrandVal(categoryName, brandName, attrStr, goodsSkuId);
 	}
 
 	@Override
@@ -620,27 +615,63 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 	}
 
 	@Override
-	public void edit(CommonsMultipartFile goodsImage, GoodsSku goodsSku) {
+	public String edit(CommonsMultipartFile goodsImage, GoodsSku goodsSku, Integer userId) {
 		String s;
 		try {
-			s = ImageUtil.handleUpload(goodsImage);
-			String createTimeStart = goodsSku.getCreateTimeStart();
-			Date produceDate = DateUtil.string2Date(createTimeStart, "yyyy-MM-dd HH:mm:ss");
-			goodsSku.setProduceDate(produceDate);
-			String createTimeEnd = goodsSku.getCreateTimeEnd();
-			Date validDate = DateUtil.string2Date(createTimeEnd, "yyyy-MM-dd HH:mm:ss");
+			//判断条形码是否存在
 			String barcode = goodsSku.getBarcode();
-			for (int i = 0; i < 11 - barcode.length(); i++) {
+			GoodsSku goods = new GoodsSku();
+			int len = 13 - barcode.length();
+			for (int i = 0; i < len; i++){
 				barcode = "0" + barcode;
 			}
-            goodsSku.setFullName(null);
+			goods.setBarcode(barcode);
+			goods.setStatus("NORMAL");
+			List<GoodsSku> goodsByGoods = goodsSkuMapper.getGoodsByGoods(goods);
+			if ((goodsByGoods != null && goodsByGoods.size() > 0) && !(goodsByGoods.get(0).getGoodsSkuId() + "").equals(goodsSku.getGoodsSkuId() + "")){
+				return "repeat";
+			}
+
+			GoodsSku goodsSku_new = goodsSkuMapper.getGoodsById(Integer.parseInt(goodsSku.getGoodsSkuId() +""));
+			if (!barcode.equals(goodsSku_new.getBarcode())){
+				if(goodsSku_new.getCreateTime().getTime() < DateUtil.string2Date("2019-03-19 00:00:00","yyyy-MM-dd HH:mm:ss").getTime()){
+					goodsSku.setCreateTime(new Date());
+					goodsSku.setUserId(userId);
+				}
+			}
+			goods.setFullName(null);
+			s = ImageUtil.handleUpload(goodsImage);
+			String createTimeStart = goodsSku.getCreateTimeStart();
+			if(createTimeStart != null && !"".equals(createTimeStart)){
+                Date produceDate = DateUtil.string2Date(createTimeStart, "yyyy-MM-dd HH:mm:ss");
+                goodsSku.setProduceDate(produceDate);
+            }
+
+			String createTimeEnd = goodsSku.getCreateTimeEnd();
+            if(createTimeEnd != null && !"".equals(createTimeEnd)){
+                Date validDate = DateUtil.string2Date(createTimeEnd, "yyyy-MM-dd HH:mm:ss");
+                goodsSku.setValidDate(validDate);
+            }
+			GoodsSku goodsById = goodsSkuMapper.getGoodsById(Integer.parseInt(goodsSku.getGoodsSkuId() + ""));
+			goodsById.setName(goodsSku.getName());
+			String goodsName = getGoodsName(goodsById);
+			//判断商品全称是否存在
+			goods.setFullName(goodsName);
+			goodsByGoods = goodsSkuMapper.getGoodsByGoods(goods);
+			if ((goodsByGoods != null && goodsByGoods.size() > 0) && !(goodsByGoods.get(0).getGoodsSkuId() + "").equals(goodsSku.getGoodsSkuId() + "")){
+				return "repeat";
+			}
+			goodsSku.setFullName(goodsName);
 			goodsSku.setBarcode(barcode);
-			goodsSku.setValidDate(validDate);
+
 			goodsSku.setImage(s);
+			goodsSku.setUpdateTime(new Date());
 			goodsSkuMapper.update(goodsSku);
+			return "success";
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return "defeat";
 	}
 
 	@Override
@@ -651,7 +682,8 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 	@Override
 	public String editGoodsAttribute(String[] attribute,Integer goodsSkuId) {
 
-		List<GoodsAttrValue> goodsAttrValueArrayList = new ArrayList<>();
+		List<GoodsAttrValue> goodsAttrValueAdd = new ArrayList<>();
+		List<GoodsAttrValue> goodsAttrValueRemove = new ArrayList<>();
 
 		List<Attribute> attributes = attributeMapper.getAttributes();
 		for (int i = 0; i < attribute.length; i++) {
@@ -663,14 +695,18 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 				if (attributeValue != null && attributeValue.size() > 0) {
 					attrbuteVal = attributeValue.get(0);
 				}
-				goodsAttrValue.setAttrValueId(attrbuteVal.getValueId());
+
 				goodsAttrValue.setGoodsSkuId(goodsSkuId);
+				goodsAttrValue.setAttributeId(attr.getAttributeId());
 				List<GoodsAttrValue> goodsAttrValueList = goodsAttrValueMapper.getGoodsAttrValue(goodsAttrValue);
-				if (goodsAttrValueList == null || goodsAttrValueList.size() == 0){
-					goodsAttrValue.setCreateTime(new Date());
-					goodsAttrValueMapper.insert(goodsAttrValue);
-					goodsAttrValueArrayList.add(goodsAttrValue);
+				goodsAttrValue.setAttrValueId(attrbuteVal.getValueId());
+				goodsAttrValue.setCreateTime(new Date());
+				if (goodsAttrValueList != null && goodsAttrValueList.size() > 0){
+					goodsAttrValueMapper.deleteById(goodsAttrValueList.get(0).getGoodsAttrValueId());
+					goodsAttrValueRemove.add(goodsAttrValueList.get(0));
 				}
+				goodsAttrValueMapper.insert(goodsAttrValue);
+				goodsAttrValueAdd.add(goodsAttrValue);
 			}
 		}
 
@@ -692,9 +728,17 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		goodsSku.setStatus("NORMAL");
 		List<GoodsSku> goodsByGoods = goodsSkuMapper.getGoodsByGoods(goodsSku);
 		if (goodsByGoods != null && goodsByGoods.size() > 0){
-			if(goodsAttrValueArrayList != null && goodsAttrValueArrayList.size() > 0){
-				goodsAttrValueArrayList.forEach(item ->{
+			if(goodsByGoods.get(0).getGoodsSkuId() == Long.parseLong(goodsSkuId + "")){
+				return attrs + ":" + fullName;
+			}
+			if(goodsAttrValueAdd != null && goodsAttrValueAdd.size() > 0){
+				goodsAttrValueAdd.forEach(item ->{
 					goodsAttrValueMapper.deleteById(item.getGoodsAttrValueId());
+				});
+			}
+			if(goodsAttrValueRemove != null && goodsAttrValueRemove.size() > 0){
+				goodsAttrValueRemove.forEach(item ->{
+					goodsAttrValueMapper.insert(item);
 				});
 			}
 			return "exist";
