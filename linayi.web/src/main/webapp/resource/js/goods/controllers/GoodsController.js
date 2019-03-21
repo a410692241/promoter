@@ -201,7 +201,7 @@ app.controller('goodsCtrl'/**
                     {name: 'fullName', label: '商品名称', width: 120, sortable: false},
                     {name: 'categoryName', label: '类别', width: 60, sortable: false},
                     {name: 'brandName', label: '品牌', width: 60, sortable: false},
-                    {name: 'realName', label: '添加人', width: 60, sortable: false},
+                    {name: 'createName', label: '添加人', width: 60, sortable: false},
                     {
                         name: 'createTime',
                         label: '创建时间',

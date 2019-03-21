@@ -89,7 +89,7 @@
                     </div>
                     <div class="input-group form-group form-group-margin">
                         <span class="input-group-addon">创建者账号</span> <input
-                            ng-model="search.userName" type="text" class="form-control">
+                            ng-model="search.createName" type="text" class="form-control">
                     </div>
                     <div>
                         <a ng-click="list()" class="btn btn-primary form-group-margin"
