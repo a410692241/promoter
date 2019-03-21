@@ -102,7 +102,6 @@
     }
 
     function edit(){
-        debugger;
         var form = new FormData(document.getElementById("add_goods"));
         $.ajax({
             url:"${pageContext.request.contextPath}/goods/goods/editGoodsAttribute.do",

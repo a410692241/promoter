@@ -84,14 +84,12 @@
             }
         });
         var attrStr = attrArr.join(",");
-        debugger;
         $.ajax({
             type: "POST",//方法
             url: "specificationsGoodsAdd.do",//表单接收url
             data: {categoryName:categoryName,brandName:brandName,attrStr:attrStr,goodsSkuId:goodsSkuId},
             dataType:"json",
             success: function (data){
-                debugger;
                 var s = data.data;
                 if(data.data == "repate"){
                     alert("商品已存在");

@@ -694,7 +694,6 @@ app.controller('goodsCtrl'/**
         }
 
         function editeAttribute(goodsSkuId) {
-            debugger;
             var param = "?goodsSkuId=" + goodsSkuId;
             // 修改商品规格
             window.open(urls.ms + "/goods/goods/toAddSpecifications.do" + param, "修改商品规格", "height=800, width=1000,top=0,left=0, toolbar=no, menubar=no, scrollbars=yes, resizable=no, location=no, status=no")
