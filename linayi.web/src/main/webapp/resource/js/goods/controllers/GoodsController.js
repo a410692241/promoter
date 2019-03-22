@@ -676,7 +676,7 @@ app.controller('goodsCtrl'/**
                 url = url + $.param({goodsSkuId: id});
             }
             templateform.open({
-                title: "商品信息查看",
+                title: "查看商品信息",
                 buttons: [],
                 backdrop: true,
                 keyboard: true,
