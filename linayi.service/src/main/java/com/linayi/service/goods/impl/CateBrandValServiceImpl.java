@@ -125,6 +125,7 @@ public class CateBrandValServiceImpl implements CateBrandValService {
                     }
                 }
                 goods.setGoodsSkuId(goodsSkus.get(0).getGoodsSkuId());
+                goods.setUpdateTime(new Date());
                 goodsSkuMapper.update(goods);
             }
         }
