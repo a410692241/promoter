@@ -203,6 +203,7 @@ app.controller('goodsCtrl'/**
                     {name: 'brandName', label: '品牌', width: 60, sortable: false},
                     {name: 'barcode', label: '条形码', width: 60, sortable: false},
                     {name: 'createName', label: '添加人', width: 60, sortable: false},
+                    {name: 'userName', label: '创建者账号', width: 60, sortable: false},
                     {
                         name: 'createTime',
                         label: '创建时间',
