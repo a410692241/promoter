@@ -49,8 +49,6 @@ public class GoodsSkuController extends BaseController{
     @Autowired
     private SupermarketGoodsVersionService supermarketGoodsVersionService;
     @Autowired
-    private AccountService accountService;
-    @Autowired
     private CategoryService categoryService;
     @Autowired
     private BrandService brandService;
@@ -90,7 +88,7 @@ public class GoodsSkuController extends BaseController{
     public String addGoods(ModelMap modelMap, MultipartFile file, String category, String brand, HttpServletRequest httpRequest, GoodsSku goods, String[] attribute) {
         String result = "success";
         try {
-            goodsService.insertGoods(modelMap, file, category, brand, goods, attribute, httpRequest, null);
+            String s = goodsService.insertGoods(modelMap, file, category, brand, goods, attribute, httpRequest, null);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -117,21 +115,21 @@ public class GoodsSkuController extends BaseController{
             String startTime,
             String endTime
     ) {
-        GoodsSku goodsSku;
+        String result;
         try {
             HttpSession session = httpRequest.getSession();
             AdminAccount adminAccount = (AdminAccount) session.getAttribute("loginAccount");
             Integer userId = adminAccount.getAccountId();
             // 插入商品sku
-            goodsSku = goodsService.insertGoods(modelMap, file, category, brand, goods, attribute, httpRequest, userId);
-            if (goodsSku == null){
+            result = goodsService.insertGoods(modelMap, file, category, brand, goods, attribute, httpRequest, userId);
+            if (!result.equals("success")){
                 ResponseData responseData = new ResponseData(ErrorType.SYSTEM_ERROR);
-                responseData.setRespCode("T");
+                responseData.setRespCode(result);
                 return responseData;
             }
             // 分享价格
             if (supermarketId != null && price != null && priceType != null) {
-                Long goodsSkuId = goodsSku.getGoodsSkuId();
+                Long goodsSkuId = goods.getGoodsSkuId();
                 Correct correct = new Correct();
                 correct.setGoodsSkuId(goodsSkuId);
                 correct.setSupermarketId(supermarketId);
@@ -165,7 +163,7 @@ public class GoodsSkuController extends BaseController{
             e.printStackTrace();
             return new ResponseData(ErrorType.SYSTEM_ERROR);
         }
-        return new ResponseData(goodsSku);
+        return new ResponseData(result);
     }
 
 
@@ -212,8 +210,8 @@ public class GoodsSkuController extends BaseController{
         Category category= categoryService.getCategoryById(goodsSku.getCategoryId());
         Brand brand = brandService.getBrandById(goodsSku.getBrandId());
         modelMap.addAttribute("goodsSkuId",goodsSkuId);
-        modelMap.addAttribute("brandName",brand.getName());
-        modelMap.addAttribute("categoryName",category.getName());
+        /*modelMap.addAttribute("brandName",brand.getName());
+        modelMap.addAttribute("categoryName",category.getName());*/
         return "jsp/goods/specificationsAdd";
     }
 
@@ -274,18 +272,16 @@ public class GoodsSkuController extends BaseController{
     /**
      * 商品、分类、品牌、属性值绑定
      *
-     * @param categoryName
-     * @param brandName
      * @param
      */
     @Transactional
     @RequestMapping(value = "/specificationsGoodsAdd.do", method = RequestMethod.POST)
     @ResponseBody
-    public Object specificationsGoodsAdd(String categoryName, String brandName, String attrStr,Integer goodsSkuId) {
+    public Object specificationsGoodsAdd(String attrStr,Integer goodsSkuId) {
         try {
-            String result = goodsService.specificationsAdd(categoryName, brandName, attrStr, goodsSkuId);
-            if ("repeat".equals(result)){
-                return new ResponseData("repeat");
+            String result = goodsService.specificationsAdd(null, null, attrStr, goodsSkuId);
+            if ("nameNepeat".equals(result)){
+                return new ResponseData("nameNepeat");
             }
             GoodsSku goodsSku = goodsService.getGoodsSku(Long.parseLong(goodsSkuId + ""));
             List<GoodsAttrValue> goodsAttrValues = goodsAttrValueService.getGoodsAttrValueByGoodsId(goodsSku.getGoodsSkuId());
@@ -314,9 +310,9 @@ public class GoodsSkuController extends BaseController{
      */
     @RequestMapping("/list.do")
     @ResponseBody
-    public Object getGoodsList(GoodsSku goods, String userName) {
+    public Object getGoodsList(GoodsSku goods) {
         goods.setStatus("NORMAL");
-        return goodsService.getGoodsLists(goods, userName);
+        return goodsService.getGoodsLists(goods);
     }
 
 
@@ -430,13 +426,13 @@ public class GoodsSkuController extends BaseController{
     @RequestMapping("/editGoodsAttribute.do")
     @ResponseBody
     public Object editGoodsAttribute(String[] attribute,Integer goodsSkuId){
-        String attrName = null;
+       /* String attrName = null;
         try {
             attrName = goodsService.editGoodsAttribute(attribute,goodsSkuId);
             return new ResponseData(attrName);
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
         return new ResponseData(ErrorType.SYSTEM_ERROR);
     }
 }

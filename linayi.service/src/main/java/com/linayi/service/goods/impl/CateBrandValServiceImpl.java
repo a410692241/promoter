@@ -32,8 +32,6 @@ public class CateBrandValServiceImpl implements CateBrandValService {
     private GoodsAttrValueMapper goodsAttrValueMapper;
     @Autowired
     private GoodsSkuMapper goodsSkuMapper;
-    @Autowired
-    private BrandService brandService;
 
     @Override
     public CateBrandVal getCateBrandVal(Integer categoryId, Integer brandId, Integer valueId) {
@@ -43,19 +41,26 @@ public class CateBrandValServiceImpl implements CateBrandValService {
     @Transactional
     @Override
     public String addCateBrandVal(String categoryName, String brandName, String attrStr,Integer goodsSkuId) {
-        List<GoodsAttrValue> goodsAttrValueByGoodsId = null;
+        List<GoodsAttrValue> newGoodsAttrValue = new ArrayList<>();
         // 调用品牌和分类业务层方法，获取品牌id和分类id
         Integer brandId = null;
-        List<Brand> brandList = brandMapper.getBrandsByName(null, null, brandName);
-        if (brandList != null && brandList.size() > 0){
-            brandId = brandList.get(0).getBrandId();
+        List<Brand> brandList;
+        if(brandName != null && !brandName.equals("")){
+            brandList = brandMapper.getBrandsByName(null, null, brandName);
+            if (brandList != null && brandList.size() > 0){
+                brandId = brandList.get(0).getBrandId();
+            }
         }
+
         Integer categoryId = null;
-        List<Category> categorysByCate = categoryMapper.getCategorysByCate(null, categoryName);
-        if (categorysByCate != null && categorysByCate.size() > 0){
-            categoryId = categorysByCate.get(0).getCategoryId();
+        List<Category> categorysByCate;
+        if(categoryName != null && !categoryName.equals("")){
+            categorysByCate = categoryMapper.getCategorysByCate(null, categoryName);
+            if (categorysByCate != null && categorysByCate.size() > 0){
+                categoryId = categorysByCate.get(0).getCategoryId();
+            }
         }
-        
+
         if (brandId == null && !"".equals(brandName)){
             Brand brand1 = new Brand();
             brand1.setName(brandName);
@@ -73,8 +78,6 @@ public class CateBrandValServiceImpl implements CateBrandValService {
             categoryId = category1.getCategoryId();
         }
         String[] attrArr = attrStr.split(",");
-        goodsAttrValueByGoodsId = goodsAttrValueMapper.getGoodsAttrValueByGoodsId(Long.parseLong(goodsSkuId + ""));
-        goodsAttrValueMapper.deleteByGoodsSkuId(goodsSkuId);
         List<Attribute> attributes = attributeMapper.getAttributes();
         if (attrArr != null && attrArr.length > 0){
             for (int i = 0; i < attrArr.length; i++) {
@@ -86,7 +89,7 @@ public class CateBrandValServiceImpl implements CateBrandValService {
                         attrbuteVal = attributeValue.get(0);
                     }
                     CateBrandVal cateBrandVal = cateBrandValMapper.getCateBrandVal(categoryId, brandId, attrbuteVal.getValueId());
-                    if (cateBrandVal == null){
+                    if (cateBrandVal == null && goodsSkuId == null){
                         cateBrandVal = new CateBrandVal();
                         cateBrandVal.setAttrValueId(attrbuteVal.getValueId());
                         cateBrandVal.setBrandId(brandId);
@@ -98,7 +101,7 @@ public class CateBrandValServiceImpl implements CateBrandValService {
                         goodsAttrValue.setAttrValueId(attrbuteVal.getValueId());
                         goodsAttrValue.setCreateTime(new Date());
                         goodsAttrValue.setGoodsSkuId(goodsSkuId);
-                        goodsAttrValueMapper.insert(goodsAttrValue);
+                        newGoodsAttrValue.add(goodsAttrValue);
                     }
                 }
             }
@@ -106,18 +109,20 @@ public class CateBrandValServiceImpl implements CateBrandValService {
                 GoodsSku goods = new GoodsSku();
                 goods.setGoodsSkuId(Long.parseLong(goodsSkuId + ""));
                 List<GoodsSku> goodsSkus = goodsSkuService.getGoodsList(goods);
-                String goodsName = getGoodsName(goodsSkus.get(0));
+                //获取商品全名称
+                String goodsName = goodsSkuService.getNewGoodsName(goodsSkus.get(0),newGoodsAttrValue);
                 goods.setFullName(goodsName);
                 goods.setStatus("NORMAL");
                 List<GoodsSku> goodsByGoods = goodsSkuMapper.getGoodsByGoods(goods);
                 if ((goodsByGoods != null && goodsByGoods.size() > 0) && !(goodsByGoods.get(0).getGoodsSkuId() + "").equals(goodsSkus.get(0).getGoodsSkuId() + "")){
-                    goodsAttrValueMapper.deleteByGoodsSkuId(goodsSkuId);
-                    if (goodsAttrValueByGoodsId != null && goodsAttrValueByGoodsId.size() > 0){
-                        for (GoodsAttrValue attrValue : goodsAttrValueByGoodsId) {
-                            goodsAttrValueMapper.insert(attrValue);
-                        }
+                    return "nameRepeat";
+                }
+                //商品规格要处理
+                goodsAttrValueMapper.deleteByGoodsSkuId(goodsSkuId);
+                if (newGoodsAttrValue != null && newGoodsAttrValue.size() > 0){
+                    for (GoodsAttrValue attrValue : newGoodsAttrValue) {
+                        goodsAttrValueMapper.insert(attrValue);
                     }
-                    return "repeat";
                 }
                 goods.setGoodsSkuId(goodsSkus.get(0).getGoodsSkuId());
                 goodsSkuMapper.update(goods);
@@ -126,49 +131,5 @@ public class CateBrandValServiceImpl implements CateBrandValService {
         return "success";
     }
 
-    //商品名字处理
-    public String getGoodsName(GoodsSku goodsSku) {
-        Brand brand = brandService.getBrandById(goodsSku.getBrandId());
 
-        List<Attribute> attributesList = attributeMapper.getAttributesList(goodsSku.getGoodsSkuId());
-        StringBuffer goodsName = new StringBuffer();
-        if (brand != null){
-            goodsName.append(brand.getName());
-        }
-        goodsName.append(" goodsName");
-        Map<String, String> attributeMap = new HashMap<>();
-        if (attributesList != null && attributesList.size() > 0){
-            for (Attribute attribute : attributesList) {
-                attributeMap.put(attribute.getName(), attribute.getAttributeValue());
-            }
-            String taste = attributeMap.get(AttributeOrder.attrOrdes.get(0));
-            if (taste != null && !"".equals(taste)){
-                goodsName.append(" ").append(taste);
-                attributeMap.remove(AttributeOrder.attrOrdes.get(0));
-            }
-            String packing = null;
-            for (String attrOrde : AttributeOrder.attrOrdes) {
-                if (attributeMap.containsKey("包装")){
-                    packing = attributeMap.get("包装");
-                    attributeMap.remove("包装");
-                }
-                if ( !attrOrde.equals(AttributeOrder.attrOrdes.get(0)) && attributeMap.containsKey(attrOrde)){
-                    goodsName.append(" ").append(attributeMap.get(attrOrde));
-                    attributeMap.remove(attrOrde);
-                }
-
-            }
-            if (attributeMap != null && attributeMap.size() > 0){
-                Set<String> strings = attributeMap.keySet();
-                for (String attrName : strings) {
-                    goodsName.append(" ").append(attributeMap.get(attrName));
-                }
-
-            }
-            if (packing != null){
-                goodsName.append(" /").append(packing);
-            }
-        }
-        return goodsName.toString().replace("goodsName", goodsSku.getName());
-    }
 }

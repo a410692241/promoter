@@ -8,16 +8,17 @@
   </select>
 
   <select id="getAttributeValue" resultType="com.linayi.entity.goods.AttributeValue">
-    select `value_id` , `value`, `attribute_id`, `status`, `update_time` , `create_time` from `attribute_value`
-    where status = 'NORMAL'
+    select av.value_id valueId, av.value value, av.attribute_id attributeId, av.status status, av.update_time updateTime, av.create_time createTime, a.name attributeName
+    from `attribute_value` av join attribute a on av.attribute_id = a.attribute_id
+    where av.status = 'NORMAL'
       <if test="valueId != null">
-        and value_id = #{valueId}
+        and av.value_id = #{valueId}
       </if>
       <if test="attributeId != null">
-        and attribute_id = #{attributeId}
+        and av.attribute_id = #{attributeId}
       </if>
       <if test="value != null">
-        and value = #{value}
+        and av.value = #{value}
       </if>
   </select>
 

@@ -201,6 +201,7 @@ app.controller('goodsCtrl'/**
                     {name: 'fullName', label: '商品名称', width: 120, sortable: false},
                     {name: 'categoryName', label: '类别', width: 60, sortable: false},
                     {name: 'brandName', label: '品牌', width: 60, sortable: false},
+                    {name: 'barcode', label: '条形码', width: 60, sortable: false},
                     {name: 'createName', label: '添加人', width: 60, sortable: false},
                     {
                         name: 'createTime',
@@ -592,11 +593,17 @@ app.controller('goodsCtrl'/**
 							$modalInstance.close();
 							toaster.success( "","操作成功",3000 );
 						});
-					}else if( datas.data==="repeat" ){
+					}else if( datas.data==="nameRepeat" ){
                         $("#supermarketList").trigger("reloadGrid");
                         $scope.$apply(function(){
                             $modalInstance.close();
-                            toaster.success( "","商品已存在",3000 );
+                            toaster.success( "","商品名称存在",3000 );
+                        });
+                    }else if( datas.data==="barcodeRepeat" ){
+                        $("#supermarketList").trigger("reloadGrid");
+                        $scope.$apply(function(){
+                            $modalInstance.close();
+                            toaster.success( "","商品条形码存在",3000 );
                         });
                     }else{
 						$scope.$apply(function(){

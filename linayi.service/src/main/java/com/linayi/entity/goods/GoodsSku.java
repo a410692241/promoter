@@ -29,6 +29,8 @@ public class GoodsSku extends BaseEntity {
     private Date createTime;
 
     private String model;
+    //创建者账号
+    private String userName;
 
     private String function;
 
@@ -444,5 +446,13 @@ public class GoodsSku extends BaseEntity {
 
     public void setCreateName(String createName) {
         this.createName = createName;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

@@ -39,10 +39,10 @@ public class ImageUtil {
         httpPost.setHeader("Accept", "application/octet-stream;charset=UTF-8");
         httpPost.setHeader("Content-Type", "application/octet-stream;charset=UTF-8");
         CloseableHttpResponse response = null;
-        String originalFileName = file.getOriginalFilename(); // 获取原始文件名
-        if ("".equals(originalFileName)){
+        if (file == null || "".equals(file.getOriginalFilename())){
             return null;
         }
+        String originalFileName = file.getOriginalFilename(); // 获取原始文件名
         String type = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
 
         //设置请求头

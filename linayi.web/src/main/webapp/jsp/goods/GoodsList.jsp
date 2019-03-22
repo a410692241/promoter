@@ -55,6 +55,10 @@
                             </ui-select-choices>
                         </ui-select>
                     </div>
+                    <div class="input-group form-group form-group-margin">
+                        <span class="input-group-addon">条形码</span> <input
+                            ng-model="search.barcode" type="text" class="form-control">
+                    </div>
                     <%--<div class="input-group form-group form-group-margin">
                         <span class="input-group-addon">上架状态</span>
                         <ui-select on-select="search.status=$item.code"
@@ -88,8 +92,12 @@
                         </div>
                     </div>
                     <div class="input-group form-group form-group-margin">
-                        <span class="input-group-addon">创建者账号</span> <input
+                        <span class="input-group-addon">添加人</span> <input
                             ng-model="search.createName" type="text" class="form-control">
+                    </div>
+                    <div class="input-group form-group form-group-margin">
+                        <span class="input-group-addon">创建者账号</span> <input
+                            ng-model="search.userName" type="text" class="form-control">
                     </div>
                     <div>
                         <a ng-click="list()" class="btn btn-primary form-group-margin"

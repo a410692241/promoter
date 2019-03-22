@@ -517,9 +517,11 @@
                    $('#list').empty();
                    $("#preview").empty();
                    $("input[type='radio']").removeAttr('checked');
-               }else if(data.respCode == "T"){
-                    alert("商品已存在！");
-                }else{
+               }else if(data.respCode == "barcodeRepeat"){
+                    alert("商品条形码已存在！");
+                }else if(data.respCode == "nameRepeat"){
+                   alert("商品名称已存在！");
+               }else{
                    alert("添加失败！");
                }
             },
