@@ -596,13 +596,11 @@ app.controller('goodsCtrl'/**
 					}else if( datas.data==="nameRepeat" ){
                         $("#supermarketList").trigger("reloadGrid");
                         $scope.$apply(function(){
-                            $modalInstance.close();
                             toaster.success( "","商品名称存在",3000 );
                         });
                     }else if( datas.data==="barcodeRepeat" ){
                         $("#supermarketList").trigger("reloadGrid");
                         $scope.$apply(function(){
-                            $modalInstance.close();
                             toaster.success( "","商品条形码存在",3000 );
                         });
                     }else{

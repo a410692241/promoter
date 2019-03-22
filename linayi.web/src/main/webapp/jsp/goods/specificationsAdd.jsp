@@ -97,7 +97,7 @@
                     window .opener.document.getElementById("fullName").value=data.data.fullName;
                     window .close();
                 }else if(data.respCode == "F") {
-                    alert("新增失败!")
+                    alert("新增失败!");
                 }
             }
         })
