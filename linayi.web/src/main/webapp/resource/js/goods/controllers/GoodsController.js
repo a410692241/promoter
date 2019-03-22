@@ -513,7 +513,7 @@ app.controller('goodsCtrl'/**
     	
     	var url = urls.ms + "/jsp/goods/GoodsEdit.jsp";
 		templateform.open({
-			title:"商品信息",
+			title:"修改商品信息",
 			url:url,
 			scope:$scope,
 			data:data,
