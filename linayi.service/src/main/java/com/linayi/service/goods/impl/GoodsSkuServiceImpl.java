@@ -709,11 +709,8 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
                 Date validDate = DateUtil.string2Date(createTimeEnd, "yyyy-MM-dd HH:mm:ss");
                 goodsSku.setValidDate(validDate);
             }
-			GoodsSku goodsById = goodsSkuMapper.getGoodsById(Integer.parseInt(goodsSku.getGoodsSkuId() + ""));
-
 			//判断商品全称是否存在
-			goodsById.setName(goodsSku.getName());
-			String goodsName = getGoodsName(goodsById);
+			String goodsName = getGoodsName(goodsSku);
 			goods.setFullName(goodsName);
 			goodsByGoods = goodsSkuMapper.getGoodsByGoods(goods);
 			if ((goodsByGoods != null && goodsByGoods.size() > 0) && !(goodsByGoods.get(0).getGoodsSkuId() + "").equals(goodsSku.getGoodsSkuId() + "")){
