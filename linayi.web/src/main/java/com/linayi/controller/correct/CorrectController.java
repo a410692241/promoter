@@ -362,7 +362,7 @@ public class CorrectController extends BaseController {
         cal.setTime(nowTime);//设置起时间
         cal.add(Calendar.YEAR, 1);//增加一年
         Date afterOneYearTime = cal.getTime();
-//        try{
+        try{
         if (
                 (correct.getPrice() == null || correct.getPrice() <= 0) ||
                         (correct.getGoodsSkuId() == null || correct.getGoodsSkuId() <= 0) ||
@@ -383,7 +383,7 @@ public class CorrectController extends BaseController {
         }
         String userType = OperatorType.ADMIN.toString();
         AdminAccount adminAccount = (AdminAccount) httpRequest.getSession().getAttribute("loginAccount");
-        Integer creatorId = adminAccount.getAccountId();
+                    Integer creatorId = adminAccount.getAccountId();
         correct.setUserId(creatorId);
 
         if ("SHARE".equals(correct.getCorrectType())) {
@@ -436,17 +436,13 @@ public class CorrectController extends BaseController {
 
             //撤回后,重新通过超市id和商品id查询该商品的状态(可纠错,可分享,可查看)
             Supermarket supermarket = supermarketGoodsService.getCorrectTypeBySupermarketIdAndgoodsSkuId(correct.getGoodsSkuId(),correct.getSupermarketId());
-            if("VIEW".equals(supermarket.getCorrectType())){
-                throw new BusinessException(ErrorType.SYSTEM_ERROR);
-            }
             if("CORRECT".equals(supermarket.getCorrectType())){
                 if(correct.getCorrectId() != null ){
                     correct.setCorrectId(null);
                 }
                 correct.setParentId(currentCorrect.getParentId());
                 correctService.correct(correct, file, OperatorType.ADMIN.getOperatorTypeName());
-            }
-            if("SHARE".equals(supermarket.getCorrectType())){
+            }else if("SHARE".equals(supermarket.getCorrectType())){
                 if(correct.getCorrectId() != null ){
                     correct.setCorrectId(null);
                 }
@@ -454,14 +450,16 @@ public class CorrectController extends BaseController {
                 // 线程安全并发处理
                 initVersion(correct);
                 correctService.share(correct, file, OperatorType.ADMIN.getOperatorTypeName());
+            }else{
+                throw new BusinessException(ErrorType.SYSTEM_ERROR);
             }
         }
         return new ResponseData("修改价格成功！");
-//        } catch (BusinessException e) {
-//            return new ResponseData(e.getErrorType()).toString();
-//        } catch (Exception e) {
-//            return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
-//        }
+        } catch (BusinessException e) {
+            return new ResponseData(e.getErrorType()).toString();
+        } catch (Exception e) {
+            return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+        }
     }
 
 
