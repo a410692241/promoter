@@ -96,7 +96,7 @@ public interface GoodsSkuMapper {
     List<String> getGoodsNameList();
 
 	/**
-	 * 把查询得到商品存入map集合
+	 * 把查询得到商品集合
 	 * @param goodsSku
 	 * @return
 	 */
