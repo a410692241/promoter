@@ -1,6 +1,8 @@
 package com.linayi.service.goods.impl;
 
+import java.io.*;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,13 +12,23 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.linayi.entity.BaseEntity;
 import com.linayi.entity.account.Account;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.entity.user.User;
 import com.linayi.util.*;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -385,6 +397,75 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 	}
 
 	@Override
+	public void exportGoodsData(GoodsSku goodsSku, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		// 只是让浏览器知道要保存为什么文件而已，真正的文件还是在流里面的数据，你设定一个下载类型并不会去改变流里的内容。
+		//而实际上只要你的内容正确，文件后缀名之类可以随便改，就算你指定是下载excel文件，下载时我也可以把他改成pdf等。
+		response.setContentType("application/vnd.ms-excel");
+		// 传递中文参数编码
+		String codedFileName = java.net.URLEncoder.encode("商品信息","UTF-8");
+		response.setHeader("content-disposition", "attachment;filename=" + codedFileName + ".xls");
+		goodsSku.setStatus("NORMAL");
+		List<GoodsSku> goodsLists = goodsSkuMapper.getGoodsLists(goodsSku);
+		// 定义一个工作薄
+		Workbook workbook = new HSSFWorkbook();
+		// 创建一个sheet页
+		Sheet sheet = workbook.createSheet("商品信息");
+		// 创建一行
+		Row row = sheet.createRow(0);
+		// 在本行赋值 以0开始
+
+		row.createCell(0).setCellValue("商品名");
+		row.createCell(1).setCellValue("商品全名");
+		row.createCell(2).setCellValue("条形码");
+		row.createCell(3).setCellValue("分类名");
+		row.createCell(4).setCellValue("品牌名");
+		row.createCell(5).setCellValue("型号");
+		row.createCell(6).setCellValue("功能");
+		row.createCell(7).setCellValue("产地");
+		row.createCell(8).setCellValue("生产日期");
+		row.createCell(9).setCellValue("有效日期");
+		row.createCell(10).setCellValue("产家");
+		row.createCell(11).setCellValue("其他属性");
+		row.createCell(12).setCellValue("创建时间");
+		row.createCell(13).setCellValue("修改时间");
+		row.createCell(14).setCellValue("添加人");
+		row.createCell(15).setCellValue("创建账号");
+		// 定义样式
+		CellStyle cellStyle = workbook.createCellStyle();
+		// 格式化日期
+		//cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("yyyy-MM-dd"));
+		String pattern = "yyyy-MM-dd HH:mm:ss";
+		// 遍历输出
+		for (int i = 1; i <= goodsLists.size(); i++) {
+			GoodsSku goods = goodsLists.get(i - 1);
+			row = sheet.createRow(i);
+			row.createCell(0).setCellValue(goods.getName());
+			row.createCell(1).setCellValue(goods.getFullName());
+			row.createCell(2).setCellValue(goods.getBarcode());
+			row.createCell(3).setCellValue(goods.getCategoryName());
+			row.createCell(4).setCellValue(goods.getBrandName());
+			row.createCell(5).setCellValue(goods.getModel());
+			row.createCell(6).setCellValue(goods.getFunction());
+			row.createCell(7).setCellValue(goods.getProduceAddress());
+			row.createCell(8).setCellValue(DateUtil.date2String(goods.getProduceDate(),pattern));
+			row.createCell(9).setCellValue(DateUtil.date2String(goods.getValidDate(),pattern));
+			row.createCell(10).setCellValue(goods.getManufacturer());
+			row.createCell(11).setCellValue(goods.getOtherAttribute());
+			row.createCell(12).setCellValue(DateUtil.date2String(goods.getCreateTime(),pattern));
+			row.createCell(13).setCellValue(DateUtil.date2String(goods.getUpdateTime(),pattern));
+			row.createCell(14).setCellValue(goods.getCreateName());
+			row.createCell(15).setCellValue(goods.getUserName());
+
+		}
+		OutputStream  fOut = response.getOutputStream();
+		workbook.write(fOut);
+		fOut.flush();
+		fOut.close();
+	}
+
+
+
+	@Override
 	public String specificationsAdd(String categoryName, String brandName, String attrStr,Integer goodsSkuId) {
 		return cateBrandValService.addCateBrandVal(categoryName, brandName, attrStr, goodsSkuId);
 	}
@@ -427,10 +508,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 
 	@Override
 	public Object getGoodsLists(GoodsSku goods) {
-		List<GoodsSku> goodsList = this.getGoodsList(goods);
-		for (GoodsSku goodsSku : goodsList) {
-			packGoodsSku(goodsSku);
-		}
+		List<GoodsSku> goodsList = goodsSkuMapper.getGoodsLists(goods);
 		PageResult<GoodsSku> pageResult = new PageResult<>(goodsList, goods.getTotal());
 		return pageResult;
 	}
@@ -672,6 +750,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		return supermarketGoods;
 	}
 
+	@Transactional
 	@Override
 	public String edit(CommonsMultipartFile goodsImage, GoodsSku goodsSku, Integer userId) {
 		try {
@@ -733,72 +812,5 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		return supermarketMapper.selectAll(supermarket);
 	}
 
-	/*@Override
-	public String editGoodsAttribute(String[] attribute,Integer goodsSkuId) {
 
-		List<GoodsAttrValue> goodsAttrValueAdd = new ArrayList<>();
-		List<GoodsAttrValue> goodsAttrValueRemove = new ArrayList<>();
-
-		List<Attribute> attributes = attributeMapper.getAttributes();
-		for (int i = 0; i < attribute.length; i++) {
-			if (attribute[i] != null && !"".equals(attribute[i])){
-				GoodsAttrValue goodsAttrValue = new GoodsAttrValue();
-				Attribute attr = attributes.get(i);
-				AttributeValue attrbuteVal = null;
-				List<AttributeValue> attributeValue = attributeValueMapper.getAttributeValue(attr.getAttributeId(), attribute[i], null);
-				if (attributeValue != null && attributeValue.size() > 0) {
-					attrbuteVal = attributeValue.get(0);
-				}
-
-				goodsAttrValue.setGoodsSkuId(goodsSkuId);
-				goodsAttrValue.setAttributeId(attr.getAttributeId());
-				List<GoodsAttrValue> goodsAttrValueList = goodsAttrValueMapper.getGoodsAttrValue(goodsAttrValue);
-				goodsAttrValue.setAttrValueId(attrbuteVal.getValueId());
-				goodsAttrValue.setCreateTime(new Date());
-				if (goodsAttrValueList != null && goodsAttrValueList.size() > 0){
-					goodsAttrValueMapper.deleteById(goodsAttrValueList.get(0).getGoodsAttrValueId());
-					goodsAttrValueRemove.add(goodsAttrValueList.get(0));
-				}
-				goodsAttrValueMapper.insert(goodsAttrValue);
-				goodsAttrValueAdd.add(goodsAttrValue);
-			}
-		}
-
-		List<GoodsAttrValue> goodsAttrValues = goodsAttrValueService.getGoodsAttrValueByGoodsId(Long.parseLong(goodsSkuId + ""));
-		String attrs = "";
-		for (GoodsAttrValue goodsAttrValue : goodsAttrValues) {
-			AttributeValue attributeValue = attributeValueService.getAttrValsByAttrValId(goodsAttrValue.getAttrValueId());
-			if (attrs.equals("")){
-				attrs += attributeValue.getValue();
-			}else{
-				attrs += "," + attributeValue.getValue();
-			}
-		}
-		GoodsSku goodsSku = new GoodsSku();
-		GoodsSku goods = goodsSkuMapper.getGoodsById(goodsSkuId);
-		//判断商品全称是否存在
-		String fullName = getGoodsName(goods);
-		goodsSku.setFullName(fullName);
-		goodsSku.setStatus("NORMAL");
-		List<GoodsSku> goodsByGoods = goodsSkuMapper.getGoodsByGoods(goodsSku);
-		if (goodsByGoods != null && goodsByGoods.size() > 0){
-			if(goodsByGoods.get(0).getGoodsSkuId() == Long.parseLong(goodsSkuId + "")){
-				return attrs + ":" + fullName;
-			}
-			if(goodsAttrValueAdd != null && goodsAttrValueAdd.size() > 0){
-				goodsAttrValueAdd.forEach(item ->{
-					goodsAttrValueMapper.deleteById(item.getGoodsAttrValueId());
-				});
-			}
-			if(goodsAttrValueRemove != null && goodsAttrValueRemove.size() > 0){
-				goodsAttrValueRemove.forEach(item ->{
-					goodsAttrValueMapper.insert(item);
-				});
-			}
-			return "exist";
-		}
-		goods.setFullName(fullName);
-		goodsSkuMapper.updateGoodsFullName(goods);
-		return attrs + ":" + fullName;
-	}*/
 }

@@ -40,6 +40,7 @@ app.controller('goodsCtrl'/**
             $scope.editeAttribute = editeAttribute;
             $scope.show = show;
             $scope.edit = edit;
+            $scope.exportData = exportData;
             $scope.remove = remove;
             $scope.share = share;
             $scope.getPrice = getPrice;
@@ -733,6 +734,80 @@ app.controller('goodsCtrl'/**
 
                 }
             }
+        }
+        //导出数据
+        function exportData() {
+            debugger;
+            var fullName = $scope.search.fullName;
+            var categoryId = $scope.search.categoryId;
+            var brandId = $scope.search.brandId;
+            var barcode = $scope.search.barcode;
+            var createName = $scope.search.createName;
+            var userName = $scope.search.userName;
+            var createTimeStart = $scope.search.createTimeStart;
+            var createTimeEnd = $scope.search.createTimeEnd;
+            var sum = 0;
+            var data = '';
+            if (fullName === undefined || fullName == '') {
+                fullName = null;
+                sum++;
+            } else {
+                data += '&fullName=' + fullName;
+            }
+            if (categoryId === undefined || categoryId == '') {
+                categoryId = null;
+                sum++;
+            } else {
+                data += '&categoryId=' + categoryId;
+            }
+            if (brandId === undefined || brandId == '') {
+                brandId = null;
+                sum++;
+            } else {
+                data += '&brandId=' + brandId;
+            }
+            if (barcode === undefined || barcode == '') {
+                barcode = null;
+                sum++;
+            } else {
+                data += '&barcode=' + barcode;
+            }
+            if (userName === undefined || userName == '') {
+                userName = null;
+                sum++;
+            } else {
+                data += '&userName=' + userName;
+            }
+            if (createName === undefined || createName == '') {
+                createName = null;
+                sum++;
+
+            } else {
+                data += '&createName=' + createName;
+            }
+            if (createTimeStart === undefined || createTimeStart == '') {
+                createTimeStart = null;
+                sum++;
+            } else {
+                data += '&createTimeStart=' + createTimeStart;
+            }
+            if (createTimeEnd === undefined || createTimeEnd == '') {
+                createTimeEnd = null;
+                sum++;
+            } else {
+                data += '&createTimeEnd=' + createTimeEnd;
+            }
+
+            if (sum == 8) {
+                toaster.error("", "请输入搜索条件后导出!", 3000);
+                return;
+            }
+
+            //window.location.href = urls.ms + "/goods/goods/exportGoodsData.do?" + data.replace("&", "");
+            location.href = urls.ms + "/goods/goods/exportGoodsData.do?" + data.replace("&", "");
+            toaster.success("", "导出成功!", 1000);
+
+
         }
 
         // 初始化

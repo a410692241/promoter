@@ -216,6 +216,55 @@
     <select id="getGoodsNameList" resultType="java.lang.String">
         select name from goods_sku
     </select>
+    <select id="getGoodsLists" resultType="com.linayi.entity.goods.GoodsSku">
+        select gs.goods_sku_id goodsSkuId, gs.name NAME, gs.full_name fullName,gs.barcode barcode, gs.category_id categoryId,c.name categoryName, gs.brand_id brandId,b.name brandName, gs.status STATUS, gs.image image, gs.update_time updateTime, gs.create_time createTime, gs.model model, gs.function FUNCTION , gs.produce_address produceAddress, gs.produce_date produceDate, gs.valid_date validDate, gs.manufacturer manufacturer, gs.other_attribute otherAttribute
+        ,e.real_name createName,aa.user_name userName from goods_sku gs left join admin_account aa on aa.account_id = gs.user_id left join employee e on aa.user_id = e.employee_id join brand b on b.brand_id = gs.brand_id join category c on c.category_id = gs.category_id
+        <where>
+            <if test="goodsSkuId != null and goodsSkuId != ''">
+                gs.goods_sku_id like #{goodsSkuId}
+            </if>
+            <if test="name != null and name != ''">
+                and gs.name like #{name}
+            </if>
+            <if test="fullName != null and fullName != ''">
+                and gs.full_name like concat('%',#{fullName},'%')
+            </if>
+            <if test="barcode != null and barcode != ''">
+                and gs.barcode like concat('%',#{barcode},'%')
+            </if>
+            <if test="categoryId != null and categoryId != ''">
+                and gs.category_id = #{categoryId}
+            </if>
+
+            <if test="brandId != null and brandId != ''">
+                and gs.brand_id = #{brandId}
+            </if>
+            <if test="status != null and status != ''">
+                and gs.status = #{status}
+            </if>
+
+            <if test="image != null and image != ''">
+                and gs.image = #{image}
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                and gs.update_time = #{updateTime}
+            </if>
+            <if test="createName != null and createName != ''">
+                and e.real_name like concat('%',#{createName},'%')
+            </if>
+
+            <if test="userName != null and userName != ''">
+                and aa.user_name like concat('%',#{userName},'%')
+            </if>
+            <if test="createTimeStart != null and createTimeStart != ''">
+                and gs.create_time <![CDATA[ >= ]]> #{createTimeStart}
+            </if>
+            <if test="createTimeEnd != null and createTimeEnd != ''">
+                and gs.create_time <![CDATA[ <= ]]> #{createTimeEnd}
+            </if>
+        </where>
+        order by gs.goods_sku_id desc
+    </select>
     <select id="getGoodsByGoods" resultMap="BaseResultMap">
         select
         <include refid="columnList"/>

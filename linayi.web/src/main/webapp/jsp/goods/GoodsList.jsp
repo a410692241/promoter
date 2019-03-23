@@ -118,8 +118,11 @@
 								class="btn btn-primary form-group-margin"
 								href="javascript:void(0);"> <i class=" fa fa-remove"></i>批量刪除
 							</a>--%>
-
+                        <a ng-click="exportData()" class="btn btn-primary form-group-margin"
+                           href="javascript:void(0);"></i>导出列表
+                        </a>
                     </div>
+
                 </form>
 
                 <!-- 表格 -->

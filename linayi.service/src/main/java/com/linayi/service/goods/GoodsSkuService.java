@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public interface GoodsSkuService {
@@ -133,4 +134,10 @@ public interface GoodsSkuService {
 	 * @return
 	 */
 	String getNewGoodsName(GoodsSku goodsSku, List<GoodsAttrValue> newGoodsAttrValue);
+
+	/**
+	 * 根据条件导出excel
+	 * @param goodsSku
+	 */
+    void exportGoodsData(GoodsSku goodsSku, HttpServletRequest request, HttpServletResponse response) throws Exception;
 }

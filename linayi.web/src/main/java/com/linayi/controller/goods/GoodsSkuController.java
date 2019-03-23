@@ -33,6 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -434,5 +435,11 @@ public class GoodsSkuController extends BaseController{
             e.printStackTrace();
         }*/
         return new ResponseData(ErrorType.SYSTEM_ERROR);
+    }
+
+    @RequestMapping("/exportGoodsData.do")
+    @ResponseBody
+    public void exportGoodsData(GoodsSku goodsSku, HttpServletRequest request, HttpServletResponse response) throws Exception {
+            goodsService.exportGoodsData(goodsSku,request,response);
     }
 }
