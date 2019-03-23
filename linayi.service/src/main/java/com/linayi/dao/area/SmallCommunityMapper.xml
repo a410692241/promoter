@@ -14,7 +14,7 @@
   </resultMap>
   <insert id="insert" parameterType="com.linayi.entity.area.SmallCommunity">
     insert into small_community (small_community_id, area_code, name, 
-      community_id, status, create_time, deliverer_id
+      community_id, status, create_time, deliverer_id,
       update_time)
     values (#{smallCommunityId,jdbcType=INTEGER}, #{areaCode,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{communityId,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
