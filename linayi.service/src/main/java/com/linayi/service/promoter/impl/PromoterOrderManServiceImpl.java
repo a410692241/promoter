@@ -53,9 +53,9 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         PromoterOrderMan currentPromoterOrderMan = getStatisALL(promoterOrderMan.getOrderManId(),"MONTH","ALL");
         PromoterOrderMan currentPromoterOrderMan2 = getStatisALL(promoterOrderMan.getOrderManId(),"ALL","ALL");
         //总收入
-        currentPromoterOrderMan.setHomePageIncome(currentPromoterOrderMan2.getTotalSum());
+        currentPromoterOrderMan.setHomePageIncome(currentPromoterOrderMan2.getTotalSum() == null ? 0 : currentPromoterOrderMan2.getTotalSum());
         //会员数
-        currentPromoterOrderMan.setNumberOfMembers(currentPromoterOrderMan2.getNumberOfMembers());
+        currentPromoterOrderMan.setNumberOfMembers(currentPromoterOrderMan2.getNumberOfMembers() == null ? 0 : currentPromoterOrderMan2.getNumberOfMembers());
 
         if(currentPromoterOrderMan2.getNumberOfMembers() == null) {
             currentPromoterOrderMan.setNumberOfMembers(0);

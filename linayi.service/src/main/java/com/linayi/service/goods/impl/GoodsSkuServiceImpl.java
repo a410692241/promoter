@@ -414,22 +414,23 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		Row row = sheet.createRow(0);
 		// 在本行赋值 以0开始
 
-		row.createCell(0).setCellValue("商品名");
-		row.createCell(1).setCellValue("商品全名");
-		row.createCell(2).setCellValue("条形码");
-		row.createCell(3).setCellValue("分类名");
-		row.createCell(4).setCellValue("品牌名");
-		row.createCell(5).setCellValue("型号");
-		row.createCell(6).setCellValue("功能");
-		row.createCell(7).setCellValue("产地");
-		row.createCell(8).setCellValue("生产日期");
-		row.createCell(9).setCellValue("有效日期");
-		row.createCell(10).setCellValue("产家");
-		row.createCell(11).setCellValue("其他属性");
-		row.createCell(12).setCellValue("创建时间");
-		row.createCell(13).setCellValue("修改时间");
-		row.createCell(14).setCellValue("添加人");
-		row.createCell(15).setCellValue("创建账号");
+		row.createCell(0).setCellValue("商品编号");
+		row.createCell(1).setCellValue("商品名");
+		row.createCell(2).setCellValue("商品全名");
+		row.createCell(3).setCellValue("条形码");
+		row.createCell(4).setCellValue("分类名");
+		row.createCell(5).setCellValue("品牌名");
+		row.createCell(6).setCellValue("型号");
+		row.createCell(7).setCellValue("功能");
+		row.createCell(8).setCellValue("产地");
+		row.createCell(9).setCellValue("生产日期");
+		row.createCell(10).setCellValue("有效日期");
+		row.createCell(11).setCellValue("产家");
+		row.createCell(12).setCellValue("其他属性");
+		row.createCell(13).setCellValue("创建时间");
+		row.createCell(14).setCellValue("修改时间");
+		row.createCell(15).setCellValue("添加人");
+		row.createCell(16).setCellValue("创建账号");
 		// 定义样式
 		CellStyle cellStyle = workbook.createCellStyle();
 		// 格式化日期
@@ -439,22 +440,23 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		for (int i = 1; i <= goodsLists.size(); i++) {
 			GoodsSku goods = goodsLists.get(i - 1);
 			row = sheet.createRow(i);
-			row.createCell(0).setCellValue(goods.getName());
-			row.createCell(1).setCellValue(goods.getFullName());
-			row.createCell(2).setCellValue(goods.getBarcode());
-			row.createCell(3).setCellValue(goods.getCategoryName());
-			row.createCell(4).setCellValue(goods.getBrandName());
-			row.createCell(5).setCellValue(goods.getModel());
-			row.createCell(6).setCellValue(goods.getFunction());
-			row.createCell(7).setCellValue(goods.getProduceAddress());
-			row.createCell(8).setCellValue(DateUtil.date2String(goods.getProduceDate(),pattern));
-			row.createCell(9).setCellValue(DateUtil.date2String(goods.getValidDate(),pattern));
-			row.createCell(10).setCellValue(goods.getManufacturer());
-			row.createCell(11).setCellValue(goods.getOtherAttribute());
-			row.createCell(12).setCellValue(DateUtil.date2String(goods.getCreateTime(),pattern));
-			row.createCell(13).setCellValue(DateUtil.date2String(goods.getUpdateTime(),pattern));
-			row.createCell(14).setCellValue(goods.getCreateName());
-			row.createCell(15).setCellValue(goods.getUserName());
+			row.createCell(0).setCellValue(goods.getGoodsSkuId());
+			row.createCell(1).setCellValue(goods.getName());
+			row.createCell(2).setCellValue(goods.getFullName());
+			row.createCell(3).setCellValue(goods.getBarcode());
+			row.createCell(4).setCellValue(goods.getCategoryName());
+			row.createCell(5).setCellValue(goods.getBrandName());
+			row.createCell(6).setCellValue(goods.getModel());
+			row.createCell(7).setCellValue(goods.getFunction());
+			row.createCell(8).setCellValue(goods.getProduceAddress());
+			row.createCell(9).setCellValue(DateUtil.date2String(goods.getProduceDate(),pattern));
+			row.createCell(10).setCellValue(DateUtil.date2String(goods.getValidDate(),pattern));
+			row.createCell(11).setCellValue(goods.getManufacturer());
+			row.createCell(12).setCellValue(goods.getOtherAttribute());
+			row.createCell(13).setCellValue(DateUtil.date2String(goods.getCreateTime(),pattern));
+			row.createCell(14).setCellValue(DateUtil.date2String(goods.getUpdateTime(),pattern));
+			row.createCell(15).setCellValue(goods.getCreateName());
+			row.createCell(16).setCellValue(goods.getUserName());
 
 		}
 		OutputStream  fOut = response.getOutputStream();
