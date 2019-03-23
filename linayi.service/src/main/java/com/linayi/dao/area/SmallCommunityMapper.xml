@@ -18,7 +18,7 @@
       update_time)
     values (#{smallCommunityId,jdbcType=INTEGER}, #{areaCode,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{communityId,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP},#{delivererId,jdbcType=TIMESTAMP})
+     #{delivererId,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.linayi.entity.area.SmallCommunity">
     insert into small_community
