@@ -36,7 +36,7 @@ public class WeixinServiceImpl implements WeixinService {
     private UserService userService;
 
     @Override
-    public Object getCode(String code, HttpServletResponse response) {
+    public Object getCode(String code, HttpServletResponse response,boolean linsheng) {
         //获取access_token
         String getTokenUrl = WeixinConfig.GET_TOKEN_URL + "appid=" + Configuration.getConfig().getValue(WeixinConfig.APPID) + "&secret=" + Configuration.getConfig().getValue(WeixinConfig.APPSECRET) + "&code=" + code + "&grant_type=authorization_code";
         String responseStr = HttpClientUtil.sendGetRequest(getTokenUrl, "utf-8");
@@ -97,7 +97,11 @@ public class WeixinServiceImpl implements WeixinService {
             String sysetemAccessToken = redisService.GenerationToken(accountId);
             //用openId进入数据库进行查找
             try {
-                response.sendRedirect(Configuration.getConfig().getValue(WeixinConfig.REDICT_INDEX_URL) + "?accessToken=" + sysetemAccessToken+ "&accountId=" + accountId+"&userId="+userId+"&loginType="+1);
+                //如果是邻生客户端,需要跳转的是邻生的商户端首页
+                if (!linsheng) {
+                    response.sendRedirect(Configuration.getConfig().getValue(WeixinConfig.REDICT_INDEX_URL) + "?accessToken=" + sysetemAccessToken+ "&accountId=" + accountId+"&userId="+userId+"&loginType="+1);
+                }
+                response.sendRedirect(Configuration.getConfig().getValue(WeixinConfig.LINSHENG_REDICT_INDEX_URL) + "?accessToken=" + sysetemAccessToken);
             } catch (IOException e) {
                 e.printStackTrace();
 
@@ -105,6 +109,7 @@ public class WeixinServiceImpl implements WeixinService {
         }
         return new ResponseData(ErrorType.WECHAT_CALL_ERROR);
     }
+
 
     private String uploadImg(String headimgurl) {
         String datePath = DateUtil.date2String(new Date(), "yyyy/MM/dd/HH");
