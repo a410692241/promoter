@@ -287,7 +287,7 @@ app.controller('communityLocationCtrl', function($scope,toaster,communityLocatio
     				$scope.$apply(function(){
 	    				if( data.respCode == "S" ){
 							$("#communityLocationList").trigger("reloadGrid");
-							$modalInstance.close();
+							 $modalInstance.close();
 						}else{
 								toaster.error( "",data.msg,3000 );
 						}

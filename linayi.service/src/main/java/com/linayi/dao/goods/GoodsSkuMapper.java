@@ -3,6 +3,7 @@ package com.linayi.dao.goods;
 import com.linayi.entity.goods.GoodsSku;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface GoodsSkuMapper {
@@ -93,4 +94,11 @@ public interface GoodsSkuMapper {
 	 * @return
 	 */
     List<String> getGoodsNameList();
+
+	/**
+	 * 把查询得到商品集合
+	 * @param goodsSku
+	 * @return
+	 */
+	List<GoodsSku> getGoodsLists(GoodsSku goodsSku);
 }

@@ -362,7 +362,7 @@ public class CorrectController extends BaseController {
         cal.setTime(nowTime);//设置起时间
         cal.add(Calendar.YEAR, 1);//增加一年
         Date afterOneYearTime = cal.getTime();
-//        try{
+        try{
         if (
                 (correct.getPrice() == null || correct.getPrice() <= 0) ||
                         (correct.getGoodsSkuId() == null || correct.getGoodsSkuId() <= 0) ||
@@ -383,7 +383,7 @@ public class CorrectController extends BaseController {
         }
         String userType = OperatorType.ADMIN.toString();
         AdminAccount adminAccount = (AdminAccount) httpRequest.getSession().getAttribute("loginAccount");
-        Integer creatorId = adminAccount.getAccountId();
+                    Integer creatorId = adminAccount.getAccountId();
         correct.setUserId(creatorId);
 
         if ("SHARE".equals(correct.getCorrectType())) {
@@ -407,23 +407,42 @@ public class CorrectController extends BaseController {
             //调用撤回方法
             Correct currentCorrect = correctService.recall(correct, userType);
 
-            //查询此商品有无价格
-            SupermarketGoods currentParam = new SupermarketGoods();
-            currentParam.setGoodsSkuId(correct.getGoodsSkuId());
-            currentParam.setSupermarketId(correct.getSupermarketId());
-            SupermarketGoods supermarketGoods = supermarketGoodsService.getSupermarketGoods(currentParam).stream().findFirst().orElse(null);
-            ;
+//            //查询此商品有无价格
+//            SupermarketGoods currentParam = new SupermarketGoods();
+//            currentParam.setGoodsSkuId(correct.getGoodsSkuId());
+//            currentParam.setSupermarketId(correct.getSupermarketId());
+//            SupermarketGoods supermarketGoods = supermarketGoodsService.getSupermarketGoods(currentParam).stream().findFirst().orElse(null);
+//
+//            //如果有价格，调用纠错方法
+//            if (supermarketGoods != null) {
+//                if(correct.getCorrectId() != null ){
+//                    correct.setCorrectId(null);
+//                }
+//                correct.setParentId(currentCorrect.getParentId());
+//                correctService.correct(correct, file, OperatorType.ADMIN.getOperatorTypeName());
+//            }
+//            //如果没价格，调用分享方法
+//            if (supermarketGoods == null) {
+//                if(correct.getCorrectId() != null ){
+//                    correct.setCorrectId(null);
+//                }
+//
+//                // 线程安全并发处理
+//                initVersion(correct);
+//                correctService.share(correct, file, OperatorType.ADMIN.getOperatorTypeName());
+//            }
 
-            //如果有价格，调用纠错方法
-            if (supermarketGoods != null) {
+
+
+            //撤回后,重新通过超市id和商品id查询该商品的状态(可纠错,可分享,可查看)
+            Supermarket supermarket = supermarketGoodsService.getCorrectTypeBySupermarketIdAndgoodsSkuId(correct.getGoodsSkuId(),correct.getSupermarketId());
+            if("CORRECT".equals(supermarket.getCorrectType())){
                 if(correct.getCorrectId() != null ){
                     correct.setCorrectId(null);
                 }
                 correct.setParentId(currentCorrect.getParentId());
                 correctService.correct(correct, file, OperatorType.ADMIN.getOperatorTypeName());
-            }
-            //如果没价格，调用分享方法
-            if (supermarketGoods == null) {
+            }else if("SHARE".equals(supermarket.getCorrectType())){
                 if(correct.getCorrectId() != null ){
                     correct.setCorrectId(null);
                 }
@@ -431,14 +450,16 @@ public class CorrectController extends BaseController {
                 // 线程安全并发处理
                 initVersion(correct);
                 correctService.share(correct, file, OperatorType.ADMIN.getOperatorTypeName());
+            }else{
+                throw new BusinessException(ErrorType.SYSTEM_ERROR);
             }
         }
         return new ResponseData("修改价格成功！");
-//        } catch (BusinessException e) {
-//            return new ResponseData(e.getErrorType()).toString();
-//        } catch (Exception e) {
-//            return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
-//        }
+        } catch (BusinessException e) {
+            return new ResponseData(e.getErrorType()).toString();
+        } catch (Exception e) {
+            return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+        }
     }
 
 

@@ -55,6 +55,10 @@
                             </ui-select-choices>
                         </ui-select>
                     </div>
+                    <div class="input-group form-group form-group-margin">
+                        <span class="input-group-addon">条形码</span> <input
+                            ng-model="search.barcode" type="text" class="form-control">
+                    </div>
                     <%--<div class="input-group form-group form-group-margin">
                         <span class="input-group-addon">上架状态</span>
                         <ui-select on-select="search.status=$item.code"
@@ -88,6 +92,10 @@
                         </div>
                     </div>
                     <div class="input-group form-group form-group-margin">
+                        <span class="input-group-addon">添加人</span> <input
+                            ng-model="search.createName" type="text" class="form-control">
+                    </div>
+                    <div class="input-group form-group form-group-margin">
                         <span class="input-group-addon">创建者账号</span> <input
                             ng-model="search.userName" type="text" class="form-control">
                     </div>
@@ -110,8 +118,11 @@
 								class="btn btn-primary form-group-margin"
 								href="javascript:void(0);"> <i class=" fa fa-remove"></i>批量刪除
 							</a>--%>
-
+                        <a ng-click="exportData()" class="btn btn-primary form-group-margin"
+                           href="javascript:void(0);"></i>导出列表
+                        </a>
                     </div>
+
                 </form>
 
                 <!-- 表格 -->

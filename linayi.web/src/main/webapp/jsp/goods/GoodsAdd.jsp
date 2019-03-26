@@ -220,11 +220,10 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td colspan="3"><input type="button" onclick="tijiao();" value="确认添加">&nbsp;&nbsp;<a href="${pageContext.request.contextPath }/backStageManagement/showAddGoodsIndex.do">返回</a></td>
+                    <td colspan="3"><input type="button" id="tj"  onclick="tijiao();" value="确认添加">&nbsp;&nbsp;</td>
                 </tr>
             </table>
             <div>
-
             </div>
         </div>
         <div>
@@ -495,7 +494,7 @@
             alert("商品条形码长度不能超过13位!");
             return false;
         }
-
+        $('#tj').attr('disabled',"true");
         var form = new FormData(document.getElementById("add_goods"));
         $.ajax({
             url:"${pageContext.request.contextPath}/goods/goods/addGoodsForAdmin.do",
@@ -504,6 +503,7 @@
             processData:false,
             contentType:false,
             success:function(data){
+                $('#tj').removeAttr("disabled");
                if(data.respCode == "S"){
                    alert("添加成功！");
                    goodsSku = data.data;
@@ -517,9 +517,11 @@
                    $('#list').empty();
                    $("#preview").empty();
                    $("input[type='radio']").removeAttr('checked');
-               }else if(data.respCode == "T"){
-                    alert("商品已存在！");
-                }else{
+               }else if(data.respCode == "barcodeRepeat"){
+                    alert("商品条形码已存在！");
+                }else if(data.respCode == "nameRepeat"){
+                   alert("商品名称已存在！");
+               }else{
                    alert("添加失败！");
                }
             },

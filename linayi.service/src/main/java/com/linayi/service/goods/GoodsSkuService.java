@@ -1,6 +1,7 @@
 package com.linayi.service.goods;
 
 import com.linayi.entity.goods.Attribute;
+import com.linayi.entity.goods.GoodsAttrValue;
 import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.goods.SupermarketGoods;
 
@@ -12,13 +13,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public interface GoodsSkuService {
 
 
     /*新增商品*/
-    GoodsSku addGoods(String category, String brand, GoodsSku goods, String [] attribute,MultipartFile file, Integer userId) throws Exception;
+    String addGoods(String category, String brand, GoodsSku goods, String [] attribute,MultipartFile file, Integer userId) throws Exception;
 
     /*分页查询*/
     List<GoodsSku> getGoodsList(GoodsSku goods);
@@ -34,11 +36,17 @@ public interface GoodsSkuService {
 
     void view(Long goodsSkuId, Model model);
     GoodsSku getGoodsSku(Long goodsSkuId);
-    Object getGoodsLists(GoodsSku goods,String userName);
+    Object getGoodsLists(GoodsSku goods);
 
-    GoodsSku insertGoods(ModelMap modelMap, MultipartFile file, String category, String brand, GoodsSku goods, String [] attribute, HttpServletRequest httpRequest, Integer userId) throws Exception;
+    String insertGoods(ModelMap modelMap, MultipartFile file, String category, String brand, GoodsSku goods, String [] attribute, HttpServletRequest httpRequest, Integer userId) throws Exception;
     void getBrandAndVal(ModelMap model);
-    
+
+	/**
+	 * 获取商品的名称
+	 * @param goodsSku
+	 * @return
+	 */
+	String getGoodsName(GoodsSku goodsSku);
     
     
     
@@ -115,9 +123,21 @@ public interface GoodsSkuService {
 	 * @param goodsSkuId
 	 * @return
 	 */
-    String editGoodsAttribute(String[] attribute, Integer goodsSkuId);
+    //String editGoodsAttribute(String[] attribute, Integer goodsSkuId);
 
 	void toShowSpecifications(ModelMap modelMap, Integer attributeId, String value);
 
 	void addSpecifications(Integer attributeId, String value);
+	/**
+	 * 获取商品要新增的商品全名称
+	 * @param goodsSku
+	 * @return
+	 */
+	String getNewGoodsName(GoodsSku goodsSku, List<GoodsAttrValue> newGoodsAttrValue);
+
+	/**
+	 * 根据条件导出excel
+	 * @param goodsSku
+	 */
+    void exportGoodsData(GoodsSku goodsSku, HttpServletRequest request, HttpServletResponse response) throws Exception;
 }

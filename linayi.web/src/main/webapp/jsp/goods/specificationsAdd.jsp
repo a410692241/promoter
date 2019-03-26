@@ -69,8 +69,6 @@
     }
 
 
-    var brandName = "${brandName}";
-    var categoryName = "${categoryName}";
     var goodsSkuId = "${goodsSkuId}";
 
     function foo(){
@@ -87,18 +85,19 @@
         $.ajax({
             type: "POST",//方法
             url: "specificationsGoodsAdd.do",//表单接收url
-            data: {categoryName:categoryName,brandName:brandName,attrStr:attrStr,goodsSkuId:goodsSkuId},
+            data: {attrStr:attrStr,goodsSkuId:goodsSkuId},
             dataType:"json",
             success: function (data){
+                debugger;
                 var s = data.data;
-                if(data.data == "repate"){
-                    alert("商品已存在");
+                if(data.data == "nameRepeat"){
+                    alert("商品名称已存在");
                 }else if(data.respCode == "S"){
                     window .opener.document.getElementById("attrValues").value=data.data.attrValues;
                     window .opener.document.getElementById("fullName").value=data.data.fullName;
                     window .close();
                 }else if(data.respCode == "F") {
-                    alert("新增失败!")
+                    alert("新增失败!");
                 }
             }
         })

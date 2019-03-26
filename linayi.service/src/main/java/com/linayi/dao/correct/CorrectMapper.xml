@@ -334,7 +334,7 @@
         SELECT
             c.correct_id,c.goods_sku_id,u.real_name,u.mobile,s.supermarket_id,c.`status`,g.`full_name`,c.type,c.price,c.price_type,c.start_time,c.end_time,c.create_time
         FROM
-            `correct` c left join USER u on c.user_id = u.user_id left join supermarket s on c.supermarket_id = s.supermarket_id
+            `correct` c left join `user` u on c.user_id = u.user_id left join supermarket s on c.supermarket_id = s.supermarket_id
             left join  goods_sku g on c.goods_sku_id = g.goods_sku_id where c.user_type = "USER"
 
             <if test="mobile !=null and mobile != ''">

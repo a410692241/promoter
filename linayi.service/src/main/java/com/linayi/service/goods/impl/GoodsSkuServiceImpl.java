@@ -1,6 +1,8 @@
 package com.linayi.service.goods.impl;
 
+import java.io.*;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,13 +12,23 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.linayi.entity.BaseEntity;
 import com.linayi.entity.account.Account;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.entity.user.User;
 import com.linayi.util.*;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -97,9 +109,9 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		return goodsSkuMapper.getGoodsList(goods);
 	}
 
+	@Transactional
 	@Override
-	public GoodsSku insertGoods(ModelMap modelMap, MultipartFile file, String category, String brand, GoodsSku goods, String [] attribute, HttpServletRequest httpRequest, Integer userId) throws Exception {
-		MultipartHttpServletRequest request = (MultipartHttpServletRequest) httpRequest;
+	public String insertGoods(ModelMap modelMap, MultipartFile file, String category, String brand, GoodsSku goods, String [] attribute, HttpServletRequest httpRequest, Integer userId) throws Exception {
 		return addGoods(category, brand, goods, attribute,file,userId);
 	}
 
@@ -139,10 +151,11 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		}
 		return goodsSku;
 	}
+	@Transactional
 	@Override
-	public GoodsSku addGoods(String category, String brand, GoodsSku goods, String [] attribute,MultipartFile file, Integer userId) throws Exception {
+	public String addGoods(String category, String brand, GoodsSku goods, String [] attribute,MultipartFile file, Integer userId) throws Exception {
 		//判断条形码是否存在
-		String barcode = goods.getBarcode();
+		String barcode = goods.getBarcode().trim();
 		GoodsSku goodsSku = new GoodsSku();
         int len = 13 - barcode.length();
         for (int i = 0; i < len; i++){
@@ -152,15 +165,9 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		goodsSku.setStatus("NORMAL");
 		List<GoodsSku> goodsByGoods = goodsSkuMapper.getGoodsByGoods(goodsSku);
 		if (goodsByGoods != null && goodsByGoods.size() > 0){
-			return null;
+			return "barcodeRepeat";
 		}
 		goodsSku.setBarcode(null);
-
-		if (file != null) {
-			String image = null;
-			image = ImageUtil.handleUpload(file);
-			goods.setImage(image);
-		}
 		// 调用品牌和分类业务层方法，获取品牌id和分类id
 		Integer brandId = null;
 		List<Brand> brandList = brandMapper.getBrandsByName(null, null, brand);
@@ -187,7 +194,6 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 			categoryMapper.insert(category1);
 		}
 
-
 		if (goods.getName() != null && !"".equals(goods.getName())) {
 			goods.setBarcode(barcode);
 			goods.setBrandId(brandId);
@@ -195,9 +201,9 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 			goods.setStatus("NORMAL");
 			goods.setCreateTime(new Date());
 			goods.setUserId(userId);
-			goodsSkuMapper.insert(goods);
 
 			List<Attribute> attributes = attributeMapper.getAttributes();
+			List<GoodsAttrValue> list = new ArrayList<>();
 			for (int i = 0; i < attribute.length; i++) {
 				if (attribute[i] != null && !"".equals(attribute[i])){
 					GoodsAttrValue goodsAttrValue = new GoodsAttrValue();
@@ -208,24 +214,34 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 						attrbuteVal = attributeValue.get(0);
 					}
 					goodsAttrValue.setAttrValueId(attrbuteVal.getValueId());
-					goodsAttrValue.setGoodsSkuId(Integer.parseInt(goods.getGoodsSkuId() + ""));
 					goodsAttrValue.setCreateTime(new Date());
-					goodsAttrValueMapper.insert(goodsAttrValue);
+					list.add(goodsAttrValue);
+					//goodsAttrValueMapper.insert(goodsAttrValue);
 				}
 			}
 			//判断商品全称是否存在
-			String fullName = getGoodsName(goods);
+			String fullName = getNewGoodsName(goods,list);
 			goodsSku.setFullName(fullName);
 			goodsByGoods = goodsSkuMapper.getGoodsByGoods(goodsSku);
 			if (goodsByGoods != null && goodsByGoods.size() > 0){
-                goodsSkuMapper.deleteGoodsById(Integer.parseInt(goods.getGoodsSkuId() + ""));
-				return null;
-			}else{
-				goods.setFullName(fullName);
-				goodsSkuMapper.updateGoodsFullName(goods);
+                //goodsSkuMapper.deleteGoodsById(Integer.parseInt(goods.getGoodsSkuId() + ""));
+				return "nameRepeat";
+			}
+			if (file != null) {
+				String image = null;
+				image = ImageUtil.handleUpload(file);
+				goods.setImage(image);
+			}
+			goods.setFullName(fullName);
+			goodsSkuMapper.insert(goods);
+			if(list != null && list.size() > 0){
+				for (GoodsAttrValue goodsAttrValue : list) {
+					goodsAttrValue.setGoodsSkuId(Integer.parseInt(goods.getGoodsSkuId() + ""));
+					goodsAttrValueMapper.insert(goodsAttrValue);
+				}
 			}
 		}
-		return goods;
+		return "success";
 	}
 
 	@Override
@@ -305,6 +321,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		getAttributesMap(modelMap, attributeId, value);
 	}
 
+	@Transactional
 	@Override
 	public void addSpecifications(Integer attributeId, String value) {
 		if (value != null && !"".equals(value)) {
@@ -320,6 +337,135 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 			}
 		}
 	}
+
+	@Override
+	public String getNewGoodsName(GoodsSku goodsSku, List<GoodsAttrValue> newGoodsAttrValue) {
+		Brand brand = brandService.getBrandById(goodsSku.getBrandId());
+		//获取所有的属性
+//		List<Attribute> attributesList = attributeMapper.getAttributesList(goodsSku.getGoodsSkuId());
+		//跟商品属性值获取所有属性
+		List<Attribute> attributesList = new ArrayList<>();
+		for (GoodsAttrValue goodsAttrValue : newGoodsAttrValue) {
+			AttributeValue attrVal = attributeValueService.getAttrValsByAttrValId(goodsAttrValue.getAttrValueId());
+			Attribute attribute = new Attribute();
+			attribute.setName(attrVal.getAttributeName());
+			attribute.setAttributeValue(attrVal.getValue());
+			attributesList.add(attribute);
+		}
+
+		StringBuffer goodsName = new StringBuffer();
+		if (brand != null){
+			goodsName.append(brand.getName());
+		}
+		goodsName.append(" goodsName");
+
+		Map<String, String> attributeMap = new HashMap<>();
+		if (attributesList != null && attributesList.size() > 0){
+			for (Attribute attribute : attributesList) {
+				attributeMap.put(attribute.getName(), attribute.getAttributeValue());
+			}
+			String taste = attributeMap.get(AttributeOrder.attrOrdes.get(0));
+			if (taste != null && !"".equals(taste)){
+				goodsName.append(" ").append(taste);
+				attributeMap.remove(AttributeOrder.attrOrdes.get(0));
+			}
+			String packing = null;
+			for (String attrOrde : AttributeOrder.attrOrdes) {
+				if (attributeMap.containsKey("包装")){
+					packing = attributeMap.get("包装");
+					attributeMap.remove("包装");
+				}
+				if ( !attrOrde.equals(AttributeOrder.attrOrdes.get(0)) && attributeMap.containsKey(attrOrde)){
+					goodsName.append(" ").append(attributeMap.get(attrOrde));
+					attributeMap.remove(attrOrde);
+				}
+
+			}
+			if (attributeMap != null && attributeMap.size() > 0){
+				Set<String> strings = attributeMap.keySet();
+				for (String attrName : strings) {
+					goodsName.append(" ").append(attributeMap.get(attrName));
+				}
+
+			}
+			if (packing != null){
+				goodsName.append(" /").append(packing);
+			}
+		}
+		return goodsName.toString().replace("goodsName", goodsSku.getName());
+
+	}
+
+	@Override
+	public void exportGoodsData(GoodsSku goodsSku, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		// 只是让浏览器知道要保存为什么文件而已，真正的文件还是在流里面的数据，你设定一个下载类型并不会去改变流里的内容。
+		//而实际上只要你的内容正确，文件后缀名之类可以随便改，就算你指定是下载excel文件，下载时我也可以把他改成pdf等。
+		response.setContentType("application/vnd.ms-excel");
+		// 传递中文参数编码
+		String codedFileName = java.net.URLEncoder.encode("商品信息","UTF-8");
+		response.setHeader("content-disposition", "attachment;filename=" + codedFileName + ".xls");
+		goodsSku.setStatus("NORMAL");
+		List<GoodsSku> goodsLists = goodsSkuMapper.getGoodsLists(goodsSku);
+		// 定义一个工作薄
+		Workbook workbook = new HSSFWorkbook();
+		// 创建一个sheet页
+		Sheet sheet = workbook.createSheet("商品信息");
+		// 创建一行
+		Row row = sheet.createRow(0);
+		// 在本行赋值 以0开始
+
+		row.createCell(0).setCellValue("商品编号");
+		row.createCell(1).setCellValue("商品名");
+		row.createCell(2).setCellValue("商品全名");
+		row.createCell(3).setCellValue("条形码");
+		row.createCell(4).setCellValue("分类名");
+		row.createCell(5).setCellValue("品牌名");
+		row.createCell(6).setCellValue("型号");
+		row.createCell(7).setCellValue("功能");
+		row.createCell(8).setCellValue("产地");
+		row.createCell(9).setCellValue("生产日期");
+		row.createCell(10).setCellValue("有效日期");
+		row.createCell(11).setCellValue("产家");
+		row.createCell(12).setCellValue("其他属性");
+		row.createCell(13).setCellValue("创建时间");
+		row.createCell(14).setCellValue("修改时间");
+		row.createCell(15).setCellValue("添加人");
+		row.createCell(16).setCellValue("创建账号");
+		// 定义样式
+		CellStyle cellStyle = workbook.createCellStyle();
+		// 格式化日期
+		//cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("yyyy-MM-dd"));
+		String pattern = "yyyy-MM-dd HH:mm:ss";
+		// 遍历输出
+		for (int i = 1; i <= goodsLists.size(); i++) {
+			GoodsSku goods = goodsLists.get(i - 1);
+			row = sheet.createRow(i);
+			row.createCell(0).setCellValue(goods.getGoodsSkuId());
+			row.createCell(1).setCellValue(goods.getName());
+			row.createCell(2).setCellValue(goods.getFullName());
+			row.createCell(3).setCellValue(goods.getBarcode());
+			row.createCell(4).setCellValue(goods.getCategoryName());
+			row.createCell(5).setCellValue(goods.getBrandName());
+			row.createCell(6).setCellValue(goods.getModel());
+			row.createCell(7).setCellValue(goods.getFunction());
+			row.createCell(8).setCellValue(goods.getProduceAddress());
+			row.createCell(9).setCellValue(DateUtil.date2String(goods.getProduceDate(),pattern));
+			row.createCell(10).setCellValue(DateUtil.date2String(goods.getValidDate(),pattern));
+			row.createCell(11).setCellValue(goods.getManufacturer());
+			row.createCell(12).setCellValue(goods.getOtherAttribute());
+			row.createCell(13).setCellValue(DateUtil.date2String(goods.getCreateTime(),pattern));
+			row.createCell(14).setCellValue(DateUtil.date2String(goods.getUpdateTime(),pattern));
+			row.createCell(15).setCellValue(goods.getCreateName());
+			row.createCell(16).setCellValue(goods.getUserName());
+
+		}
+		OutputStream  fOut = response.getOutputStream();
+		workbook.write(fOut);
+		fOut.flush();
+		fOut.close();
+	}
+
+
 
 	@Override
 	public String specificationsAdd(String categoryName, String brandName, String attrStr,Integer goodsSkuId) {
@@ -363,16 +509,8 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 	}
 
 	@Override
-	public Object getGoodsLists(GoodsSku goods,String userName) {
-		String name = goods.getFullName();
-		if (name != null && !"".equals(name)){
-			goods.setFullName("%" + name + "%");
-		}
-
-		List<GoodsSku> goodsList = this.getGoodsList(goods);
-		for (GoodsSku goodsSku : goodsList) {
-			packGoodsSku(goodsSku);
-		}
+	public Object getGoodsLists(GoodsSku goods) {
+		List<GoodsSku> goodsList = goodsSkuMapper.getGoodsLists(goods);
 		PageResult<GoodsSku> pageResult = new PageResult<>(goodsList, goods.getTotal());
 		return pageResult;
 	}
@@ -614,12 +752,12 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		return supermarketGoods;
 	}
 
+	@Transactional
 	@Override
 	public String edit(CommonsMultipartFile goodsImage, GoodsSku goodsSku, Integer userId) {
-		String s;
 		try {
 			//判断条形码是否存在
-			String barcode = goodsSku.getBarcode();
+			String barcode = goodsSku.getBarcode().trim();
 			GoodsSku goods = new GoodsSku();
 			int len = 13 - barcode.length();
 			for (int i = 0; i < len; i++){
@@ -629,9 +767,9 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 			goods.setStatus("NORMAL");
 			List<GoodsSku> goodsByGoods = goodsSkuMapper.getGoodsByGoods(goods);
 			if ((goodsByGoods != null && goodsByGoods.size() > 0) && !(goodsByGoods.get(0).getGoodsSkuId() + "").equals(goodsSku.getGoodsSkuId() + "")){
-				return "repeat";
+				return "barcodeRepeat";
 			}
-
+			//修改时间小于2019-03-19 时更新创建时间和创建的account_id
 			GoodsSku goodsSku_new = goodsSkuMapper.getGoodsById(Integer.parseInt(goodsSku.getGoodsSkuId() +""));
 			if (!barcode.equals(goodsSku_new.getBarcode())){
 				if(goodsSku_new.getCreateTime().getTime() < DateUtil.string2Date("2019-03-19 00:00:00","yyyy-MM-dd HH:mm:ss").getTime()){
@@ -639,8 +777,8 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 					goodsSku.setUserId(userId);
 				}
 			}
-			goods.setFullName(null);
-			s = ImageUtil.handleUpload(goodsImage);
+			goods.setBarcode(null);
+			String s = ImageUtil.handleUpload(goodsImage);
 			String createTimeStart = goodsSku.getCreateTimeStart();
 			if(createTimeStart != null && !"".equals(createTimeStart)){
                 Date produceDate = DateUtil.string2Date(createTimeStart, "yyyy-MM-dd HH:mm:ss");
@@ -652,18 +790,15 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
                 Date validDate = DateUtil.string2Date(createTimeEnd, "yyyy-MM-dd HH:mm:ss");
                 goodsSku.setValidDate(validDate);
             }
-			GoodsSku goodsById = goodsSkuMapper.getGoodsById(Integer.parseInt(goodsSku.getGoodsSkuId() + ""));
-			goodsById.setName(goodsSku.getName());
-			String goodsName = getGoodsName(goodsById);
 			//判断商品全称是否存在
+			String goodsName = getGoodsName(goodsSku);
 			goods.setFullName(goodsName);
 			goodsByGoods = goodsSkuMapper.getGoodsByGoods(goods);
 			if ((goodsByGoods != null && goodsByGoods.size() > 0) && !(goodsByGoods.get(0).getGoodsSkuId() + "").equals(goodsSku.getGoodsSkuId() + "")){
-				return "repeat";
+				return "nameRepeat";
 			}
 			goodsSku.setFullName(goodsName);
 			goodsSku.setBarcode(barcode);
-
 			goodsSku.setImage(s);
 			goodsSku.setUpdateTime(new Date());
 			goodsSkuMapper.update(goodsSku);
@@ -679,72 +814,5 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		return supermarketMapper.selectAll(supermarket);
 	}
 
-	@Override
-	public String editGoodsAttribute(String[] attribute,Integer goodsSkuId) {
 
-		List<GoodsAttrValue> goodsAttrValueAdd = new ArrayList<>();
-		List<GoodsAttrValue> goodsAttrValueRemove = new ArrayList<>();
-
-		List<Attribute> attributes = attributeMapper.getAttributes();
-		for (int i = 0; i < attribute.length; i++) {
-			if (attribute[i] != null && !"".equals(attribute[i])){
-				GoodsAttrValue goodsAttrValue = new GoodsAttrValue();
-				Attribute attr = attributes.get(i);
-				AttributeValue attrbuteVal = null;
-				List<AttributeValue> attributeValue = attributeValueMapper.getAttributeValue(attr.getAttributeId(), attribute[i], null);
-				if (attributeValue != null && attributeValue.size() > 0) {
-					attrbuteVal = attributeValue.get(0);
-				}
-
-				goodsAttrValue.setGoodsSkuId(goodsSkuId);
-				goodsAttrValue.setAttributeId(attr.getAttributeId());
-				List<GoodsAttrValue> goodsAttrValueList = goodsAttrValueMapper.getGoodsAttrValue(goodsAttrValue);
-				goodsAttrValue.setAttrValueId(attrbuteVal.getValueId());
-				goodsAttrValue.setCreateTime(new Date());
-				if (goodsAttrValueList != null && goodsAttrValueList.size() > 0){
-					goodsAttrValueMapper.deleteById(goodsAttrValueList.get(0).getGoodsAttrValueId());
-					goodsAttrValueRemove.add(goodsAttrValueList.get(0));
-				}
-				goodsAttrValueMapper.insert(goodsAttrValue);
-				goodsAttrValueAdd.add(goodsAttrValue);
-			}
-		}
-
-		List<GoodsAttrValue> goodsAttrValues = goodsAttrValueService.getGoodsAttrValueByGoodsId(Long.parseLong(goodsSkuId + ""));
-		String attrs = "";
-		for (GoodsAttrValue goodsAttrValue : goodsAttrValues) {
-			AttributeValue attributeValue = attributeValueService.getAttrValsByAttrValId(goodsAttrValue.getAttrValueId());
-			if (attrs.equals("")){
-				attrs += attributeValue.getValue();
-			}else{
-				attrs += "," + attributeValue.getValue();
-			}
-		}
-		GoodsSku goodsSku = new GoodsSku();
-		GoodsSku goods = goodsSkuMapper.getGoodsById(goodsSkuId);
-		//判断商品全称是否存在
-		String fullName = getGoodsName(goods);
-		goodsSku.setFullName(fullName);
-		goodsSku.setStatus("NORMAL");
-		List<GoodsSku> goodsByGoods = goodsSkuMapper.getGoodsByGoods(goodsSku);
-		if (goodsByGoods != null && goodsByGoods.size() > 0){
-			if(goodsByGoods.get(0).getGoodsSkuId() == Long.parseLong(goodsSkuId + "")){
-				return attrs + ":" + fullName;
-			}
-			if(goodsAttrValueAdd != null && goodsAttrValueAdd.size() > 0){
-				goodsAttrValueAdd.forEach(item ->{
-					goodsAttrValueMapper.deleteById(item.getGoodsAttrValueId());
-				});
-			}
-			if(goodsAttrValueRemove != null && goodsAttrValueRemove.size() > 0){
-				goodsAttrValueRemove.forEach(item ->{
-					goodsAttrValueMapper.insert(item);
-				});
-			}
-			return "exist";
-		}
-		goods.setFullName(fullName);
-		goodsSkuMapper.updateGoodsFullName(goods);
-		return attrs + ":" + fullName;
-	}
 }

@@ -12,7 +12,7 @@ public class Supermarket extends BaseEntity {
     private String name;
 
     private String areaCode;
-    
+
     private String areaName;
 
     private String address;
@@ -22,7 +22,7 @@ public class Supermarket extends BaseEntity {
     private String logo;
 
     private Integer orderNo;
-    
+
     private Date updateTime;
 
     private Date createTime;
@@ -54,7 +54,7 @@ public class Supermarket extends BaseEntity {
 	@DateTimeFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
 	private Date createTimeEnd;
 
-	
+
     public Date getCreateTimeStart() {
 		return createTimeStart;
 	}
@@ -183,16 +183,10 @@ public class Supermarket extends BaseEntity {
         return areaName;
     }
 
-    public Integer getUserId() {
-        return userId;
-    }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
 
-    
-    
+
+
     public String getCorrectType() {
 		return correctType;
 	}
@@ -201,7 +195,7 @@ public class Supermarket extends BaseEntity {
 		this.correctType = correctType;
 	}
 
-	
+
 	public Long getCorrectId() {
 		return correctId;
 	}
@@ -219,5 +213,12 @@ public class Supermarket extends BaseEntity {
                 + ", supermarketIdList=" + supermarketIdList + ", createTimeStart=" + createTimeStart
                 + ", createTimeEnd=" + createTimeEnd + "]";
 	}
-    
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 }

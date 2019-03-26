@@ -4,12 +4,14 @@ import com.linayi.dao.area.AreaMapper;
 import com.linayi.dao.community.CommunitySupermarketMapper;
 import com.linayi.dao.correct.CorrectLogMapper;
 import com.linayi.dao.correct.CorrectMapper;
+import com.linayi.dao.goods.GoodsSkuMapper;
 import com.linayi.dao.goods.SupermarketGoodsMapper;
 import com.linayi.dao.supermarket.SupermarketMapper;
 import com.linayi.dao.user.MessageMapper;
 import com.linayi.entity.community.CommunitySupermarket;
 import com.linayi.entity.correct.Correct;
 import com.linayi.entity.correct.CorrectLog;
+import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.goods.SupermarketGoods;
 import com.linayi.entity.order.Orders;
 import com.linayi.entity.order.OrdersSku;
@@ -20,6 +22,7 @@ import com.linayi.service.account.AdminAccountService;
 import com.linayi.service.community.CommunitySupermarketService;
 import com.linayi.service.correct.CorrectService;
 import com.linayi.service.correct.impl.CorrectServiceImpl;
+import com.linayi.service.goods.GoodsSkuService;
 import com.linayi.service.order.OrderService;
 import com.linayi.service.order.SelfOrderMessageService;
 import com.linayi.service.order.SelfOrderService;
@@ -36,10 +39,7 @@ import sun.reflect.generics.tree.VoidDescriptor;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:config/spring-context.xml")
@@ -50,6 +50,9 @@ public class RedisTest {
     private RedisUtil redisUtil;    
     @Resource(name="redisTemplate")
     private RedisTemplate<Serializable, Serializable> redisTemplate;
+
+    @Resource
+    private GoodsSkuMapper goodsSkuMapper;
 
     @Resource
     private CorrectMapper correctMapper;
@@ -81,8 +84,10 @@ public class RedisTest {
     private AdminAccountService adminAccount;
 //    @Autowired
 //    private CustomLabel customLabel;
-	
-    
+
+
+
+
     @Test
     public void testSpringRedis() {
 //    	redisTemplate.delete("myStr");

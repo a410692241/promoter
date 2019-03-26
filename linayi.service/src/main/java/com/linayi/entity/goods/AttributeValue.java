@@ -12,7 +12,9 @@ public class AttributeValue {
     private Integer attributeId;
 
     private String status;
-    
+    //属性名称
+    private String attributeName;
+
     /***
 	 * 属性ID集合
 	 */
@@ -85,5 +87,12 @@ public class AttributeValue {
 		return "AttributeValue [valueId=" + valueId + ", value=" + value + ", attributeId=" + attributeId + ", status="
 				+ status + ", updateTime=" + updateTime + ", createTime=" + createTime + "]";
 	}
-    
+
+    public String getAttributeName() {
+        return attributeName;
+    }
+
+    public void setAttributeName(String attributeName) {
+        this.attributeName = attributeName;
+    }
 }

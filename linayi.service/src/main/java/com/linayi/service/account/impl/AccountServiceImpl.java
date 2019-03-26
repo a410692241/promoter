@@ -184,7 +184,7 @@ public class AccountServiceImpl implements AccountService {
         //添加用户
         User user = new User();
         user.setNickname(mobile);
-        user.setNickname(mobile);
+        user.setMobile(mobile);
         user.setCreateTime(new Date());
         user.setUpdateTime(new Date());
         userMapper.insertUser(user);

@@ -15,11 +15,11 @@
 	</resultMap>
   <insert id="insert" parameterType="com.linayi.entity.supermarket.Supermarket" useGeneratedKeys="true" keyProperty="supermarketId">
     insert into supermarket (supermarket_id, name, area_code,
-      address, status, logo, 
+      address, status, logo,
       order_no, update_time, create_time
       )
-    values (#{supermarketId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{areaCode,jdbcType=VARCHAR}, 
-      #{address,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, 
+    values (#{supermarketId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{areaCode,jdbcType=VARCHAR},
+      #{address,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR},
       #{orderNo,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -84,27 +84,27 @@
       </if>
     </trim>
   </insert>
-  
-  
+
+
   <!-- 根据id查找超市 -->
   <select id="selectSupermarketBysupermarketId" resultType="com.linayi.entity.supermarket.Supermarket">
 		select
 		 	`supermarket_id`,`name`,`area_code`,`address`,`status`,`logo`,`order_no`,`user_id`,`update_time`,`create_time`,`procurer_id`
-		from 
+		from
 			`supermarket` where supermarket_id=#{value}
 	</select>
 	<!-- 根据SupermarketId集合查找超市 -->
   <select id="selectSupermarketList" resultType="com.linayi.entity.supermarket.Supermarket">
 		select
 		 	`supermarket_id`,`name`,`area_code`,`address`,`status`,`logo`,`order_no`,`user_id`,`update_time`,`create_time`,`procurer_id`
-		from 
-			`supermarket` 
+		from
+			`supermarket`
 		<where>
 			<if test="supermarketIdList.size() > 0 and supermarketIdList != null">
 				and supermarket_id in
 				<foreach collection="supermarketIdList" index="index" item="item" open="(" separator="," close=")">
-                	${item}       
-        		</foreach>  
+                	${item}
+        		</foreach>
 			</if>
 		</where>
 		order by supermarket_id desc
@@ -113,24 +113,24 @@
   <select id="selectSupermarketListTwo" resultType="com.linayi.entity.supermarket.Supermarket">
 		select
 		 	`supermarket_id`,`name`,`area_code`,`address`,`status`,`logo`,`order_no`,`update_time`,`create_time`
-		from 
-			`supermarket` 
+		from
+			`supermarket`
 		<where>
 			<if test="supermarketIdList.size() > 0 and supermarketIdList != null">
 				and supermarket_id not in
 				<foreach collection="supermarketIdList" index="index" item="item" open="(" separator="," close=")">
-                	${item}       
-        		</foreach>  
+                	${item}
+        		</foreach>
 			</if>
 		</where>
 		order by supermarket_id desc
 	</select>
-	
+
 	<!-- 查找所有的超市 -->
 	<select id="selectAll" resultType="com.linayi.entity.supermarket.Supermarket">
 		select
 			`supermarket_id`,`name`,`area_code`,`address`,`status`,`logo`,`order_no`,`user_id`,`update_time`,`create_time`,`procurer_id`
-		from 
+		from
 			`supermarket`
 		<where>
 			<if test="supermarketId!=null and supermarketId!=''">
@@ -176,7 +176,7 @@
 		</where>
 		order by supermarket_id desc
 	</select>
-	
+
 	<!--修改  -->
   <update id="updateSupermarketBysupermarketId" parameterType="com.linayi.entity.supermarket.Supermarket">
 		update `supermarket`
@@ -212,33 +212,33 @@
 				 procurer_id=#{procurerId}
 			</if>
 		</set>
-		where 
+		where
 			supermarket_id=#{supermarketId}
 	</update>
-	
+
 	<!-- 删除 -->
 	<delete id="deleteSupermarketrBysupermarketId">
 		delete from `supermarket` where
 		supermarket_id=#{value}
 	</delete>
-	
+
 	<insert id="insertSupermarket" parameterType="com.linayi.entity.supermarket.Supermarket" useGeneratedKeys="true" keyProperty="supermarketId">
-		 insert into supermarket (supermarket_id, name, area_code, 
-      address, status, logo, 
+		 insert into supermarket (supermarket_id, name, area_code,
+      address, status, logo,
       order_no, user_id, update_time, create_time, procurer_id
       )
-    values (#{supermarketId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{areaCode,jdbcType=VARCHAR}, 
-      #{address,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, 
+    values (#{supermarketId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{areaCode,jdbcType=VARCHAR},
+      #{address,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR},
       #{orderNo,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP},
       #{procurerId,jdbcType=INTEGER}
       )
 	</insert>
-	
-	
-	
+
+
+
   <!-- 根据用户的uid的默认收货地址找到绑定的5家超市 -->
   <!--List<Supermarket> getSupermarketByAddress(); -->
-  <select id="getSupermarketByAddress" 
+  <select id="getSupermarketByAddress" parameterType="java.lang.Integer"
   resultType="com.linayi.entity.supermarket.Supermarket">
   	SELECT distinct
 		s.supermarket_id supermarketId,
@@ -249,15 +249,15 @@
 		s.logo,
 		s.order_no orderNo,
 		s.update_time updateTime,
-		s.create_time  createTime     
+		s.create_time  createTime
   	FROM
   		receive_address ra,small_community sc,community_supermarket cs,supermarket s,user u
   	WHERE
   		ra.address_one=sc.small_community_id
-		AND sc.community_id=cs.community_id 
-  		AND cs.supermarket_id = s.supermarket_id 
+		AND sc.community_id=cs.community_id
+  		AND cs.supermarket_id = s.supermarket_id
   		AND u.default_receive_address_id=ra.receive_address_id
-		  <if test="userId!=null">
+		  <if test="userId != null">
 			  AND ra.user_id = #{userId}
 		  </if>
 
@@ -267,12 +267,12 @@
 	  select `supermarket_id`,`name`,`area_code`,`address`,`status`,`logo`,`user_id`,`procurer_id`,`order_no`,`update_time`,`create_time`
 	  from supermarket where procurer_id = #{userId}
   </select>
-  
+
     <select id="selectSupermarketByAreaCode" resultType="com.linayi.entity.supermarket.Supermarket">
 	  select `supermarket_id`,`name`,`area_code`,`address`,`status`,`logo`,`user_id`,`procurer_id`,`order_no`,`update_time`,`create_time`
 	  from supermarket where area_code = #{areaCode}
   </select>
-  	
+
   	<!-- 根据社区id获取超市 -->
   	<select id="getSupermarketBycommunityId" resultType="java.lang.String">
   		SELECT
@@ -282,9 +282,9 @@
   		WHERE
   			s.supermarket_id=cs.supermarket_id
   		AND
-  			cs.community_id=#{communityId}			
-  	
+  			cs.community_id=#{communityId}
+
   	</select>
-  
-  
+
+
 </mapper>

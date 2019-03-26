@@ -196,7 +196,6 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 				User user=new User();
 				user.setMobile(orderManMember.getMobile());
 				User currentUser = userService.selectUserList(user).stream().findFirst().orElse(null);
-				System.out.println("猴子"+userService.selectUserList(user).get(0).getHeadImage());
 				if(currentUser != null) {
 					orderManMember.setNickname(currentUser.getNickname());
 					orderManMember.setHeadImage(ImageUtil.dealToShow(currentUser.getHeadImage()));
