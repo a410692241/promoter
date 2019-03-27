@@ -32,6 +32,7 @@ public class AuthenticationInterceptor {
     	notNeedCheckTokenMethods.add("/account/account/regist.do");
     	notNeedCheckTokenMethods.add("/user/weixin/getAuthUrl.do");
     	notNeedCheckTokenMethods.add("/user/weixin/getCode.do");
+    	notNeedCheckTokenMethods.add("/user/weixin/getLinShengCode.do");
     	notNeedCheckTokenMethods.add("/account/account/getValidCode.do");
     	notNeedCheckTokenMethods.add("/account/account/changePsw.do");
     	notNeedCheckTokenMethods.add("/account/account/resetPsw.do");
