@@ -213,6 +213,8 @@ public class OrderServiceImpl implements OrderService {
         order.setUserId(userId);
         order.setAddressOne(smallCommunity.getAreaCode());
         order.setAddressTwo(smallCommunity.getName());
+        //新增小区ID
+        order.setSmallCommunityId(smallCommunity.getSmallCommunityId());
         order.setAddressThree(receiveAddress.getAddressTwo());
         order.setReceiverName(receiveAddress.getReceiverName());
         order.setMobile(receiveAddress.getMobile());
@@ -816,23 +818,23 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public Integer updateOrderReceivedStatus(Long ordersId) {
-		//通过订单ordersId查询订单信息 
+		//通过订单ordersId查询订单信息
 		Orders order =ordersMapper.getOrderById(ordersId);
 		int cou = 0;
-		if("PROCURE_FINISHED".equals(order.getCommunityStatus())){			
+		if("PROCURE_FINISHED".equals(order.getCommunityStatus())){
 		//根据orderId获取数量大于0的采买任务状态集合
 		List<String> seceiveStatusList = procurementTaskMapper.getReceiveStatusByOrderId(ordersId);
-		
+
 		if(seceiveStatusList.size()>0) {
 
 			if(!seceiveStatusList.contains("WAIT_RECEIVE")){ //不包含等待收货
-			
+
 				Orders orders = new Orders();
 				orders.setCommunityStatus("RECEIVED");
 				orders.setOrdersId(ordersId);
 				//修改订单社区状态为全部已收货
 				cou = ordersMapper.updateOrderById(orders);
-			
+
 				}
 			}
 		}
