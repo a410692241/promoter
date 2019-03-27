@@ -111,13 +111,16 @@ public class ProcurementController extends BaseController {
 
 	/**
 	 * 改变合并采买任务状态
-	 * @param goodsSkuId
-	 * @param quantity 采买数量 - 缺货数量
 	 * @return
 	 */
 	@RequestMapping("/updateProcurStatus.do")
-	public Object updateProcurmentStatus(Integer goodsSkuId, Integer quantity){
+	public Object updateProcurmentStatus(@RequestBody Map<String, Object> param){
 		try {
+			ParamValidUtil<ProcurementTask> pvu = new ParamValidUtil<>(param);
+			pvu.Exist("quantity","goodsSkuId");
+			//采买数量 - 缺货数量
+			Integer quantity = Integer.parseInt(param.get("quantity") +"");
+			Integer goodsSkuId = Integer.parseInt(param.get("goodsSkuId") +"");
 			Integer userId = getUserId();
 			procurementService.updateProcurmentStatus(goodsSkuId, quantity,userId);
 			return new ResponseData("success");

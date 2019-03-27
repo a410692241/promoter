@@ -405,10 +405,13 @@
                 update_time = #{updateTime},
             </if>
             <if test="boxNo != null">
-            	box_no=#{boxNo}
+            	box_no=#{boxNo},
             </if>
             <if test="createTime != null">
-                create_time = #{createTime}
+                create_time = #{createTime},
+            </if>
+            <if test="procureTime != null">
+                procure_time = #{procureTime}
             </if>
         </set>
         where procurement_task_id = #{procurementTaskId}
@@ -461,7 +464,7 @@
          ORDER BY pt.procure_time DESC
     </select>
 	<select id="getProcurements" resultType="com.linayi.entity.procurement.ProcurementTask">
-        select  <include refid="Base_Column_List"/> from procurement_task where community_id = #{communityId} and pt.procure_status = 'PROCURING' and pt.goods_sku_id = #{goodsSkuId}
+        select  <include refid="Base_Column_List"/> from procurement_task where community_id = #{communityId} and procure_status = 'PROCURING' and goods_sku_id = #{goodsSkuId}
         ORDER BY create_time ASC
     </select>
 
