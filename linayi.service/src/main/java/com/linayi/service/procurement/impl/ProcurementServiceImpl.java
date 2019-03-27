@@ -73,7 +73,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 	@Override
 	public List<ProcurementTask> getProcurementTaskStatus(ProcurementTask procurementTask) {
 
-		
+
 
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskStatus(procurementTask);
 		if(procurementTaskList.size()>0) {
@@ -102,30 +102,35 @@ public class ProcurementServiceImpl implements ProcurementService {
 	}
 
 	@Override
-	public List<ProcurementTask> getCommunityProcurement(Integer communityId, String procureStatus) {
+	public List<ProcurementTask> getCommunityProcurement(Integer userId, String procureStatus) {
+		Integer communityId = supermarketMapper.getSupermarketCommunityId(userId);
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementList(communityId, procureStatus);
-		if (procurementTaskList != null && procurementTaskList.size() > 0){
+		/*if (procurementTaskList != null && procurementTaskList.size() > 0){
 			for (ProcurementTask procurementTask : procurementTaskList) {
 				procurementTask.setCommunityId(communityId);
 			}
-		}
+		}*/
 		return procurementTaskList;
 	}
 
 	@Transactional
 	@Override
-	public void updateProcurmentStatus(Integer goodsSkuId, Integer quantity, Integer communityId) {
+	public void updateProcurmentStatus(Integer goodsSkuId, Integer quantity, Integer userId) {
+		Integer communityId = supermarketMapper.getSupermarketCommunityId(userId);
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurements(goodsSkuId,communityId);
 		if (quantity == null){
 			//价高
 			if (procurementTaskList != null && procurementTaskList.size() > 0){
 				for (ProcurementTask procurementTask : procurementTaskList) {
 					procurementTask.setProcureStatus("PRICE_HIGH");
+					procurementTask.setUpdateTime(new Date());
 					procurementTaskMapper.updateProcurementTaskById(procurementTask);
 				}
 			}
-		}else if(quantity  > 0){
+		}else if(quantity > 0){
 			//缺货
+
+
 			if (procurementTaskList != null && procurementTaskList.size() > 0){
 				for (ProcurementTask procurementTask : procurementTaskList) {
 					if (procurementTask.getQuantity() <= quantity){
@@ -134,6 +139,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 					}else {
 						procurementTask.setProcureStatus("LACK");
 					}
+					procurementTask.setUpdateTime(new Date());
 					procurementTaskMapper.updateProcurementTaskById(procurementTask);
 				}
 			}
@@ -142,6 +148,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 			if (procurementTaskList != null && procurementTaskList.size() > 0){
 				for (ProcurementTask procurementTask : procurementTaskList) {
 					procurementTask.setProcureStatus("BOUGHT");
+					procurementTask.setUpdateTime(new Date());
 					procurementTaskMapper.updateProcurementTaskById(procurementTask);
 				}
 			}
@@ -157,15 +164,15 @@ public class ProcurementServiceImpl implements ProcurementService {
 		procurementTask.setImage(ImageUtil.dealToShow(goodsSkuMapper.getGoodsById(procurementTask.getGoodsSkuId()).getImage()));
 
 		procurementTask.setServiceFeeString(10);
-		
+
 		procurementTask.setSupermarketName(supermarketMapper.selectSupermarketBysupermarketId(procurementTask.getSupermarketId()).getName());
-		
+
 		procurementTask.setBuyUserName(userMapper.selectUserByuserId(procurementTask.getUserId()).getRealName()); //采买员姓名
 		if (procurementTask.getActualQuantity() != null && procurementTask.getPrice() != null){
 			procurementTask.setTotalPrice(procurementTask.getActualQuantity() * procurementTask.getPrice()+"");
 		}
 
-		
+
 		return procurementTask;
 	}
 
@@ -374,9 +381,9 @@ public class ProcurementServiceImpl implements ProcurementService {
 	public Integer updateOrderStatus(ProcurementTask procurementTask) {
 		//根据procurementTaskId查询任务列表
 		ProcurementTask newProcurementTask = procurementTaskMapper.getProcurementById(procurementTask.getProcurementTaskId());
-		
+
 		procurementTask.setProcureQuantity(newProcurementTask.getActualQuantity());
-		
+
 		procurementTask.setReceiveStatus("RECEIVED");
 		//将采买任务表改成已收货
 		Integer order = procurementTaskMapper.updateProcurementTaskById(procurementTask);

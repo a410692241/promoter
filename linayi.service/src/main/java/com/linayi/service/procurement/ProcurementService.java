@@ -27,21 +27,21 @@ public interface ProcurementService {
      * @param procurementTask
      */
     void updateProcurement(ProcurementTask procurementTask);
-    
-    
-  
-    
 
-    
+
+
+
+
+
     //根据任务id获取任务信息
     ProcurementTask getProcurementById(Long procurementTaskId);
 
     //返回任务列表和剩余的超市及价格
     List<ProcurementTask> showProcurementTaskAndOrderGoods(ProcurementTask procurementTask);
-    
+
     //根据任务id获取orderId而后修改订单状态
     Integer updateOrderStatus(ProcurementTask procurementTask);
-    
+
     /**
      * 根据订单id和实际采买数量大于0查询采买任务表
      * @param orderId
@@ -52,8 +52,8 @@ public interface ProcurementService {
     void updateOrdersGoodsStatus(ProcurementTask procurementTask);
 
     ProcurementTask getProcurementTaskLast(ProcurementTask procurementTask);
-    
-    
+
+
     /**
      * 获取状态为未收货并且数量大于0的
      * @param procurementTask
@@ -63,7 +63,7 @@ public interface ProcurementService {
 
     List<Community> getProcurementCommunity(Integer userId);
 
-    List<ProcurementTask> getCommunityProcurement(Integer communityId, String procureStatus);
+    List<ProcurementTask> getCommunityProcurement(Integer userId, String procureStatus);
 
-    void updateProcurmentStatus(Integer goodsSkuId, Integer quantity, Integer communityId);
+    void updateProcurmentStatus(Integer goodsSkuId, Integer quantity, Integer userId);
 }

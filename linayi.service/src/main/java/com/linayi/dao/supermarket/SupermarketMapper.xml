@@ -286,5 +286,8 @@
 
   	</select>
 
+	<select id="getSupermarketCommunityId" resultType="java.lang.Integer">
+		select cs.community_id from supermarket s join community_supermarket cs on s.user_id = #{userId} and cs.supermarket_id = s.supermarket_id
+	</select>
 
 </mapper>

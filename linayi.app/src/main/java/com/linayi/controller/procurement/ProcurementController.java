@@ -91,13 +91,14 @@ public class ProcurementController extends BaseController {
 
 
 	/**
-	 * 获取社区采买任务列表
+	 * 获取社区合并采买任务列表
 	 * @return
 	 */
 	@RequestMapping("/getCommunityPros.do")
-	public Object getCommunityProcurementList(Integer communityId,String procureStatus){
+	public Object getCommunityProcurementList(String procureStatus){
 		try {
-			List<ProcurementTask> procurementTaskList = procurementService.getCommunityProcurement(communityId, procureStatus);
+			Integer userId = getUserId();
+			List<ProcurementTask> procurementTaskList = procurementService.getCommunityProcurement(userId, procureStatus);
 			return new ResponseData(procurementTaskList);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -106,31 +107,31 @@ public class ProcurementController extends BaseController {
 	}
 
 	/**
-	 * 改变采买任务状态
+	 * 改变合并采买任务状态
 	 * @param goodsSkuId
-	 * @param quantity
-	 * @param communityId
+	 * @param quantity 采买数量 - 缺货数量
 	 * @return
 	 */
 	@RequestMapping("/updateProcurStatus.do")
-	public Object updateProcurmentStatus(Integer goodsSkuId, Integer quantity, Integer communityId){
+	public Object updateProcurmentStatus(Integer goodsSkuId, Integer quantity){
 		try {
-			procurementService.updateProcurmentStatus(goodsSkuId, quantity,communityId);
+			Integer userId = getUserId();
+			procurementService.updateProcurmentStatus(goodsSkuId, quantity,userId);
 			return new ResponseData("success");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return new ResponseData("F", ErrorType.SYSTEM_ERROR.getErrorMsg());
 	}
-	
+
 	//根据社区id和收货状态查询采买任务列表
 	@RequestMapping("/getProcurementTask.do")
 	public Object getProcurementTask(@RequestBody ProcurementTask procurementTask) {
-		
+
 		try {
 			//社区id
 			procurementTask.setCommunityId(getCommunityId());
-					
+
     		if(procurementTask.getPageSize() == null){
     			procurementTask.setPageSize(15);
     		}
@@ -141,61 +142,61 @@ public class ProcurementController extends BaseController {
     		if(totalPage <= 0){
     			totalPage++;
     		}
-    		
+
     		Map<String , Object> map = new HashMap<>();
     		map.put("data", procurementTaskList);
     		map.put("totalPage", totalPage);
     		map.put("currentPage",procurementTask.getCurrentPage() );
     		return new ResponseData(map);
-		
+
 		} catch (Exception e) {
-			
+
 			return new ResponseData(ErrorType.SYSTEM_ERROR);
 		}
-		
+
 	}
-	
-	
+
+
 	//买手收货详情页
 	@RequestMapping("/receivingDetails.do")
 	public Object receivingDetails(@RequestBody ProcurementTask procurementTask) {
-		
+
 		try {
 			ProcurementTask newprocurementTask = procurementService.getProcurementById(procurementTask.getProcurementTaskId());
 			return new  ResponseData(newprocurementTask);
 		} catch (Exception e) {
-		
+
 			return new ResponseData(ErrorType.SYSTEM_ERROR);
 		}
-		
+
 	}
-	
+
 	//买手收货详情点击验货完毕
 	@RequestMapping("/inspectionComplete.do")
 	public Object inspectionComplete(@RequestBody ProcurementTask procurementTask) {
-		
+
 		try {
 			Integer newprocurementTask = procurementService.updateOrderStatus(procurementTask);
 			return new  ResponseData(newprocurementTask);
 		} catch (Exception e) {
-		
+
 			return new ResponseData(ErrorType.SYSTEM_ERROR);
 		}
-		
+
 	}
-	
+
 	 @RequestMapping("/boxingDetails.do")
 	    public Object boxingDetails(@RequestBody Map<String, Object> param){//前端参数 ordersId
 	    	try {
 	    		ParamValidUtil<ProcurementTask> pvu = new ParamValidUtil<>(param);
 	       	 	ProcurementTask procurementTask = pvu.transObj(ProcurementTask.class);
-	       	 	
+
 	       	 	List<ProcurementTask> ProcurementTaskList = procurementService.getProcurementTaskByOrderIdAndActualQuantity(procurementTask);
 	       	 	return new ResponseData(ProcurementTaskList);
 			} catch (Exception e) {
 				return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
 			}
-	    	
+
 	    }
 
 
