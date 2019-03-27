@@ -10,9 +10,9 @@ import com.linayi.entity.procurement.ProcurementTask;
 public interface ProcurementTaskMapper {
 
     ProcurementTask selectByPrimaryKey(Long primaryKey);
-    
+
     void insert(ProcurementTask procurementTask);
-  
+
 
     List<ProcurementTask> getProcurementTaskList(ProcurementTask procurementTask);
 
@@ -43,15 +43,15 @@ public interface ProcurementTaskMapper {
      * @return
      */
     List<String> getReceiveStatusByOrderId(Long ordersId);
-    
-    
+
+
     /**
      * 获取状态为未收货并且数量大于0的
      * @param procurementTask
      * @return
      */
     List<ProcurementTask> getProcurementTaskStatus(ProcurementTask procurementTask);
-    
+
     List<ProcurementTask> getProcurementTaskByOrdersId(Long ordersId);
     /**
      * 通过订单Id和箱号实际数量大于0获取商品id和数量
@@ -66,7 +66,7 @@ public interface ProcurementTaskMapper {
      * @param procureStatus
      * @return
      */
-    List<ProcurementTask> getCommunityProcurementList(@Param("communityId") Integer communityId, String procureStatus);
+    List<ProcurementTask> getCommunityProcurementList(@Param("communityId") Integer communityId, @Param("procureStatus")String procureStatus);
 
     /**
      * 获取在同一个社区商品一样的所有的采买任务
@@ -74,5 +74,5 @@ public interface ProcurementTaskMapper {
      * @param communityId
      * @return
      */
-    List<ProcurementTask> getProcurements(@Param("procureStatus")Integer goodsSkuId, @Param("communityId")Integer communityId);
+    List<ProcurementTask> getProcurements(@Param("goodsSkuId")Integer goodsSkuId, @Param("communityId")Integer communityId);
 }

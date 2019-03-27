@@ -185,6 +185,8 @@ public class ProcurementServiceImpl implements ProcurementService {
 			if (procurementTaskList != null && procurementTaskList.size() > 0){
 				for (ProcurementTask procurementTask : procurementTaskList) {
                     procurementTask.setProcureTime(procureTime);
+                    procurementTask.setProcureQuantity(procurementTask.getQuantity());
+                    procurementTask.setActualQuantity(procurementTask.getQuantity());
 					procurementTask.setProcureStatus("BOUGHT");
 					procurementTask.setUpdateTime(new Date());
 					procurementTaskMapper.updateProcurementTaskById(procurementTask);

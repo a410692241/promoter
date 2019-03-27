@@ -95,8 +95,11 @@ public class ProcurementController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/getCommunityPros.do")
-	public Object getCommunityProcurementList(String procureStatus){
+	public Object getCommunityProcurementList(@RequestBody Map<String, Object> param){
 		try {
+			ParamValidUtil<ProcurementTask> pvu = new ParamValidUtil<>(param);
+			pvu.Exist("procureStatus");
+			String procureStatus =param.get("procureStatus") + "";
 			Integer userId = getUserId();
 			List<ProcurementTask> procurementTaskList = procurementService.getCommunityProcurement(userId, procureStatus);
 			return new ResponseData(procurementTaskList);
