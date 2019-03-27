@@ -74,7 +74,7 @@
             <if test="receiveTime != null" >
                 receive_time,
             </if>
-            
+
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="procurementTaskId != null" >
@@ -308,13 +308,13 @@
         </where>
         order by create_time DESC
     </select>
-    
+
       <select id="getProcurementTaskStatus" resultType="com.linayi.entity.procurement.ProcurementTask">
         select <include refid="Base_Column_List"/>
         from procurement_task
        where
            community_id = #{communityId}
-        AND  receive_status="WAIT_RECEIVE" 
+        AND  receive_status="WAIT_RECEIVE"
         AND  actual_quantity>0
     </select>
 
@@ -424,9 +424,9 @@
 		WHERE
 			o.community_status="PROCURE_FINISHED"
 		AND
-			o.orders_id=#{ordersId}	
+			o.orders_id=#{ordersId}
 		AND
-			pt.actual_quantity>0					
+			pt.actual_quantity>0
 
 	</select>
 	<!-- 通过订单Id和实际数量大于0获取商品id和数量  List<ProcurementTask> getListByOrdersId(Long ordersId); -->
@@ -439,11 +439,11 @@
 			orders_id=#{ordersId}
 		and
 			actual_quantity >0
-		and 
+		and
 			box_no =#{boxNo}
 	</select>
 	<select id="getCommunityProcurementList" resultType="com.linayi.entity.procurement.ProcurementTask">
-        select MIN(p.price) price, SUM(pt.quantity) totalQuantity, gs.full_name fullName, pt.goods_sku_id .goodsSkuId from procurement_task pt
+        select MIN(p.price) * SUM(pt.actual_quantity) totalPrice, SUM(pt.actual_quantity) totalQuantity, (select name from community where pt.community_id = #{communityId}) communityName, pt.goods_sku_id .goodsSkuId from procurement_task pt
        join goodsSku gs on gs.goods_sku_id = pt.goods_sku_id and pt.community_id = #{communityId}
          <where>
              <if test="procureStatus != null and procureStatus == 'PROCURING'">
@@ -453,8 +453,12 @@
                  pt.procure_status != 'PROCURING'
              </if>
          </where>
-         GROUP BY pt.goods_sku_id
-         ORDER BY SUM(pt.quantity) DESC
+         GROUP BY
+         <if test="procureStatus != null and procureStatus == 'FINISHED'">
+            pt.procure_time
+          </if>
+            pt.goods_sku_id
+         ORDER BY pt.procure_time DESC
     </select>
 	<select id="getProcurements" resultType="com.linayi.entity.procurement.ProcurementTask">
         select  <include refid="Base_Column_List"/> from procurement_task where community_id = #{communityId} and pt.procure_status = 'PROCURING'

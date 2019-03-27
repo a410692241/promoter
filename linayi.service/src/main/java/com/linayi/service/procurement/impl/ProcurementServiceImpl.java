@@ -105,11 +105,6 @@ public class ProcurementServiceImpl implements ProcurementService {
 	public List<ProcurementTask> getCommunityProcurement(Integer userId, String procureStatus) {
 		Integer communityId = supermarketMapper.getSupermarketCommunityId(userId);
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementList(communityId, procureStatus);
-		/*if (procurementTaskList != null && procurementTaskList.size() > 0){
-			for (ProcurementTask procurementTask : procurementTaskList) {
-				procurementTask.setCommunityId(communityId);
-			}
-		}*/
 		return procurementTaskList;
 	}
 
@@ -118,27 +113,69 @@ public class ProcurementServiceImpl implements ProcurementService {
 	public void updateProcurmentStatus(Integer goodsSkuId, Integer quantity, Integer userId) {
 		Integer communityId = supermarketMapper.getSupermarketCommunityId(userId);
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurements(goodsSkuId,communityId);
+		Date procureTime = new Date();
 		if (quantity == null){
 			//价高
 			if (procurementTaskList != null && procurementTaskList.size() > 0){
 				for (ProcurementTask procurementTask : procurementTaskList) {
 					procurementTask.setProcureStatus("PRICE_HIGH");
 					procurementTask.setUpdateTime(new Date());
+                    procurementTask.setProcureTime(procureTime);
 					procurementTaskMapper.updateProcurementTaskById(procurementTask);
 				}
 			}
 		}else if(quantity > 0){
 			//缺货
-
-
 			if (procurementTaskList != null && procurementTaskList.size() > 0){
 				for (ProcurementTask procurementTask : procurementTaskList) {
+                    procurementTask.setProcureTime(procureTime);
 					if (procurementTask.getQuantity() <= quantity){
 						procurementTask.setProcureStatus("BOUGHT");
-						quantity -= procurementTask.getQuantity();
+                        procurementTask.setActualQuantity(procurementTask.getQuantity());
 					}else {
-						procurementTask.setProcureStatus("LACK");
+                        int num = quantity;
+                        if (quantity < 0){
+                            num = 0;
+                        }
+                        procurementTask.setProcureStatus("LACK");
+                        procurementTask.setActualQuantity(num);
+                        procurementTask.setProcureQuantity(num);
+
+                        OrdersGoods ordersGoods = new OrdersGoods();
+                        ordersGoods.setOrdersGoodsId(procurementTask.getOrdersGoodsId());
+                        List<OrdersGoods> ordersGoodsList = ordersGoodsMapper.getOrdersGoodsByOrdersGoods(ordersGoods);
+                        OrdersGoods ordersGoods1 = ordersGoodsList.get(0);
+                        List<Map> list = JSON.parseArray(ordersGoods1.getSupermarketList(), Map.class);
+                        Integer supermarketId = procurementTask.getSupermarketId();
+                        Map map = list.stream().filter(item -> item.get("supermarket_id") == supermarketId).collect(Collectors.toList()).stream().findFirst().orElse(null);
+                        int i = list.indexOf(map);
+                        if (i == list.size() - 1 ){
+                            //采买任务已完成
+                            ordersGoods1.setProcureStatus("FINISHED");
+                            ordersGoodsMapper.updateOrdersGoodsById(ordersGoods1);
+                        }
+
+                        boolean isFinish = true;
+                        List<OrdersGoods> ordersGoodsList1 = ordersGoodsMapper.getOrdersGoodsByOrdersId(ordersGoods1.getOrdersId());
+                        for (OrdersGoods orderGoods : ordersGoodsList1) {
+                            String status = orderGoods.getProcureStatus();
+                            if (!"FINISHED".equals(status)){
+                                isFinish = false;
+                            }
+                        }
+
+                        Orders orders = new Orders();
+                        orders.setOrdersId(ordersGoods1.getOrdersId());
+
+                        if (isFinish){
+                            //订单采买完成
+                            orders.setCommunityStatus("PROCURE_FINISHED");
+                            ordersMapper.updateOrderById(orders);
+                        }
+                        orderService.updateOrderReceivedStatus(ordersGoods1.getOrdersId());
 					}
+                    quantity -= procurementTask.getQuantity();
+
 					procurementTask.setUpdateTime(new Date());
 					procurementTaskMapper.updateProcurementTaskById(procurementTask);
 				}
@@ -147,6 +184,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 			//已买
 			if (procurementTaskList != null && procurementTaskList.size() > 0){
 				for (ProcurementTask procurementTask : procurementTaskList) {
+                    procurementTask.setProcureTime(procureTime);
 					procurementTask.setProcureStatus("BOUGHT");
 					procurementTask.setUpdateTime(new Date());
 					procurementTaskMapper.updateProcurementTaskById(procurementTask);

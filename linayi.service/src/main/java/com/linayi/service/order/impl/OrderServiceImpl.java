@@ -734,6 +734,7 @@ public class OrderServiceImpl implements OrderService {
         ProcurementTask procurementTask2 = new ProcurementTask();
         procurementTask2.setOrdersGoodsId(procurementTask.getOrdersGoodsId());
         List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskListAsc(procurementTask2);
+        ProcurementTask procurementTask1 = procurementTaskList.get(0);
         ProcurementTask procurementTask3 = procurementTaskList.get(procurementTaskList.size() - 1);
         ordersGoods.setOrdersId(Long.parseLong(procurementTask.getOrdersId() + ""));
         ordersGoods.setGoodsSkuId(procurementTask.getGoodsSkuId());
@@ -747,6 +748,7 @@ public class OrderServiceImpl implements OrderService {
         map = list.get(i+1);
 
         Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(Integer.parseInt(map.get("supermarket_id") + ""));
+        procurementTask.setQuantity(procurementTask1.getQuantity() - procurementTask1.getProcureQuantity());
         procurementTask.setProcurementTaskId(null);
         procurementTask.setProcureStatus("PROCURING");
         procurementTask.setPrice(Integer.parseInt(map.get("price") + ""));
