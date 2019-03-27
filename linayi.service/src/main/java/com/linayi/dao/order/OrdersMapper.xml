@@ -244,20 +244,20 @@
     </select>
 
   <insert id="insert" parameterType="com.linayi.entity.order.Orders" useGeneratedKeys="true" keyProperty="ordersId">
-    insert into orders (orders_id, user_id, receiver_name, 
+    insert into orders (orders_id, user_id, receiver_name,
       mobile, address_one, address_two, address_three,
-      pay_way, save_amount, service_fee, 
-      extra_fee, arrive_time, actual_arrive_time, 
+      pay_way, save_amount, service_fee,
+      extra_fee, arrive_time, actual_arrive_time,
       remark, quantity, amount, receive_address_id,
       user_status, community_status, community_id, address_type,
-      update_time, create_time <if test="orderType!=null and orderType!=''">,order_type</if>)
-    values (#{ordersId,jdbcType=BIGINT}, #{userId,jdbcType=INTEGER}, #{receiverName,jdbcType=VARCHAR}, 
+      update_time, create_time,small_community_id <if test="orderType!=null and orderType!=''">,order_type</if>)
+    values (#{ordersId,jdbcType=BIGINT}, #{userId,jdbcType=INTEGER}, #{receiverName,jdbcType=VARCHAR},
       #{mobile,jdbcType=VARCHAR}, #{addressOne,jdbcType=VARCHAR}, #{addressTwo,jdbcType=VARCHAR}, #{addressThree,jdbcType=VARCHAR},
-      #{payWay,jdbcType=VARCHAR}, #{saveAmount,jdbcType=INTEGER}, #{serviceFee,jdbcType=INTEGER}, 
+      #{payWay,jdbcType=VARCHAR}, #{saveAmount,jdbcType=INTEGER}, #{serviceFee,jdbcType=INTEGER},
       #{extraFee,jdbcType=INTEGER}, #{arriveTime,jdbcType=TIMESTAMP}, #{actualArriveTime,jdbcType=TIMESTAMP},
       #{remark,jdbcType=VARCHAR}, #{quantity,jdbcType=INTEGER}, #{amount,jdbcType=INTEGER}, #{receiveAddressId,jdbcType=INTEGER},
       #{userStatus,jdbcType=VARCHAR}, #{communityStatus,jdbcType=VARCHAR}, #{communityId,jdbcType=INTEGER}, #{addressType,jdbcType=VARCHAR},
-      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}<if test="orderType!=null and orderType!=''">,#{orderType}</if>)
+      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP},#{smallCommunityId,jdbcType=INTEGER}<if test="orderType!=null and orderType!=''">,#{orderType}</if>)
   </insert>
   <insert id="insertSelective" parameterType="com.linayi.entity.order.Orders">
     insert into orders
@@ -464,24 +464,24 @@
 	  SELECT
 		  orders_id,
 		  user_id,
-		  receiver_name, 
-		  mobile, 
-		  address_one, 
-		  address_two, 
-		  address_three, 
-		  pay_way, 
-		  save_amount, 
-		  service_fee, 
-		  extra_fee, 
-		  arrive_time, 
+		  receiver_name,
+		  mobile,
+		  address_one,
+		  address_two,
+		  address_three,
+		  pay_way,
+		  save_amount,
+		  service_fee,
+		  extra_fee,
+		  arrive_time,
 		  actual_arrive_time,
-          remark, 
-          quantity, 
-          amount, 
-          user_status, 
-          community_status, 
-          community_id, 
-          update_time, 
+          remark,
+          quantity,
+          amount,
+          user_status,
+          community_status,
+          community_id,
+          update_time,
           create_time
        FROM
        		orders

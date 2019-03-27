@@ -22,16 +22,16 @@
     </resultMap>
     <insert id="insert" parameterType="com.linayi.entity.goods.GoodsSku" useGeneratedKeys="true" keyProperty="goodsSkuId">
     insert into goods_sku (goods_sku_id, name, full_name, barcode,
-      category_id, brand_id, status, 
-      image, update_time, create_time, 
-      model, function, produce_address, 
-      produce_date, valid_date, manufacturer, 
+      category_id, brand_id, status,
+      image, update_time, create_time,
+      model, function, produce_address,
+      produce_date, valid_date, manufacturer,
       other_attribute,user_id)
     values (#{goodsSkuId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{fullName,jdbcType=VARCHAR}, #{barcode,jdbcType=VARCHAR},
-      #{categoryId,jdbcType=INTEGER}, #{brandId,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, 
-      #{image,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{model,jdbcType=VARCHAR}, #{function,jdbcType=VARCHAR}, #{produceAddress,jdbcType=VARCHAR}, 
-      #{produceDate,jdbcType=TIMESTAMP}, #{validDate,jdbcType=TIMESTAMP}, #{manufacturer,jdbcType=VARCHAR}, 
+      #{categoryId,jdbcType=INTEGER}, #{brandId,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR},
+      #{image,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP},
+      #{model,jdbcType=VARCHAR}, #{function,jdbcType=VARCHAR}, #{produceAddress,jdbcType=VARCHAR},
+      #{produceDate,jdbcType=TIMESTAMP}, #{validDate,jdbcType=TIMESTAMP}, #{manufacturer,jdbcType=VARCHAR},
       #{otherAttribute,jdbcType=VARCHAR},#{userId,jdbcType=INTEGER})
   </insert>
     <insert id="insertSelective" parameterType="com.linayi.entity.goods.GoodsSku">
@@ -218,7 +218,7 @@
     </select>
     <select id="getGoodsLists" resultType="com.linayi.entity.goods.GoodsSku">
         select gs.goods_sku_id goodsSkuId, gs.name NAME, gs.full_name fullName,gs.barcode barcode, gs.category_id categoryId,c.name categoryName, gs.brand_id brandId,b.name brandName, gs.status STATUS, gs.image image, gs.update_time updateTime, gs.create_time createTime, gs.model model, gs.function FUNCTION , gs.produce_address produceAddress, gs.produce_date produceDate, gs.valid_date validDate, gs.manufacturer manufacturer, gs.other_attribute otherAttribute
-        ,e.real_name createName,aa.user_name userName from goods_sku gs left join admin_account aa on aa.account_id = gs.user_id left join employee e on aa.user_id = e.employee_id join brand b on b.brand_id = gs.brand_id join category c on c.category_id = gs.category_id
+        ,e.real_name createName,aa.user_name userName from goods_sku gs left join admin_account aa on aa.account_id = gs.user_id left join employee e on aa.user_id = e.employee_id left join brand b on b.brand_id = gs.brand_id left join category c on c.category_id = gs.category_id
         <where>
             <if test="goodsSkuId != null and goodsSkuId != ''">
                 gs.goods_sku_id like #{goodsSkuId}
@@ -355,7 +355,7 @@
         </where>
             order by gs.goods_sku_id desc
     </select>
-    
+
     <!-- 通过品牌id分类id商品名获取商品列表 -->
   <!-- List<GoodsSku>getGoodsListBybrandIdcategoryIdGoodsName() -->
   <select id="getGoodsListBybrandIdcategoryIdGoodsName" resultType="com.linayi.entity.goods.GoodsSku" >
@@ -379,7 +379,7 @@
   			gs.other_attribute,
   			cg.min_price minPrice,
   			ss.name minSupermarket
-		FROM			
+		FROM
   			goods_sku gs JOIN community_goods cg ON gs.goods_sku_id=cg.goods_sku_id JOIN supermarket ss ON cg.min_supermarket_id=ss.supermarket_id
   		<where>
   			cg.community_id=#{communityId}
@@ -391,14 +391,14 @@
   			</if>
   			<if test="fullName!=null and fullName!=''">
   			and gs.full_name like concat('%',#{fullName},'%')
-  			</if>	
-  		 </where>	
+  			</if>
+  		 </where>
   </select>
   <select id="getGoodsById" resultMap="BaseResultMap">
       select  <include refid="columnList"/> from goods_sku where goods_sku_id = #{goodsSkuId}
   </select>
-  
-  
+
+
   <!-- 价差排行 -->
   <!--List<GoodsSku> getDifferenceRanking()-->
   <select id="getDifferenceRanking" resultType="com.linayi.entity.goods.GoodsSku">
@@ -424,7 +424,7 @@
   			cg.max_price maxPrice,
   			cg.max_supermarket_id maxSupermarketId,
   			cg.min_supermarket_id minSupermarketId
-  		FROM			
+  		FROM
   			goods_sku gs,community_goods cg
   		<where>
   			gs.goods_sku_id=cg.goods_sku_id
@@ -438,10 +438,10 @@
   				AND gs.brand_id=#{brandId}
   			</if>
   		ORDER BY (cg.max_price-cg.min_price)/cg.min_price DESC
-  		</where>	
+  		</where>
   	</select>
-  	
-  	
+
+
   		<!-- 根据商品名称模糊查询商品列表 -->
   		<!--List<GoodsSku> getGoodsSkuByVagueGoodsName(GoodsSku goodsSku) -->
   		<select id="getGoodsSkuByVagueGoodsName" resultType="com.linayi.entity.goods.GoodsSku">
@@ -462,10 +462,10 @@
   				produce_date,
   				valid_date,
   				manufacturer,
-  				other_attribute	
+  				other_attribute
   			FROM
   				goods_sku
-  			<where>	
+  			<where>
 	  			<if test="brandId!=null">
 	  			and brand_id=#{brandId}
 	  			</if>
@@ -474,11 +474,11 @@
 	  			</if>
 	  			<if test="valueName!=null and valueName!=''">
 	  			and full_name like concat('%',#{valueName},'%')
-	  			</if>			
-  		 </where>				
-  		
+	  			</if>
+  		 </where>
+
   		</select>
-  		
+
   		<!-- 自定义下单 -->
   		<select id="customSearch" resultType="com.linayi.entity.goods.GoodsSku">
   		SELECT
@@ -503,7 +503,7 @@
   			cg.max_price maxPrice,
   			(cg.max_price-cg.min_price)/cg.min_price spreadRate,
   			ss.name minSupermarket
-  		FROM			
+  		FROM
   			goods_sku gs,community_goods cg,supermarket ss,brand b
   		<where>
   			gs.goods_sku_id=cg.goods_sku_id
@@ -512,7 +512,7 @@
   		AND
   			gs.brand_id = b.brand_id
   			<if test="communityId!=null">
-  			and cg.community_id=#{communityId}	
+  			and cg.community_id=#{communityId}
   			</if>
   			<if test="brandName!=null and brandName!=''">
   			and b.name=#{brandName}
@@ -522,10 +522,10 @@
   			</if>
   			<if test="valueName!=null and valueName!=''">
   			and gs.full_name like concat('%',#{valueName},'%')
-  			</if>			
+  			</if>
   		 </where>
   		</select>
-  	
+
 
   <select id="getGoodsByName" resultMap="BaseResultMap">
       select <include refid="columnList"/> from goods_sku where name like concat('%',#{name},'%')
@@ -534,15 +534,15 @@
   <select id="deleteGoodsById">
       delete from goods_sku where goods_sku_id = #{goodsSkuId}
   </select>
-  
-  
+
+
     <!-- 获取所有商品id -->
   <select id="getGoodsSkuIdBygoodsSku" resultType="java.lang.Integer">
   	SELECT
   		goods_sku_id
   	FROM
-  		goods_sku	 
- 
+  		goods_sku
+
   </select>
 
   <select id="selectNamebyId" resultType="com.linayi.entity.goods.GoodsSku">
