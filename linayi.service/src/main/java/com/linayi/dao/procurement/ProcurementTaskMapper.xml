@@ -458,10 +458,10 @@
          </where>
          GROUP BY
          <if test="procureStatus != null and procureStatus == 'FINISHED'">
-            pt.procure_time
+            pt.procure_time ,
           </if>
             pt.goods_sku_id
-         ORDER BY pt.procure_time DESC
+         ORDER BY pt.procure_time DESC, SUM(pt.quantity) DESC
     </select>
 	<select id="getProcurements" resultType="com.linayi.entity.procurement.ProcurementTask">
         select  <include refid="Base_Column_List"/> from procurement_task where community_id = #{communityId} and procure_status = 'PROCURING' and goods_sku_id = #{goodsSkuId}
