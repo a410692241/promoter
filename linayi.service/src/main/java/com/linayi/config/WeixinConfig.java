@@ -19,6 +19,8 @@ public class WeixinConfig {
     public static final String REFRESH_TOKEN_URL = "https://api.weixin.qq.com/sns/oauth2/refresh_token?";
     //app项目首页url
     public static final String REDICT_INDEX_URL = "redict_index_url";
+    //邻生商户端首页
+    public static final String LINSHENG_REDICT_INDEX_URL = "linsheng_redict_index_url";
 
 
 }
