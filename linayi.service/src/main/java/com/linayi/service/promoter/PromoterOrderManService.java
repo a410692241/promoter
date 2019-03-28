@@ -30,7 +30,7 @@ public interface PromoterOrderManService {
      * @param type  时间范围   代替顾客: CUSTOMER 所有: ALL  会员:VIP
      * @return
      */
-    public PromoterOrderMan getStatisALL(Integer manId, String range, String type);
+    PromoterOrderMan getStatisALL(Integer manId, String range, String type);
 
     /**
      * 统计会员  订单数 金额
