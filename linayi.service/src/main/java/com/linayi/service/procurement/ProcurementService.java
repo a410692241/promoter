@@ -63,7 +63,19 @@ public interface ProcurementService {
 
     List<Community> getProcurementCommunity(Integer userId);
 
+    /**
+     * 查询采买任务合并列表
+     * @param procurementTask
+     * @return
+     */
     List<ProcurementTask> getCommunityProcurement(ProcurementTask procurementTask);
 
     void updateProcurmentStatus(Integer goodsSkuId, Integer quantity, Integer userId);
+
+    /**
+     * 查询采买任务详情
+     * @param procurementTask
+     * @return
+     */
+    ProcurementTask getprocurementDeatil(ProcurementTask procurementTask);
 }

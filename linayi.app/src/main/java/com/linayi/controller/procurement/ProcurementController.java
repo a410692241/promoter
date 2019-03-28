@@ -92,7 +92,7 @@ public class ProcurementController extends BaseController {
 
 
 	/**
-	 * 获取社区合并采买任务列表
+	 * 用户端获取社区合并采买任务列表
 	 * @return
 	 */
 	@RequestMapping("/getCommunityPros.do")
@@ -113,7 +113,7 @@ public class ProcurementController extends BaseController {
 	}
 
 	/**
-	 * 改变合并采买任务状态
+	 * 用户端改变合并采买任务状态
 	 * @return
 	 */
 	@RequestMapping("/updateProcurStatus.do")
@@ -121,7 +121,7 @@ public class ProcurementController extends BaseController {
 		try {
 			ParamValidUtil<ProcurementTask> pvu = new ParamValidUtil<>(param);
 			pvu.Exist("quantity","goodsSkuId");
-			//采买数量 - 缺货数量
+			//实际采买数量
 			Integer quantity = Integer.parseInt(param.get("quantity") +"");
 			Integer goodsSkuId = Integer.parseInt(param.get("goodsSkuId") +"");
 			Integer userId = getUserId();
@@ -133,12 +133,30 @@ public class ProcurementController extends BaseController {
 		return new ResponseData("F", ErrorType.SYSTEM_ERROR.getErrorMsg());
 	}
 
-	//根据社区id和收货状态查询采买任务列表
+	/**
+	 * 用户端买合并采买任务详情页
+	 * @param procurementTask 采买时间
+	 * @return
+	 */
+	@RequestMapping("/getProcureDetails.do")
+	public Object getProcureDetails(@RequestBody ProcurementTask procurementTask) {
+		try {
+			Integer userId = getUserId();
+			procurementTask.setUserId(userId);
+			ProcurementTask procurementTask1 = procurementService.getprocurementDeatil(procurementTask);
+			return new  ResponseData(procurementTask1);
+		} catch (Exception e) {
+			return new ResponseData(ErrorType.SYSTEM_ERROR);
+		}
+
+	}
+
+	//社区端根据社区id和收货状态查询合并采买任务列表
 	@RequestMapping("/getProcurementTask.do")
 	public Object getProcurementTask(@RequestBody ProcurementTask procurementTask) {
 		try {
 			Integer userId = getUserId();
-			procurementTask.setUserId(userId);
+			procurementTask.setCommunityId(userId);
 			List<ProcurementTask> procurementTaskList = procurementService.getCommunityProcurement(procurementTask);
 			PageResult<ProcurementTask> pageResult = new PageResult<>(procurementTaskList, procurementTask);
 			return new ResponseData(pageResult);
@@ -149,29 +167,32 @@ public class ProcurementController extends BaseController {
 	}
 
 
-	//买手收货详情页
+	/**
+	 * 社区端买手收货合并采买任务详情页
+	 * @param procurementTask 采买时间
+	 * @return
+	 */
 	@RequestMapping("/receivingDetails.do")
 	public Object receivingDetails(@RequestBody ProcurementTask procurementTask) {
 		try {
 			Integer userId = getUserId();
-			procurementTask.setUserId(userId);
-			List<ProcurementTask> procurementTaskList = procurementService.getCommunityProcurement(procurementTask);
-			return new  ResponseData(procurementTaskList.get(0));
+			procurementTask.setCommunityId(userId);
+			ProcurementTask procurementTask1 = procurementService.getprocurementDeatil(procurementTask);
+			return new  ResponseData(procurementTask1);
 		} catch (Exception e) {
 			return new ResponseData(ErrorType.SYSTEM_ERROR);
 		}
 
 	}
 
-	//买手收货详情点击验货完毕
+	//社区端买手收货详情点击验货完毕
 	@RequestMapping("/inspectionComplete.do")
 	public Object inspectionComplete(@RequestBody ProcurementTask procurementTask) {
-
 		try {
+			procurementTask.setCommunityId(getUserId());
 			Integer newprocurementTask = procurementService.updateOrderStatus(procurementTask);
 			return new  ResponseData(newprocurementTask);
 		} catch (Exception e) {
-
 			return new ResponseData(ErrorType.SYSTEM_ERROR);
 		}
 

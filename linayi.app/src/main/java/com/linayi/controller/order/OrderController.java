@@ -180,7 +180,7 @@ public class OrderController extends BaseController {
         }
         return new ResponseData("F",ErrorType.SYSTEM_ERROR.getErrorMsg());
     }
-    
+
     /**
 	 * 查询装箱列表
 	 */
@@ -193,7 +193,7 @@ public class OrderController extends BaseController {
 			}
 			order.setCommunityId(getCommunityId());
 			List<Orders> orderList = orderService.getBoxingList(order);
-			
+
 			Integer totalPage = (int) Math.ceil(Double.valueOf(order.getTotal()) / Double.valueOf(order.getPageSize()));
 			if (totalPage <= 0) {
 				totalPage++;

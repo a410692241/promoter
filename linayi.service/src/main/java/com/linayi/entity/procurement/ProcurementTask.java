@@ -66,9 +66,9 @@ public class ProcurementTask extends BaseEntity{
     private Date updateTime;
 
     private Date createTime;
-    
+
     private Date procureTime;
-    
+
     private Date receiveTime;
 
     private String goodsSkuName;//商品名
@@ -84,6 +84,8 @@ public class ProcurementTask extends BaseEntity{
     private Integer procureQuantity;
 
     private Integer receiveQuantity;
+
+    private Integer totalProcureQuantity;
 
     private Integer boxQuantity;
 
@@ -315,7 +317,7 @@ public class ProcurementTask extends BaseEntity{
     public void setOrderCreateTime(Date orderCreateTime) {
         this.orderCreateTime = orderCreateTime;
     }
-    
+
     public Date getProcureTime() {
 		return procureTime;
 	}
@@ -419,5 +421,13 @@ public class ProcurementTask extends BaseEntity{
 
     public void setFullName(Integer fullName) {
         this.fullName = fullName;
+    }
+
+    public Integer getTotalProcureQuantity() {
+        return totalProcureQuantity;
+    }
+
+    public void setTotalProcureQuantity(Integer totalProcureQuantity) {
+        this.totalProcureQuantity = totalProcureQuantity;
     }
 }

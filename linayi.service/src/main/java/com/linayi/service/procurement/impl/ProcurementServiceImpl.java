@@ -100,6 +100,10 @@ public class ProcurementServiceImpl implements ProcurementService {
 
 	@Override
 	public List<ProcurementTask> getCommunityProcurement(ProcurementTask procurementTask) {
+		if (procurementTask.getCommunityId() ==null){
+			Integer communityId = supermarketMapper.getSupermarketCommunityId(procurementTask.getUserId());
+			procurementTask.setCommunityId(communityId);
+		}
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementList(procurementTask);
 		return procurementTaskList;
 	}
@@ -189,6 +193,28 @@ public class ProcurementServiceImpl implements ProcurementService {
 				}
 			}
 		}
+	}
+
+	/**
+	 *
+	 * @param procurementTask
+	 * @return
+	 */
+	@Override
+	public ProcurementTask getprocurementDeatil(ProcurementTask procurementTask) {
+		if (procurementTask.getCommunityId() ==null){
+			Integer communityId = supermarketMapper.getSupermarketCommunityId(procurementTask.getUserId());
+			procurementTask.setCommunityId(communityId);
+		}
+		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementList(procurementTask);
+		ProcurementTask procurementTask1 = null;
+		if (procurementTaskList != null && procurementTaskList.size() > 0){
+			procurementTask1 = procurementTaskList.get(0);
+			GoodsSku goodsSku = goodsSkuMapper.getGoodsById(procurementTask.getGoodsSkuId());
+			procurementTask1.setImage(ImageUtil.dealToShow(goodsSku.getImage()));
+			procurementTask1.setGoodsSkuName(goodsSku.getFullName());
+		}
+		return procurementTask1;
 	}
 
 	@Override
@@ -415,18 +441,34 @@ public class ProcurementServiceImpl implements ProcurementService {
 
 	@Override
 	public Integer updateOrderStatus(ProcurementTask procurementTask) {
+		Integer quantity = procurementTask.getQuantity();
+		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurements(procurementTask.getGoodsSkuId(),procurementTask.getCommunityId());
+
 		//根据procurementTaskId查询任务列表
-		ProcurementTask newProcurementTask = procurementTaskMapper.getProcurementById(procurementTask.getProcurementTaskId());
+		//ProcurementTask newProcurementTask = procurementTaskMapper.getProcurementById(procurementTask.getProcurementTaskId());
+		int num = 0;
+		if(procurementTaskList != null && procurementTaskList.size() > 0){
+			for (ProcurementTask task : procurementTaskList) {
+			if(task.getProcureQuantity() <= quantity){
+				num = task.getProcureQuantity();
+				quantity -= task.getProcureQuantity();
+			}else {
+				num = quantity;
+				quantity = 0;
+			}
+				procurementTask.setReceiveQuantity(num);
+				procurementTask.setActualQuantity(num);
 
-		procurementTask.setProcureQuantity(newProcurementTask.getActualQuantity());
+				procurementTask.setReceiveStatus("RECEIVED");
+				//将采买任务表改成已收货
+				procurementTaskMapper.updateProcurementTaskById(procurementTask);
+				Long ordersId = procurementTaskMapper.getProcurementById(procurementTask.getProcurementTaskId()).getOrdersId();
+				//更新订单状态为已完成
+				orderService.updateOrderReceivedStatus(ordersId);
+			}
+		}
 
-		procurementTask.setReceiveStatus("RECEIVED");
-		//将采买任务表改成已收货
-		Integer order = procurementTaskMapper.updateProcurementTaskById(procurementTask);
-		Long ordersId = procurementTaskMapper.getProcurementById(procurementTask.getProcurementTaskId()).getOrdersId();
-		//更新订单状态为已完成
-		orderService.updateOrderReceivedStatus(ordersId);
-		return order;
+		return quantity;
 	}
 
 
