@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.linayi.dao.promoter.PromoterMapper">
-  <insert id="insert" parameterType="com.linayi.entity.promoter.Promoter">
+    <resultMap id="BaseResultMap" type="com.linayi.dto.PromoterSettleDTO">
+        <id column="promoter_id" property="promoterId" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="qq" property="qq" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="promoterLevel" property="promoterLevel" jdbcType="VARCHAR"/>
+        <!--<result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>-->
+        <!--<result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>-->
+    </resultMap>
+    <insert id="insert" parameterType="com.linayi.entity.promoter.Promoter">
     insert into promoter (promoter_id, name, mobile, 
       qq, email, promoter_level, 
       update_time, create_time)
@@ -9,5 +19,12 @@
       #{qq,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{promoterLevel,jdbcType=VARCHAR}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
-  <sql id="Base_Column">promoter_id, name, mobile, qq, email, promoter_level,  update_time, create_time</sql>
+    <sql id="Base_Column">promoter_id, name, mobile, qq, email, promoter_level,  update_time, create_time</sql>
+
+    <!--获取所有的推广商-->
+    <select id="getAllPromoter" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column"></include>
+        from promoter
+    </select>
 </mapper>
