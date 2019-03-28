@@ -72,9 +72,6 @@ public class ProcurementServiceImpl implements ProcurementService {
 
 	@Override
 	public List<ProcurementTask> getProcurementTaskStatus(ProcurementTask procurementTask) {
-
-
-
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskStatus(procurementTask);
 		if(procurementTaskList.size()>0) {
 			for(ProcurementTask i:procurementTaskList) {
@@ -102,9 +99,8 @@ public class ProcurementServiceImpl implements ProcurementService {
 	}
 
 	@Override
-	public List<ProcurementTask> getCommunityProcurement(Integer userId, String procureStatus) {
-		Integer communityId = supermarketMapper.getSupermarketCommunityId(userId);
-		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementList(communityId, procureStatus);
+	public List<ProcurementTask> getCommunityProcurement(ProcurementTask procurementTask) {
+		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementList(procurementTask);
 		return procurementTaskList;
 	}
 

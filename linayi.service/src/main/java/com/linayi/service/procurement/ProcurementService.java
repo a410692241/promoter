@@ -63,7 +63,7 @@ public interface ProcurementService {
 
     List<Community> getProcurementCommunity(Integer userId);
 
-    List<ProcurementTask> getCommunityProcurement(Integer userId, String procureStatus);
+    List<ProcurementTask> getCommunityProcurement(ProcurementTask procurementTask);
 
     void updateProcurmentStatus(Integer goodsSkuId, Integer quantity, Integer userId);
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.linayi.entity.community.Community;
 import com.linayi.entity.supermarket.Supermarket;
+import com.linayi.util.PageResult;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -99,10 +100,12 @@ public class ProcurementController extends BaseController {
 		try {
 			ParamValidUtil<ProcurementTask> pvu = new ParamValidUtil<>(param);
 			pvu.Exist("procureStatus");
-			String procureStatus =param.get("procureStatus") + "";
 			Integer userId = getUserId();
-			List<ProcurementTask> procurementTaskList = procurementService.getCommunityProcurement(userId, procureStatus);
-			return new ResponseData(procurementTaskList);
+			ProcurementTask procurementTask = pvu.transObj(ProcurementTask.class);
+			procurementTask.setUserId(userId);
+			List<ProcurementTask> procurementTaskList = procurementService.getCommunityProcurement(procurementTask);
+			PageResult<ProcurementTask> pageResult = new PageResult<>(procurementTaskList, procurementTask);
+			return new ResponseData(pageResult);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -133,45 +136,28 @@ public class ProcurementController extends BaseController {
 	//根据社区id和收货状态查询采买任务列表
 	@RequestMapping("/getProcurementTask.do")
 	public Object getProcurementTask(@RequestBody ProcurementTask procurementTask) {
-
 		try {
-			//社区id
-			procurementTask.setCommunityId(getCommunityId());
-
-    		if(procurementTask.getPageSize() == null){
-    			procurementTask.setPageSize(15);
-    		}
-
-    		List<ProcurementTask> procurementTaskList =
-    				procurementService.getProcurementTaskStatus(procurementTask);
-    		Integer totalPage = (int) Math.ceil(Double.valueOf(procurementTask.getTotal())/Double.valueOf(procurementTask.getPageSize()));
-    		if(totalPage <= 0){
-    			totalPage++;
-    		}
-
-    		Map<String , Object> map = new HashMap<>();
-    		map.put("data", procurementTaskList);
-    		map.put("totalPage", totalPage);
-    		map.put("currentPage",procurementTask.getCurrentPage() );
-    		return new ResponseData(map);
-
+			Integer userId = getUserId();
+			procurementTask.setUserId(userId);
+			List<ProcurementTask> procurementTaskList = procurementService.getCommunityProcurement(procurementTask);
+			PageResult<ProcurementTask> pageResult = new PageResult<>(procurementTaskList, procurementTask);
+			return new ResponseData(pageResult);
 		} catch (Exception e) {
-
-			return new ResponseData(ErrorType.SYSTEM_ERROR);
+			e.printStackTrace();
 		}
-
+		return new ResponseData(ErrorType.SYSTEM_ERROR);
 	}
 
 
 	//买手收货详情页
 	@RequestMapping("/receivingDetails.do")
 	public Object receivingDetails(@RequestBody ProcurementTask procurementTask) {
-
 		try {
-			ProcurementTask newprocurementTask = procurementService.getProcurementById(procurementTask.getProcurementTaskId());
-			return new  ResponseData(newprocurementTask);
+			Integer userId = getUserId();
+			procurementTask.setUserId(userId);
+			List<ProcurementTask> procurementTaskList = procurementService.getCommunityProcurement(procurementTask);
+			return new  ResponseData(procurementTaskList.get(0));
 		} catch (Exception e) {
-
 			return new ResponseData(ErrorType.SYSTEM_ERROR);
 		}
 

@@ -62,11 +62,9 @@ public interface ProcurementTaskMapper {
 
     /**
      * 查采买员所在社区Id为comunityId社区的采买任务,如有同一件商品,合在一起
-     * @param communityId
-     * @param procureStatus
      * @return
      */
-    List<ProcurementTask> getCommunityProcurementList(@Param("communityId") Integer communityId, @Param("procureStatus")String procureStatus);
+    List<ProcurementTask> getCommunityProcurementList(ProcurementTask procurementTask);
 
     /**
      * 获取在同一个社区商品一样的所有的采买任务
