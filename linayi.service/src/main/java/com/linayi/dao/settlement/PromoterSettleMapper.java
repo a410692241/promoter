@@ -1,6 +1,6 @@
-package com.linayi.dao.promoterSettle;
+package com.linayi.dao.settlement;
 
-import com.linayi.entity.promoterSettle.PromoterSettle;
+import com.linayi.entity.settlement.PromoterSettle;
 
 public interface PromoterSettleMapper {
     /**
