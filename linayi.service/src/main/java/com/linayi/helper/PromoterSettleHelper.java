@@ -44,15 +44,15 @@ public class PromoterSettleHelper {
     /**
      * 一级推广商单笔订单>=100收益率
      */
-    private static final BigDecimal YIELD_RATE_ONE_AMOUNT = new BigDecimal("0.005");
+    private static final BigDecimal YIELD_RATE_ONE_AMOUNT = new BigDecimal("0.5");
     /**
      * 二级推广商单笔订单>=100收益率
      */
-    private static final BigDecimal YIELD_RATE_TWO_AMOUNT = new BigDecimal("0.008");
+    private static final BigDecimal YIELD_RATE_TWO_AMOUNT = new BigDecimal("0.8");
     /**
      * 三级推广商单笔订单>=100收益率
      */
-    private static final BigDecimal YIELD_RATE_THREE_AMOUNT = new BigDecimal("0.01");
+    private static final BigDecimal YIELD_RATE_THREE_AMOUNT = new BigDecimal("1");
 
     /**
      * 计算推广商收益
