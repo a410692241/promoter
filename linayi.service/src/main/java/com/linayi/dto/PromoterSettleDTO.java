@@ -4,6 +4,9 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
+/**
+ * @author czw
+ */
 @Data
 public class PromoterSettleDTO {
     //推广商下单员ID
