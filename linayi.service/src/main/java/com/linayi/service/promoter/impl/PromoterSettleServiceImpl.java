@@ -1,7 +1,6 @@
 package com.linayi.service.promoter.impl;
 
 import com.linayi.dao.promoter.PromoterMapper;
-import com.linayi.dao.promoterSettle.PromoterSettleMapper;
 import com.linayi.dto.PromoterSettleDTO;
 import com.linayi.entity.promoter.PromoterOrderMan;
 import com.linayi.helper.PromoterSettleHelper;
@@ -17,8 +16,6 @@ import java.util.List;
 public class PromoterSettleServiceImpl implements PromoterSettleService {
     @Autowired
     private PromoterMapper promoterMapper;
-    @Autowired
-    private PromoterSettleMapper promoterSettleMapper;
     @Autowired
     private PromoterOrderManService promoterOrderManService;
 
@@ -59,9 +56,6 @@ public class PromoterSettleServiceImpl implements PromoterSettleService {
                 }
                 promoterSettleDTO.setProfit(profit);
             }
-            // 将当前记录插入到结算表
-//            PromoterSettle promoterSettle = new PromoterSettle();
-//            promoterSettleMapper.insertSelective(promoterSettle);
         }
         return promoterSettleDTOList;
     }
