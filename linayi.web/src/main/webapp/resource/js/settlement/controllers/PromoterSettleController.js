@@ -57,18 +57,7 @@ app.controller('promoterCtrl', function ($http, $scope, toaster, promoterService
                 {name: 'sumOrderAmount', label: '订单总额', sortable: false},
                 {name: 'promoterSettleId', label: '推广商收益ID', sortable: false, hidden: true},
                 {name: 'profit', label: '推广商收益', sortable: false}
-                // {
-                //     label: "操作",
-                //     name: "opt",
-                //     width: 300,
-                //     sortable: false,
-                //     formatter: function (cellvalue, options, rowObject) {
-                //         var opts = "";
-                //         opts = opts + "<a href='javascript:void(0);' ng-click='show( " + rowObject.correctId + " )' " +
-                //             "class='btn btn-primary shiny fa fa-eye btn-sm td-compile'>详情</a> ";
-                //         return opts;
-                //     }
-                // }
+
             ],
             //设置页面
             loadComplete: function () {
