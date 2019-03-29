@@ -1,12 +1,12 @@
 'use strict';
 app.filter('skuAttributeSorter', function( ) {
-	
+
 	return function( skuAttributeList,salesAttributeList ) {
 		// 根据商品属性排序
 		angular.forEach( salesAttributeList, function( attribute,attributeIndex ){
 			var attributeId = attribute.attributeId;
 			var attrValueList = attribute.attrValueList;
-			
+
 			var currentSkuAttribute = skuAttributeList[attributeIndex];
 			// 交换位置
 			angular.forEach(skuAttributeList, function( skuAttribute, skuAttributeIndex){
@@ -24,10 +24,10 @@ app.filter('skuAttributeSorter', function( ) {
 					return;
 				}
 			});
-			
+
 		});
-		
-		
+
+
 		return skuAttributeList;
 	};
 });
@@ -262,7 +262,6 @@ app.controller('goodsCtrl'/**
                     }
                 });
             } catch (e) {
-                console.error(e);
                 toaster.error("", typeof e == "string" ? //
                     e : e.msg ? //
                         e.msg : "出错了", 3000);
@@ -353,7 +352,7 @@ app.controller('goodsCtrl'/**
     function removeList( ){
     	var selarrrow=$("#goodsList").jqGrid('getGridParam','selarrrow');
     	if(selarrrow.length==0){
-			toaster.error("",'请选择行',3000 ); 
+			toaster.error("",'请选择行',3000 );
 			return;
 		}
     	messager.confirm("确认删除？",function( $modalInstance ){
@@ -379,7 +378,7 @@ app.controller('goodsCtrl'/**
     		}
     	});
     }
-    
+
     /**
 	 * 编辑
 	 *
@@ -419,7 +418,7 @@ app.controller('goodsCtrl'/**
 				}).then( function( data ){
 					init( data );
 				} );
-				
+
 				var search = $scope.search={
 					categoryName:"",
 					category:{},
@@ -427,14 +426,14 @@ app.controller('goodsCtrl'/**
 					brand:{},
 					productionName:"",
 					production:{},
-					
+
 				}
-				
-				
+
+
 				function init( data ){
 					$scope.categoryList = data;
 				}
-				
+
 				// 类别查询品牌
 				$scope.listBrandList = function( category ){
 					if( search.category == category ){
@@ -466,7 +465,7 @@ app.controller('goodsCtrl'/**
 						} );
 					} );
 				}
-				
+
 				// 品牌查询产品
 				$scope.listProduction = function( brand ){
 					if( search.brand == brand ){
@@ -490,14 +489,14 @@ app.controller('goodsCtrl'/**
 						} );
 					} );
 				}
-				
+
 				/** 选择产品 */
 				$scope.selectedProduction = function( production ){
 					search.production = production;
 				}
-				
+
 				$scope.confirmPorudction = function(){
-					
+
 				}
 			}
 		},function( $modalInstance,data, $scope ){
@@ -511,7 +510,7 @@ app.controller('goodsCtrl'/**
     }
     /** 新增，编辑 */
     function openEdit( data ){
-    	
+
     	var url = urls.ms + "/jsp/goods/GoodsEdit.jsp";
 		templateform.open({
 			title:"修改商品信息",
@@ -539,10 +538,10 @@ app.controller('goodsCtrl'/**
 			save( $modalInstance,$scope.goods, $scope );
 		});
     }
-    
-    
+
+
     /**
-	 * 
+	 *
 	 * 推荐商品列表查询
 	 */
     function recommandModal( $modalInstance,data, $scope ){
@@ -737,7 +736,6 @@ app.controller('goodsCtrl'/**
         }
         //导出数据
         function exportData() {
-            debugger;
             var fullName = $scope.search.fullName;
             var categoryId = $scope.search.categoryId;
             var brandId = $scope.search.brandId;

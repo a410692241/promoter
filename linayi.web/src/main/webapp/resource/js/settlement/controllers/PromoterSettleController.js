@@ -7,6 +7,7 @@ app.controller('promoterCtrl', function ($http, $scope, toaster, promoterService
         debugger;
         $scope.list = list;
         $scope.show = show;
+        $scope.exportData = exportData;
         list();
         $scope.search = {
             status: "",
@@ -16,7 +17,34 @@ app.controller('promoterCtrl', function ($http, $scope, toaster, promoterService
 
     /**列表查询*/
     function list() {
-        debugger;
+        if ($scope.search.createTimeEnd != "") {
+            //结束时间不能大于当前时间
+            var date = new Date();
+            var createTimeEnd = convertDateFromString($scope.search.createTimeEnd);
+            if(date.getTime() < createTimeEnd.getTime()){
+                toaster.error("", "结束时间必须大于当前时间!", 3000);
+                return;
+            }
+
+            var year1 = createTimeEnd.getFullYear();//年
+            var month1 = createTimeEnd.getMonth();//月
+            //时间不能和开始时间不是同一个月份
+            if($scope.search.createTimeStart != ""){
+                var createTimeStart = convertDateFromString($scope.search.createTimeStart);
+                var year2 = createTimeStart.getFullYear();//年
+                var month2 = createTimeStart.getMonth();//月
+                if(createTimeStart.getTime() > createTimeEnd.getTime()){
+                    toaster.error("", "开始时间必须小于结束时间!", 3000);
+                    return;
+                }
+
+                if(!(year1 == year2 && month1 == month2)){
+                    toaster.error("", "查询时间必须是同一月份的!", 3000);
+                    return;
+                }
+            }
+
+        }
         var $grid = $("#promoterList");
         if ($grid[0].grid) {
             $grid.jqGrid('setGridParam', {
@@ -130,6 +158,36 @@ app.controller('promoterCtrl', function ($http, $scope, toaster, promoterService
             $scope.correct = data.data;
         });
     }
+
+    //导出excel
+    function exportData() {
+        var createTimeStart = $scope.search.createTimeStart;
+        var createTimeEnd = $scope.search.createTimeEnd;
+        var data = '';
+        if (createTimeStart === undefined || createTimeStart == '') {
+            createTimeStart = null;
+        } else {
+            data += '&createTimeStart=' + createTimeStart;
+        }
+        if (createTimeEnd === undefined || createTimeEnd == '') {
+            createTimeEnd = null;
+        } else {
+            data += '&createTimeEnd=' + createTimeEnd;
+        }
+
+        location.href = urls.ms + "/finace/exportData.do?" + data.replace("&", "");
+        toaster.success("", "导出成功!", 1000);
+    }
+
+    function convertDateFromString(dateString) {
+        if (dateString) {
+            var arr1 = dateString.split(" ");
+            var sdate = arr1[0].split('-');
+            var date = new Date(sdate[0], sdate[1]-1, sdate[2]);
+            return date;
+        }
+    }
+
 
     init();
 });

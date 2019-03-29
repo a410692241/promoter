@@ -2,6 +2,7 @@ package com.linayi.controller.settlement;
 
 import com.linayi.controller.BaseController;
 import com.linayi.dto.PromoterSettleDTO;
+import com.linayi.entity.order.Orders;
 import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.promoter.PromoterSettleService;
@@ -22,10 +23,10 @@ public class PromoterSettleController extends BaseController {
 
     @PostMapping("/getAllPromoter.do")
     @ResponseBody
-    public ResponseData getAllPromoter() {
+    public ResponseData getAllPromoter(Orders orders) {
         try {
             // 推广商列表[推广商信息，订单信息，当前推广商的收益]
-            List<PromoterSettleDTO> promoterSettleDTOList = promoterSettleService.getAllPromoterDto();
+            List<PromoterSettleDTO> promoterSettleDTOList = promoterSettleService.getAllPromoterDto(orders);
             return new ResponseData(promoterSettleDTOList);
         } catch (BusinessException e) {
             return new ResponseData(e.getErrorType());
@@ -33,6 +34,10 @@ public class PromoterSettleController extends BaseController {
             e.printStackTrace();
             return new ResponseData(ErrorType.SYSTEM_ERROR);
         }
+    }
+    @RequestMapping("/exportData.do")
+    public void exportData(Orders orders){
+
     }
 
 }

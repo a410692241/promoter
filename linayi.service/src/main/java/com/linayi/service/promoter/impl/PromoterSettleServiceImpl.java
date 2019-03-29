@@ -3,6 +3,7 @@ package com.linayi.service.promoter.impl;
 import com.linayi.dao.promoter.PromoterMapper;
 import com.linayi.dao.promoterSettle.PromoterSettleMapper;
 import com.linayi.dto.PromoterSettleDTO;
+import com.linayi.entity.order.Orders;
 import com.linayi.entity.promoter.PromoterOrderMan;
 import com.linayi.helper.PromoterSettleHelper;
 import com.linayi.service.promoter.PromoterOrderManService;
@@ -30,7 +31,7 @@ public class PromoterSettleServiceImpl implements PromoterSettleService {
      * @return
      */
     @Override
-    public List<PromoterSettleDTO> getAllPromoterDto() {
+    public List<PromoterSettleDTO> getAllPromoterDto(Orders orders) {
         BigDecimal profit = new BigDecimal("0.00");
         // 推广商列表
         List<PromoterSettleDTO> promoterSettleDTOList = promoterMapper.getAllPromoter();
@@ -38,7 +39,7 @@ public class PromoterSettleServiceImpl implements PromoterSettleService {
         if (promoterSettleDTOList != null && !promoterSettleDTOList.isEmpty()) {
             for (PromoterSettleDTO promoterSettleDTO : promoterSettleDTOList) {
                 // 推广商下的所有订单
-                promoterOrderMan = promoterOrderManService.getStatisALL(promoterSettleDTO.getPromoterId(), "ALL", "ALL");
+                promoterOrderMan = promoterOrderManService.getStatisALL(promoterSettleDTO.getPromoterId(), "ALL", "ALL",orders);
                 if (promoterOrderMan != null) {
                     if (promoterSettleDTO.getPromoterId().equals(promoterOrderMan.getOrderManId())) {
                         // 订单数

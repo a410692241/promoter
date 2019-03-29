@@ -22,9 +22,23 @@
             </div>
             <div class="widget-body">
                 <form class="form-inline" id="promoter">
-
+                    <div class="form-group form-group-margin">
+                        <div class="input-group">
+                            <span class="input-group-addon">创建时间</span> <input type="text"
+                                                                               class="form-control" datetimepicker
+                                                                               ng-model="search.createTimeStart"/>
+                        </div>
+                        至
+                        <div class="input-group">
+                            <input type="text" class="form-control" datetimepicker
+                                   ng-model="search.createTimeEnd"/>
+                        </div>
+                    </div>
                     <a ng-click="list()" class="btn btn-primary form-group-margin" href="javascript:void(0);">
                         <i class="fa fa-search"></i>搜索
+                    </a>
+                    <a ng-click="exportData()" class="btn btn-primary form-group-margin"
+                       href="javascript:void(0);"></i>导出列表
                     </a>
                 </form>
 

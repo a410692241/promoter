@@ -50,8 +50,8 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     @Override
     public PromoterOrderMan promoterIndex(PromoterOrderMan promoterOrderMan) {
         //通过推广商id获取订单数，订单总金额，下单员数等信息
-        PromoterOrderMan currentPromoterOrderMan = getStatisALL(promoterOrderMan.getOrderManId(),"MONTH","ALL");
-        PromoterOrderMan currentPromoterOrderMan2 = getStatisALL(promoterOrderMan.getOrderManId(),"ALL","ALL");
+        PromoterOrderMan currentPromoterOrderMan = getStatisALL(promoterOrderMan.getOrderManId(),"MONTH","ALL",null);
+        PromoterOrderMan currentPromoterOrderMan2 = getStatisALL(promoterOrderMan.getOrderManId(),"ALL","ALL",null);
         //总收入
         currentPromoterOrderMan.setHomePageIncome(currentPromoterOrderMan2.getTotalSum() == null ? 0 : currentPromoterOrderMan2.getTotalSum());
         //会员数
@@ -78,7 +78,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     @Override
     public PromoterOrderMan myTeamOrderStatistics(PromoterOrderMan promoterOrderMan) {
         //通过推广商id获取订单数，订单总金额，下单员数等信息
-        PromoterOrderMan currentPromoterOrderMan = getStatisALL(promoterOrderMan.getOrderManId(), promoterOrderMan.getDate(),"ALLVIP");
+        PromoterOrderMan currentPromoterOrderMan = getStatisALL(promoterOrderMan.getOrderManId(), promoterOrderMan.getDate(),"ALLVIP",null);
         currentPromoterOrderMan.setOrderStatisticsData3(currentPromoterOrderMan.getNumberOfOrderMan());
         if(currentPromoterOrderMan.getNumberOfOrderMan() == null) {
             currentPromoterOrderMan.setOrderStatisticsData3(0);
@@ -107,7 +107,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             }
 
             // 获取下单员的会员数、订单数、订单总金额,将信息set进OrderMan对象
-            PromoterOrderMan paramPromoterOrderMan = getStatisALL(orderMan.getOrderManId(), range,"VIP");
+            PromoterOrderMan paramPromoterOrderMan = getStatisALL(orderMan.getOrderManId(), range,"VIP",null);
             orderMan.setNumberOfMembers(paramPromoterOrderMan.getNumberOfMembers());
             orderMan.setNumberOfOrders(paramPromoterOrderMan.getNumberOfOrders());
             orderMan.setTotalSum(paramPromoterOrderMan.getTotalSum());
@@ -118,7 +118,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     @Override
     public PromoterOrderMan memberListOrderStatistics(PromoterOrderMan promoterOrderMan) {
         //通过推广商id获取订单数，订单总金额，会员数等信息
-        PromoterOrderMan currentPromoterOrderMan = getStatisALL(promoterOrderMan.getOrderManId(), promoterOrderMan.getDate(),"VIP");
+        PromoterOrderMan currentPromoterOrderMan = getStatisALL(promoterOrderMan.getOrderManId(), promoterOrderMan.getDate(),"VIP",null);
         currentPromoterOrderMan.setOrderStatisticsData3(currentPromoterOrderMan.getNumberOfMembers());
         if(currentPromoterOrderMan.getNumberOfMembers() == null) {
             currentPromoterOrderMan.setOrderStatisticsData3(0);
@@ -190,8 +190,12 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
 
 
     @Override
-    public PromoterOrderMan getStatisALL(Integer manId, String range, String type) {
+    public PromoterOrderMan getStatisALL(Integer manId, String range, String type, Orders order) {
         Orders orders = getTimeRange(range);
+        if (order != null){
+            orders.setCreateTimeStart(order.getCreateTimeStart());
+            orders.setCreateTimeEnd(order.getCreateTimeEnd());
+        }
         PromoterOrderMan promoterOrderMan = new PromoterOrderMan();
         promoterOrderMan.setOrderManId(manId);
         promoterOrderMan = promoterOrderManMapper.getPromoterOrderMan(promoterOrderMan);
