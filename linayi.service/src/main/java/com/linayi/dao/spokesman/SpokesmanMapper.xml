@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.spokesman.SpokesmanMapper">
+  <insert id="insert" parameterType="com.linayi.entity.spokesman.Spokesman">
+    insert into spokesman (user_id, nickname,
+      real_name, mobile, area_code, 
+      small_community_id, address, specialty, 
+      hobby, motto, image, 
+      status, update_time, create_time
+      )
+    values (#{userId,jdbcType=INTEGER}, #{nickname,jdbcType=VARCHAR},
+      #{realName,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{areaCode,jdbcType=VARCHAR}, 
+      #{smallCommunityId,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, #{specialty,jdbcType=VARCHAR}, 
+      #{hobby,jdbcType=VARCHAR}, #{motto,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+
+
+  <select id="selectSpokesmanBySpokesmanId" resultType="com.linayi.entity.spokesman.Spokesman">
+    SELECT
+	  s.spokesman_id,s.user_id,s.nickname,s.real_name,s.mobile,s.area_code,s.small_community_id,sc.name,
+	  s.address,s.specialty,s.hobby,s.motto,s.image,s.status,s.update_time,s.create_time
+    FROM
+      spokesman s JOIN small_community sc ON s.small_community_id=sc.small_community_id
+    WHERE
+	  s.spokesman_id = #{spokesmanId}
+  </select>
+
+
+  <select id="selectSpokesmanByUserId" resultType="com.linayi.entity.spokesman.Spokesman">
+    SELECT
+	  spokesman_id,user_id,nickname,real_name,mobile,area_code,small_community_id,
+	  address,specialty,hobby,motto,image,status,update_time,create_time
+    FROM
+      spokesman
+    WHERE
+	  user_id = #{userId}
+  </select>
+
+
+  <update id="updateSpokesmanStatus" parameterType="com.linayi.entity.spokesman.Spokesman">
+    UPDATE spokesman SET
+      `status`=#{status}
+    WHERE
+      user_id=#{userId}
+  </update>
+</mapper>

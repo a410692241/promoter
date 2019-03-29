@@ -1,17 +1,16 @@
 package com.linayi.controller.user;
 
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.linayi.controller.BaseController;
 import com.linayi.entity.user.AuthenticationApply;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.user.AuthenticationApplyService;
 import com.linayi.util.ResponseData;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.Resource;
 
 @Controller
 @RequestMapping("/user/authentication")
@@ -22,7 +21,6 @@ public class ApplyAuthenticationController extends BaseController{
 
 	/**
 	 *	插入数据
-	 * @param userId	用户Id
 	 * @param realName	真实姓名
 	 * @param mobile	联系电话
 	 * @param file		身份证正反面
@@ -76,6 +74,14 @@ public class ApplyAuthenticationController extends BaseController{
 			return responseData;
 		}
 		return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+	}
+
+	@RequestMapping("/applySpokesman.do" )
+	@ResponseBody
+	public Object applySpokesman(AuthenticationApply authenticationApply, MultipartFile file) {
+		authenticationApply.setUserId(getUserId());
+		Object responseData = authenticationApplyService.applySpokesman(authenticationApply,file);
+		return responseData;
 	}
 	
 

@@ -3,13 +3,16 @@ package com.linayi.service.user.impl;
 import com.linayi.dao.account.AccountMapper;
 import com.linayi.dao.account.AdminAccountMapper;
 import com.linayi.dao.account.EmployeeMapper;
+import com.linayi.dao.area.AreaMapper;
 import com.linayi.dao.area.SmallCommunityMapper;
 import com.linayi.dao.user.AuthenticationApplyMapper;
 import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.account.Account;
 import com.linayi.entity.account.AdminAccount;
 import com.linayi.entity.account.Employee;
+import com.linayi.entity.area.Area;
 import com.linayi.entity.area.SmallCommunity;
+import com.linayi.entity.procurement.ProcurementTask;
 import com.linayi.entity.user.AuthenticationApply;
 import com.linayi.entity.user.User;
 import com.linayi.enums.EnabledDisabled;
@@ -41,6 +44,9 @@ public class UserServiceImpl implements UserService {
     private EmployeeMapper employeeMapper;
     @Resource
     private SmallCommunityMapper smallCommunityMapper;
+    @Resource
+    private AreaMapper areaMapper;
+
 
 
     @Override
@@ -282,5 +288,27 @@ public class UserServiceImpl implements UserService {
             return account;
     	}
         return null;
+    }
+
+    @Override
+    public User getUserForSpokesMan(Integer userId) {
+        User user = userMapper.getUserForSpokesMan(userId);
+        //获取省市区街道和小区
+        String areaCode = user.getCode();
+        String addressTwo = user.getName();
+
+        Area area = new Area();
+        String areaName = "";
+        while (true) {
+            area.setCode(areaCode);
+            Area areaInfo = areaMapper.getAreaInfo(area);
+            areaName = areaInfo.getName() + areaName;
+            if (areaInfo.getParent().equals("1000")) {
+                break;
+            }
+            areaCode = areaInfo.getParent();
+        }
+        user.setReceiverAddress(areaName + addressTwo);
+        return user;
     }
 }

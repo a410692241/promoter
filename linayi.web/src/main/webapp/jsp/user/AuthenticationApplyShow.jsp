@@ -30,6 +30,40 @@
 						</span>
 					</div>
 				</div>
+
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label>特长</label> <span class="input-icon icon-right"> <input
+							type="text" disabled ng-model="apply1.specialty"
+							class="form-control">
+						</span>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label>兴趣爱好</label> <span class="input-icon icon-right"> <input
+							type="text" disabled ng-model="apply1.hobby"
+							class="form-control">
+						</span>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label>格言</label> <span class="input-icon icon-right"> <input
+							type="text" disabled ng-model="apply1.motto"
+							class="form-control">
+						</span>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label>代言人图片</label> <span class="input-icon icon-right"> <img
+							style="width: 100%; height: 350px"
+							ng-src="{{apply1.image}}">
+						</span>
+					</div>
+				</div>
+
 				<div class="col-sm-6">
 					<div class="form-group">
 						<label>身份证正面</label> <span class="input-icon icon-right"> <img

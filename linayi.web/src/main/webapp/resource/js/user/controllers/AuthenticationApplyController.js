@@ -71,7 +71,9 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 			            		return "采买员";
 			            	}else if(cellvalue == "DELIVERER"){
 			            		return "配送员";
-			            	}
+			            	}else if(cellvalue == "SPOKESMAN"){
+								return "代言人";
+							}
 			            	return ""; 
 			            }},
 			            {name:'createTime',label:'创建时间',sortable:false,formatter:function( cellvalue, options, rowObject ){
