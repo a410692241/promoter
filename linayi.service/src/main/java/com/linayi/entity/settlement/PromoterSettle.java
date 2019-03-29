@@ -1,4 +1,4 @@
-package com.linayi.entity.promoterSettle;
+package com.linayi.entity.settlement;
 
 import java.math.BigDecimal;
 import java.util.Date;
