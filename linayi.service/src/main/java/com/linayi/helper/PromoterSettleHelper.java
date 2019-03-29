@@ -14,7 +14,7 @@ public class PromoterSettleHelper {
      */
     private static final BigDecimal ORDER_QUANTITY = new BigDecimal("100");
     /**
-     * 单笔订单金额>=100
+     * 单笔订单金额>=100的所有订单金额：101+102 = 203
      */
     private static final BigDecimal IS_ORDER_AMOUNT = new BigDecimal("100");
     /**
@@ -65,9 +65,8 @@ public class PromoterSettleHelper {
     public static BigDecimal calculateEarnings(String promoterLevel, BigDecimal totalSum, BigDecimal orderAmount) {
         BigDecimal earnings = new BigDecimal("0.00");
         if ("1".equals(promoterLevel)) {
-            // 单笔订单>=100
+            // 单笔订单金额>=100的所有订单金额：101+102 = 203
             if (!(orderAmount.compareTo(IS_ORDER_AMOUNT) == -1)) {
-                // 单笔收益
                 earnings = orderAmount.multiply(YIELD_RATE_ONE_AMOUNT);
             }
             // 订单数>=100
@@ -78,8 +77,8 @@ public class PromoterSettleHelper {
                 earnings = totalSum.multiply(YIELD_RATE_ONE);
             }
         } else if ("2".equals(promoterLevel)) {
+            // 单笔订单金额>=100的所有订单金额：101+102 = 203
             if (!(orderAmount.compareTo(IS_ORDER_AMOUNT) == -1)) {
-                // 单笔收益
                 earnings = orderAmount.multiply(YIELD_RATE_TWO_AMOUNT);
             }
             // 订单数>=100
@@ -90,8 +89,8 @@ public class PromoterSettleHelper {
                 earnings = totalSum.multiply(YIELD_RATE_TWO);
             }
         } else if ("3".equals(promoterLevel)) {
+            // 单笔订单金额>=100的所有订单金额：101+102 = 203
             if (!(orderAmount.compareTo(IS_ORDER_AMOUNT) == -1)) {
-                // 单笔收益
                 earnings = orderAmount.multiply(YIELD_RATE_THREE_AMOUNT);
             }
             // 订单数>=100
