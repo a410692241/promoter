@@ -166,6 +166,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     public PromoterOrderMan getStatisVIP(Integer orderManId, Integer userId, String range) {
         Integer numberOfOrders = 0;    //订单数(通用)
         Integer totalSum = 0;    //订单合计金额(通用)
+        Integer totalHundredSum = 0;    //订单合计大于100金额(通用)
         PromoterOrderMan promoterOrderMan = new PromoterOrderMan();
         Orders orders = getTimeRange(range);
         //下单员会员订单数
@@ -175,9 +176,13 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         if(ordersList != null && ordersList.size() > 0){
             numberOfOrders +=ordersList.size();
             for (Orders orders1 : ordersList) {
+                if(orders1.getAmount() >= 100){
+                    totalHundredSum += orders1.getAmount();
+                }
                 totalSum += orders1.getAmount();
             }
         }
+        promoterOrderMan.setTotalHundredSum(totalHundredSum);
         promoterOrderMan.setNumberOfOrders(numberOfOrders);
         promoterOrderMan.setTotalSum(totalSum);
         return promoterOrderMan;
@@ -197,7 +202,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             Integer numberOfOrders = 0;    //订单数(通用)
             Integer totalSum = 0;    //订单合计金额(通用)
             Integer numberOfMembers = 0;    //会员数量(通用)
-
+            Integer totalHundredSum = 0;    //订单合计大于100金额(通用)
             if ("ORDER_MAN".equals(identity)) {
                 //下单员
                 promoterOrderMan = orderManTongji(manId, orders,type,identity);
@@ -217,7 +222,9 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
                     PromoterOrderMan tongji = orderManTongji(manId, orders,type,identity);
                     numberOfMembers += tongji.getNumberOfMembers() == null ? 0 : tongji.getNumberOfMembers();
                     totalSum += tongji.getTotalSum();
+                    totalHundredSum += tongji.getTotalHundredSum();
                     numberOfOrders += tongji.getNumberOfOrders();
+                    promoterOrderMan.setTotalHundredSum(totalHundredSum);
                     promoterOrderMan.setNumberOfOrderMan(numberOfOrderMan);
                     promoterOrderMan.setNumberOfMembers(numberOfMembers);
                     promoterOrderMan.setTotalSum(totalSum);
@@ -232,6 +239,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         Integer numberOfOrders = 0;    //订单数(通用)
         Integer totalSum = 0;    //订单合计金额(通用)
         Integer numberOfMembers = 0;    //会员数量(通用)
+        Integer totalHundredSum = 0;    //订单合计大于100金额(通用)
         PromoterOrderMan promoterOrderMan = new PromoterOrderMan();
         if ("ALL".equals(type)){
             //统计所有
@@ -272,6 +280,9 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
                 if (allOrder != null && allOrder.size() > 0){
                     numberOfOrders += allOrder.size();
                     for (Orders orders2 : allOrder) {
+                        if(orders2.getAmount() >= 100){
+                            totalHundredSum += orders2.getAmount();
+                        }
                         totalSum += orders2.getAmount();
                     }
                 }
@@ -285,6 +296,9 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             if(ordersList != null && ordersList.size() > 0){
                 numberOfOrders +=ordersList.size();
                 for (Orders orders1 : ordersList) {
+                    if(orders1.getAmount() >= 100){
+                        totalHundredSum += orders1.getAmount();
+                    }
                     totalSum += orders1.getAmount();
                 }
 
@@ -306,6 +320,9 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
                     numberOfOrders += allOrder.size();
                     for (Orders orders2 : allOrder) {
                         totalSum += orders2.getAmount();
+                        if(orders2.getAmount() >= 100){
+                            totalHundredSum += orders2.getAmount();
+                        }
                     }
                 }
             }
@@ -328,6 +345,9 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
                 numberOfOrders +=ordersList.size();
                 for (Orders orders1 : ordersList) {
                     totalSum += orders1.getAmount();
+                    if(orders1.getAmount() >= 100){
+                        totalHundredSum += orders1.getAmount();
+                    }
                 }
             }
         }else if("ALLVIP".equals(type)){
@@ -350,12 +370,16 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
                 numberOfOrders +=ordersList.size();
                 for (Orders orders1 : ordersList) {
                     totalSum += orders1.getAmount();
+                    if(orders1.getAmount() >= 100){
+                        totalHundredSum += orders1.getAmount();
+                    }
                 }
             }
         }
         promoterOrderMan.setNumberOfOrders(numberOfOrders);
         promoterOrderMan.setTotalSum(totalSum);
         promoterOrderMan.setNumberOfMembers(numberOfMembers);
+        promoterOrderMan.setTotalHundredSum(totalHundredSum);
         return promoterOrderMan;
     }
 
