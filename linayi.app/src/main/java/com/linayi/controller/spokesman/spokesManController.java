@@ -1,16 +1,13 @@
 package com.linayi.controller.spokesman;
 
 import com.linayi.controller.BaseController;
-import com.linayi.entity.spokesman.Spokesman;
 import com.linayi.entity.user.User;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.spokesman.SpokesmanService;
 import com.linayi.service.user.UserService;
 import com.linayi.util.ResponseData;
-import jdk.internal.org.objectweb.asm.tree.TryCatchBlockNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -36,14 +33,14 @@ public class spokesManController extends BaseController {
         }
     }*/
 
-    @RequestMapping(value = "/getUserInfo.do",method = RequestMethod.POST)
+    @RequestMapping(value = "/getUserInfo.do", method = RequestMethod.POST)
     @ResponseBody
-    public Object getUserInfo () {
+    public Object getUserInfo() {
         try {
             Integer userId = getUserId();
-           User user = userService.getUserForSpokesMan(userId);
+            User user = userService.getUserForSpokesMan(userId);
             return new ResponseData(user);
-        }catch (Exception e) {
+        } catch (Exception e) {
             return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
         }
 
