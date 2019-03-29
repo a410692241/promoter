@@ -175,7 +175,7 @@ app.controller('promoterCtrl', function ($http, $scope, toaster, promoterService
             data += '&createTimeEnd=' + createTimeEnd;
         }
 
-        location.href = urls.ms + "/finace/exportData.do?" + data.replace("&", "");
+        location.href = urls.ms + "/finace/exportShareRecord.do?" + data.replace("&", "");
         toaster.success("", "导出成功!", 1000);
     }
 

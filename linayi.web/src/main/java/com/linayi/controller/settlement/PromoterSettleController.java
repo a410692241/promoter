@@ -45,17 +45,14 @@ public class PromoterSettleController extends BaseController {
             return new ResponseData(ErrorType.SYSTEM_ERROR);
         }
     }
-    @RequestMapping("/exportData.do")
-    public void exportData(Orders orders){
 
-    }
 
     /**
      * excel 导出
      */
     @RequestMapping(value = "/exportShareRecord.do", method = RequestMethod.GET)
     public void exportExcel(Orders orders) {
-        List<PromoterSettleDTO> promoterSettleDTOList = promoterSettleService.getAllPromoterDto();
+        List<PromoterSettleDTO> promoterSettleDTOList = promoterSettleService.getAllPromoterDto(orders);
         try {
             getRequest().setCharacterEncoding("UTF-8");//设置request的编码方式，防止中文乱码
             String fileName = null;
