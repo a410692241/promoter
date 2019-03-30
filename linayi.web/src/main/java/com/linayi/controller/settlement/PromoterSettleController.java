@@ -70,7 +70,7 @@ public class PromoterSettleController extends BaseController {
                     if (settleDTO.getName() != null) {
                         tableHtml = tableHtml.append("<tr><td>" + settleDTO.getName() + "</td>");
                     } else {
-                        tableHtml = tableHtml.append("<td>" + " " + "</td>");
+                        tableHtml = tableHtml.append("<tr><td>" + " " + "</td>");
                     }
                     // 推广商等级
                     if (settleDTO.getPromoterLevel() != null) {
@@ -86,7 +86,7 @@ public class PromoterSettleController extends BaseController {
                     }
                     // 订单数
                     if (settleDTO.getSumOrderNo() != null) {
-                        tableHtml = tableHtml.append("<tr><td>" + settleDTO.getSumOrderNo() + "</td>");
+                        tableHtml = tableHtml.append("<td>" + settleDTO.getSumOrderNo() + "</td>");
                     } else {
                         tableHtml = tableHtml.append("<td>" + " " + "</td>");
                     }
