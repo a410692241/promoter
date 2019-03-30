@@ -17,6 +17,7 @@ public class PromoterSettleDTO {
     private Long ordersId;
     //推广商下单员名
     private String name;
+    
     //推广商下单员等级
     private String promoterLevel;
     //订单数
