@@ -4,10 +4,13 @@ app.controller('promoterCtrl', function ($http, $scope, toaster, promoterService
     var item_selected = new Array();
 
     function init() {
-        debugger;
         $scope.list = list;
         $scope.show = show;
         $scope.exportData = exportData;
+        $scope.search = {
+            createTimeEnd: "",
+            createTimeStart: ""
+        };
         list();
         $scope.search = {
             status: "",
@@ -66,7 +69,6 @@ app.controller('promoterCtrl', function ($http, $scope, toaster, promoterService
                     label: '推广商等级',
                     sortable: false,
                     formatter: function (cellvalue, options, rowObject) {
-                        debugger;
                         switch (cellvalue) {
                             case "1":
                                 return "一级";
