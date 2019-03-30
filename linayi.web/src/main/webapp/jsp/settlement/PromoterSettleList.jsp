@@ -22,16 +22,16 @@
             </div>
             <div class="widget-body">
                 <form class="form-inline" id="promoter">
-                    <div class="controls">
-                        <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="fa fa-calendar"></i>
-                                </span><input type="text" class="form-control" id="reservation">
-                        </div>
-                    </div>
+                    <%--<div class="controls">--%>
+                    <%--<div class="input-group">--%>
+                    <%--<span class="input-group-addon">--%>
+                    <%--<i class="fa fa-calendar"></i>--%>
+                    <%--</span><input type="text" class="form-control" id="reservation">--%>
+                    <%--</div>--%>
+                    <%--</div>--%>
                     <div class="form-group form-group-margin">
                         <div class="input-group">
-                            <span class="input-group-addon">创建时间</span> <input type="text"
+                            <span class="input-group-addon">结算时间</span> <input type="text"
                                                                                class="form-control" datetimepicker
                                                                                ng-model="search.createTimeStart"/>
                         </div>
