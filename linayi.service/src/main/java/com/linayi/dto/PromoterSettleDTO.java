@@ -9,6 +9,8 @@ import java.math.BigDecimal;
  */
 @Data
 public class PromoterSettleDTO {
+    //推广商法人ID
+    private Integer orderManId;
     //推广商下单员ID
     private Integer promoterId;
     //订单Id也是订单编号
