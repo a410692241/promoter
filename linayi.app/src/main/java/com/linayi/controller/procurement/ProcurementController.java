@@ -149,8 +149,12 @@ public class ProcurementController extends BaseController {
     		return new ResponseData(map);
 
 		} catch (Exception e) {
-
-			return new ResponseData(ErrorType.SYSTEM_ERROR);
+			String message = e.getMessage();
+			ResponseData responseData = new ResponseData(ErrorType.SYSTEM_ERROR);
+			if (message != null){
+				responseData.setErrorType(message);
+			}
+			return responseData;
 		}
 
 	}
