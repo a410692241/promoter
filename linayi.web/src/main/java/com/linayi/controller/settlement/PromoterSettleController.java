@@ -3,7 +3,7 @@ package com.linayi.controller.settlement;
 import com.linayi.controller.BaseController;
 import com.linayi.dto.PromoterSettleDTO;
 import com.linayi.entity.order.Orders;
-import com.linayi.service.promoter.PromoterSettleService;
+import com.linayi.service.settlement.PromoterSettleService;
 import com.linayi.util.PageResult;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.ServletOutputStream;
 import java.util.List;
 
+/**
+ * 推广商结算controller
+ */
 @Controller
 @RequestMapping("/finace")
 public class PromoterSettleController extends BaseController {
