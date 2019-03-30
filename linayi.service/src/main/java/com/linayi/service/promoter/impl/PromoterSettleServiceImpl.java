@@ -29,6 +29,7 @@ public class PromoterSettleServiceImpl implements PromoterSettleService {
      */
     @Override
     public List<PromoterSettleDTO> getAllPromoterDto(Orders orders) {
+        orders = PromoterSettleHelper.getDefaultSearchTime(orders);
         BigDecimal profit = new BigDecimal("0.00");
         // 推广商列表
         List<PromoterSettleDTO> promoterSettleDTOList = promoterMapper.getAllPromoter(orders);
@@ -36,7 +37,7 @@ public class PromoterSettleServiceImpl implements PromoterSettleService {
         if (promoterSettleDTOList != null && !promoterSettleDTOList.isEmpty()) {
             for (PromoterSettleDTO promoterSettleDTO : promoterSettleDTOList) {
                 // 推广商下的所有订单
-                promoterOrderMan = promoterOrderManService.getStatisALL(promoterSettleDTO.getPromoterId(), "ALL", "ALL",orders);
+                promoterOrderMan = promoterOrderManService.getStatisALL(promoterSettleDTO.getPromoterId(), "ALL", "ALL", orders);
                 if (promoterOrderMan != null) {
                     if (promoterSettleDTO.getPromoterId().equals(promoterOrderMan.getOrderManId())) {
                         // 订单数
