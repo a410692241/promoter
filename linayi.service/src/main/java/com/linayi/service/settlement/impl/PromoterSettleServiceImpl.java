@@ -1,4 +1,4 @@
-package com.linayi.service.promoter.impl;
+package com.linayi.service.settlement.impl;
 
 import com.linayi.dao.promoter.PromoterMapper;
 import com.linayi.dto.PromoterSettleDTO;
@@ -6,7 +6,7 @@ import com.linayi.entity.order.Orders;
 import com.linayi.entity.promoter.PromoterOrderMan;
 import com.linayi.helper.PromoterSettleHelper;
 import com.linayi.service.promoter.PromoterOrderManService;
-import com.linayi.service.promoter.PromoterSettleService;
+import com.linayi.service.settlement.PromoterSettleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

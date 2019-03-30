@@ -1,4 +1,4 @@
-package com.linayi.service.promoter;
+package com.linayi.service.settlement;
 
 import com.linayi.dto.PromoterSettleDTO;
 import com.linayi.entity.order.Orders;
