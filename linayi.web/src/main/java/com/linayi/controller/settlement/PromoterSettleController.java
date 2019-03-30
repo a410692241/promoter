@@ -3,11 +3,8 @@ package com.linayi.controller.settlement;
 import com.linayi.controller.BaseController;
 import com.linayi.dto.PromoterSettleDTO;
 import com.linayi.entity.order.Orders;
-import com.linayi.exception.BusinessException;
-import com.linayi.exception.ErrorType;
 import com.linayi.service.promoter.PromoterSettleService;
 import com.linayi.util.PageResult;
-import com.linayi.util.ResponseData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.ServletOutputStream;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Controller
@@ -68,7 +64,6 @@ public class PromoterSettleController extends BaseController {
             ServletOutputStream sos = getResponse().getOutputStream();
             String tempsb = "";
             if (null != promoterSettleDTOList) {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 StringBuilder tableHtml = new StringBuilder("<table><tr><td>推广商名称</td><td>推广商等级</td><td>订单数</td><td>订单总额</td><td>推广商收益</td></tr>");
                 for (PromoterSettleDTO settleDTO : promoterSettleDTOList) {
                     // 推广商名称
@@ -79,7 +74,6 @@ public class PromoterSettleController extends BaseController {
                     }
                     // 推广商等级
                     if (settleDTO.getPromoterLevel() != null) {
-                        tableHtml = tableHtml.append("<tr><td>" + settleDTO.getName() + "</td>");
                         if ("1".equals(settleDTO.getPromoterLevel())) {
                             tableHtml = tableHtml.append("<td>" + "一级" + "</td>");
                         } else if ("2".equals(settleDTO.getPromoterLevel())) {
