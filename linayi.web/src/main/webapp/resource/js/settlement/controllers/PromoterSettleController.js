@@ -16,13 +16,19 @@ app.controller('promoterCtrl', function ($http, $scope, toaster, promoterService
 
     /**列表查询*/
     function list() {
-        debugger;
+        var date = new Date();
+        if ($scope.search.createTimeStart != "") {
+            var createTimeStart = convertDateFromString($scope.search.createTimeStart);
+            if(date.getTime() < createTimeStart.getTime()){
+                alert("开始时间必须小于当前时间!");
+                return;
+            }
+        }
         if ($scope.search.createTimeEnd != "") {
             //结束时间不能大于当前时间
-            var date = new Date();
             var createTimeEnd = convertDateFromString($scope.search.createTimeEnd);
             if(date.getTime() < createTimeEnd.getTime()){
-                alert("结束时间必须大于当前时间!");
+                alert("结束时间不能大于当前时间!");
                 return;
             }
 
