@@ -9,16 +9,15 @@ import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.area.SmallCommunity;
 import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.goods.SupermarketGoods;
+import com.linayi.entity.promoter.OpenMemberInfo;
 import com.linayi.entity.user.ReceiveAddress;
 import com.linayi.entity.user.ShoppingCar;
 import com.linayi.entity.user.User;
 import com.linayi.service.goods.BrandService;
 import com.linayi.service.goods.SupermarketGoodsService;
+import com.linayi.service.promoter.OpenMemberInfoService;
 import com.linayi.service.user.ShopCarService;
-import com.linayi.util.CheckUtil;
-import com.linayi.util.ConstantUtil;
-import com.linayi.util.ImageUtil;
-import com.linayi.util.NumberUtil;
+import com.linayi.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,13 +34,11 @@ public class ShopCarServiceImpl implements ShopCarService {
     @Autowired
     private SupermarketGoodsService supermarketGoodsService;
     @Autowired
-    private BrandService brandService;
-    @Autowired
     private ReceiveAddressMapper receiveAddressMapper;
     @Autowired
     private SmallCommunityMapper smallCommunityMapper;
     @Autowired
-    private AttributeMapper attributeMapper;
+    private OpenMemberInfoService openMemberInfoService;
     @Autowired
     private UserMapper userMapper;
 
@@ -78,7 +75,8 @@ public class ShopCarServiceImpl implements ShopCarService {
             List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getSupermarketGoodsList(car.getGoodsSkuId(), smallCommunity.getCommunityId());
             Integer minPrice = 0;
             if (supermarketGoodsList != null && supermarketGoodsList.size() > 0){
-                minPrice = supermarketGoodsList.get(supermarketGoodsList.size() - 1).getPrice();
+                OpenMemberInfo theLastOpenMemberInfo = openMemberInfoService.getTheLastOpenMemberInfo(shoppingCar.getUserId());
+                minPrice = supermarketGoodsList.get(MemberPriceUtil.memberPriceByLevel(theLastOpenMemberInfo,supermarketGoodsList.size())).getPrice();
             }
             car.setMinPrice(getpriceString(minPrice));
             car.setMinSupermarketName(supermarketGoodsList.get(supermarketGoodsList.size() - 1).getSupermarketName());
@@ -88,9 +86,9 @@ public class ShopCarServiceImpl implements ShopCarService {
             car.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
             car.setGoodsName(goodsSku.getFullName());
             if ("SELECTED".equals(car.getSelectStatus())){
-                List<SupermarketGoods> supermarketGoodss = getSupermarketGoodsByGoodsSkuId(car);
+                //List<SupermarketGoods> supermarketGoodss = getSupermarketGoodsByGoodsSkuId(car);
 //                car.setHeJiPrice(getpriceString(car.getQuantity() * supermarketGoods.getPrice()));
-                totalPrice += car.getQuantity() *  supermarketGoodss.get(0).getPrice();
+                totalPrice += car.getQuantity() *  minPrice;
             }
 
         }
@@ -195,7 +193,8 @@ public class ShopCarServiceImpl implements ShopCarService {
             Integer minPrice = 0;
             Integer maxPrice = 0;
             if (supermarketGoodsList != null && supermarketGoodsList.size() > 0){
-                minPrice = supermarketGoodsList.get(supermarketGoodsList.size() - 1).getPrice();
+                OpenMemberInfo theLastOpenMemberInfo = openMemberInfoService.getTheLastOpenMemberInfo(car.getUserId());
+                minPrice = supermarketGoodsList.get(MemberPriceUtil.memberPriceByLevel(theLastOpenMemberInfo,supermarketGoodsList.size())).getPrice();
                 maxPrice = supermarketGoodsList.get(0).getPrice();
             }
 
@@ -206,9 +205,9 @@ public class ShopCarServiceImpl implements ShopCarService {
             car.setSpreadRate(NumberUtil.formatDouble((maxPrice - minPrice) * 100 / Double.parseDouble(minPrice + "")) + "%");
             offerPrice += (maxPrice - minPrice) * car.getQuantity();
             if ("SELECTED".equals(car.getSelectStatus())){
-                List<SupermarketGoods> supermarketGoodss = getSupermarketGoodsByGoodsSkuId(car);
-                car.setHeJiPrice(getpriceString(car.getQuantity() * supermarketGoodss.get(0).getPrice()));
-                totalPrice += car.getQuantity() * supermarketGoodss.get(0).getPrice();
+//                List<SupermarketGoods> supermarketGoodss = getSupermarketGoodsByGoodsSkuId(car);
+                car.setHeJiPrice(getpriceString(car.getQuantity() * minPrice));
+                totalPrice += car.getQuantity() * minPrice;
             }
         }
         result.put("shopCars",shoppingCars);

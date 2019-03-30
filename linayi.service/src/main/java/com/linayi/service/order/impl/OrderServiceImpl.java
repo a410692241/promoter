@@ -37,6 +37,7 @@ import com.linayi.enums.OrderStatus;
 import com.linayi.service.goods.BrandService;
 import com.linayi.service.goods.SupermarketGoodsService;
 import com.linayi.service.order.OrderService;
+import com.linayi.service.promoter.OpenMemberInfoService;
 import com.linayi.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,6 +82,8 @@ public class OrderServiceImpl implements OrderService {
     private PromoterOrderManMapper promoterOrderManMapper;
     @Autowired
     private OpenMemberInfoMapper openMemberInfoMapper;
+    @Autowired
+    private OpenMemberInfoService openMemberInfoService;
 
     @Transactional
     @Override
@@ -164,13 +167,14 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    public static OrdersGoods generateOrdersGoods(Orders order, List<SupermarketGoods> supermarketGoodsList, Integer quantity, Integer goodsSkuId) {
+    public  OrdersGoods generateOrdersGoods(Orders order, List<SupermarketGoods> supermarketGoodsList, Integer quantity, Integer goodsSkuId) {
         OrdersGoods ordersGoods = new OrdersGoods();
         ordersGoods.setOrdersId(order.getOrdersId());
         Integer minPrice = 0;
         Integer maxPrice = 0;
         if (supermarketGoodsList != null && supermarketGoodsList.size() > 0) {
-            minPrice = supermarketGoodsList.get(supermarketGoodsList.size() - 1).getPrice();
+            OpenMemberInfo theLastOpenMemberInfo = openMemberInfoService.getTheLastOpenMemberInfo(order.getUserId());
+            minPrice = supermarketGoodsList.get(MemberPriceUtil.memberPriceByLevel(theLastOpenMemberInfo, supermarketGoodsList.size())).getPrice();
             maxPrice = supermarketGoodsList.get(0).getPrice();
         }
 

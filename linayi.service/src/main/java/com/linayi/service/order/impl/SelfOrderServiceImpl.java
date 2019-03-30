@@ -55,7 +55,7 @@ public class SelfOrderServiceImpl implements SelfOrderService {
     @Autowired
     private GoodsSkuService goodsSkuService;
     @Autowired
-    private BrandService brandService;
+    private OrderServiceImpl orderServiceImpl;
     @Autowired
     private GoodsSkuMapper goodsSkuMapper;
 
@@ -291,7 +291,7 @@ public class SelfOrderServiceImpl implements SelfOrderService {
         order.setOrderType("'SELF_ORDER'");
         ordersMapper.insert(order);
         List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getSupermarketGoodsList(goodsSkuId, smallCommunity.getCommunityId());
-        OrdersGoods ordersGoods = OrderServiceImpl.generateOrdersGoods(order, supermarketGoodsList, num, goodsSkuId);
+        OrdersGoods ordersGoods = orderServiceImpl.generateOrdersGoods(order, supermarketGoodsList, num, goodsSkuId);
         ordersGoodsMapper.insert(ordersGoods);
         Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(supermarketGoodsList.get(supermarketGoodsList.size() - 1).getSupermarketId());
         //待采买任务
