@@ -16,12 +16,13 @@ app.controller('promoterCtrl', function ($http, $scope, toaster, promoterService
 
     /**列表查询*/
     function list() {
+        debugger;
         if ($scope.search.createTimeEnd != "") {
             //结束时间不能大于当前时间
             var date = new Date();
             var createTimeEnd = convertDateFromString($scope.search.createTimeEnd);
             if(date.getTime() < createTimeEnd.getTime()){
-                toaster.error("", "结束时间必须大于当前时间!", 3000);
+                alert("结束时间必须大于当前时间!");
                 return;
             }
 
@@ -33,12 +34,12 @@ app.controller('promoterCtrl', function ($http, $scope, toaster, promoterService
                 var year2 = createTimeStart.getFullYear();//年
                 var month2 = createTimeStart.getMonth();//月
                 if(createTimeStart.getTime() > createTimeEnd.getTime()){
-                    toaster.error("", "开始时间必须小于结束时间!", 3000);
+                    alert("开始时间必须小于结束时间!");
                     return;
                 }
 
                 if(!(year1 == year2 && month1 == month2)){
-                    toaster.error("", "查询时间必须是同一月份的!", 3000);
+                    alert("查询时间必须是同一月份的!");
                     return;
                 }
             }
