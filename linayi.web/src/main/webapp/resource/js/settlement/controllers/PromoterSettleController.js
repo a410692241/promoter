@@ -12,10 +12,6 @@ app.controller('promoterCtrl', function ($http, $scope, toaster, promoterService
             createTimeStart: ""
         };
         list();
-        $scope.search = {
-            status: "",
-            priceType: ""
-        };
     }
 
     /**列表查询*/
