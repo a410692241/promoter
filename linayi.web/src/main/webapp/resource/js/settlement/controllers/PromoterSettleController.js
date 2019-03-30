@@ -84,7 +84,9 @@ app.controller('promoterCtrl', function ($http, $scope, toaster, promoterService
                 {name: 'promoterSettleId', label: '推广商收益ID', sortable: false, hidden: true},
                 {name: 'profit', label: '推广商收益', sortable: false}
 
-            ],
+            ]
+        });
+    }/*,
             //设置页面
             loadComplete: function () {
                 debugger;
@@ -132,9 +134,7 @@ app.controller('promoterCtrl', function ($http, $scope, toaster, promoterService
                     }
                 }
 
-            },
-        });
-    }
+            },*/
 
 
     //查看

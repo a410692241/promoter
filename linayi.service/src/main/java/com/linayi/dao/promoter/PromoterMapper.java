@@ -1,6 +1,7 @@
 package com.linayi.dao.promoter;
 
 import com.linayi.dto.PromoterSettleDTO;
+import com.linayi.entity.order.Orders;
 import com.linayi.entity.promoter.Promoter;
 
 import java.util.List;
@@ -13,5 +14,5 @@ public interface PromoterMapper {
      *
      * @return
      */
-    List<PromoterSettleDTO> getAllPromoter();
+    List<PromoterSettleDTO> getAllPromoter(Orders orders);
 }

@@ -31,7 +31,7 @@ public class PromoterSettleServiceImpl implements PromoterSettleService {
     public List<PromoterSettleDTO> getAllPromoterDto(Orders orders) {
         BigDecimal profit = new BigDecimal("0.00");
         // 推广商列表
-        List<PromoterSettleDTO> promoterSettleDTOList = promoterMapper.getAllPromoter();
+        List<PromoterSettleDTO> promoterSettleDTOList = promoterMapper.getAllPromoter(orders);
         PromoterOrderMan promoterOrderMan = null;
         if (promoterSettleDTOList != null && !promoterSettleDTOList.isEmpty()) {
             for (PromoterSettleDTO promoterSettleDTO : promoterSettleDTOList) {
