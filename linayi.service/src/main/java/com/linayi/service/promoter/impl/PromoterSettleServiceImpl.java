@@ -52,9 +52,9 @@ public class PromoterSettleServiceImpl implements PromoterSettleService {
                         // 订单数
                         promoterSettleDTO.setSumOrderNo(sumOrderNo);
                         // 订单合计总额
-                        promoterSettleDTO.setSumOrderAmount(totalSum);
+                        promoterSettleDTO.setSumOrderAmount(totalSum.divide(new BigDecimal("100")));
                         // 单笔订单额>=100的合计：有可能等于0
-                        BigDecimal orderAmount = BigDecimal.valueOf(promoterOrderMan.getTotalHundredSum());
+                        BigDecimal orderAmount = BigDecimal.valueOf(promoterOrderMan.getTotalHundredSum()).divide(new BigDecimal("100"));
                         // 收益：订单收益+单笔订单额>=100合计后的收益
                         profit = PromoterSettleHelper.calculateEarnings(level, totalSum, orderAmount);
                     }
