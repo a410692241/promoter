@@ -1,8 +1,12 @@
 package com.linayi.helper;
 
+import com.linayi.entity.order.Orders;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * 财务结算：推广商结算
@@ -102,5 +106,29 @@ public class PromoterSettleHelper {
             }
         }
         return earnings;
+    }
+
+    public static Orders getDefaultSearchTime(Orders orders) {
+        // 默认查询当前月1号到当天时间范围的数据
+        Date time = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        if (orders.getCreateTimeStart() == null || orders.getCreateTimeStart() == "") {
+            Calendar c = Calendar.getInstance();
+            c.add(Calendar.MONTH, 0);
+            c.set(Calendar.DAY_OF_MONTH, 1);
+            c.set(Calendar.HOUR_OF_DAY, 0);
+            c.set(Calendar.MINUTE, 0);
+            c.set(Calendar.SECOND, 0);
+            c.set(Calendar.MILLISECOND, 0);
+            //设置为1号,当前日期既为本月第一天
+            String first = sdf.format(c.getTime());
+            orders.setCreateTimeStart(first);
+        }
+        if (orders.getCreateTimeEnd() == null || orders.getCreateTimeEnd() == "") {
+            // 设置为当前时间
+            String currentDate = sdf.format(time);
+            orders.setCreateTimeEnd(currentDate);
+        }
+        return orders;
     }
 }
