@@ -4,16 +4,18 @@
     <resultMap id="BaseResultMap" type="com.linayi.dto.PromoterSettleDTO">
         <id column="promoter_id" property="promoterId" jdbcType="INTEGER"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
-        <result column="promoterLevel" property="promoterLevel" jdbcType="VARCHAR"/>
-
+        <result column="promoter_level" property="promoterLevel" jdbcType="VARCHAR"/>
+        <result column="order_man_id" property="orderManId" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column">promoter_id, name, promoter_level</sql>
 
     <!--获取所有的推广商-->
     <select id="getAllPromoter" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column"></include>
-        from promoter
+        SELECT p.`promoter_id`,p.`name`,p.`promoter_level`,pom.`order_man_id`
+          FROM promoter p,promoter_order_man pom
+         WHERE  p.`promoter_id` = pom.`promoter_id`
+           AND pom.`identity`='LEGAL_MAN'
+           GROUP BY p.`promoter_id`
     </select>
 </mapper>

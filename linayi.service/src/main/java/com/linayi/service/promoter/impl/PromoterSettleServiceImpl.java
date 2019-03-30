@@ -37,25 +37,30 @@ public class PromoterSettleServiceImpl implements PromoterSettleService {
         if (promoterSettleDTOList != null && !promoterSettleDTOList.isEmpty()) {
             for (PromoterSettleDTO promoterSettleDTO : promoterSettleDTOList) {
                 // 推广商下的所有订单
-                promoterOrderMan = promoterOrderManService.getStatisALL(promoterSettleDTO.getPromoterId(), "ALL", "ALL", orders);
+                promoterOrderMan = promoterOrderManService.getStatisALL(promoterSettleDTO.getOrderManId(), "ALL", "ALL", orders);
                 if (promoterOrderMan != null) {
-                    if (promoterSettleDTO.getPromoterId().equals(promoterOrderMan.getOrderManId())) {
-                        // 订单数
-                        promoterSettleDTO.setSumOrderNo(promoterOrderMan.getNumberOfOrders());
-                        // 订单总额
-                        promoterSettleDTO.setSumOrderAmount(BigDecimal.valueOf(promoterOrderMan.getTotalSum()));
-                        // TODO 被投诉或违规推广次数:暂时默认为0
-                        promoterSettleDTO.setViolationOfPromotionNo(0);
-                        //  推广商等级
-                        String level = promoterSettleDTO.getPromoterLevel();
-                        // 订单数
-                        BigDecimal orderAmount = BigDecimal.valueOf(promoterOrderMan.getTotalHundredSum());
-                        // 单笔订单额>=100的合计：有可能等于0
+                    // 订单数
+                    Integer sumOrderNo = promoterOrderMan.getNumberOfOrders();
+                    //  推广商等级
+                    String level = promoterSettleDTO.getPromoterLevel();
+                    if (sumOrderNo == null || sumOrderNo == 0) {
+                        promoterSettleDTO.setSumOrderNo(0);
+                        promoterSettleDTO.setSumOrderAmount(new BigDecimal("0"));
+                        promoterSettleDTO.setProfit(new BigDecimal("0"));
+                    } else {
                         BigDecimal totalSum = new BigDecimal(promoterOrderMan.getTotalSum());
+                        // 订单数
+                        promoterSettleDTO.setSumOrderNo(sumOrderNo);
+                        // 订单合计总额
+                        promoterSettleDTO.setSumOrderAmount(totalSum);
+                        // 单笔订单额>=100的合计：有可能等于0
+                        BigDecimal orderAmount = BigDecimal.valueOf(promoterOrderMan.getTotalHundredSum());
                         // 收益：订单收益+单笔订单额>=100合计后的收益
                         profit = PromoterSettleHelper.calculateEarnings(level, totalSum, orderAmount);
                     }
                 }
+                // TODO 被投诉或违规推广次数:暂时默认为0
+                promoterSettleDTO.setViolationOfPromotionNo(0);
                 promoterSettleDTO.setProfit(profit);
             }
         }
