@@ -146,4 +146,6 @@ public interface OrderService {
      * @return
      */
     PageResult<Orders> getOrdersList(Orders orders);
+
+    OrdersGoods generateOrdersGoods(Orders order, List<SupermarketGoods> supermarketGoodsList, Integer num, Integer goodsSkuId);
 }

@@ -27,6 +27,7 @@ import com.linayi.enums.SelfOrderStatus;
 import com.linayi.service.goods.BrandService;
 import com.linayi.service.goods.GoodsSkuService;
 import com.linayi.service.goods.SupermarketGoodsService;
+import com.linayi.service.order.OrderService;
 import com.linayi.service.order.SelfOrderMessageService;
 import com.linayi.service.order.SelfOrderService;
 import com.linayi.service.user.MessageService;
@@ -55,7 +56,7 @@ public class SelfOrderServiceImpl implements SelfOrderService {
     @Autowired
     private GoodsSkuService goodsSkuService;
     @Autowired
-    private OrderServiceImpl orderServiceImpl;
+    private OrderService orderService;
     @Autowired
     private GoodsSkuMapper goodsSkuMapper;
 
@@ -291,7 +292,7 @@ public class SelfOrderServiceImpl implements SelfOrderService {
         order.setOrderType("'SELF_ORDER'");
         ordersMapper.insert(order);
         List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getSupermarketGoodsList(goodsSkuId, smallCommunity.getCommunityId());
-        OrdersGoods ordersGoods = orderServiceImpl.generateOrdersGoods(order, supermarketGoodsList, num, goodsSkuId);
+        OrdersGoods ordersGoods = orderService.generateOrdersGoods(order, supermarketGoodsList, num, goodsSkuId);
         ordersGoodsMapper.insert(ordersGoods);
         Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(supermarketGoodsList.get(supermarketGoodsList.size() - 1).getSupermarketId());
         //待采买任务

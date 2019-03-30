@@ -167,6 +167,7 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    @Override
     public  OrdersGoods generateOrdersGoods(Orders order, List<SupermarketGoods> supermarketGoodsList, Integer quantity, Integer goodsSkuId) {
         OrdersGoods ordersGoods = new OrdersGoods();
         ordersGoods.setOrdersId(order.getOrdersId());
