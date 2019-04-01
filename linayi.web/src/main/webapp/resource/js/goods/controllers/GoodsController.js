@@ -203,6 +203,7 @@ app.controller('goodsCtrl'/**
                     {name: 'categoryName', label: '类别', width: 60, sortable: false},
                     {name: 'brandName', label: '品牌', width: 60, sortable: false},
                     {name: 'barcode', label: '条形码', width: 60, sortable: false},
+                    {name: 'goodsSkuId', label: '商品编号', width: 60, sortable: false},
                     {name: 'createName', label: '添加人', width: 60, sortable: false},
                     {name: 'userName', label: '创建者账号', width: 60, sortable: false},
                     {
