@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 
-
-
 @RestController
 @RequestMapping("/goods/goods")
 public class GoodsSkuController extends BaseController {
@@ -43,118 +41,81 @@ public class GoodsSkuController extends BaseController {
 
 	}
 
-
-
 	//根据用户地址获取绑定的5家超市对象
     @RequestMapping("/supermarket.do")
     @ResponseBody
     public Object addShopCar() {
-    	
-    	
-     
     	try {
     		List<Supermarket> supermarketList =	supermarketService.getSupermarketByAddress(getUserId());
-        
-
     		return  new ResponseData(supermarketList);
-    		
     	} catch (Exception e) {
     		return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
-    		
 		}
-    
-
     }
-    
-    
+
+
     //根据商品id和用户uid查询其他超市价格
     @RequestMapping("/supermarketPriceList.do")
     @ResponseBody
     public Object showOtherSupermarketPrice(@RequestBody Map<String, Object> param){
-    	
-    	
     	try {
-
     		Map<String,Object> map = supermarketGoodsService.getPriceSupermarketByGoodsSkuId(super.getUserId(), (Integer)param.get("goodsSkuId"));
     		return new ResponseData(map);
-    	
     	} catch (Exception e) {
     		return new ResponseData(ErrorType.SYSTEM_ERROR);
-    		
 		}
-   
-    	
-
-    	
     }
-    
-    
+
+
     //根据品牌id分类id和商品名获取商品列表(已测试)
     @RequestMapping("/searchgoodsList.do")
     public ResponseData showGoodsSkuList(@RequestBody GoodsSku goodsSku){
     	try {
-    		
     		goodsSku.setUserId(getUserId());
-    		
     		if(goodsSku.getPageSize() == null){
     			goodsSku.setPageSize(8);
     		}
-
+    		Integer userId = getUserId();
+			goodsSku.setUserId(userId);
     		List<GoodsSku> goodsList =
     	    		goodsSkuService.getGoodsListBybrandIdcategoryIdGoodsName(goodsSku);
     		Integer totalPage = (int) Math.ceil(Double.valueOf(goodsSku.getTotal())/Double.valueOf(goodsSku.getPageSize()));
     		if(totalPage <= 0){
     			totalPage++;
     		}
-    		
     		Map<String , Object> map = new HashMap<>();
     		map.put("data", goodsList);
     		map.put("totalPage", totalPage);
     		map.put("currentPage",goodsSku.getCurrentPage() );
     		return new ResponseData(map);
-
-    	
     	} catch (Exception e) {
     		return new ResponseData(ErrorType.SYSTEM_ERROR);
-    		
 		}
-    	
-   
-
     }
-    
-    
+
+
     //差价排行(已测试)
     @RequestMapping("/differenceRanking.do")
     public Object showDifferenceRanking(@RequestBody GoodsSku goodsSku) {
-
-
     	try {
     		goodsSku.setUserId(getUserId());
-    		
     		if(goodsSku.getPageSize() == null){
     			goodsSku.setPageSize(8);
     		}
-
     		List<GoodsSku> differenceRankingList = goodsSkuService.getDifferenceRanking(goodsSku);
     		Integer totalPage = (int) Math.ceil(Double.valueOf(goodsSku.getTotal())/Double.valueOf(goodsSku.getPageSize()));
     		if(totalPage <= 0){
     			totalPage++;
     		}
-    		
+
     		Map<String , Object> map = new HashMap<>();
     		map.put("data", differenceRankingList);
     		map.put("totalPage", totalPage);
     		map.put("currentPage",goodsSku.getCurrentPage() );
     		return new ResponseData(map);
-
-    	
     	} catch (Exception e) {
     		return new ResponseData(ErrorType.SYSTEM_ERROR);
-    		
 		}
-    
-    	
     }
 
 	/**
@@ -168,7 +129,6 @@ public class GoodsSkuController extends BaseController {
 		ParamValidUtil<GoodsSku> pvu = new ParamValidUtil<>(param);
 		Integer currentPage = (Integer) param.get("pages");
 		String name = (String) param.get("name");
-		
 		try {
 			GoodsSku goodsSku = new GoodsSku();
 			goodsSku.setCurrentPage(currentPage);
@@ -176,7 +136,6 @@ public class GoodsSkuController extends BaseController {
 			goodsSku.setName(name);
 			//pvu.Exist("accessToken","name");
 			List<GoodsSku> goodsSkusList = goodsSkuService.getGoodsByName(goodsSku, request);
-
 			return new ResponseData(goodsSkusList);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -203,7 +162,7 @@ public class GoodsSkuController extends BaseController {
 	}
 
 
-    
+
     //根据商品名模糊搜索商品不包含价格分享价格用(已测试)
     @RequestMapping("/vagueGoodsSku.do")
     public Object showVagueGoodsSku(@RequestBody GoodsSku goodsSku) {
@@ -220,7 +179,7 @@ public class GoodsSkuController extends BaseController {
 //    		}else{
 //    			goodsSku.setPageSize(10);
 //    		}
-    		
+
     		if(goodsSku.getPageSize() == null){
     			goodsSku.setPageSize(8);
     		}
@@ -238,45 +197,38 @@ public class GoodsSkuController extends BaseController {
     		return new ResponseData(map);
     	} catch (Exception e) {
     		return new ResponseData(ErrorType.SYSTEM_ERROR);
-    		
+
 		}
-    	
     }
-    
-    
+
+
     //根据用户id和商品id获取超市和价格信息(已测试)
     @RequestMapping("/priceSupermarket.do")
     @ResponseBody
     public Object showPriceSupermarket(@RequestBody Map<String, Object> param) {
-    	
     	try {
-    		
     		List<Supermarket> priceSupermarketList = supermarketGoodsService.getPriceSupermarketBycommunityIdAndgoodsSkuId(getUserId(), (Integer)param.get("goodsSkuId"));
     		return new ResponseData(priceSupermarketList);
-    	
     	} catch (Exception e) {
     		return new ResponseData(ErrorType.SYSTEM_ERROR);
-    		
 		}
-    	
+
     }
-    
-    
+
+
     //自定义搜索
     @RequestMapping("/customSearch.do")
     public Object customSearch(@RequestBody GoodsSku goodsSku) {
-    	
     	try {
-    		
     		if(goodsSku.getBrandName()==null&&goodsSku.getFullName()==null&&goodsSku.getValueName()==null) {
     			return null;
     		}
-    		
     		goodsSku.setUserId(getUserId());
     		if(goodsSku.getPageSize() == null){
     			goodsSku.setPageSize(8);
     		}
-
+			Integer userId = getUserId();
+			goodsSku.setUserId(userId);
     		List<GoodsSku> goodsSkuList = goodsSkuService.customSearch(goodsSku);
     		Integer totalPage = (int) Math.ceil(Double.valueOf(goodsSku.getTotal())/Double.valueOf(goodsSku.getPageSize()));
     		if(totalPage <= 0){
@@ -290,10 +242,9 @@ public class GoodsSkuController extends BaseController {
 
     	} catch (Exception e) {
     		return new ResponseData(ErrorType.SYSTEM_ERROR);
-    		
+
 		}
-    	
     }
-    
-    
+
+
 }
