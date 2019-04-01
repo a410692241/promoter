@@ -22,6 +22,9 @@ public class PromoterOrderMan extends BaseEntity {
     @ApiModelProperty(name = "createTime", value = "创建时间")
     private Date createTime;
 
+    @ApiModelProperty(name = "parentType", value = "上级类型")
+    private String parentType;
+
     @ApiModelProperty(name = "headImage", value = "头像")
     private String headImage;            //头像(首页)
 
@@ -246,5 +249,13 @@ public class PromoterOrderMan extends BaseEntity {
 
     public void setTotalHundredSum(Integer totalHundredSum) {
         this.totalHundredSum = totalHundredSum;
+    }
+
+    public String getParentType() {
+        return parentType;
+    }
+
+    public void setParentType(String parentType) {
+        this.parentType = parentType;
     }
 }

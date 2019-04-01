@@ -211,6 +211,8 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
                 //下单员
                 promoterOrderMan = orderManTongji(manId, orders,type,identity);
             } else if ("LEGAL_MAN".equals(identity)) {
+                //将parentType的值赋值给identity
+                promoterOrderMan.setIdentity(promoterOrderMan.getParentType());
                 //法人
                 PromoterOrderMan promoterOrderMan1 = new PromoterOrderMan();
                 promoterOrderMan1.setPromoterId(promoterOrderMan.getPromoterId());
