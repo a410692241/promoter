@@ -41,6 +41,8 @@
     	community_supermarket
  	WHERE
     	community_id = #{communityId}
+    ORDER BY
+        rank
  
   </select>
   

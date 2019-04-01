@@ -162,7 +162,7 @@
 
 
 	<!-- 根据超市id获取超市价格表信息 -->
-	<select id="getSupermarketGoodsBysupermarketIdAndgoodsSkuId"
+	<select id="getSupermarketGoodsBysupermarketIdListAndgoodsSkuId"
 		resultType="com.linayi.entity.goods.SupermarketGoods">
 		SELECT
 			supermarket_goods_id,
@@ -180,6 +180,25 @@
 	
 			AND  goods_sku_id =#{goodsSkuId}
 	
+			AND  price is not null
+		</where>
+	</select>
+
+	<!-- 根据超市id获取超市价格表信息 -->
+	<select id="getSupermarketGoodsBysupermarketIdAndgoodsSkuId"
+			resultType="com.linayi.entity.goods.SupermarketGoods">
+		SELECT
+		supermarket_goods_id,
+		supermarket_id,
+		goods_sku_id,
+		price
+		FROM
+		supermarket_goods
+		<where>
+			supermarket_id = #{supermarketId}
+
+			AND  goods_sku_id =#{goodsSkuId}
+
 			AND  price is not null
 		</where>
 	</select>

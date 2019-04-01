@@ -49,8 +49,15 @@ public interface SupermarketGoodsMapper {
      * @param goodsSkuId
      * @return
      */
-    List<SupermarketGoods> getSupermarketGoodsBysupermarketIdAndgoodsSkuId(@Param("goodsSkuId") Integer goodsSkuId,
-                                                                           @Param("supermarketIdList")List<Integer> supermarketIdList);
+    List<SupermarketGoods> getSupermarketGoodsBysupermarketIdListAndgoodsSkuId(@Param("goodsSkuId") Integer goodsSkuId,
+                                                                               @Param("supermarketIdList")List<Integer> supermarketIdList);
+    /**
+     * 根据超市id商品id获取超市价格表信息
+     * @param supermarketId
+     * @param goodsSkuId
+     * @return
+     */
+    SupermarketGoods getSupermarketGoodsBysupermarketIdAndgoodsSkuId(@Param("goodsSkuId") Integer goodsSkuId,@Param("supermarketId")Integer supermarketId);
 
     //根据correctId删除数据
     Integer deleteSupermarketGoods(@Param("supermarketId") Integer supermarketId,
