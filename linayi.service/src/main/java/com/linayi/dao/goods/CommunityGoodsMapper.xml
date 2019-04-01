@@ -77,6 +77,42 @@
       <if test="updateTime != null">
         update_time,
       </if>
+      <if test="minSupermarketIdNormal != null">
+        min_supermarket_id_normal,
+      </if>
+      <if test="minPriceNormal != null">
+        min_price_normal,
+      </if>
+      <if test="maxSupermarketIdNormal != null">
+        max_supermarket_id_normal,
+      </if>
+      <if test="maxPriceNormal != null">
+        max_price_normal,
+      </if>
+      <if test="minSupermarketIdSenior != null">
+        min_supermarket_id_senior,
+      </if>
+      <if test="minPriceSenior != null">
+        min_price_senior,
+      </if>
+      <if test="maxSupermarketIdSenior != null">
+        max_supermarket_id_senior,
+      </if>
+      <if test="maxPriceSenior != null">
+        max_price_senior,
+      </if>
+      <if test="minSupermarketIdSuper != null">
+        min_supermarket_id_super,
+      </if>
+      <if test="minPriceSuper != null">
+        min_price_super,
+      </if>
+      <if test="maxSupermarketIdSuper != null">
+        max_supermarket_id_super,
+      </if>
+      <if test="maxPriceSuper != null">
+        max_price_super,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="communityGoodsId != null">
@@ -106,23 +142,59 @@
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="minSupermarketIdNormal != null">
+        #{minSupermarketIdNormal,jdbcType=INTEGER},
+      </if>
+      <if test="minPriceNormal != null">
+        #{minPriceNormal,jdbcType=INTEGER},
+      </if>
+      <if test="maxSupermarketIdNormal != null">
+        #{maxSupermarketIdNormal,jdbcType=INTEGER},
+      </if>
+      <if test="maxPriceNormal != null">
+        #{maxPriceNormal,jdbcType=INTEGER},
+      </if>
+      <if test="minSupermarketIdSenior != null">
+        #{minSupermarketIdSenior,jdbcType=INTEGER},
+      </if>
+      <if test="minPriceSenior != null">
+        #{minPriceSenior,jdbcType=INTEGER},
+      </if>
+      <if test="maxSupermarketIdSenior != null">
+        #{maxSupermarketIdSenior,jdbcType=INTEGER},
+      </if>
+      <if test="maxPriceSenior != null">
+        #{maxPriceSenior,jdbcType=INTEGER},
+      </if>
+      <if test="minSupermarketIdSuper != null">
+        #{minSupermarketIdSuper,jdbcType=INTEGER},
+      </if>
+      <if test="minPriceSuper != null">
+        #{minPriceSuper,jdbcType=INTEGER},
+      </if>
+      <if test="maxSupermarketIdSuper != null">
+        #{maxSupermarketIdSuper,jdbcType=INTEGER},
+      </if>
+      <if test="maxPriceSuper != null">
+        #{maxPriceSuper,jdbcType=INTEGER},
+      </if>
     </trim>
   </insert>
-  
-  
+
+
   <!-- 通过社区id删除社区商品表信息 -->
   <delete id="delectCommunityGoods">
-  	DELETE FROM
-  				community_goods
-  		  WHERE
-  				community_id=#{communityId}	
-  			<if test="goodsSkuId!=null and goodsSkuId!=''">
-  		 	AND	goods_sku_id=#{goodsSkuId}
-  		 	 </if>
-  				
+    DELETE FROM
+    community_goods
+    WHERE
+    community_id=#{communityId}
+    <if test="goodsSkuId!=null and goodsSkuId!=''">
+      AND	goods_sku_id=#{goodsSkuId}
+    </if>
+
 
   </delete>
-  
-  
-  
+
+
+
 </mapper>

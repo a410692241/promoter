@@ -1,63 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.linayi.dao.goods.SupermarketGoodsMapper">
-	<resultMap id="BaseResultMap" type="com.linayi.entity.goods.SupermarketGoods">
-		<result column="supermarket_goods_id" jdbcType="BIGINT"
-			property="supermarketGoodsId" />
-		<result column="supermarket_id" jdbcType="INTEGER" property="supermarketId" />
-		<result column="goods_sku_id" jdbcType="BIGINT" property="goodsSkuId" />
-		<result column="price" jdbcType="INTEGER" property="price" />
-		<result column="correct_id" jdbcType="BIGINT" property="correctId" />
-	</resultMap>
+    <resultMap id="BaseResultMap" type="com.linayi.entity.goods.SupermarketGoods">
+        <result column="supermarket_goods_id" jdbcType="BIGINT"
+                property="supermarketGoodsId" />
+        <result column="supermarket_id" jdbcType="INTEGER" property="supermarketId" />
+        <result column="goods_sku_id" jdbcType="BIGINT" property="goodsSkuId" />
+        <result column="price" jdbcType="INTEGER" property="price" />
+        <result column="correct_id" jdbcType="BIGINT" property="correctId" />
+    </resultMap>
 
-	<select id="getSkuList" resultType="com.linayi.entity.goods.SupermarketGoods">
-		select 
-			supermarket_goods_id, sg.supermarket_id supermarketId, gs.name name, sg.goods_sku_id goodsSkuId, price, correct_id, sm.name supermarketName  
-		from 
-			supermarket_goods sg JOIN goods_sku gs on sg.goods_sku_id = gs.goods_sku_id JOIN supermarket sm on sg.supermarket_id = sm.supermarket_id
-		<where>
-			<if test="supermarketGoodsId != null and supermarketGoodsId!=''">
-				sg.supermarket_goods_id = #{supermarketGoodsId}
-			</if>
-			<if test="name != null and name!=''">
-				AND  gs.name like concat ('%',#{name},'%')
-			</if>
-			<if test="supermarketId != null and supermarketId!=''">
-				AND sg.supermarket_id = #{supermarketId}
-			</if>
-			<if test="goodsSkuId != null and goodsSkuId!=''">
-				AND sg.goods_sku_id = #{goodsSkuId}
-			</if>
-			<if test="correctId != null and correctId!=''">
-				AND sg.correct_id = #{correctId}
-			</if>
-			<if test="supermarketName != null and supermarketName!=''">
-				AND sm.name like concat ('%',#{supermarketName},'%')
-			</if>
-		</where>
-		order by supermarket_goods_id desc
-	</select>
+    <select id="getSkuList" resultType="com.linayi.entity.goods.SupermarketGoods">
+        select
+        supermarket_goods_id, sg.supermarket_id supermarketId, gs.name name, sg.goods_sku_id goodsSkuId, price, correct_id, sm.name supermarketName
+        from
+        supermarket_goods sg JOIN goods_sku gs on sg.goods_sku_id = gs.goods_sku_id JOIN supermarket sm on sg.supermarket_id = sm.supermarket_id
+        <where>
+            <if test="supermarketGoodsId != null and supermarketGoodsId!=''">
+                sg.supermarket_goods_id = #{supermarketGoodsId}
+            </if>
+            <if test="name != null and name!=''">
+                AND  gs.name like concat ('%',#{name},'%')
+            </if>
+            <if test="supermarketId != null and supermarketId!=''">
+                AND sg.supermarket_id = #{supermarketId}
+            </if>
+            <if test="goodsSkuId != null and goodsSkuId!=''">
+                AND sg.goods_sku_id = #{goodsSkuId}
+            </if>
+            <if test="correctId != null and correctId!=''">
+                AND sg.correct_id = #{correctId}
+            </if>
+            <if test="supermarketName != null and supermarketName!=''">
+                AND sm.name like concat ('%',#{supermarketName},'%')
+            </if>
+        </where>
+        order by supermarket_goods_id desc
+    </select>
 
-	<select id="getSupermarketGoods" resultMap="BaseResultMap">
-		select supermarket_goods_id, supermarket_id, goods_sku_id, price,
-		correct_id from supermarket_goods
-		<where>
-			<if test="supermarketGoodsId != null">
-				supermarket_goods_id = #{supermarketGoodsId}
-			</if>
-			<if test="supermarketId != null">
-				AND supermarket_id = #{supermarketId}
-			</if>
-			<if test="goodsSkuId != null">
-				AND goods_sku_id = #{goodsSkuId}
-			</if>
-			<if test="correctId != null">
-				AND correct_id = #{correctId}
-			</if>
-			order by price asc
-		</where>
-	</select>
-	<insert id="insert" parameterType="com.linayi.entity.goods.SupermarketGoods">
+    <select id="getSupermarketGoods" resultMap="BaseResultMap">
+        select supermarket_goods_id, supermarket_id, goods_sku_id, price,
+        correct_id from supermarket_goods
+        <where>
+            <if test="supermarketGoodsId != null">
+                supermarket_goods_id = #{supermarketGoodsId}
+            </if>
+            <if test="supermarketId != null">
+                AND supermarket_id = #{supermarketId}
+            </if>
+            <if test="goodsSkuId != null">
+                AND goods_sku_id = #{goodsSkuId}
+            </if>
+            <if test="correctId != null">
+                AND correct_id = #{correctId}
+            </if>
+            order by price asc
+        </where>
+    </select>
+    <insert id="insert" parameterType="com.linayi.entity.goods.SupermarketGoods">
 		insert into supermarket_goods (supermarket_goods_id, supermarket_id,
 		goods_sku_id, price, correct_id
 		)
@@ -66,59 +66,59 @@
 		#{goodsSkuId,jdbcType=BIGINT}, #{price,jdbcType=INTEGER}, #{correctId,jdbcType=BIGINT}
 		)
 	</insert>
-	<insert id="insertSelective" parameterType="com.linayi.entity.goods.SupermarketGoods">
-		insert into supermarket_goods
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="supermarketGoodsId != null">
-				supermarket_goods_id,
-			</if>
-			<if test="supermarketId != null">
-				supermarket_id,
-			</if>
-			<if test="goodsSkuId != null">
-				goods_sku_id,
-			</if>
-			<if test="price != null">
-				price,
-			</if>
-			<if test="correctId != null">
-				correct_id,
-			</if>
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="supermarketGoodsId != null">
-				#{supermarketGoodsId,jdbcType=BIGINT},
-			</if>
-			<if test="supermarketId != null">
-				#{supermarketId,jdbcType=INTEGER},
-			</if>
-			<if test="goodsSkuId != null">
-				#{goodsSkuId,jdbcType=BIGINT},
-			</if>
-			<if test="price != null">
-				#{price,jdbcType=INTEGER},
-			</if>
-			<if test="correctId != null">
-				#{correctId,jdbcType=BIGINT},
-			</if>
-		</trim>
-	</insert>
+    <insert id="insertSelective" parameterType="com.linayi.entity.goods.SupermarketGoods">
+        insert into supermarket_goods
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="supermarketGoodsId != null">
+                supermarket_goods_id,
+            </if>
+            <if test="supermarketId != null">
+                supermarket_id,
+            </if>
+            <if test="goodsSkuId != null">
+                goods_sku_id,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="correctId != null">
+                correct_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="supermarketGoodsId != null">
+                #{supermarketGoodsId,jdbcType=BIGINT},
+            </if>
+            <if test="supermarketId != null">
+                #{supermarketId,jdbcType=INTEGER},
+            </if>
+            <if test="goodsSkuId != null">
+                #{goodsSkuId,jdbcType=BIGINT},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=INTEGER},
+            </if>
+            <if test="correctId != null">
+                #{correctId,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
 
-	<!-- &lt;!&ndash; 通过商品id获取5家超市名和价格 &ndash;&gt; &lt;!&ndash; List<SupermarketGoods> 
-		getPriceSupermarketByGoodsSkuId (Integer goodsSkuId) &ndash;&gt; <select 
-		id="getPriceSupermarketByGoodsSkuId" resultType="com.linayi.entity.goods.SupermarketGoods"> 
-		SELECT sg.price, s.name supermarketName FROM supermarket_goods sg,supermarket 
-		s WHERE sg.supermarket_id=s.supermarket_id AND sg.goods_sku_id=#{goodsSkuId} 
-		order by sg.price DESC </select> -->
-
-
+    <!-- &lt;!&ndash; 通过商品id获取5家超市名和价格 &ndash;&gt; &lt;!&ndash; List<SupermarketGoods>
+        getPriceSupermarketByGoodsSkuId (Integer goodsSkuId) &ndash;&gt; <select
+        id="getPriceSupermarketByGoodsSkuId" resultType="com.linayi.entity.goods.SupermarketGoods">
+        SELECT sg.price, s.name supermarketName FROM supermarket_goods sg,supermarket
+        s WHERE sg.supermarket_id=s.supermarket_id AND sg.goods_sku_id=#{goodsSkuId}
+        order by sg.price DESC </select> -->
 
 
-	<!-- 根据社区网点id和商品id获取超市和价格信息 -->
-	<!--List<SupermarketGoods> getPriceSupermarketBycommunityIdAndgoodsSkuId(Integer 
-		communityId,Integer goodsSkuId) -->
-	<select id="getPriceSupermarketBycommunityIdAndgoodsSkuId"
-		resultType="com.linayi.entity.goods.SupermarketGoods">
+
+
+    <!-- 根据社区网点id和商品id获取超市和价格信息 -->
+    <!--List<SupermarketGoods> getPriceSupermarketBycommunityIdAndgoodsSkuId(Integer
+        communityId,Integer goodsSkuId) -->
+    <select id="getPriceSupermarketBycommunityIdAndgoodsSkuId"
+            resultType="com.linayi.entity.goods.SupermarketGoods">
 		SELECT
 		sg.supermarket_goods_id,
 		s.supermarket_id,
@@ -138,73 +138,74 @@
 	</select>
 
 
-	<!-- 根据社区id获取商品id集合 -->
-	<select id="getGoodsSkuIdBySupermarketId" resultType="com.linayi.entity.goods.SupermarketGoods">
-		SELECT
-			goods_sku_id
-		FROM
-			supermarket_goods
-		WHERE
-		<if test="supermarketIdList!= null and supermarketIdList.size() > 0">
-			supermarket_id IN
-			<foreach collection="supermarketIdList" item="item" index="index"
-				open="(" separator="," close=")">
-				${item}
-			</foreach>
-		</if>
-		AND 
-			price is not null
-		GROUP BY
-		goods_sku_id
+    <!-- 根据社区id获取商品id集合 -->
+    <select id="getGoodsSkuIdBySupermarketId" resultType="com.linayi.entity.goods.SupermarketGoods">
+        SELECT
+        goods_sku_id
+        FROM
+        supermarket_goods
+        WHERE
+        <if test="supermarketIdList!= null and supermarketIdList.size() > 0">
+            supermarket_id IN
+            <foreach collection="supermarketIdList" item="item" index="index"
+                     open="(" separator="," close=")">
+                ${item}
+            </foreach>
+        </if>
+        AND
+        price is not null
+        GROUP BY
+        goods_sku_id
 
-	</select>
+    </select>
 
 
 
-	<!-- 根据超市id获取超市价格表信息 -->
-	<select id="getSupermarketGoodsBysupermarketIdListAndgoodsSkuId"
-		resultType="com.linayi.entity.goods.SupermarketGoods">
-		SELECT
-			supermarket_goods_id,
-			supermarket_id,
-			goods_sku_id,
-			price
-		FROM
-			supermarket_goods
-		<where>
-			supermarket_id IN
-			<foreach collection="supermarketIdList" item="item" index="index"
-				open="(" separator="," close=")">
-				${item}
-			</foreach>
-	
-			AND  goods_sku_id =#{goodsSkuId}
-	
-			AND  price is not null
-		</where>
-	</select>
+    <!-- 根据超市id集合和商品id获取超市价格表信息 -->
+    <select id="getSupermarketGoodsBysupermarketIdListAndgoodsSkuId"
+            resultType="com.linayi.entity.goods.SupermarketGoods">
+        SELECT
+        supermarket_goods_id,
+        supermarket_id,
+        goods_sku_id,
+        price
+        FROM
+        supermarket_goods
+        <where>
+            supermarket_id IN
+            <foreach collection="supermarketIdList" item="item" index="index"
+                     open="(" separator="," close=")">
+                ${item}
+            </foreach>
 
-	<!-- 根据超市id获取超市价格表信息 -->
-	<select id="getSupermarketGoodsBysupermarketIdAndgoodsSkuId"
-			resultType="com.linayi.entity.goods.SupermarketGoods">
-		SELECT
-		supermarket_goods_id,
-		supermarket_id,
-		goods_sku_id,
-		price
-		FROM
-		supermarket_goods
-		<where>
-			supermarket_id = #{supermarketId}
+            AND  goods_sku_id =#{goodsSkuId}
 
-			AND  goods_sku_id =#{goodsSkuId}
+            AND  price is not null
+        </where>
+    </select>
 
-			AND  price is not null
-		</where>
-	</select>
+    <!-- 根据超市id商品id获取超市价格表信息 -->
+    <select id="getSupermarketGoodsBysupermarketIdAndgoodsSkuId"
+            resultType="com.linayi.entity.goods.SupermarketGoods">
+        SELECT
+        supermarket_goods_id,
+        supermarket_id,
+        goods_sku_id,
+        price
+        FROM
+        supermarket_goods
+        <where>
+            supermarket_id = #{supermarketId}
 
-	<!-- 根据correctId删除数据 -->
-	<delete id="deleteSupermarketGoods">
+            AND  goods_sku_id =#{goodsSkuId}
+
+            AND  price is not null
+        </where>
+    </select>
+
+
+    <!-- 根据correctId删除数据 -->
+    <delete id="deleteSupermarketGoods">
 		DELETE FROM
 		supermarket_goods
 		WHERE

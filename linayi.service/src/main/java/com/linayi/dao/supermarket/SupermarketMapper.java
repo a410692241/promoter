@@ -72,4 +72,5 @@ public interface SupermarketMapper {
 	 * @return
 	 */
 	List<String> getSupermarketBycommunityId(Integer communityId);
+
 }

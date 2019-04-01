@@ -4,7 +4,10 @@ import com.linayi.dao.area.AreaMapper;
 import com.linayi.dao.community.CommunitySupermarketMapper;
 import com.linayi.dao.supermarket.SupermarketMapper;
 import com.linayi.entity.area.Area;
+import com.linayi.entity.promoter.OpenMemberInfo;
 import com.linayi.entity.supermarket.Supermarket;
+import com.linayi.enums.MemberLevel;
+import com.linayi.service.promoter.OpenMemberInfoService;
 import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,8 @@ public class SupermarketServiceImpl implements SupermarketService {
 	private AreaMapper areaMapper;
 	@Resource
 	private CommunitySupermarketMapper communitySupermarketMapper;
+	@Resource
+	private OpenMemberInfoService openMemberInfoService;
 	
 	@Override
 
@@ -178,11 +183,24 @@ public class SupermarketServiceImpl implements SupermarketService {
 	 @Override
 		public List<Supermarket> getSupermarketByAddress(Integer userId) {
 
+		//根据用户id获取绑定的超市集合(已按距离由近到远排序)
 		 List<Supermarket> supermarketList = supermarketMapper.getSupermarketByAddress(userId);
 
-		 if(supermarketList.size()>5) {
-			 supermarketList = supermarketList.subList(0, 5);
+		 //获取用户的会员等级
+		 OpenMemberInfo openMemberInfo = openMemberInfoService.getTheLastOpenMemberInfo(userId);
+		 //普通用户和普通会员(5家超市)
+		 if(openMemberInfo == null && MemberLevel.NORMAL.toString().equals(openMemberInfo.getMemberLevel())){
+			 supermarketList = supermarketList.size()>5 ? supermarketList.subList(0, 5) : supermarketList;
 		 }
+		 //高级会员(8家超市)
+		 if(MemberLevel.SENIOR.toString().equals(openMemberInfo.getMemberLevel())){
+			 supermarketList = supermarketList.size()>8 ? supermarketList.subList(0, 8) : supermarketList;
+		 }
+		 //超级VIP(12家超市)
+		 if(MemberLevel.SUPER.toString().equals(openMemberInfo.getMemberLevel())){
+			 supermarketList = supermarketList.size()>12 ? supermarketList.subList(0, 12) : supermarketList;
+		 }
+
 		 System.out.println(supermarketList.size());
 		 for(Supermarket i:supermarketList) {
 			 i.setLogo(ImageUtil.dealToShow(i.getLogo()));

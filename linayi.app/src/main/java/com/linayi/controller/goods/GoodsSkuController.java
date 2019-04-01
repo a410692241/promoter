@@ -75,6 +75,8 @@ public class GoodsSkuController extends BaseController {
     		if(goodsSku.getPageSize() == null){
     			goodsSku.setPageSize(8);
     		}
+    		Integer userId = getUserId();
+			goodsSku.setUserId(userId);
     		List<GoodsSku> goodsList =
     	    		goodsSkuService.getGoodsListBybrandIdcategoryIdGoodsName(goodsSku);
     		Integer totalPage = (int) Math.ceil(Double.valueOf(goodsSku.getTotal())/Double.valueOf(goodsSku.getPageSize()));
@@ -225,6 +227,8 @@ public class GoodsSkuController extends BaseController {
     		if(goodsSku.getPageSize() == null){
     			goodsSku.setPageSize(8);
     		}
+			Integer userId = getUserId();
+			goodsSku.setUserId(userId);
     		List<GoodsSku> goodsSkuList = goodsSkuService.customSearch(goodsSku);
     		Integer totalPage = (int) Math.ceil(Double.valueOf(goodsSku.getTotal())/Double.valueOf(goodsSku.getPageSize()));
     		if(totalPage <= 0){

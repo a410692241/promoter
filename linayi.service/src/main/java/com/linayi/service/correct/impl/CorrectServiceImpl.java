@@ -506,7 +506,7 @@ public class CorrectServiceImpl implements CorrectService {
                     if (CorrectStatus.AFFECTED.toString().equals(correctService.selectByCorrectId(corrects.getParentId()).getStatus())) {
                         Correct correct = new Correct();
                         correct.setStatus(CorrectStatus.EXPIRED.toString());
-                        correct.setActualStartTime(now);
+                        correct.setActualEndTime(now);
                         correct.setUpdateTime(now);
                         correct.setCorrectId(corrects.getParentId());
                         this.updateCorrect(correct);

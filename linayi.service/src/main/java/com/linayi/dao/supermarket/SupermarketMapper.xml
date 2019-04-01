@@ -236,7 +236,7 @@
 
 
 
-  <!-- 根据用户的uid的默认收货地址找到绑定的5家超市 -->
+  <!-- 根据用户的uid的默认收货地址找到绑定的超市 -->
   <!--List<Supermarket> getSupermarketByAddress(); -->
   <select id="getSupermarketByAddress" parameterType="java.lang.Integer"
   resultType="com.linayi.entity.supermarket.Supermarket">
@@ -260,6 +260,8 @@
 		  <if test="userId != null">
 			  AND ra.user_id = #{userId}
 		  </if>
+	ORDER BY
+	  	cs.rank
 
   </select>
 
@@ -285,6 +287,5 @@
   			cs.community_id=#{communityId}
 
   	</select>
-
 
 </mapper>
