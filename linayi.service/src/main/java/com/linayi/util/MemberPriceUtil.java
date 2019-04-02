@@ -2,6 +2,7 @@ package com.linayi.util;
 
 import com.linayi.entity.goods.CommunityGoods;
 import com.linayi.entity.promoter.OpenMemberInfo;
+import com.linayi.enums.MemberLevel;
 
 public class MemberPriceUtil {
 
@@ -21,11 +22,11 @@ public class MemberPriceUtil {
 
         String memberLevel = theLastOpenMemberInfo.getMemberLevel();
 
-        if("NORMAL".equals(memberLevel)){
+        if(MemberLevel.NORMAL.toString().equals(memberLevel)){
             return supermarketSize > 5 ? 5 : supermarketSize;
         }
 
-        if("SENIOR".equals(memberLevel)){
+        if(MemberLevel.SENIOR.toString().equals(memberLevel)){
             return supermarketSize > 8 ? 8 : supermarketSize;
         }
 
