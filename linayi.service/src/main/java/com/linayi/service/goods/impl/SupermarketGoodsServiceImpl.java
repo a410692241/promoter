@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.linayi.entity.promoter.OpenMemberInfo;
+import com.linayi.enums.MemberLevel;
+import com.linayi.service.promoter.OpenMemberInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,8 @@ import com.linayi.entity.goods.SupermarketGoods;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.enums.CorrectStatus;
 import com.linayi.service.goods.SupermarketGoodsService;
+
+import javax.annotation.Resource;
 
 @Service
 public class SupermarketGoodsServiceImpl implements SupermarketGoodsService {
@@ -33,6 +38,8 @@ public class SupermarketGoodsServiceImpl implements SupermarketGoodsService {
 
     @Autowired
     private SupermarketMapper supermarketMapper;
+    @Resource
+    private OpenMemberInfoService openMemberInfoService;
 
     @Override
     public List<SupermarketGoods> getSupermarketGoods(SupermarketGoods superGoods) {
@@ -53,11 +60,27 @@ public class SupermarketGoodsServiceImpl implements SupermarketGoodsService {
         List<String> supermarketList = supermarketMapper.getSupermarketBycommunityId(communityId);
 
 
+
         if (supermarketGoodsList.size() > 1) {
-            //价格排序降序
-            supermarketGoodsList.sort((a, b) -> {
-                return a.getPrice() - b.getPrice();
-            });
+            //获取用户的会员等级
+            OpenMemberInfo openMemberInfo = openMemberInfoService.getTheLastOpenMemberInfo(uid);
+            //普通用户和普通会员
+            if(openMemberInfo == null && MemberLevel.NORMAL.toString().equals(openMemberInfo.getMemberLevel())){
+                supermarketGoodsList = supermarketGoodsList.size() > 5 ? supermarketGoodsList.subList(0,5) : supermarketGoodsList;
+            }
+            //高级会员
+            if(MemberLevel.SENIOR.toString().equals(openMemberInfo.getMemberLevel())){
+                supermarketGoodsList = supermarketGoodsList.size() > 8 ? supermarketGoodsList.subList(0,8) : supermarketGoodsList;
+            }
+            //超级vip
+            if(MemberLevel.SUPER.toString().equals(openMemberInfo.getMemberLevel())){
+                supermarketGoodsList = supermarketGoodsList.size() > 12 ? supermarketGoodsList.subList(0,12) : supermarketGoodsList;
+            }
+
+//            //价格排序降序
+//            supermarketGoodsList.sort((a, b) -> {
+//                return a.getPrice() - b.getPrice();
+//            });
 
             //差价率
             spreadRate = Double.valueOf(df.format(Double.valueOf((supermarketGoodsList.get(supermarketGoodsList.size() - 1).getPrice() - supermarketGoodsList.get(0).getPrice())) / supermarketGoodsList.get(0).getPrice() * 100));

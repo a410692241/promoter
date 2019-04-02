@@ -592,18 +592,46 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		if(goodsSku.getCommunityId()==null) {
 			goodsSku.setCommunityId(communityMapper.getcommunityIdByuserId(goodsSku.getUserId()));
 		}
-		System.out.println("社区id:"+goodsSku.getCommunityId());
 		List<GoodsSku> differenceRankingList = goodsSkuMapper.getDifferenceRanking(goodsSku);
 		DecimalFormat df = new DecimalFormat("#.00");
 
 		if(differenceRankingList.size()>0) {
-			for(GoodsSku i:differenceRankingList) {
-				System.out.println(i.getMaxSupermarketId());
-				i.setMaxSupermarket(supermarketMapper.selectSupermarketBysupermarketId(i.getMaxSupermarketId()).getName());
-				i.setMinSupermarket(supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketId()).getName());
-				i.setImage(ImageUtil.dealToShow(i.getImage())); 
-				i.setSpreadRate(Double.valueOf((df.format(Double.valueOf((i.getMaxPrice()-i.getMinPrice()))/i.getMinPrice()*100))));
-			}
+            //获取用户的会员等级
+            OpenMemberInfo openMemberInfo = openMemberInfoService.getTheLastOpenMemberInfo(goodsSku.getUserId());
+            //普通用户和普通会员
+            if(openMemberInfo == null && MemberLevel.NORMAL.toString().equals(openMemberInfo.getMemberLevel())){
+                for(GoodsSku i:differenceRankingList) {
+                    Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdNormal());
+//                  i.setMaxSupermarket(supermarketMapper.selectSupermarketBysupermarketId(i.getMaxSupermarketId()).getName());
+                    i.setMinPrice(i.getMinPriceNormal());
+                    i.setMinSupermarket(supermarket.getName());
+                    i.setImage(ImageUtil.dealToShow(i.getImage()));
+                    i.setSpreadRate(Double.valueOf((df.format(Double.valueOf((i.getMaxPrice()-i.getMinPrice()))/i.getMinPrice()*100))));
+                }
+            }
+            //高级会员
+            if(MemberLevel.SENIOR.toString().equals(openMemberInfo.getMemberLevel())){
+                for(GoodsSku i:differenceRankingList) {
+                    Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdSenior());
+//                  i.setMaxSupermarket(supermarketMapper.selectSupermarketBysupermarketId(i.getMaxSupermarketId()).getName());
+                    i.setMinPrice(i.getMinPriceSenior());
+                    i.setMinSupermarket(supermarket.getName());
+                    i.setImage(ImageUtil.dealToShow(i.getImage()));
+                    i.setSpreadRate(Double.valueOf((df.format(Double.valueOf((i.getMaxPrice()-i.getMinPrice()))/i.getMinPrice()*100))));
+                }
+            }
+            //超级vip
+            if(MemberLevel.SUPER.toString().equals(openMemberInfo.getMemberLevel())){
+                for(GoodsSku i:differenceRankingList) {
+                    Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdSuper());
+//                  i.setMaxSupermarket(supermarketMapper.selectSupermarketBysupermarketId(i.getMaxSupermarketId()).getName());
+                    i.setMinPrice(i.getMinPriceSuper());
+                    i.setMinSupermarket(supermarket.getName());
+                    i.setImage(ImageUtil.dealToShow(i.getImage()));
+                    i.setSpreadRate(Double.valueOf((df.format(Double.valueOf((i.getMaxPrice()-i.getMinPrice()))/i.getMinPrice()*100))));
+                }
+            }
+
 		}
 		return differenceRankingList;
 	}

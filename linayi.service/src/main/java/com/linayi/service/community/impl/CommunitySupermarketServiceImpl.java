@@ -74,7 +74,9 @@ public class CommunitySupermarketServiceImpl implements CommunitySupermarketServ
 		List<SupermarketGoods> supermarketGoodsSkuList = new ArrayList<SupermarketGoods>();
 		for(Integer supermarketId : supermarketIdList){
 			SupermarketGoods supermarketGoods = supermarketGoodsMapper.getSupermarketGoodsBysupermarketIdAndgoodsSkuId(goodsSkuId,supermarketId);
-			supermarketGoodsSkuList.add(supermarketGoods);
+			if(supermarketGoods != null){
+				supermarketGoodsSkuList.add(supermarketGoods);
+			}
 		}
 		
 		if(supermarketGoodsSkuList.size()==0) {
@@ -86,36 +88,24 @@ public class CommunitySupermarketServiceImpl implements CommunitySupermarketServ
 		});
 
 		//用户和普通会员最近5家超市,再排序价格
-		List<SupermarketGoods> supermarketGoodsSkuListForNormal = new ArrayList<SupermarketGoods>();
-		if(supermarketGoodsSkuList.size() > 5){
-			supermarketGoodsSkuListForNormal = supermarketGoodsSkuList.subList(0,5);
-		}else{
-			supermarketGoodsSkuListForNormal = supermarketGoodsSkuList;
-		}
+		List<SupermarketGoods> supermarketGoodsSkuListForNormal =
+				supermarketGoodsSkuList.size() > 5 ? supermarketGoodsSkuList.subList(0,5) : supermarketGoodsSkuList;
 		//所有超市价格价格排序(升序)
 		supermarketGoodsSkuListForNormal.sort((a, b) -> {
 			return a.getPrice() - b.getPrice();
 		});
 
 		//高级会员最近8家超市,再排序价格
-		List<SupermarketGoods> supermarketGoodsSkuListForSenior = new ArrayList<SupermarketGoods>();
-		if(supermarketGoodsSkuList.size() > 8){
-			supermarketGoodsSkuListForSenior = supermarketGoodsSkuList.subList(0,8);
-		}else{
-			supermarketGoodsSkuListForSenior = supermarketGoodsSkuList;
-		}
+		List<SupermarketGoods> supermarketGoodsSkuListForSenior =
+				supermarketGoodsSkuList.size() > 8 ? supermarketGoodsSkuList.subList(0,8) : supermarketGoodsSkuList;
 		//所有超市价格价格排序(升序)
 		supermarketGoodsSkuListForSenior.sort((a, b) -> {
 			return a.getPrice() - b.getPrice();
 		});
 
 		//vip会员最近8家超市,再排序价格
-		List<SupermarketGoods> supermarketGoodsSkuListForSuper = new ArrayList<SupermarketGoods>();
-		if(supermarketGoodsSkuList.size() > 12){
-			supermarketGoodsSkuListForSuper = supermarketGoodsSkuList.subList(0,12);
-		}else{
-			supermarketGoodsSkuListForSuper = supermarketGoodsSkuList;
-		}
+		List<SupermarketGoods> supermarketGoodsSkuListForSuper =
+				supermarketGoodsSkuList.size() > 12 ? supermarketGoodsSkuList.subList(0,12) : supermarketGoodsSkuList;
 		//所有超市价格价格排序(升序)
 		supermarketGoodsSkuListForSuper.sort((a, b) -> {
 			return a.getPrice() - b.getPrice();
@@ -164,23 +154,86 @@ public class CommunitySupermarketServiceImpl implements CommunitySupermarketServ
 		List<SupermarketGoods> goodsSkuIdList = supermarketGoodsMapper.getGoodsSkuIdBySupermarketId(supermarketIdList);
 		
 		for(SupermarketGoods i:goodsSkuIdList) {
-		//根据超市id获取超市价格表信息	
-		List<SupermarketGoods> supermarketGoodsSkuList = supermarketGoodsMapper.getSupermarketGoodsBysupermarketIdListAndgoodsSkuId(i.getGoodsSkuId().intValue(), supermarketIdList);
-			
+		//根据超市id获取超市价格表信息
+			List<SupermarketGoods> supermarketGoodsSkuList = new ArrayList<SupermarketGoods>();
+			for(Integer supermarketId : supermarketIdList){
+				SupermarketGoods supermarketGoods = supermarketGoodsMapper.getSupermarketGoodsBysupermarketIdAndgoodsSkuId(i.getGoodsSkuId().intValue(),supermarketId);
+				if(supermarketGoods != null){
+					supermarketGoodsSkuList.add(supermarketGoods);
+				}
+			}
+
 		if(supermarketGoodsSkuList.size()>0) {
 			//价格排序(升序)
 		    supermarketGoodsSkuList.sort((a, b) -> {
 				return a.getPrice() - b.getPrice();
 			});
+
+			//用户和普通会员最近5家超市,再排序价格
+			List<SupermarketGoods> supermarketGoodsSkuListForNormal = new ArrayList<SupermarketGoods>();
+			if(supermarketGoodsSkuList.size() > 5){
+				supermarketGoodsSkuListForNormal = supermarketGoodsSkuList.subList(0,5);
+			}else{
+				supermarketGoodsSkuListForNormal = supermarketGoodsSkuList;
+			}
+			//所有超市价格价格排序(升序)
+			supermarketGoodsSkuListForNormal.sort((a, b) -> {
+				return a.getPrice() - b.getPrice();
+			});
+
+			//高级会员最近8家超市,再排序价格
+			List<SupermarketGoods> supermarketGoodsSkuListForSenior = new ArrayList<SupermarketGoods>();
+			if(supermarketGoodsSkuList.size() > 8){
+				supermarketGoodsSkuListForSenior = supermarketGoodsSkuList.subList(0,8);
+			}else{
+				supermarketGoodsSkuListForSenior = supermarketGoodsSkuList;
+			}
+			//所有超市价格价格排序(升序)
+			supermarketGoodsSkuListForSenior.sort((a, b) -> {
+				return a.getPrice() - b.getPrice();
+			});
+
+			//vip会员最近8家超市,再排序价格
+			List<SupermarketGoods> supermarketGoodsSkuListForSuper = new ArrayList<SupermarketGoods>();
+			if(supermarketGoodsSkuList.size() > 12){
+				supermarketGoodsSkuListForSuper = supermarketGoodsSkuList.subList(0,12);
+			}else{
+				supermarketGoodsSkuListForSuper = supermarketGoodsSkuList;
+			}
+			//所有超市价格价格排序(升序)
+			supermarketGoodsSkuListForSuper.sort((a, b) -> {
+				return a.getPrice() - b.getPrice();
+			});
+
+
+
+
+
 			CommunityGoods communityGoods = new CommunityGoods();
 			Date now = new Date();
 			communityGoods.setCommunityId(communityId);
 			communityGoods.setCreateTime(now);
 			communityGoods.setGoodsSkuId(i.getGoodsSkuId().intValue());
+			//所有超市
 			communityGoods.setMaxPrice(supermarketGoodsSkuList.get(supermarketGoodsSkuList.size()-1).getPrice());
 			communityGoods.setMaxSupermarketId(supermarketGoodsSkuList.get(supermarketGoodsSkuList.size()-1).getSupermarketId());
 			communityGoods.setMinPrice(supermarketGoodsSkuList.get(0).getPrice());
 			communityGoods.setMinSupermarketId(supermarketGoodsSkuList.get(0).getSupermarketId());
+			//普通用户和普通会员(最近5家超市)
+			communityGoods.setMinPriceNormal(supermarketGoodsSkuListForNormal.get(0).getPrice());
+			communityGoods.setMinSupermarketIdNormal(supermarketGoodsSkuListForNormal.get(0).getSupermarketId());
+			communityGoods.setMaxPriceNormal(supermarketGoodsSkuListForNormal.get(supermarketGoodsSkuList.size()-1).getPrice());
+			communityGoods.setMaxSupermarketIdNormal(supermarketGoodsSkuListForNormal.get(supermarketGoodsSkuList.size()-1).getSupermarketId().intValue());
+			//高级会员(最近8家超市)
+			communityGoods.setMinPriceSenior(supermarketGoodsSkuListForSenior.get(0).getPrice());
+			communityGoods.setMinSupermarketIdSenior(supermarketGoodsSkuListForSenior.get(0).getSupermarketId());
+			communityGoods.setMaxPriceSenior(supermarketGoodsSkuListForSenior.get(supermarketGoodsSkuList.size()-1).getPrice());
+			communityGoods.setMaxSupermarketIdSenior(supermarketGoodsSkuListForSenior.get(supermarketGoodsSkuList.size()-1).getSupermarketId().intValue());
+			//vip会员(最近12家超市)
+			communityGoods.setMinPriceSuper(supermarketGoodsSkuListForSuper.get(0).getPrice());
+			communityGoods.setMinSupermarketIdSuper(supermarketGoodsSkuListForSuper.get(0).getSupermarketId());
+			communityGoods.setMaxPriceSuper(supermarketGoodsSkuListForSuper.get(supermarketGoodsSkuList.size()-1).getPrice());
+			communityGoods.setMaxSupermarketIdSuper(supermarketGoodsSkuListForSuper.get(supermarketGoodsSkuList.size()-1).getSupermarketId().intValue());
 			//重新添加新的社区商品价格表信息
 			communityGoodsMapper.insertSelective(communityGoods);
 			//supermarketGoodsSkuList.clear();
