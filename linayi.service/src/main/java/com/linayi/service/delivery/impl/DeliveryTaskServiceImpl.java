@@ -216,15 +216,15 @@ public class DeliveryTaskServiceImpl implements DeliveryTaskService {
 
     @Override
     public List<Orders> getOrdersBydelivererIdAndStatus(Orders orders) {
-        if (UserStatusType.IN_PROGRESS.toString().equals(orders.getCommunityStatus())) {
-            if (orders.getDelivererId() != null) {
-                List<Integer> smallCommunityList = new ArrayList<>();
-                List<SmallCommunity> delivererList = smallCommunityMapper.getDeliverer(orders.getDelivererId());
-                for (SmallCommunity smallCommunity : delivererList) {
-                    smallCommunityList.add(smallCommunity.getSmallCommunityId());
-                }
-                orders.setSmallCommunityIdList(smallCommunityList);
+        if (orders.getDelivererId() != null) {
+            List<Integer> smallCommunityList = new ArrayList<>();
+            List<SmallCommunity> delivererList = smallCommunityMapper.getDeliverer(orders.getDelivererId());
+            for (SmallCommunity smallCommunity : delivererList) {
+                smallCommunityList.add(smallCommunity.getSmallCommunityId());
             }
+            orders.setSmallCommunityIdList(smallCommunityList);
+        }
+        if (UserStatusType.IN_PROGRESS.toString().equals(orders.getCommunityStatus())) {
             List<Orders> ordersList = ordersMapper.getOrdersBySmallCommunityIdAndStatus(orders);
             return this.getOrderTotalPriceByOrdersList(ordersList);
         } else {
