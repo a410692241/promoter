@@ -23,7 +23,7 @@ import java.util.List;
 
 @Service
 public class SupermarketServiceImpl implements SupermarketService {
-	
+
 	@Autowired
 	private SupermarketMapper supermarketMapper;
 	@Autowired
@@ -32,7 +32,7 @@ public class SupermarketServiceImpl implements SupermarketService {
 	private CommunitySupermarketMapper communitySupermarketMapper;
 	@Resource
 	private OpenMemberInfoService openMemberInfoService;
-	
+
 	@Override
 
 	public List<Supermarket> selectAll(Supermarket supermarket,Integer communityId,String type) {
@@ -59,12 +59,12 @@ public class SupermarketServiceImpl implements SupermarketService {
 				list.get(i).setType("unBind");
 			}
 			return list;
-		}		
+		}
 
 		list = supermarketMapper.selectAll(supermarket);
 		for(int i = 0;i<list.size();i++){
 			Integer sId = list.get(i).getSupermarketId();
-			
+
 			if(supermarketIdList.size()>0){
 				list.get(i).setType("bind");
 			}
@@ -88,7 +88,7 @@ public class SupermarketServiceImpl implements SupermarketService {
 	public void insertSupermarket(Supermarket supermarket) {
 		supermarketMapper.insertSupermarket(supermarket);
 	}
-	
+
 	@Override
 	public void updateSupermarketBysupermarketId(Supermarket supermarket) {
 		supermarketMapper.updateSupermarketBysupermarketId(supermarket);
@@ -115,7 +115,7 @@ public class SupermarketServiceImpl implements SupermarketService {
 	@Override
 	public Supermarket selectSupermarketBysupermarketId(Integer supermarketId) {
 		Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(supermarketId);
-		
+
 		try {
 			supermarket.setLogo(ImageUtil.dealToShow(supermarket.getLogo()));
 			//通过areacode设置地区名
@@ -143,16 +143,16 @@ public class SupermarketServiceImpl implements SupermarketService {
 		}
 		return supermarket;
 	}
-	
+
 	private Area getAreaNameByCode(String code){
 		return areaMapper.selectByPrimaryKey(code);
-		
+
 	}
 
 	@Override
 	public void deleteSupermarketrBysupermarketId(Integer supermarketId) {
 		Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(supermarketId);
-		
+
 		if(supermarket.getLogo() != null){
 			File file = new File(supermarket.getLogo());
 			if(file.isFile() && file.exists()){
@@ -177,9 +177,9 @@ public class SupermarketServiceImpl implements SupermarketService {
         supermarket.setStatus("NORMAL");
         supermarket.setUpdateTime(new Date());
 		supermarketMapper.updateSupermarketBysupermarketId(supermarket);
-		
+
 	}
-	
+
 	 @Override
 		public List<Supermarket> getSupermarketByAddress(Integer userId) {
 
@@ -219,5 +219,10 @@ public class SupermarketServiceImpl implements SupermarketService {
 		supermarket.setUserId(userId);
 		List<Supermarket> supermarketList = supermarketMapper.selectSupermarketList(supermarket);
 		return supermarketList != null && supermarketList.size() > 0 ? supermarketList.get(0) : null;
+	}
+
+	@Override
+	public Supermarket getSupermarketById(Integer SupermarketId) {
+		return supermarketMapper.selectSupermarketBysupermarketId(SupermarketId);
 	}
 }

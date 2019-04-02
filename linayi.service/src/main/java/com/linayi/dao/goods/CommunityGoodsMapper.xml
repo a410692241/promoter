@@ -191,9 +191,30 @@
     <if test="goodsSkuId!=null and goodsSkuId!=''">
       AND	goods_sku_id=#{goodsSkuId}
     </if>
-
-
   </delete>
+
+  <select id="getCommunityGoodsByGoodsId" resultType="com.linayi.entity.goods.CommunityGoods">
+    select community_goods_id,community_id,
+   goods_sku_id ,
+   min_supermarket_id,
+   min_price,
+   max_supermarket_id,
+   max_price,
+   create_time,
+   update_time,
+   min_supermarket_id_normal,
+   min_price_normal,
+   max_supermarket_id_normal,
+   max_price_normal,
+   min_supermarket_id_senior,
+   min_price_senior,
+   max_supermarket_id_senior ,
+   max_price_senior,
+   min_supermarket_id_super,
+   min_price_super ,
+   max_supermarket_id_super,
+   max_price_super from community_goods where goods_sku_id = #{goodsSkuId}
+  </select>
 
 
 

@@ -175,11 +175,11 @@ public class OrderServiceImpl implements OrderService {
         Integer maxPrice = 0;
         OpenMemberInfo theLastOpenMemberInfo = openMemberInfoService.getTheLastOpenMemberInfo(order.getUserId());
         if (supermarketGoodsList != null && supermarketGoodsList.size() > 0) {
-            minPrice = supermarketGoodsList.get(MemberPriceUtil.memberPriceByLevel(theLastOpenMemberInfo, supermarketGoodsList.size())).getPrice();
+            minPrice = supermarketGoodsList.get(MemberPriceUtil.supermarketPriceByLevel(theLastOpenMemberInfo, supermarketGoodsList.size())).getPrice();
             maxPrice = supermarketGoodsList.get(0).getPrice();
         }
 
-        String jsonStr = dealSupermarket(supermarketGoodsList.subList(0,MemberPriceUtil.memberPriceByLevel(theLastOpenMemberInfo, supermarketGoodsList.size())));
+        String jsonStr = dealSupermarket(supermarketGoodsList.subList(0,MemberPriceUtil.supermarketPriceByLevel(theLastOpenMemberInfo, supermarketGoodsList.size())));
         ordersGoods.setSupermarketList(jsonStr);
         ordersGoods.setMaxPrice(maxPrice);
         ordersGoods.setPrice(minPrice);
