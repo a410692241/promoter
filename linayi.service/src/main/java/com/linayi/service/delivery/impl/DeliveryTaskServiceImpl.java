@@ -216,7 +216,7 @@ public class DeliveryTaskServiceImpl implements DeliveryTaskService {
 
     @Override
     public List<Orders> getOrdersBydelivererIdAndStatus(Orders orders) {
-        if (UserStatusType.IN_PROGRESS.toString().equals(orders.getCommunityStatus())) {
+        if (UserStatusType.IN_PROGRESS.toString().equals(orders.getUserStatus())) {
             if(orders.getDelivererId()!=null){
                 List<Integer> smallCommunityList = new ArrayList<>();
                 List<SmallCommunity> delivererList = smallCommunityMapper.getDeliverer(orders.getDelivererId());
