@@ -752,7 +752,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 			if(openMemberInfo == null || MemberLevel.NORMAL.toString().equals(openMemberInfo.getMemberLevel())){
 				for(GoodsSku i:goodsSkuList) {
 					Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdNormal());
-					i.setMinPrice(i.getMinPriceSenior());
+					i.setMinPrice(i.getMinPriceNormal());
 					i.setMinSupermarket(supermarket.getName());
 					i.setImage(ImageUtil.dealToShow(i.getImage()));
 				}
