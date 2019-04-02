@@ -46,62 +46,62 @@ import java.util.Date;
 
 @Service
 public class DeliveryTaskServiceImpl implements DeliveryTaskService {
-	@Resource
-	private DeliveryTaskMapper deliveryTaskMapper;
-	@Resource
-	private OrdersMapper ordersMapper;
-	@Resource
-	private DeliveryBoxMapper deliveryBoxMapper;
-	@Resource
-	private DeliveryBoxGoodsMapper deliveryBoxGoodsMapper;
-	@Resource
-	private AreaMapper areaMapper;
-	@Resource
-	private GoodsSkuMapper goodsSkuMapper;
-	@Autowired
-	private SupermarketMapper supermarketMapper;
-	@Resource
-	private UserMapper userMapper;
-	@Resource
-	private ProcurementTaskMapper procurementTaskMapper;
-	@Resource
-	private OrderBoxMapper orderBoxMapper;
+    @Resource
+    private DeliveryTaskMapper deliveryTaskMapper;
+    @Resource
+    private OrdersMapper ordersMapper;
+    @Resource
+    private DeliveryBoxMapper deliveryBoxMapper;
+    @Resource
+    private DeliveryBoxGoodsMapper deliveryBoxGoodsMapper;
+    @Resource
+    private AreaMapper areaMapper;
+    @Resource
+    private GoodsSkuMapper goodsSkuMapper;
+    @Autowired
+    private SupermarketMapper supermarketMapper;
+    @Resource
+    private UserMapper userMapper;
+    @Resource
+    private ProcurementTaskMapper procurementTaskMapper;
+    @Resource
+    private OrderBoxMapper orderBoxMapper;
     @Resource
     private SmallCommunityMapper smallCommunityMapper;
 
-	@Override
-	public List<Orders> getListDeliveryTask(Orders orders) {
-		//获取所有装箱的订单
-		orders.setCommunityStatus("PACKED");
-		List<Orders> listOrders = ordersMapper.getOrderListDelivery(orders);
-		List<Orders> newListOrders = new ArrayList<>();
-		//通过订单Id获得订单的商品数量和配送箱信息
-		Integer sum =0;
-		for(int i=0;i<listOrders.size();i++){
-			Long ordersId = listOrders.get(i).getOrdersId();
-			//获取配送箱信息
+    @Override
+    public List<Orders> getListDeliveryTask(Orders orders) {
+        //获取所有装箱的订单
+        orders.setCommunityStatus("PACKED");
+        List<Orders> listOrders = ordersMapper.getOrderListDelivery(orders);
+        List<Orders> newListOrders = new ArrayList<>();
+        //通过订单Id获得订单的商品数量和配送箱信息
+        Integer sum = 0;
+        for (int i = 0; i < listOrders.size(); i++) {
+            Long ordersId = listOrders.get(i).getOrdersId();
+            //获取配送箱信息
 
-			List<OrderBox> OrderBoxList =orderBoxMapper.getOrderBoxList(ordersId);
-			for(int k=0;k<OrderBoxList.size();k++){
-				orders = new Orders();
-				//通过订单Id获得订单的商品数量
-				ProcurementTask procurementTask = new ProcurementTask();
-				procurementTask.setOrdersId(ordersId);
-				procurementTask.setBoxNo(OrderBoxList.get(k).getBoxNo());
-				List<ProcurementTask> procurementTaskList= procurementTaskMapper.getProcurementList(procurementTask);
-				for(int j=0;j<procurementTaskList.size();j++){
-					Integer actualQuantity = procurementTaskList.get(j).getActualQuantity();
-					sum += actualQuantity;
-				}
-				orders.setBoxTime(OrderBoxList.get(k).getBoxTime());
-				orders.setBoxNo(OrderBoxList.get(k).getBoxNo());
-				orders.setOrdersId(listOrders.get(i).getOrdersId());
-				orders.setReceiverName(listOrders.get(i).getReceiverName());
-				orders.setQuantity(sum);
-				newListOrders.add(orders);
-			}
-		}
-		return newListOrders;
+            List<OrderBox> OrderBoxList = orderBoxMapper.getOrderBoxList(ordersId);
+            for (int k = 0; k < OrderBoxList.size(); k++) {
+                orders = new Orders();
+                //通过订单Id获得订单的商品数量
+                ProcurementTask procurementTask = new ProcurementTask();
+                procurementTask.setOrdersId(ordersId);
+                procurementTask.setBoxNo(OrderBoxList.get(k).getBoxNo());
+                List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementList(procurementTask);
+                for (int j = 0; j < procurementTaskList.size(); j++) {
+                    Integer actualQuantity = procurementTaskList.get(j).getActualQuantity();
+                    sum += actualQuantity;
+                }
+                orders.setBoxTime(OrderBoxList.get(k).getBoxTime());
+                orders.setBoxNo(OrderBoxList.get(k).getBoxNo());
+                orders.setOrdersId(listOrders.get(i).getOrdersId());
+                orders.setReceiverName(listOrders.get(i).getReceiverName());
+                orders.setQuantity(sum);
+                newListOrders.add(orders);
+            }
+        }
+        return newListOrders;
 //		List<DeliveryTask> listDeliveryTask= deliveryTaskMapper.getListDeliveryTask(deliveryTask);
 //
 //		for(int i=0;i<listDeliveryTask.size();i++){
@@ -124,59 +124,59 @@ public class DeliveryTaskServiceImpl implements DeliveryTaskService {
 //			listDeliveryTask.get(i).setQuantity(sum);
 //		}
 //		return listDeliveryTask;
-	}
+    }
 
-	@Override
-	public Orders toViewDeliveryTask(String boxNo,Long ordersId) {
-		Orders newOrders = new Orders();
-		//通过订单ID获取顾客信息
-		Orders orders = ordersMapper.getOrderById(ordersId);
-		String address = getAddress(orders);
-		newOrders.setCreateTime(orders.getCreateTime());
-		newOrders.setReceiverName(orders.getReceiverName());
-		newOrders.setMobile(orders.getMobile());
-		newOrders.setAddress(address);
-		//通过订单ID获取配送箱信息
+    @Override
+    public Orders toViewDeliveryTask(String boxNo, Long ordersId) {
+        Orders newOrders = new Orders();
+        //通过订单ID获取顾客信息
+        Orders orders = ordersMapper.getOrderById(ordersId);
+        String address = getAddress(orders);
+        newOrders.setCreateTime(orders.getCreateTime());
+        newOrders.setReceiverName(orders.getReceiverName());
+        newOrders.setMobile(orders.getMobile());
+        newOrders.setAddress(address);
+        //通过订单ID获取配送箱信息
 //		OrderBox OrderBox =orderBoxMapper.getOrderBox(ordersId);
 //		newOrders.setBoxNo(OrderBox.getBoxNo());
 
-		//通过订单id获取商品信息
-		List<ProcurementTask> listProcurementTask = procurementTaskMapper.getListByOrdersId(ordersId,boxNo);
-		List<GoodsSku> listGoodsSku = new ArrayList<>();
-		Integer sum = 0;
-		for(int i=0;i<listProcurementTask.size();i++){
-			GoodsSku newGoodsSku = new GoodsSku();
-			Integer goodsSkuId = listProcurementTask.get(i).getGoodsSkuId();
-			Integer actualQuantity = listProcurementTask.get(i).getActualQuantity();
-			GoodsSku goodsSku = goodsSkuMapper.getGoodsById(goodsSkuId);
-			newGoodsSku.setImage(ImageUtil.dealToShow(goodsSku.getImage()));
-			newGoodsSku.setFullName(goodsSku.getFullName());
-			newGoodsSku.setQuantity(actualQuantity);
-			listGoodsSku.add(newGoodsSku);
-			sum += actualQuantity;
-		}
-		newOrders.setGoodsSkuList(listGoodsSku);
-		newOrders.setQuantity(sum);
-		newOrders.setOrdersId(ordersId);
-		newOrders.setBoxNo(boxNo);
-		return newOrders;
-	}
+        //通过订单id获取商品信息
+        List<ProcurementTask> listProcurementTask = procurementTaskMapper.getListByOrdersId(ordersId, boxNo);
+        List<GoodsSku> listGoodsSku = new ArrayList<>();
+        Integer sum = 0;
+        for (int i = 0; i < listProcurementTask.size(); i++) {
+            GoodsSku newGoodsSku = new GoodsSku();
+            Integer goodsSkuId = listProcurementTask.get(i).getGoodsSkuId();
+            Integer actualQuantity = listProcurementTask.get(i).getActualQuantity();
+            GoodsSku goodsSku = goodsSkuMapper.getGoodsById(goodsSkuId);
+            newGoodsSku.setImage(ImageUtil.dealToShow(goodsSku.getImage()));
+            newGoodsSku.setFullName(goodsSku.getFullName());
+            newGoodsSku.setQuantity(actualQuantity);
+            listGoodsSku.add(newGoodsSku);
+            sum += actualQuantity;
+        }
+        newOrders.setGoodsSkuList(listGoodsSku);
+        newOrders.setQuantity(sum);
+        newOrders.setOrdersId(ordersId);
+        newOrders.setBoxNo(boxNo);
+        return newOrders;
+    }
 
-	@Override
-	@Transactional
-	public Integer sealBox(String boxNo,Long ordersId,MultipartFile file) {
-		String path = null;
-		ordersMapper.updateStatusByOrdersId(ordersId);
-		try {
-			path = ImageUtil.handleUpload(file);
-			OrderBox orderBox = new OrderBox();
-			orderBox.setBoxNo(boxNo);
-			orderBox.setOrdersId(ordersId);
-			orderBox.setImage(path);
-			orderBoxMapper.updateImage(orderBox);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    @Override
+    @Transactional
+    public Integer sealBox(String boxNo, Long ordersId, MultipartFile file) {
+        String path = null;
+        ordersMapper.updateStatusByOrdersId(ordersId);
+        try {
+            path = ImageUtil.handleUpload(file);
+            OrderBox orderBox = new OrderBox();
+            orderBox.setBoxNo(boxNo);
+            orderBox.setOrdersId(ordersId);
+            orderBox.setImage(path);
+            orderBoxMapper.updateImage(orderBox);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 //		deliveryTaskMapper.updateStatusByDeliveryBoxId(deliveryBoxId);
 //		ordersMapper.updateStatusByOrdersId(ordersId);
 //		String path = null;
@@ -216,8 +216,8 @@ public class DeliveryTaskServiceImpl implements DeliveryTaskService {
 
     @Override
     public List<Orders> getOrdersBydelivererIdAndStatus(Orders orders) {
-        if (UserStatusType.IN_PROGRESS.toString().equals(orders.getUserStatus())) {
-            if(orders.getDelivererId()!=null){
+        if (UserStatusType.IN_PROGRESS.toString().equals(orders.getCommunityStatus())) {
+            if (orders.getDelivererId() != null) {
                 List<Integer> smallCommunityList = new ArrayList<>();
                 List<SmallCommunity> delivererList = smallCommunityMapper.getDeliverer(orders.getDelivererId());
                 for (SmallCommunity smallCommunity : delivererList) {
@@ -227,14 +227,14 @@ public class DeliveryTaskServiceImpl implements DeliveryTaskService {
             }
             List<Orders> ordersList = ordersMapper.getOrdersBySmallCommunityIdAndStatus(orders);
             return this.getOrderTotalPriceByOrdersList(ordersList);
-        }else{
+        } else {
             List<Orders> ordersList = ordersMapper.getOrdersByUserIdAndFinishStatus(orders);
             return this.getOrderTotalPriceByOrdersList(ordersList);
         }
     }
 
     //通过订单列表获取订单总价格
-    public List<Orders> getOrderTotalPriceByOrdersList(List<Orders> ordersList){
+    public List<Orders> getOrderTotalPriceByOrdersList(List<Orders> ordersList) {
         for (Orders order : ordersList) {
             List<OrderBox> orderBoxList = orderBoxMapper.getOrderBoxList(order.getOrdersId());
             for (OrderBox orderBox : orderBoxList) {
@@ -244,10 +244,12 @@ public class DeliveryTaskServiceImpl implements DeliveryTaskService {
                 List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(task);
                 Integer totalPrice = 0;
                 for (ProcurementTask procurementTask : procurementTaskList) {
-                    totalPrice = procurementTask.getPrice()*procurementTask.getActualQuantity()+totalPrice;
+                    totalPrice = procurementTask.getPrice() * procurementTask.getActualQuantity() + totalPrice;
                 }
-                order.setDelivererName(userMapper.selectUserByuserId(order.getDelivererId()).getRealName());
-                order.setAmount(totalPrice+ConstantUtil.SERVICE_FEE);
+                if (order.getDelivererId() != null) {
+                    order.setDelivererName(userMapper.selectUserByuserId(order.getDelivererId()).getRealName());
+                    order.setAmount(totalPrice + ConstantUtil.SERVICE_FEE);
+                }
             }
         }
         return ordersList;
