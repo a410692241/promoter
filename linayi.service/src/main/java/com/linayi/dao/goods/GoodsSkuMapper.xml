@@ -408,7 +408,9 @@
         cg.min_price minPrice,
         cg.max_price maxPrice,
         cg.max_supermarket_id maxSupermarketId,
-        cg.min_supermarket_id minSupermarketId
+        cg.min_supermarket_id minSupermarketId,
+        cg.min_supermarket_id_normal,cg.min_price_normal,cg.max_supermarket_id_normal,cg.max_price_normal,cg.min_supermarket_id_senior,cg.min_price_senior,
+        cg.max_supermarket_id_senior,cg.max_price_senior,cg.min_supermarket_id_super,cg.min_price_super,cg.max_supermarket_id_super,cg.max_price_super
         FROM
         goods_sku gs,community_goods cg
         <where>

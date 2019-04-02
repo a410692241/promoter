@@ -133,7 +133,7 @@
 		cs.community_id=#{communityId}
 		AND
 		sg.goods_sku_id=#{goodsSkuId}
-		ORDER BY cs.rank,sg.price DESC
+		ORDER BY cs.rank
 
 	</select>
 

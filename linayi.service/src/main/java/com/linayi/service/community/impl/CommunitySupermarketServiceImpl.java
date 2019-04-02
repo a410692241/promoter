@@ -170,44 +170,28 @@ public class CommunitySupermarketServiceImpl implements CommunitySupermarketServ
 			});
 
 			//用户和普通会员最近5家超市,再排序价格
-			List<SupermarketGoods> supermarketGoodsSkuListForNormal = new ArrayList<SupermarketGoods>();
-			if(supermarketGoodsSkuList.size() > 5){
-				supermarketGoodsSkuListForNormal = supermarketGoodsSkuList.subList(0,5);
-			}else{
-				supermarketGoodsSkuListForNormal = supermarketGoodsSkuList;
-			}
+			List<SupermarketGoods> supermarketGoodsSkuListForNormal =
+					supermarketGoodsSkuList.size() > 5 ? supermarketGoodsSkuList.subList(0,5) : supermarketGoodsSkuList;
 			//所有超市价格价格排序(升序)
 			supermarketGoodsSkuListForNormal.sort((a, b) -> {
 				return a.getPrice() - b.getPrice();
 			});
 
 			//高级会员最近8家超市,再排序价格
-			List<SupermarketGoods> supermarketGoodsSkuListForSenior = new ArrayList<SupermarketGoods>();
-			if(supermarketGoodsSkuList.size() > 8){
-				supermarketGoodsSkuListForSenior = supermarketGoodsSkuList.subList(0,8);
-			}else{
-				supermarketGoodsSkuListForSenior = supermarketGoodsSkuList;
-			}
+			List<SupermarketGoods> supermarketGoodsSkuListForSenior =
+					supermarketGoodsSkuList.size() > 8 ? supermarketGoodsSkuList.subList(0,8) : supermarketGoodsSkuList;
 			//所有超市价格价格排序(升序)
 			supermarketGoodsSkuListForSenior.sort((a, b) -> {
 				return a.getPrice() - b.getPrice();
 			});
 
 			//vip会员最近8家超市,再排序价格
-			List<SupermarketGoods> supermarketGoodsSkuListForSuper = new ArrayList<SupermarketGoods>();
-			if(supermarketGoodsSkuList.size() > 12){
-				supermarketGoodsSkuListForSuper = supermarketGoodsSkuList.subList(0,12);
-			}else{
-				supermarketGoodsSkuListForSuper = supermarketGoodsSkuList;
-			}
+			List<SupermarketGoods> supermarketGoodsSkuListForSuper =
+					supermarketGoodsSkuList.size() > 12 ? supermarketGoodsSkuList.subList(0,12) : supermarketGoodsSkuList;
 			//所有超市价格价格排序(升序)
 			supermarketGoodsSkuListForSuper.sort((a, b) -> {
 				return a.getPrice() - b.getPrice();
 			});
-
-
-
-
 
 			CommunityGoods communityGoods = new CommunityGoods();
 			Date now = new Date();
