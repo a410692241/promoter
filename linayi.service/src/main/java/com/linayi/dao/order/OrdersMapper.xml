@@ -549,6 +549,10 @@
             ${item}
         </foreach>
     </if>
+    <if test="delivererId != null">
+        AND
+        o.deliverer_id = #{delivererId}
+    </if>
   ORDER BY
     ob.box_time DESC
 </select>
@@ -557,6 +561,7 @@
   UPDATE
     orders
   SET
+    deliverer_id = #{delivererId},
     community_status = #{communityStatus},
     delivery_finish_time = #{deliveryFinishTime}
   WHERE
