@@ -5,9 +5,7 @@ import com.linayi.entity.goods.SupermarketGoods;
 import com.linayi.entity.promoter.OpenMemberInfo;
 import com.linayi.enums.MemberLevel;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MemberPriceUtil {
@@ -15,6 +13,14 @@ public class MemberPriceUtil {
     //普通会员：NORMAL  高级会员：SENIOR  超级VIP：SUPER
 
     public static List<SupermarketGoods> supermarketGoods = new ArrayList<>();
+
+    public final static Map<String,Integer> levelAndSupermarketNum = new HashMap<>();
+    static {
+        levelAndSupermarketNum.put(MemberLevel.NOT_MEMBER.toString(),Integer.parseInt(PropertiesUtil.getValueByKey("not_member_supermarket_num")));
+        levelAndSupermarketNum.put(MemberLevel.NORMAL.toString(),Integer.parseInt(PropertiesUtil.getValueByKey("normal_supermarket_num")));
+        levelAndSupermarketNum.put(MemberLevel.SENIOR.toString(),Integer.parseInt(PropertiesUtil.getValueByKey("senior_supermarket_num")));
+        levelAndSupermarketNum.put(MemberLevel.SUPER.toString(),Integer.parseInt(PropertiesUtil.getValueByKey("super_supermarket_num")));
+    }
 
     /**
      * 根据用户会员等级返回[0]最低价 [1]最低价超市Id [2]最高价 [3]最高价超市Id数组
@@ -27,19 +33,18 @@ public class MemberPriceUtil {
         Integer supermarketSize = supermarketGoodsList.size();
         Integer num = 0;
         if(theLastOpenMemberInfo == null){
-            num = supermarketSize > 5 ? 5 : supermarketSize;
+            num = supermarketSize > levelAndSupermarketNum.get(MemberLevel.NOT_MEMBER.toString()) ? levelAndSupermarketNum.get(MemberLevel.NOT_MEMBER.toString()) : supermarketSize;
         }else {
             String memberLevel = theLastOpenMemberInfo.getMemberLevel();
 
             if(MemberLevel.NORMAL.toString().equals(memberLevel)){
-                num = supermarketSize > 5 ? 5 : supermarketSize;
+                num = supermarketSize > levelAndSupermarketNum.get(MemberLevel.NORMAL.toString()) ? levelAndSupermarketNum.get(MemberLevel.NORMAL.toString()) : supermarketSize;
             }
 
             if(MemberLevel.SENIOR.toString().equals(memberLevel)){
-                num = supermarketSize > 8 ? 8 : supermarketSize;
+                num = supermarketSize > levelAndSupermarketNum.get(MemberLevel.SENIOR.toString()) ? levelAndSupermarketNum.get(MemberLevel.SENIOR.toString()) : supermarketSize;
             }
-
-            num = supermarketSize > 12 ? 12 : supermarketSize;
+            num = supermarketSize > levelAndSupermarketNum.get(MemberLevel.SUPER.toString()) ? levelAndSupermarketNum.get(MemberLevel.SUPER.toString()) : supermarketSize;
         }
 
         List<SupermarketGoods> collect = supermarketGoodsList.subList(0, num).stream().sorted(Comparator.comparing(SupermarketGoods::getPrice).reversed()).collect(Collectors.toList());
