@@ -262,7 +262,7 @@ public class UserServiceImpl implements UserService {
 
     public String isShop(int accountId){
         try {
-            String result = HttpClientUtil.sendGetRequest("http://lsp.laykj.cn/user/isShop.do?userId="+accountId,null);
+            String result = HttpClientUtil.sendGetRequest("http://www.laykj.cn/linsheng.app/user/isShop.do?userId="+accountId,null);
             if(StringUtils.isBlank(result)){
                 return "false";
             }else{
