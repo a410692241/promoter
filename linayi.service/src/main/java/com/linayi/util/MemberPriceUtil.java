@@ -24,26 +24,21 @@ public class MemberPriceUtil {
 
     /**
      * 根据用户会员等级返回[0]最低价 [1]最低价超市Id [2]最高价 [3]最高价超市Id数组
-     * @param theLastOpenMemberInfo
+     * @param memberLevel
      * @param supermarketGoodsList
      * @return
      */
-    public static Integer[] supermarketPriceByLevel(OpenMemberInfo theLastOpenMemberInfo, List<SupermarketGoods> supermarketGoodsList){
+    public static Integer[] supermarketPriceByLevel(String memberLevel, List<SupermarketGoods> supermarketGoodsList){
         Integer [] arr = new Integer[4];
         Integer supermarketSize = supermarketGoodsList.size();
         Integer num = 0;
-        if(theLastOpenMemberInfo == null){
+        if(MemberLevel.NOT_MEMBER.toString().equals(memberLevel)){
             num = supermarketSize > levelAndSupermarketNum.get(MemberLevel.NOT_MEMBER.toString()) ? levelAndSupermarketNum.get(MemberLevel.NOT_MEMBER.toString()) : supermarketSize;
-        }else {
-            String memberLevel = theLastOpenMemberInfo.getMemberLevel();
-
-            if(MemberLevel.NORMAL.toString().equals(memberLevel)){
-                num = supermarketSize > levelAndSupermarketNum.get(MemberLevel.NORMAL.toString()) ? levelAndSupermarketNum.get(MemberLevel.NORMAL.toString()) : supermarketSize;
-            }
-
-            if(MemberLevel.SENIOR.toString().equals(memberLevel)){
-                num = supermarketSize > levelAndSupermarketNum.get(MemberLevel.SENIOR.toString()) ? levelAndSupermarketNum.get(MemberLevel.SENIOR.toString()) : supermarketSize;
-            }
+        }else if(MemberLevel.NORMAL.toString().equals(memberLevel)){
+            num = supermarketSize > levelAndSupermarketNum.get(MemberLevel.NORMAL.toString()) ? levelAndSupermarketNum.get(MemberLevel.NORMAL.toString()) : supermarketSize;
+        }else if(MemberLevel.SENIOR.toString().equals(memberLevel)){
+            num = supermarketSize > levelAndSupermarketNum.get(MemberLevel.SENIOR.toString()) ? levelAndSupermarketNum.get(MemberLevel.SENIOR.toString()) : supermarketSize;
+        }else if(MemberLevel.SUPER.toString().equals(memberLevel)){
             num = supermarketSize > levelAndSupermarketNum.get(MemberLevel.SUPER.toString()) ? levelAndSupermarketNum.get(MemberLevel.SUPER.toString()) : supermarketSize;
         }
 
@@ -59,41 +54,33 @@ public class MemberPriceUtil {
     /**
      * 根据用户会员等级返回[0]最低价 [1]最低价超市Id [2]最高价 [3]最高价超市Id数组
      *
-     * @param theLastOpenMemberInfo
+     * @param memberLevel
      * @param communityGoods
      * @return
      */
-    public static Integer [] supermarketIdAndPriceByLevel(OpenMemberInfo theLastOpenMemberInfo, CommunityGoods communityGoods){
+    public static Integer [] supermarketIdAndPriceByLevel(String memberLevel, CommunityGoods communityGoods){
         Integer [] arr = new Integer[4];
-        if(theLastOpenMemberInfo == null){
+        if(MemberLevel.NOT_MEMBER.toString().equals(memberLevel)){
             arr [0] = communityGoods.getMinPriceNormal();
             arr [1] = communityGoods.getMinSupermarketIdNormal();
             arr [2] = communityGoods.getMaxPriceNormal();
             arr [3] = communityGoods.getMaxSupermarketIdNormal();
-            return arr;
-        }
-
-        String memberLevel = theLastOpenMemberInfo.getMemberLevel();
-
-        if("NORMAL".equals(memberLevel)){
+        }else if(MemberLevel.NORMAL.toString().equals(memberLevel)){
             arr [0] = communityGoods.getMinPriceNormal();
             arr [1] = communityGoods.getMinSupermarketIdNormal();
             arr [2] = communityGoods.getMaxPriceNormal();
             arr [3] = communityGoods.getMaxSupermarketIdNormal();
-            return arr;
-        }
-
-        if("SENIOR".equals(memberLevel)){
+        }else if(MemberLevel.SENIOR.toString().equals(memberLevel)){
             arr [0] = communityGoods.getMinPriceSenior();
             arr [1] = communityGoods.getMinSupermarketIdSenior();
             arr [2] = communityGoods.getMaxPriceSenior();
             arr [3] = communityGoods.getMaxSupermarketIdSenior();
-            return arr;
+        }else if(MemberLevel.SUPER.toString().equals(memberLevel)){
+            arr [0] = communityGoods.getMinPriceSuper();
+            arr [1] = communityGoods.getMinSupermarketIdSuper();
+            arr [2] = communityGoods.getMaxPriceSuper();
+            arr [3] = communityGoods.getMaxSupermarketIdSuper();
         }
-        arr [0] = communityGoods.getMinPriceSuper();
-        arr [1] = communityGoods.getMinSupermarketIdSuper();
-        arr [2] = communityGoods.getMaxPriceSuper();
-        arr [3] = communityGoods.getMaxSupermarketIdSuper();
         return arr;
     }
 }
