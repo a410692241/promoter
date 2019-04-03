@@ -15,6 +15,7 @@ import com.linayi.entity.promoter.OpenMemberInfo;
 import com.linayi.entity.user.ReceiveAddress;
 import com.linayi.entity.user.ShoppingCar;
 import com.linayi.entity.user.User;
+import com.linayi.enums.MemberLevel;
 import com.linayi.service.goods.BrandService;
 import com.linayi.service.goods.CommunityGoodsService;
 import com.linayi.service.goods.SupermarketGoodsService;
@@ -72,11 +73,11 @@ public class ShopCarServiceImpl implements ShopCarService {
         List<ShoppingCar> ShoppingCars = shoppingCarMapper.getAllCarByReceiveAddressId(shoppingCar);
         Map<String, Object> map = new HashMap<>();
         Integer totalPrice = 0;//合计总价格
-        OpenMemberInfo theLastOpenMemberInfo = openMemberInfoService.getTheLastOpenMemberInfo(shoppingCar.getUserId());
+        MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(shoppingCar.getUserId());
         for (ShoppingCar car : ShoppingCars) {
             //查出商品的最高价格最低价格
             CommunityGoods communityGoods = communityGoodsService.getCommunityGoodsByGoodsId(car.getGoodsSkuId());
-            Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketIdAndPriceByLevel(theLastOpenMemberInfo, communityGoods);
+            Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketIdAndPriceByLevel(currentMemberLevel, communityGoods);
             Integer minPrice = idAndPriceByLevel[0];
             car.setMinPrice(getpriceString(minPrice));
             car.setMinSupermarketName(supermarketService.getSupermarketById(idAndPriceByLevel[1]).getName());
@@ -176,7 +177,7 @@ public class ShopCarServiceImpl implements ShopCarService {
         result.put("deliveryTime",deliveryTime);
         // 共多少件
         Integer totalPipce = 0;
-        OpenMemberInfo theLastOpenMemberInfo = openMemberInfoService.getTheLastOpenMemberInfo(shoppingCar.getUserId());
+        MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(shoppingCar.getUserId());
 
         for (ShoppingCar car : shoppingCars) {
             totalPipce += car.getQuantity();
@@ -184,7 +185,7 @@ public class ShopCarServiceImpl implements ShopCarService {
             car.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
             car.setGoodsName(goodsSku.getFullName());
             CommunityGoods communityGoods = communityGoodsService.getCommunityGoodsByGoodsId(car.getGoodsSkuId());
-            Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketIdAndPriceByLevel(theLastOpenMemberInfo, communityGoods);
+            Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketIdAndPriceByLevel(currentMemberLevel, communityGoods);
             Integer minPrice = idAndPriceByLevel[0];
             Integer maxPrice = idAndPriceByLevel[2];
 

@@ -24,11 +24,12 @@ public class MemberPriceUtil {
 
     /**
      * 根据用户会员等级返回[0]最低价 [1]最低价超市Id [2]最高价 [3]最高价超市Id数组
-     * @param memberLevel
+     * @param currentMemberLevel
      * @param supermarketGoodsList
      * @return
      */
-    public static Integer[] supermarketPriceByLevel(String memberLevel, List<SupermarketGoods> supermarketGoodsList){
+    public static Integer[] supermarketPriceByLevel(MemberLevel currentMemberLevel, List<SupermarketGoods> supermarketGoodsList){
+        String memberLevel = currentMemberLevel.toString();
         Integer [] arr = new Integer[4];
         Integer supermarketSize = supermarketGoodsList.size();
         Integer num = 0;
@@ -54,11 +55,12 @@ public class MemberPriceUtil {
     /**
      * 根据用户会员等级返回[0]最低价 [1]最低价超市Id [2]最高价 [3]最高价超市Id数组
      *
-     * @param memberLevel
+     * @param currentMemberLevel
      * @param communityGoods
      * @return
      */
-    public static Integer [] supermarketIdAndPriceByLevel(String memberLevel, CommunityGoods communityGoods){
+    public static Integer [] supermarketIdAndPriceByLevel(MemberLevel currentMemberLevel, CommunityGoods communityGoods){
+        String memberLevel = currentMemberLevel.toString();
         Integer [] arr = new Integer[4];
         if(MemberLevel.NOT_MEMBER.toString().equals(memberLevel)){
             arr [0] = communityGoods.getMinPriceNormal();

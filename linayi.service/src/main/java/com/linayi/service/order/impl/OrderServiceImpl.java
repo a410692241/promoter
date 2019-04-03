@@ -33,6 +33,7 @@ import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.entity.user.ReceiveAddress;
 import com.linayi.entity.user.ShoppingCar;
 import com.linayi.entity.user.User;
+import com.linayi.enums.MemberLevel;
 import com.linayi.enums.OrderStatus;
 import com.linayi.service.goods.BrandService;
 import com.linayi.service.goods.SupermarketGoodsService;
@@ -173,10 +174,10 @@ public class OrderServiceImpl implements OrderService {
         ordersGoods.setOrdersId(order.getOrdersId());
         Integer minPrice = 0;
         Integer maxPrice = 0;
-        OpenMemberInfo theLastOpenMemberInfo = openMemberInfoService.getTheLastOpenMemberInfo(order.getUserId());
+        MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(order.getUserId());
         Integer[] supermarketPriceByLevel =new Integer[4];
         if (supermarketGoodsList != null && supermarketGoodsList.size() > 0) {
-            supermarketPriceByLevel = MemberPriceUtil.supermarketPriceByLevel(theLastOpenMemberInfo, supermarketGoodsList);
+            supermarketPriceByLevel = MemberPriceUtil.supermarketPriceByLevel(currentMemberLevel, supermarketGoodsList);
             minPrice = supermarketPriceByLevel[0];
             maxPrice = supermarketPriceByLevel[2];
         }
