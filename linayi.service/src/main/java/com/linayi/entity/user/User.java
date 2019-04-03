@@ -67,6 +67,8 @@ public class User extends BaseEntity implements Serializable {
     
     private String isOrderMan;
 
+    private String isShop;
+
     /**
      * [真实姓名]
      */
@@ -450,5 +452,13 @@ public class User extends BaseEntity implements Serializable {
 
     public void setReceiverAddress(String receiverAddress) {
         this.receiverAddress = receiverAddress;
+    }
+
+    public String getIsShop() {
+        return isShop;
+    }
+
+    public void setIsShop(String isShop) {
+        this.isShop = isShop;
     }
 }

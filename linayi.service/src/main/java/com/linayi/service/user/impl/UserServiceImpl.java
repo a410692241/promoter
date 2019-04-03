@@ -20,6 +20,7 @@ import com.linayi.exception.ErrorType;
 import com.linayi.service.redis.RedisService;
 import com.linayi.service.user.UserService;
 import com.linayi.util.*;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -217,6 +218,7 @@ public class UserServiceImpl implements UserService {
             if (userInfo.getMobile() == null && accountDB.getMobile() != null) {
                 userInfo.setMobile(accountDB.getMobile());
             }
+            userInfo.setIsShop(isShop(accountDB.getAccountId()));
         }else {
             userInfo.setWeixinOpenId("");
         }
@@ -254,7 +256,23 @@ public class UserServiceImpl implements UserService {
         }else {
             userInfo.setIsDeliverer("FALSE");
         }
+
         return userInfo;
+    }
+
+    public String isShop(int accountId){
+        try {
+            String result = HttpClientUtil.sendGetRequest("http://lsp.laykj.cn/user/isShop.do?userId="+accountId,null);
+            if(StringUtils.isBlank(result)){
+                return "false";
+            }else{
+                return result.contains("true") ? "true" : "false";
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return "false";
+        }
+
     }
 
     @Override
