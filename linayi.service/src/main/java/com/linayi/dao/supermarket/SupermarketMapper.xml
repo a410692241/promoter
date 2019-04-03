@@ -288,4 +288,23 @@
 
   	</select>
 
+	<!-- 根据社区id和超市集合获取超市名字集合 -->
+	<select id="getSupermarketBycommunityIdAndSupermarketIdList" resultType="java.lang.String">
+  		SELECT
+  			s.name
+  		FROM
+  			supermarket s,community_supermarket cs
+  		<where>
+			s.supermarket_id = cs.supermarket_id
+		AND
+  			s.supermarket_id IN
+			<foreach collection="supermarketIdList" item="item" index="index"
+					 open="(" separator="," close=")">
+				${item}
+			</foreach>
+  		AND
+  			cs.community_id=#{communityId}
+		</where>
+  	</select>
+
 </mapper>

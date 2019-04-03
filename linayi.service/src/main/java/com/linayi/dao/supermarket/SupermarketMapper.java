@@ -73,4 +73,11 @@ public interface SupermarketMapper {
 	 */
 	List<String> getSupermarketBycommunityId(Integer communityId);
 
+	/**
+	 * 根据社区id和超市集合获取超市名字集合
+	 * @param communityId
+	 * @return
+	 */
+	List<String> getSupermarketBycommunityIdAndSupermarketIdList(@Param("communityId") Integer communityId,@Param("supermarketIdList")List<Integer> supermarketIdList);
+
 }
