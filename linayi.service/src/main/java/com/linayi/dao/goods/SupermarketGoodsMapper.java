@@ -33,6 +33,14 @@ public interface SupermarketGoodsMapper {
      */
     List<SupermarketGoods> getPriceSupermarketBycommunityIdAndgoodsSkuId(@Param("communityId")Integer communityId,@Param("goodsSkuId")Integer goodsSkuId);
 
+    /**
+     * 根据社区网点id,商品id,超市id获取超市和价格信息
+     * @param communityId
+     * @param goodsSkuId
+     * @param supermarketId
+     * @return
+     */
+    SupermarketGoods getPriceSupermarketBycommunityIdgoodsSkuIdSupermarketId(@Param("communityId")Integer communityId,@Param("goodsSkuId")Integer goodsSkuId,@Param("supermarketId")Integer supermarketId);
 
     /**
      *  根据超市id获取商品id集合

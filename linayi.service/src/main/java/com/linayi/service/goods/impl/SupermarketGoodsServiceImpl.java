@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.linayi.dao.community.CommunitySupermarketMapper;
 import com.linayi.entity.promoter.OpenMemberInfo;
 import com.linayi.enums.MemberLevel;
 import com.linayi.service.promoter.OpenMemberInfoService;
@@ -40,6 +41,8 @@ public class SupermarketGoodsServiceImpl implements SupermarketGoodsService {
     private SupermarketMapper supermarketMapper;
     @Resource
     private OpenMemberInfoService openMemberInfoService;
+    @Resource
+    private CommunitySupermarketMapper communitySupermarketMapper;
 
     @Override
     public List<SupermarketGoods> getSupermarketGoods(SupermarketGoods superGoods) {
@@ -49,31 +52,39 @@ public class SupermarketGoodsServiceImpl implements SupermarketGoodsService {
 
     //根据商品id获取超市和价格集合然后降序排序加入差价率
     public Map<String, Object> getPriceSupermarketByGoodsSkuId(Integer uid, Integer goodsSkuId) {
-
+        //获取用户的会员等级
+        OpenMemberInfo openMemberInfo = openMemberInfoService.getTheLastOpenMemberInfo(uid);
         //通过用户id获取社区id
         double spreadRate = 0;
         Integer communityId = communityMapper.getcommunityIdByuserId(uid);
-        List<SupermarketGoods> supermarketGoodsList = supermarketGoodsMapper.getPriceSupermarketBycommunityIdAndgoodsSkuId(communityId, goodsSkuId);
+        //社区所有绑定超市id,根据会员等级截取
+        List<Integer> supermarketIdList =  communitySupermarketMapper.getSupermarketIdList(communityId);
+        if(supermarketIdList == null){
+            return new HashMap<String, Object>();
+        }
+        if(openMemberInfo == null || MemberLevel.NORMAL.toString().equals(openMemberInfo.getMemberLevel())) {
+            supermarketIdList = supermarketIdList.size() > 5 ? supermarketIdList.subList(0,5) : supermarketIdList;
+        }
+        else if(MemberLevel.SENIOR.toString().equals(openMemberInfo.getMemberLevel())) {
+            supermarketIdList = supermarketIdList.size() > 8 ? supermarketIdList.subList(0,8) : supermarketIdList;
+        }
+        else if(MemberLevel.SUPER.toString().equals(openMemberInfo.getMemberLevel())) {
+            supermarketIdList = supermarketIdList.size() > 12 ? supermarketIdList.subList(0,12) : supermarketIdList;
+        }
+
+        //根据超市id集合获取超市价格集合
+        List<SupermarketGoods> supermarketGoodsList = new ArrayList<SupermarketGoods>();
+        for(Integer supermarketId : supermarketIdList) {
+            SupermarketGoods currentSupermarketGoodsList = supermarketGoodsMapper.getPriceSupermarketBycommunityIdgoodsSkuIdSupermarketId(communityId,goodsSkuId,supermarketId);
+            if(currentSupermarketGoodsList != null){
+                supermarketGoodsList.add(currentSupermarketGoodsList);
+            }
+        }
+
         DecimalFormat df = new DecimalFormat("#.00"); //保留double小数点后2位不四舍五入
         //System.out.println("长度："+supermarketGoodsList.size());
         //List<SupermarketGoods> newsupermarketGoodsList = new ArrayList<SupermarketGoods>();
-        List<String> supermarketList = supermarketMapper.getSupermarketBycommunityId(communityId);
-
-        if (supermarketGoodsList.size() > 1) {
-            //获取用户的会员等级
-            OpenMemberInfo openMemberInfo = openMemberInfoService.getTheLastOpenMemberInfo(uid);
-            //普通用户和普通会员
-            if(openMemberInfo == null || MemberLevel.NORMAL.toString().equals(openMemberInfo.getMemberLevel())){
-                supermarketGoodsList = supermarketGoodsList.size() > 5 ? supermarketGoodsList.subList(0,5) : supermarketGoodsList;
-            }
-            //高级会员
-            else if(MemberLevel.SENIOR.toString().equals(openMemberInfo.getMemberLevel())){
-                supermarketGoodsList = supermarketGoodsList.size() > 8 ? supermarketGoodsList.subList(0,8) : supermarketGoodsList;
-            }
-            //超级vip
-            else if(MemberLevel.SUPER.toString().equals(openMemberInfo.getMemberLevel())){
-                supermarketGoodsList = supermarketGoodsList.size() > 12 ? supermarketGoodsList.subList(0,12) : supermarketGoodsList;
-            }
+        List<String> supermarketList = supermarketMapper.getSupermarketBycommunityIdAndSupermarketIdList(communityId,supermarketIdList);
 
             //价格排序升序
             supermarketGoodsList.sort((a, b) -> {
@@ -83,7 +94,6 @@ public class SupermarketGoodsServiceImpl implements SupermarketGoodsService {
             //差价率
             spreadRate = Double.valueOf(df.format(Double.valueOf((supermarketGoodsList.get(supermarketGoodsList.size() - 1).getPrice() - supermarketGoodsList.get(0).getPrice())) / supermarketGoodsList.get(0).getPrice() * 100));
 
-        }
         List<SupermarketGoods> newsupermarketGoodsList = new ArrayList<>();
         newsupermarketGoodsList.addAll(supermarketGoodsList);
         //List<String> newsupermarketGoods = new ArrayList<>();
