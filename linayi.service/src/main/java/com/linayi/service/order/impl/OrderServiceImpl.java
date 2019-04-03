@@ -174,19 +174,21 @@ public class OrderServiceImpl implements OrderService {
         Integer minPrice = 0;
         Integer maxPrice = 0;
         OpenMemberInfo theLastOpenMemberInfo = openMemberInfoService.getTheLastOpenMemberInfo(order.getUserId());
+        Integer[] supermarketPriceByLevel =new Integer[4];
         if (supermarketGoodsList != null && supermarketGoodsList.size() > 0) {
-            minPrice = supermarketGoodsList.get(MemberPriceUtil.supermarketPriceByLevel(theLastOpenMemberInfo, supermarketGoodsList.size())).getPrice();
-            maxPrice = supermarketGoodsList.get(0).getPrice();
+            supermarketPriceByLevel = MemberPriceUtil.supermarketPriceByLevel(theLastOpenMemberInfo, supermarketGoodsList);
+            minPrice = supermarketPriceByLevel[0];
+            maxPrice = supermarketPriceByLevel[2];
         }
 
-        String jsonStr = dealSupermarket(supermarketGoodsList.subList(0,MemberPriceUtil.supermarketPriceByLevel(theLastOpenMemberInfo, supermarketGoodsList.size())));
+        String jsonStr = dealSupermarket(supermarketGoodsList);
         ordersGoods.setSupermarketList(jsonStr);
         ordersGoods.setMaxPrice(maxPrice);
         ordersGoods.setPrice(minPrice);
         ordersGoods.setQuantity(quantity);
         ordersGoods.setGoodsSkuId(goodsSkuId);
-        ordersGoods.setSupermarketId(supermarketGoodsList.get(supermarketGoodsList.size() - 1).getSupermarketId());
-        ordersGoods.setMaxSupermarketId(supermarketGoodsList.get(0).getSupermarketId());
+        ordersGoods.setSupermarketId(supermarketPriceByLevel[1]);
+        ordersGoods.setMaxSupermarketId(supermarketPriceByLevel[3]);
         ordersGoods.setCreateTime(new Date());
         //待采买状态
         ordersGoods.setProcureStatus("PROCURING");
@@ -267,7 +269,7 @@ public class OrderServiceImpl implements OrderService {
 
     private static String dealSupermarket(List<SupermarketGoods> supermarketGoodsList) {
         if (supermarketGoodsList != null && supermarketGoodsList.size() > 0) {
-            List<Map> list = new ArrayList<Map>();
+            List<Map> list = new ArrayList<>();
             for (int i = supermarketGoodsList.size() - 1; i >= 0; i--) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("supermarket_id", supermarketGoodsList.get(i).getSupermarketId());

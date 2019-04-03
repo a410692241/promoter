@@ -175,7 +175,7 @@ public class SupermarketGoodsServiceImpl implements SupermarketGoodsService {
     }
 
     /**
-     * 通过商品ID和网点ID查找对应的商品价格表从高到底排列
+     * 通过商品ID和网点ID查找对应的商品价格表按距离排序
      *
      * @param goodsSkuId
      * @param communityId
