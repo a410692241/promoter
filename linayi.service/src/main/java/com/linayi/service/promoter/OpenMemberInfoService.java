@@ -1,6 +1,7 @@
 package com.linayi.service.promoter;
 
 import com.linayi.entity.promoter.OpenMemberInfo;
+import com.linayi.enums.MemberLevel;
 
 public interface OpenMemberInfoService {
 
@@ -10,4 +11,6 @@ public interface OpenMemberInfoService {
      * @return
      */
     OpenMemberInfo getTheLastOpenMemberInfo(Integer userId);
+
+    public MemberLevel getCurrentMemberLevel(Integer userId);
 }

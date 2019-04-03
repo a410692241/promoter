@@ -58,12 +58,12 @@ public class GoodsSkuController extends BaseController {
     @RequestMapping("/supermarketPriceList.do")
     @ResponseBody
     public Object showOtherSupermarketPrice(@RequestBody Map<String, Object> param){
-//    	try {
+    	try {
     		Map<String,Object> map = supermarketGoodsService.getPriceSupermarketByGoodsSkuId(super.getUserId(), (Integer)param.get("goodsSkuId"));
     		return new ResponseData(map);
-//    	} catch (Exception e) {
-//    		return new ResponseData(ErrorType.SYSTEM_ERROR);
-//		}
+    	} catch (Exception e) {
+    		return new ResponseData(ErrorType.SYSTEM_ERROR);
+		}
     }
 
 

@@ -2,6 +2,7 @@
 package com.linayi.enums;
 
 public enum MemberLevel {
+	NOT_MEMBER("非会员"),// 非会员
 	NORMAL("普通会员"),// 普通会员
 	SENIOR("高级会员"),	// 高级会员
 	SUPER("超级VIP");	// 超级VIP

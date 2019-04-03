@@ -187,17 +187,17 @@ public class SupermarketServiceImpl implements SupermarketService {
 		 List<Supermarket> supermarketList = supermarketMapper.getSupermarketByAddress(userId);
 
 		 //获取用户的会员等级
-		 OpenMemberInfo openMemberInfo = openMemberInfoService.getTheLastOpenMemberInfo(userId);
+		 MemberLevel memberLevel = openMemberInfoService.getCurrentMemberLevel(userId);
 		 //普通用户和普通会员(5家超市)
-		 if(openMemberInfo == null || MemberLevel.NORMAL.toString().equals(openMemberInfo.getMemberLevel())){
+		 if(MemberLevel.NOT_MEMBER.toString().equals(memberLevel.toString()) || MemberLevel.NORMAL.toString().equals(memberLevel.toString())){
 			 supermarketList = supermarketList.size()>5 ? supermarketList.subList(0, 5) : supermarketList;
 		 }
 		 //高级会员(8家超市)
-		 else if(MemberLevel.SENIOR.toString().equals(openMemberInfo.getMemberLevel())){
+		 else if(MemberLevel.SENIOR.toString().equals(memberLevel.toString())){
 			 supermarketList = supermarketList.size()>8 ? supermarketList.subList(0, 8) : supermarketList;
 		 }
 		 //超级VIP(12家超市)
-		 else if(MemberLevel.SUPER.toString().equals(openMemberInfo.getMemberLevel())){
+		 else if(MemberLevel.SUPER.toString().equals(memberLevel.toString())){
 			 supermarketList = supermarketList.size()>12 ? supermarketList.subList(0, 12) : supermarketList;
 		 }
 

@@ -551,9 +551,9 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 
 		if(goodsSkuList.size()>0) {
 			//获取用户的会员等级
-			OpenMemberInfo openMemberInfo = openMemberInfoService.getTheLastOpenMemberInfo(goodsSku.getUserId());
+			MemberLevel memberLevel = openMemberInfoService.getCurrentMemberLevel(goodsSku.getUserId());
 			//普通用户和普通会员
-			if(openMemberInfo == null || MemberLevel.NORMAL.toString().equals(openMemberInfo.getMemberLevel())){
+			if(MemberLevel.NOT_MEMBER.toString().equals(memberLevel.toString()) || MemberLevel.NORMAL.toString().equals(memberLevel.toString())){
 				for(GoodsSku i:goodsSkuList) {
 					Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdNormal());
 					i.setMinPrice(i.getMinPriceNormal());
@@ -562,7 +562,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 				}
 			}
 			//高级会员
-			else if(MemberLevel.SENIOR.toString().equals(openMemberInfo.getMemberLevel())){
+			else if(MemberLevel.SENIOR.toString().equals(memberLevel.toString())){
 				for(GoodsSku i:goodsSkuList) {
 					Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdSenior());
 					i.setMinPrice(i.getMinPriceSenior());
@@ -571,7 +571,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 				}
 			}
 			//超级vip
-			else if(MemberLevel.SUPER.toString().equals(openMemberInfo.getMemberLevel())){
+			else if(MemberLevel.SUPER.toString().equals(memberLevel.toString())){
 				for(GoodsSku i:goodsSkuList) {
 					Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdSuper());
 					i.setMinPrice(i.getMinPriceSuper());
@@ -597,9 +597,9 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 
 		if(differenceRankingList.size()>0) {
             //获取用户的会员等级
-            OpenMemberInfo openMemberInfo = openMemberInfoService.getTheLastOpenMemberInfo(goodsSku.getUserId());
+			MemberLevel memberLevel = openMemberInfoService.getCurrentMemberLevel(goodsSku.getUserId());
             //普通用户和普通会员
-            if(openMemberInfo == null || MemberLevel.NORMAL.toString().equals(openMemberInfo.getMemberLevel())){
+            if(MemberLevel.NOT_MEMBER.toString().equals(memberLevel.toString()) || MemberLevel.NORMAL.toString().equals(memberLevel.toString())){
                 for(GoodsSku i:differenceRankingList) {
                     Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdNormal());
 //                  i.setMaxSupermarket(supermarketMapper.selectSupermarketBysupermarketId(i.getMaxSupermarketId()).getName());
@@ -610,7 +610,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
                 }
             }
             //高级会员
-            else if(MemberLevel.SENIOR.toString().equals(openMemberInfo.getMemberLevel())){
+            else if(MemberLevel.SENIOR.toString().equals(memberLevel.toString())){
                 for(GoodsSku i:differenceRankingList) {
                     Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdSenior());
 //                  i.setMaxSupermarket(supermarketMapper.selectSupermarketBysupermarketId(i.getMaxSupermarketId()).getName());
@@ -621,7 +621,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
                 }
             }
             //超级vip
-            else if(MemberLevel.SUPER.toString().equals(openMemberInfo.getMemberLevel())){
+            else if(MemberLevel.SUPER.toString().equals(memberLevel.toString())){
                 for(GoodsSku i:differenceRankingList) {
                     Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdSuper());
 //                  i.setMaxSupermarket(supermarketMapper.selectSupermarketBysupermarketId(i.getMaxSupermarketId()).getName());
@@ -747,9 +747,9 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		List<GoodsSku> goodsSkuList = goodsSkuMapper.customSearch(goodsSku);
 		if(goodsSkuList.size()!=0) {
 			//获取用户的会员等级
-			OpenMemberInfo openMemberInfo = openMemberInfoService.getTheLastOpenMemberInfo(goodsSku.getUserId());
+			MemberLevel memberLevel = openMemberInfoService.getCurrentMemberLevel(goodsSku.getUserId());
 			//普通用户和普通会员
-			if(openMemberInfo == null || MemberLevel.NORMAL.toString().equals(openMemberInfo.getMemberLevel())){
+			if(MemberLevel.NOT_MEMBER.toString().equals(memberLevel.toString()) || MemberLevel.NORMAL.toString().equals(memberLevel.toString())){
 				for(GoodsSku i:goodsSkuList) {
 					Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdNormal());
 					i.setMinPrice(i.getMinPriceNormal());
@@ -758,7 +758,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 				}
 			}
 			//高级会员
-			else if(MemberLevel.SENIOR.toString().equals(openMemberInfo.getMemberLevel())){
+			else if(MemberLevel.SENIOR.toString().equals(memberLevel.toString())){
 				for(GoodsSku i:goodsSkuList) {
 					Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdSenior());
 					i.setMinPrice(i.getMinPriceSenior());
@@ -767,7 +767,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 				}
 			}
 			//超级vip
-			else if(MemberLevel.SUPER.toString().equals(openMemberInfo.getMemberLevel())){
+			else if(MemberLevel.SUPER.toString().equals(memberLevel.toString())){
 				for(GoodsSku i:goodsSkuList) {
 					Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdSuper());
 					i.setMinPrice(i.getMinPriceSuper());

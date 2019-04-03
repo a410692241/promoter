@@ -53,7 +53,7 @@ public class SupermarketGoodsServiceImpl implements SupermarketGoodsService {
     //根据商品id获取超市和价格集合然后降序排序加入差价率
     public Map<String, Object> getPriceSupermarketByGoodsSkuId(Integer uid, Integer goodsSkuId) {
         //获取用户的会员等级
-        OpenMemberInfo openMemberInfo = openMemberInfoService.getTheLastOpenMemberInfo(uid);
+        MemberLevel memberLevel = openMemberInfoService.getCurrentMemberLevel(uid);
         //通过用户id获取社区id
         double spreadRate = 0;
         Integer communityId = communityMapper.getcommunityIdByuserId(uid);
@@ -62,13 +62,13 @@ public class SupermarketGoodsServiceImpl implements SupermarketGoodsService {
         if(supermarketIdList == null){
             return new HashMap<String, Object>();
         }
-        if(openMemberInfo == null || MemberLevel.NORMAL.toString().equals(openMemberInfo.getMemberLevel())) {
+        if(MemberLevel.NOT_MEMBER.toString().equals(memberLevel.toString()) || MemberLevel.NORMAL.toString().equals(memberLevel.toString())) {
             supermarketIdList = supermarketIdList.size() > 5 ? supermarketIdList.subList(0,5) : supermarketIdList;
         }
-        else if(MemberLevel.SENIOR.toString().equals(openMemberInfo.getMemberLevel())) {
+        else if(MemberLevel.SENIOR.toString().equals(memberLevel.toString())) {
             supermarketIdList = supermarketIdList.size() > 8 ? supermarketIdList.subList(0,8) : supermarketIdList;
         }
-        else if(MemberLevel.SUPER.toString().equals(openMemberInfo.getMemberLevel())) {
+        else if(MemberLevel.SUPER.toString().equals(memberLevel.toString())) {
             supermarketIdList = supermarketIdList.size() > 12 ? supermarketIdList.subList(0,12) : supermarketIdList;
         }
 
