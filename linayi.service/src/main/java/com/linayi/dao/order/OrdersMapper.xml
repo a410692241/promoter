@@ -118,7 +118,7 @@
     <if test="amount != null">
       AND amount = #{amount}
     </if>
-    <if test="communityStatus != null and communityStatus == 'PROCURING'">
+    <if test="communityStatus != null and communityStatus != ''">
       AND community_status = #{communityStatus}
     </if>
     <if test="communityStatus != null and communityStatus == 'DELIVERING'">
