@@ -65,6 +65,27 @@ public class OrderController extends BaseController {
     }
 
     /**
+     * 采买任务订单列表
+     * @param param
+     * @return
+     */
+    @RequestMapping("/getProcureOrderList.do")
+    public Object getProcureOrderList(@RequestBody Map<String, Object> param){
+        ParamValidUtil<Orders> pvu = new ParamValidUtil<>(param);
+        try {
+            Orders orders = pvu.transObj(Orders.class);
+            orders.setUserId(getUserId());
+            Object orderList = orderService.getProcureOrderList(orders);
+
+            return new ResponseData(orderList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseData("F",ErrorType.SYSTEM_ERROR.getErrorMsg());
+    }
+
+    /**
      * 查看订单详情
      * @param param
      * @param request
@@ -180,7 +201,7 @@ public class OrderController extends BaseController {
         }
         return new ResponseData("F",ErrorType.SYSTEM_ERROR.getErrorMsg());
     }
-    
+
     /**
 	 * 查询装箱列表
 	 */
@@ -193,7 +214,7 @@ public class OrderController extends BaseController {
 			}
 			order.setCommunityId(getCommunityId());
 			List<Orders> orderList = orderService.getBoxingList(order);
-			
+
 			Integer totalPage = (int) Math.ceil(Double.valueOf(order.getTotal()) / Double.valueOf(order.getPageSize()));
 			if (totalPage <= 0) {
 				totalPage++;
