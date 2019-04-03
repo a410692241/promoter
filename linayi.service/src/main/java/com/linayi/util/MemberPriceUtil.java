@@ -5,6 +5,7 @@ import com.linayi.entity.goods.SupermarketGoods;
 import com.linayi.entity.promoter.OpenMemberInfo;
 import com.linayi.enums.MemberLevel;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,6 +13,8 @@ import java.util.stream.Collectors;
 public class MemberPriceUtil {
 
     //普通会员：NORMAL  高级会员：SENIOR  超级VIP：SUPER
+
+    public static List<SupermarketGoods> supermarketGoods = new ArrayList<>();
 
     /**
      * 根据用户会员等级返回[0]最低价 [1]最低价超市Id [2]最高价 [3]最高价超市Id数组
@@ -40,7 +43,7 @@ public class MemberPriceUtil {
         }
 
         List<SupermarketGoods> collect = supermarketGoodsList.subList(0, num).stream().sorted(Comparator.comparing(SupermarketGoods::getPrice).reversed()).collect(Collectors.toList());
-        supermarketGoodsList = collect;
+        supermarketGoods = collect;
         arr [0] = collect.get(num - 1).getPrice();
         arr [1] = collect.get(num - 1).getSupermarketId();
         arr [2] = collect.get(0).getPrice();

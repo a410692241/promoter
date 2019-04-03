@@ -181,7 +181,7 @@ public class OrderServiceImpl implements OrderService {
             maxPrice = supermarketPriceByLevel[2];
         }
 
-        String jsonStr = dealSupermarket(supermarketGoodsList);
+        String jsonStr = dealSupermarket(MemberPriceUtil.supermarketGoods);
         ordersGoods.setSupermarketList(jsonStr);
         ordersGoods.setMaxPrice(maxPrice);
         ordersGoods.setPrice(minPrice);
