@@ -10,6 +10,7 @@ import com.linayi.enums.MemberLevel;
 import com.linayi.service.promoter.OpenMemberInfoService;
 import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.util.ImageUtil;
+import com.linayi.util.MemberPriceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -190,15 +191,15 @@ public class SupermarketServiceImpl implements SupermarketService {
 		 MemberLevel memberLevel = openMemberInfoService.getCurrentMemberLevel(userId);
 		 //普通用户和普通会员(5家超市)
 		 if(MemberLevel.NOT_MEMBER.toString().equals(memberLevel.toString()) || MemberLevel.NORMAL.toString().equals(memberLevel.toString())){
-			 supermarketList = supermarketList.size()>5 ? supermarketList.subList(0, 5) : supermarketList;
+			 supermarketList = supermarketList.size()> MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.NORMAL.toString()) ? supermarketList.subList(0,  MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.NORMAL.toString())) : supermarketList;
 		 }
 		 //高级会员(8家超市)
 		 else if(MemberLevel.SENIOR.toString().equals(memberLevel.toString())){
-			 supermarketList = supermarketList.size()>8 ? supermarketList.subList(0, 8) : supermarketList;
+			 supermarketList = supermarketList.size()> MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.SENIOR.toString()) ? supermarketList.subList(0,  MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.SENIOR.toString())) : supermarketList;
 		 }
 		 //超级VIP(12家超市)
 		 else if(MemberLevel.SUPER.toString().equals(memberLevel.toString())){
-			 supermarketList = supermarketList.size()>12 ? supermarketList.subList(0, 12) : supermarketList;
+			 supermarketList = supermarketList.size()> MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.SUPER.toString()) ? supermarketList.subList(0, MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.SUPER.toString())) : supermarketList;
 		 }
 
 		 System.out.println(supermarketList.size());

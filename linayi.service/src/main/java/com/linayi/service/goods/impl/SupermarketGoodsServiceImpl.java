@@ -10,6 +10,7 @@ import com.linayi.dao.community.CommunitySupermarketMapper;
 import com.linayi.entity.promoter.OpenMemberInfo;
 import com.linayi.enums.MemberLevel;
 import com.linayi.service.promoter.OpenMemberInfoService;
+import com.linayi.util.MemberPriceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,13 +64,13 @@ public class SupermarketGoodsServiceImpl implements SupermarketGoodsService {
             return new HashMap<String, Object>();
         }
         if(MemberLevel.NOT_MEMBER.toString().equals(memberLevel.toString()) || MemberLevel.NORMAL.toString().equals(memberLevel.toString())) {
-            supermarketIdList = supermarketIdList.size() > 5 ? supermarketIdList.subList(0,5) : supermarketIdList;
+            supermarketIdList = supermarketIdList.size() > MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.NORMAL.toString()) ? supermarketIdList.subList(0,MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.NORMAL.toString())) : supermarketIdList;
         }
         else if(MemberLevel.SENIOR.toString().equals(memberLevel.toString())) {
-            supermarketIdList = supermarketIdList.size() > 8 ? supermarketIdList.subList(0,8) : supermarketIdList;
+            supermarketIdList = supermarketIdList.size() > MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.SENIOR.toString()) ? supermarketIdList.subList(0,MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.SENIOR.toString())) : supermarketIdList;
         }
         else if(MemberLevel.SUPER.toString().equals(memberLevel.toString())) {
-            supermarketIdList = supermarketIdList.size() > 12 ? supermarketIdList.subList(0,12) : supermarketIdList;
+            supermarketIdList = supermarketIdList.size() > MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.SUPER.toString()) ? supermarketIdList.subList(0,MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.SUPER.toString())) : supermarketIdList;
         }
 
         //根据超市id集合获取超市价格集合
