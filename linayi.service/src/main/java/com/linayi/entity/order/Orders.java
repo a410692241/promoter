@@ -100,6 +100,8 @@ public class Orders extends BaseEntity {
     private String deliverStatus;//订单配送状态
     @ApiModelProperty(value = "配送员名字")
     private String delivererName;//配送员名字
+    @ApiModelProperty(value = "采买员名字")
+    private String buyUserName;//采买员名字
 
     @ApiModelProperty(value = "订单状态",example = "进行中：IN_PROGRESS,已取消：CANCELED ,已完成：FINISHED ,已拒收：REFUSED,已退款：REFUNDED," +
             "采买中：PROCURING,采买完成：PROCURE_FINISHED,全部已收货（社区端）：RECEIVED,已装箱：PACKED,配送中：DELIVERING,配送完成：DELIVER_FINISHED\n")
