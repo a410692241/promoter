@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 
 import com.linayi.dao.promoter.OpenMemberInfoMapper;
 import com.linayi.enums.MemberLevel;
+import com.linayi.service.goods.SupermarketGoodsService;
 import com.linayi.util.MemberPriceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,8 @@ public class CommunitySupermarketServiceImpl implements CommunitySupermarketServ
 	private GoodsSkuMapper goodsSkuMapper;
 	@Autowired
 	private OpenMemberInfoMapper OpenMemberInfoMapper;
+	@Autowired
+	private SupermarketGoodsService supermarketGoodsService;
 
 
 	//绑定社区和超市
@@ -171,22 +174,23 @@ public class CommunitySupermarketServiceImpl implements CommunitySupermarketServ
 
 		for(SupermarketGoods i:goodsSkuIdList) {
 		//根据超市id获取超市价格表信息
-			List<SupermarketGoods> supermarketGoodsSkuList = new ArrayList<SupermarketGoods>();
-			for(Integer supermarketId : supermarketIdList){
-				SupermarketGoods supermarketGoods = supermarketGoodsMapper.getSupermarketGoodsBysupermarketIdAndgoodsSkuId(i.getGoodsSkuId().intValue(),supermarketId);
-				if(supermarketGoods != null){
-					supermarketGoodsSkuList.add(supermarketGoods);
-				}
-			}
+//			List<SupermarketGoods> supermarketGoodsSkuList = new ArrayList<SupermarketGoods>();
+//			for(Integer supermarketId : supermarketIdList){
+//////				SupermarketGoods supermarketGoods = supermarketGoodsMapper.getSupermarketGoodsBysupermarketIdAndgoodsSkuId(i.getGoodsSkuId().intValue(),supermarketId);
+//////				if(supermarketGoods != null){
+//////					supermarketGoodsSkuList.add(supermarketGoods);
+//////				}
+//////			}
+            List<SupermarketGoods> supermarketGoodsSkuList = supermarketGoodsService.getSupermarketGoodsList(i.getGoodsSkuId().intValue(), communityId);
 
-			List<SupermarketGoods> currentSupermarketGoodsSkuList = new ArrayList<SupermarketGoods>();
-			if(supermarketGoodsSkuList.size()>0) {
+            //List<SupermarketGoods> currentSupermarketGoodsSkuList = new ArrayList<SupermarketGoods>();
+			/*if(supermarketGoodsSkuList.size()>0) {
 				currentSupermarketGoodsSkuList.addAll(supermarketGoodsSkuList);
 				//价格排序(升序)
 				currentSupermarketGoodsSkuList.sort((a, b) -> {
 					return a.getPrice() - b.getPrice();
 				});
-			}
+			}*/
 
 
 			//普通会员最低价最高价信息
@@ -225,10 +229,10 @@ public class CommunitySupermarketServiceImpl implements CommunitySupermarketServ
 			communityGoods.setCreateTime(now);
 			communityGoods.setGoodsSkuId(i.getGoodsSkuId().intValue());
 			//所有超市
-			communityGoods.setMaxPrice(currentSupermarketGoodsSkuList.get(currentSupermarketGoodsSkuList.size()-1).getPrice());
-			communityGoods.setMaxSupermarketId(currentSupermarketGoodsSkuList.get(currentSupermarketGoodsSkuList.size()-1).getSupermarketId());
-			communityGoods.setMinPrice(currentSupermarketGoodsSkuList.get(0).getPrice());
-			communityGoods.setMinSupermarketId(currentSupermarketGoodsSkuList.get(0).getSupermarketId());
+			communityGoods.setMaxPrice(MemberPriceUtil.allSpermarketGoodsList.get(MemberPriceUtil.allSpermarketGoodsList.size()-1).getPrice());
+			communityGoods.setMaxSupermarketId(MemberPriceUtil.allSpermarketGoodsList.get(MemberPriceUtil.allSpermarketGoodsList.size()-1).getSupermarketId());
+			communityGoods.setMinPrice(MemberPriceUtil.allSpermarketGoodsList.get(0).getPrice());
+			communityGoods.setMinSupermarketId(MemberPriceUtil.allSpermarketGoodsList.get(0).getSupermarketId());
 			//普通用户和普通会员(最近5家超市)
 			communityGoods.setMinPriceNormal(supermarketGoodsSkuListForNormal.get(supermarketGoodsSkuListForNormal.size() - 1).getPrice());
 			communityGoods.setMinSupermarketIdNormal(supermarketGoodsSkuListForNormal.get(supermarketGoodsSkuListForNormal.size() - 1).getSupermarketId());

@@ -13,8 +13,10 @@ public class MemberPriceUtil {
     //普通会员：NORMAL  高级会员：SENIOR  超级VIP：SUPER
     //有价格的超市
     public static List<SupermarketGoods> supermarketGoods = new ArrayList<>();
-    //所有的超市
+    //截取后所有的超市
     public static List<SupermarketGoods> allSupermarketGoods = new ArrayList<>();
+    //所有的超市
+    public static List<SupermarketGoods> allSpermarketGoodsList = new ArrayList<>();
 
     public final static Map<String,Integer> levelAndSupermarketNum = new HashMap<>();
     static {
@@ -31,6 +33,11 @@ public class MemberPriceUtil {
      * @return
      */
     public static Integer[] supermarketPriceByLevel(MemberLevel currentMemberLevel, List<SupermarketGoods> supermarketGoodsList){
+        for (SupermarketGoods goods : supermarketGoodsList) {
+            if (goods.getGoodsSkuId() != null && goods.getGoodsSkuId() == 39){
+                System.out.println(".....................");
+            }
+        }
         String memberLevel = currentMemberLevel.toString();
         Integer [] arr = new Integer[4];
         Integer supermarketSize = supermarketGoodsList.size();
@@ -44,7 +51,27 @@ public class MemberPriceUtil {
         }else if(MemberLevel.SUPER.toString().equals(memberLevel)){
             num = supermarketSize > levelAndSupermarketNum.get(MemberLevel.SUPER.toString()) ? levelAndSupermarketNum.get(MemberLevel.SUPER.toString()) : supermarketSize;
         }
+        final int[] sum = {0};
 
+        List<SupermarketGoods> collects = supermarketGoodsList.stream().
+                sorted((o1,o2) ->{
+                    if(o1.getPrice() == null){
+                        return 1;
+                    }
+                    if(o2.getPrice() == null){
+                        return -1;
+                    }
+                    return o2.getPrice() - o1.getPrice();
+                }).collect(Collectors.toList());
+
+        collects.stream().forEach(p->{
+            if(p.getPrice() == null)
+                sum[0]++;
+        });
+
+        allSpermarketGoodsList = collects.subList(0,collects.size() - sum[0]);
+
+        sum[0] = 0;
         List<SupermarketGoods> collect = supermarketGoodsList.subList(0, num).stream().
                 sorted((o1,o2) ->{
                     if(o1.getPrice() == null){
@@ -56,18 +83,25 @@ public class MemberPriceUtil {
                     return o2.getPrice() - o1.getPrice();
                 }).collect(Collectors.toList());
 
-        final int[] sum = {0};
+
         allSupermarketGoods = collect;
         collect.stream().forEach(p->{
             if(p.getPrice() == null)
                 sum[0]++;
         });
-        supermarketGoods = collect.subList(0,collect.size() - sum[0]);
+        MemberPriceUtil.supermarketGoods = collect.subList(0,collect.size() - sum[0]);
+        if(num - 1 - sum[0] < 0){
+            arr [0] = null;
+            arr [1] = null;
+            arr [2] = null;
+            arr [3] = null;
+        }else{
+            arr [0] = collect.get(num - 1 - sum[0]).getPrice();
+            arr [1] = collect.get(num - 1 - sum[0]).getSupermarketId();
+            arr [2] = collect.get(0).getPrice();
+            arr [3] = collect.get(0).getSupermarketId();
+        }
 
-        arr [0] = collect.get(num - 1 - sum[0]).getPrice();
-        arr [1] = collect.get(num - 1 - sum[0]).getSupermarketId();
-        arr [2] = collect.get(0).getPrice();
-        arr [3] = collect.get(0).getSupermarketId();
 
         return arr;
     }
