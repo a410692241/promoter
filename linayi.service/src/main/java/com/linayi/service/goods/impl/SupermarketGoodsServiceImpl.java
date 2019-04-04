@@ -87,14 +87,17 @@ public class SupermarketGoodsServiceImpl implements SupermarketGoodsService {
         //List<SupermarketGoods> newsupermarketGoodsList = new ArrayList<SupermarketGoods>();
         List<String> supermarketList = supermarketMapper.getSupermarketBycommunityIdAndSupermarketIdList(communityId,supermarketIdList);
 
+
             //价格排序升序
             supermarketGoodsList.sort((a, b) -> {
                 return a.getPrice() - b.getPrice();
             });
 
+
+        if(supermarketGoodsList != null && supermarketGoodsList.size() >0) {
             //差价率
             spreadRate = Double.valueOf(df.format(Double.valueOf((supermarketGoodsList.get(supermarketGoodsList.size() - 1).getPrice() - supermarketGoodsList.get(0).getPrice())) / supermarketGoodsList.get(0).getPrice() * 100));
-
+        }
         List<SupermarketGoods> newsupermarketGoodsList = new ArrayList<>();
         newsupermarketGoodsList.addAll(supermarketGoodsList);
         //List<String> newsupermarketGoods = new ArrayList<>();
