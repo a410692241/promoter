@@ -11,8 +11,10 @@ import java.util.stream.Collectors;
 public class MemberPriceUtil {
 
     //普通会员：NORMAL  高级会员：SENIOR  超级VIP：SUPER
-    //所有价格的超市
+    //有价格的超市
     public static List<SupermarketGoods> supermarketGoods = new ArrayList<>();
+    //所有的超市
+    public static List<SupermarketGoods> allSupermarketGoods = new ArrayList<>();
 
     public final static Map<String,Integer> levelAndSupermarketNum = new HashMap<>();
     static {
@@ -55,7 +57,7 @@ public class MemberPriceUtil {
                 }).collect(Collectors.toList());
 
         final int[] sum = {0};
-
+        allSupermarketGoods = collect;
         collect.stream().forEach(p->{
             if(p.getPrice() == null)
                 sum[0]++;

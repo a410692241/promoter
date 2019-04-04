@@ -191,7 +191,7 @@ public class CommunitySupermarketServiceImpl implements CommunitySupermarketServ
 
 			//普通会员最低价最高价信息
 			MemberPriceUtil.supermarketPriceByLevel(MemberLevel.NORMAL,supermarketGoodsSkuList);
-			List<SupermarketGoods> supermarketGoodsSkuListForNormal = MemberPriceUtil.supermarketGoods;
+			List<SupermarketGoods> supermarketGoodsSkuListForNormal = MemberPriceUtil.allSupermarketGoods;
 			/*List<SupermarketGoods> supermarketGoodsSkuListForNormal =
 					supermarketGoodsSkuList.size() > MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.NORMAL.toString()) ? supermarketGoodsSkuList.subList(0,MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.NORMAL.toString())) : supermarketGoodsSkuList;
 			//所有超市价格价格排序(升序)
@@ -201,7 +201,7 @@ public class CommunitySupermarketServiceImpl implements CommunitySupermarketServ
 
 			//获取高级会员最低价最高价信息
 			MemberPriceUtil.supermarketPriceByLevel(MemberLevel.SENIOR,supermarketGoodsSkuList);
-			List<SupermarketGoods> supermarketGoodsSkuListForSenior = MemberPriceUtil.supermarketGoods;
+			List<SupermarketGoods> supermarketGoodsSkuListForSenior = MemberPriceUtil.allSupermarketGoods;
 			/*List<SupermarketGoods> supermarketGoodsSkuListForSenior =
 					supermarketGoodsSkuList.size() > MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.SENIOR.toString()) ? supermarketGoodsSkuList.subList(0,MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.SENIOR.toString())) : supermarketGoodsSkuList;
 			//所有超市价格价格排序(升序)
@@ -211,7 +211,7 @@ public class CommunitySupermarketServiceImpl implements CommunitySupermarketServ
 
 			//获取vip会员最低价最高价信息
 			MemberPriceUtil.supermarketPriceByLevel(MemberLevel.SUPER,supermarketGoodsSkuList);
-			List<SupermarketGoods> supermarketGoodsSkuListForSuper = MemberPriceUtil.supermarketGoods;
+			List<SupermarketGoods> supermarketGoodsSkuListForSuper = MemberPriceUtil.allSupermarketGoods;
 			/*List<SupermarketGoods> supermarketGoodsSkuListForSuper =
 					supermarketGoodsSkuList.size() > MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.SUPER.toString()) ? supermarketGoodsSkuList.subList(0,MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.SUPER.toString())) : supermarketGoodsSkuList;
 			//所有超市价格价格排序(升序)
