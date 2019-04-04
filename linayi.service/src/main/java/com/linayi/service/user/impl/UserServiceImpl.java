@@ -264,13 +264,13 @@ public class UserServiceImpl implements UserService {
         try {
             String result = HttpClientUtil.sendGetRequest("http://www.laykj.cn/linsheng.app/user/isShop.do?userId="+accountId,null);
             if(StringUtils.isBlank(result)){
-                return "false";
+                return "FALSE";
             }else{
-                return result.contains("true") ? "true" : "false";
+                return result.contains("TRUE") ? "TRUE" : "FALSE";
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            return "false";
+            return "FALSE";
         }
 
     }
