@@ -480,7 +480,7 @@ public class CorrectServiceImpl implements CorrectService {
         param1.setSupermarketId(corrects.getSupermarketId());
         param1.setGoodsSkuId(Integer.parseInt(corrects.getGoodsSkuId() + ""));
         SupermarketGoodsVersion version = supermarketGoodsVersionService.getVersion(param1);
-
+        long goodsId = 0l;
         //再次判断是否审核通过
         if (CorrectStatus.AUDIT_SUCCESS.toString().equals(corrects.getStatus())) {
             Date now = new Date();
@@ -492,6 +492,7 @@ public class CorrectServiceImpl implements CorrectService {
                 SupermarketGoods supermarketGoods = new SupermarketGoods();
                 supermarketGoods.setSupermarketId(corrects.getSupermarketId());
                 supermarketGoods.setGoodsSkuId(corrects.getGoodsSkuId());
+                goodsId = corrects.getGoodsSkuId();
                 supermarketGoods.setPrice(corrects.getPrice());
                 supermarketGoods.setCorrectId(corrects.getCorrectId());
                 supermarketGoodsMapper.insert(supermarketGoods);
@@ -535,8 +536,15 @@ public class CorrectServiceImpl implements CorrectService {
         }
 
         // 线程安全并发处理
+        if(version != null){
+            if(version.getSupermarketGoodsId() == null && version.getVersion() == null){
+                System.out.println("...............");
+            }
+        }
+
         int count = supermarketGoodsVersionService.updateVersion(version);
         if (count <= 0) {
+            System.out.println(goodsId + "..............");
             throw new BusinessException(ErrorType.OPERATION_FAIL);
         }
     }

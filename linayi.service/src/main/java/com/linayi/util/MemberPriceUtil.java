@@ -11,10 +11,9 @@ import java.util.stream.Collectors;
 public class MemberPriceUtil {
 
     //普通会员：NORMAL  高级会员：SENIOR  超级VIP：SUPER
-    //有价格的超市
-    public static List<SupermarketGoods> supermarketGoods = new ArrayList<>();
     //截取后所有的超市
-    public static List<SupermarketGoods> allSupermarketGoods = new ArrayList<>();
+    public static List<SupermarketGoods> supermarketGoods = new ArrayList<>();
+
     //所有的超市
     public static List<SupermarketGoods> allSpermarketGoodsList = new ArrayList<>();
 
@@ -27,17 +26,13 @@ public class MemberPriceUtil {
     }
 
     /**
-     * 根据用户会员等级返回[0]最低价 [1]最低价超市Id [2]最高价 [3]最高价超市Id [5]有价格的超市数量数组
+     * 根据用户会员等级返回[0]最低价 [1]最低价超市Id [2]最高价 [3]最高价超市Id 数组
      * @param currentMemberLevel
      * @param supermarketGoodsList
      * @return
      */
     public static Integer[] supermarketPriceByLevel(MemberLevel currentMemberLevel, List<SupermarketGoods> supermarketGoodsList){
-        for (SupermarketGoods goods : supermarketGoodsList) {
-            if (goods.getGoodsSkuId() != null && goods.getGoodsSkuId() == 39){
-                System.out.println(".....................");
-            }
-        }
+
         String memberLevel = currentMemberLevel.toString();
         Integer [] arr = new Integer[4];
         Integer supermarketSize = supermarketGoodsList.size();
@@ -84,12 +79,11 @@ public class MemberPriceUtil {
                 }).collect(Collectors.toList());
 
 
-        allSupermarketGoods = collect;
         collect.stream().forEach(p->{
             if(p.getPrice() == null)
                 sum[0]++;
         });
-        MemberPriceUtil.supermarketGoods = collect.subList(0,collect.size() - sum[0]);
+        supermarketGoods = collect.subList(0,collect.size() - sum[0]);
         if(num - 1 - sum[0] < 0){
             arr [0] = null;
             arr [1] = null;

@@ -113,6 +113,15 @@ public class GoodsSku extends BaseEntity {
 
     private String  createName; //新增商品用户名
 
+    private String memberLevel;
+
+    public String getMemberLevel() {
+        return memberLevel;
+    }
+
+    public void setMemberLevel(String memberLevel) {
+        this.memberLevel = memberLevel;
+    }
 
     public String getEstablishName() {
         return establishName;
