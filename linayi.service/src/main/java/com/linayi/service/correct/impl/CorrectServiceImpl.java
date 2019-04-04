@@ -536,15 +536,8 @@ public class CorrectServiceImpl implements CorrectService {
         }
 
         // 线程安全并发处理
-        if(version != null){
-            if(version.getSupermarketGoodsId() == null && version.getVersion() == null){
-                System.out.println("...............");
-            }
-        }
-
         int count = supermarketGoodsVersionService.updateVersion(version);
         if (count <= 0) {
-            System.out.println(goodsId + "..............");
             throw new BusinessException(ErrorType.OPERATION_FAIL);
         }
     }
