@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class MemberPriceUtil {
 
     //普通会员：NORMAL  高级会员：SENIOR  超级VIP：SUPER
-
+    //所有价格的超市
     public static List<SupermarketGoods> supermarketGoods = new ArrayList<>();
 
     public final static Map<String,Integer> levelAndSupermarketNum = new HashMap<>();
@@ -23,7 +23,7 @@ public class MemberPriceUtil {
     }
 
     /**
-     * 根据用户会员等级返回[0]最低价 [1]最低价超市Id [2]最高价 [3]最高价超市Id数组
+     * 根据用户会员等级返回[0]最低价 [1]最低价超市Id [2]最高价 [3]最高价超市Id [5]有价格的超市数量数组
      * @param currentMemberLevel
      * @param supermarketGoodsList
      * @return
@@ -43,12 +43,30 @@ public class MemberPriceUtil {
             num = supermarketSize > levelAndSupermarketNum.get(MemberLevel.SUPER.toString()) ? levelAndSupermarketNum.get(MemberLevel.SUPER.toString()) : supermarketSize;
         }
 
-        List<SupermarketGoods> collect = supermarketGoodsList.subList(0, num).stream().sorted(Comparator.comparing(SupermarketGoods::getPrice).reversed()).collect(Collectors.toList());
-        supermarketGoods = collect;
-        arr [0] = collect.get(num - 1).getPrice();
-        arr [1] = collect.get(num - 1).getSupermarketId();
+        List<SupermarketGoods> collect = supermarketGoodsList.subList(0, num).stream().
+                sorted((o1,o2) ->{
+                    if(o1.getPrice() == null){
+                        return 1;
+                    }
+                    if(o2.getPrice() == null){
+                        return -1;
+                    }
+                    return o2.getPrice() - o1.getPrice();
+                }).collect(Collectors.toList());
+
+        final int[] sum = {0};
+
+        collect.stream().forEach(p->{
+            if(p.getPrice() == null)
+                sum[0]++;
+        });
+        supermarketGoods = collect.subList(0,collect.size() - sum[0]);
+
+        arr [0] = collect.get(num - 1 - sum[0]).getPrice();
+        arr [1] = collect.get(num - 1 - sum[0]).getSupermarketId();
         arr [2] = collect.get(0).getPrice();
         arr [3] = collect.get(0).getSupermarketId();
+
         return arr;
     }
 
