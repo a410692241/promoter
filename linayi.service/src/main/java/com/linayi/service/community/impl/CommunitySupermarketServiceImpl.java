@@ -96,7 +96,7 @@ public class CommunitySupermarketServiceImpl implements CommunitySupermarketServ
 		}
 
 
-		//用户和普通会员最近5家超市,再排序价格
+		//普通会员最低价最高价信息
 		MemberPriceUtil.supermarketPriceByLevel(MemberLevel.NORMAL,supermarketGoodsSkuList);
 		List<SupermarketGoods> supermarketGoodsSkuListForNormal = MemberPriceUtil.supermarketGoods;
 //		List<SupermarketGoods> supermarketGoodsSkuListForNormal =
@@ -106,7 +106,7 @@ public class CommunitySupermarketServiceImpl implements CommunitySupermarketServ
 //			return a.getPrice() - b.getPrice();
 //		});
 
-		//高级会员最近8家超市,再排序价格
+		//获取高级会员最低价最高价信息
 		MemberPriceUtil.supermarketPriceByLevel(MemberLevel.SENIOR,supermarketGoodsSkuList);
 		List<SupermarketGoods> supermarketGoodsSkuListForSenior = MemberPriceUtil.supermarketGoods;
 //		List<SupermarketGoods> supermarketGoodsSkuListForSenior =
@@ -116,7 +116,7 @@ public class CommunitySupermarketServiceImpl implements CommunitySupermarketServ
 //			return a.getPrice() - b.getPrice();
 //		});
 
-		//vip会员最近8家超市,再排序价格
+		//获取vip会员最低价最高价信息
 		MemberPriceUtil.supermarketPriceByLevel(MemberLevel.SUPER,supermarketGoodsSkuList);
 		List<SupermarketGoods> supermarketGoodsSkuListForSuper = MemberPriceUtil.supermarketGoods;
 //		List<SupermarketGoods> supermarketGoodsSkuListForSuper =
@@ -189,7 +189,7 @@ public class CommunitySupermarketServiceImpl implements CommunitySupermarketServ
 			}
 
 
-			//用户和普通会员最近5家超市,再排序价格
+			//普通会员最低价最高价信息
 			MemberPriceUtil.supermarketPriceByLevel(MemberLevel.NORMAL,supermarketGoodsSkuList);
 			List<SupermarketGoods> supermarketGoodsSkuListForNormal = MemberPriceUtil.supermarketGoods;
 			/*List<SupermarketGoods> supermarketGoodsSkuListForNormal =
@@ -199,7 +199,7 @@ public class CommunitySupermarketServiceImpl implements CommunitySupermarketServ
 				return a.getPrice() - b.getPrice();
 			});*/
 
-			//高级会员最近8家超市,再排序价格
+			//获取高级会员最低价最高价信息
 			MemberPriceUtil.supermarketPriceByLevel(MemberLevel.SENIOR,supermarketGoodsSkuList);
 			List<SupermarketGoods> supermarketGoodsSkuListForSenior = MemberPriceUtil.supermarketGoods;
 			/*List<SupermarketGoods> supermarketGoodsSkuListForSenior =
@@ -209,7 +209,7 @@ public class CommunitySupermarketServiceImpl implements CommunitySupermarketServ
 				return a.getPrice() - b.getPrice();
 			});*/
 
-			//vip会员最近8家超市,再排序价格
+			//获取vip会员最低价最高价信息
 			MemberPriceUtil.supermarketPriceByLevel(MemberLevel.SUPER,supermarketGoodsSkuList);
 			List<SupermarketGoods> supermarketGoodsSkuListForSuper = MemberPriceUtil.supermarketGoods;
 			/*List<SupermarketGoods> supermarketGoodsSkuListForSuper =

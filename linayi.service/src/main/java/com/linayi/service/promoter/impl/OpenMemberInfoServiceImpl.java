@@ -32,7 +32,7 @@ public class OpenMemberInfoServiceImpl implements OpenMemberInfoService {
         }
 
         if(MemberLevel.SENIOR.toString().equals(openMemberInfos.getMemberLevel())){
-            return MemberLevel.NORMAL;
+            return MemberLevel.SENIOR;
         }
 
         if(MemberLevel.SUPER.toString().equals(openMemberInfos.getMemberLevel())){
