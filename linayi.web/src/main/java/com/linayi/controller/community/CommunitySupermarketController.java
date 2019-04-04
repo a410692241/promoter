@@ -21,12 +21,12 @@ public class CommunitySupermarketController {
 	@ResponseBody
 	public ResponseData bind(CommunitySupermarket communitySupermarket){
 		ResponseData rr = null;
-		try{
+//		try{
 			communitySupermarketService.bind(communitySupermarket);
 			rr = new ResponseData(communitySupermarket);
-		}catch(Exception e){
-			rr = new ResponseData(ErrorType.SYSTEM_ERROR);
-		}
+//		}catch(Exception e){
+//			rr = new ResponseData(ErrorType.SYSTEM_ERROR);
+//		}
 		return rr;
 	}
 	
