@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<input type="file" onchange="change( event )" >
+<img alt="" id="uploadPreview" src="">
+<script type="text/javascript">
+	function change( event ){
+
+		var file = event.target.files[0];
+		var fileReader = new FileReader(  );
+		fileReader.onloadend = function (oFREvent) {
+			var arrayBuffer =  oFREvent.target.result;
+			var dataView = new Uint8Array(arrayBuffer);
+		    var length = dataView.length;
+		    var base64 = '';
+		    var i;
+		    for (i = 0; i < length; i++) {
+		      base64 += String.fromCharCode(dataView[i]);
+		    }
+		    var base64 = 'data:image/jpeg;base64,' + btoa(base64);
+
+			document.getElementById("uploadPreview").src =base64;
+		};
+		var buff = fileReader.readAsArrayBuffer( file );
+	}
+</script>
+</body>
+</html>

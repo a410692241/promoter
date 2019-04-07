@@ -1,0 +1,62 @@
+﻿<style type="text/css">
+	/**快捷菜单样式*/
+	#quicklyLink{
+		background-color: white;
+		list-style: none;
+		width: 100%;
+		margin: 0px;
+		padding: 0px;
+		font-size: 0px;
+		padding:10px;
+		box-sizing:border-box;
+	}
+	#quicklyLink>li{
+		width: 25%;
+	 	height: 165px;
+		cursor: pointer;
+		box-sizing:border-box;
+		text-align:center;
+	 	border: 1px dashed #ccc;
+	 	padding-top:  45px;
+	 	display:inline-block;
+	 	margin-left: -1px
+	}
+	#quicklyLink>li:nth-child(1){
+		margin-left: 1px
+	}
+	#quicklyLink>li:nth-child(5n){
+		margin-left: 1px;
+		margin-top: -1px
+	}
+	#quicklyLink>li:nth-child(6n){
+		margin-top: -1px
+	}
+	#quicklyLink>li:nth-child(7n){
+		margin-top: -1px
+	}
+	#quicklyLink>li:nth-child(8n){
+		margin-top: -1px
+	}
+	#quicklyLink>li:HOVER {
+	    background: #f8f8f8;
+	}
+	#quicklyLink>li img{
+		width: 48px;
+		height: 48px;
+		zoom:120%;
+	 }
+	#quicklyLink>li figcaption{
+		font-size: 14px;
+	 }
+</style>
+
+<div ng-controller="DashboardCtrl">
+			<ul id="quicklyLink" >
+ 	   			<li ui-sref="{{menu.sref}}" ng-repeat="menu in seccondMenuItemList" ng-if="menu.common == 1">
+ 	   				<figure>
+							<img onerror="this.src=''" ng-src="{{menu.icon}}"/>
+							<figcaption>{{menu.text}}</figcaption>
+					</figure>
+ 	   			</li>
+ 	   		</ul>
+</div>

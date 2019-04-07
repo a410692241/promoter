@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.sync.dao.TOrdersMapper">
+  <resultMap id="BaseResultMap" type="com.linayi.sync.entity.TOrders">
+    <result column="orders_id" jdbcType="BIGINT" property="ordersId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="receiver_name" jdbcType="VARCHAR" property="receiverName" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="address_one" jdbcType="VARCHAR" property="addressOne" />
+    <result column="address_two" jdbcType="VARCHAR" property="addressTwo" />
+    <result column="address_three" jdbcType="VARCHAR" property="addressThree" />
+    <result column="pay_way" jdbcType="VARCHAR" property="payWay" />
+    <result column="save_amount" jdbcType="INTEGER" property="saveAmount" />
+    <result column="service_fee" jdbcType="INTEGER" property="serviceFee" />
+    <result column="extra_fee" jdbcType="INTEGER" property="extraFee" />
+    <result column="arrive_time" jdbcType="TIMESTAMP" property="arriveTime" />
+    <result column="actual_arrive_time" jdbcType="TIMESTAMP" property="actualArriveTime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="amount" jdbcType="INTEGER" property="amount" />
+    <result column="user_status" jdbcType="VARCHAR" property="userStatus" />
+    <result column="community_status" jdbcType="VARCHAR" property="communityStatus" />
+    <result column="community_id" jdbcType="INTEGER" property="communityId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <update id="updateOrderById" parameterType="com.linayi.sync.entity.TOrders">
+    update orders
+    <set>
+      <if test="receiverName != null">receiver_name=#{receiverName},</if>
+      <if test="mobile != null">mobile=#{mobile},</if>
+      <if test="addressOne != null">address_one=#{addressOne},</if>
+      <if test="addressTwo != null">address_two=#{addressTwo},</if>
+      <if test="addressThree != null">address_three=#{addressThree},</if>
+      <if test="payWay != null">pay_way=#{payWay},</if>
+      <if test="saveAmount != null">save_amount=#{saveAmount},</if>
+      <if test="extraFee != null">extra_fee=#{extraFee},</if>
+      <if test="serviceFee != null">service_fee=#{serviceFee},</if>
+      <if test="arriveTime != null">email=#{arriveTime},</if>
+      <if test="actualArriveTime != null">actual_arrive_time=#{actualArriveTime},</if>
+      <if test="remark != null">remark=#{remark},</if>
+      <if test="quantity != null">email=#{quantity},</if>
+      <if test="amount != null">amount=#{amount},</if>
+      <if test="userStatus != null">user_status=#{userStatus},</if>
+      <if test="communityStatus != null">community_status=#{communityStatus},</if>
+      <if test="communityId != null">community_id=#{communityId},</if>
+      <if test="userId != null">user_id=#{userId}</if>
+    </set>
+    where orders_id=#{ordersId}
+  </update>
+  <select id="getOrderList" resultMap="BaseResultMap">
+    select orders_id, user_id, receiver_name, mobile, address_one, address_two, address_three, pay_way, save_amount, service_fee, extra_fee, arrive_time, actual_arrive_time,
+    remark, quantity, amount, user_status, community_status, community_id, update_time, create_time from orders where user_status NOT IN ('REFUNDED','REFUSE_RECEIVE','CONFIRM_RECEIVE')
+    <if test="ordersId != null">
+      and orders_id = #{ordersId}
+    </if>
+    <if test="userId != null">
+      AND user_id = #{userId}
+    </if>
+    <if test="receiverName != null">
+      AND receiver_name = #{receiverName}
+    </if>
+    <if test="mobile != null and mobile != ''">
+      AND mobile = #{mobile}
+    </if>
+    <if test="addressOne != null">
+      AND address_one = #{addressOne}
+    </if>
+    <if test="addressTwo != null">
+      AND address_two = #{addressTwo}
+    </if><if test="addressThree != null">
+    AND address_three = #{addressThree}
+  </if>
+    <if test="payWay != null">
+      AND pay_way = #{payWay}
+    </if>
+    <if test="saveAmount != null">
+      AND save_amount = #{saveAmount}
+    </if>
+    <if test="serviceFee != null">
+      AND service_fee = #{serviceFee}
+    </if>
+    <if test="extraFee != null">
+      AND extra_fee = #{extraFee}
+    </if>
+    <if test="arriveTime != null">
+      AND arrive_time = #{arriveTime}
+    </if>
+    <if test="actualArriveTime != null">
+      AND actual_arrive_time = #{actualArriveTime}
+    </if>
+    <if test="remark != null">
+      AND remark = #{remark}
+    </if>
+    <if test="quantity != null">
+      AND quantity = #{quantity}
+    </if>
+    <if test="amount != null">
+      AND amount = #{amount}
+    </if>
+    <if test="userStatus != null and userStatus != ''">
+      AND user_status = #{userStatus}
+    </if>
+    <if test="communityStatus != null and communityStatus != ''">
+      AND community_status = #{communityStatus}
+    </if>
+    <if test="communityId != null">
+      AND community_id = #{communityId}
+    </if>
+    <if test="updateTime != null">
+      AND update_time = #{updateTime}
+    </if>
+    <if test="createTime != null">
+      AND create_time = #{createTime}
+    </if>
+    order by create_time desc
+  </select>
+  <insert id="insert" parameterType="com.linayi.sync.entity.TOrders" useGeneratedKeys="true" keyProperty="ordersId">
+    insert into orders (orders_id, user_id, receiver_name, 
+      mobile, address_one, address_two, address_three,
+      pay_way, save_amount, service_fee, 
+      extra_fee, arrive_time, actual_arrive_time, 
+      remark, quantity, amount, 
+      user_status, community_status, community_id, 
+      update_time, create_time)
+    values (#{ordersId,jdbcType=BIGINT}, #{userId,jdbcType=INTEGER}, #{receiverName,jdbcType=VARCHAR}, 
+      #{mobile,jdbcType=VARCHAR}, #{addressOne,jdbcType=VARCHAR}, #{addressTwo,jdbcType=VARCHAR}, #{addressThree,jdbcType=VARCHAR},
+      #{payWay,jdbcType=VARCHAR}, #{saveAmount,jdbcType=INTEGER}, #{serviceFee,jdbcType=INTEGER}, 
+      #{extraFee,jdbcType=INTEGER}, #{arriveTime,jdbcType=TIMESTAMP}, #{actualArriveTime,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR}, #{quantity,jdbcType=INTEGER}, #{amount,jdbcType=INTEGER}, 
+      #{userStatus,jdbcType=VARCHAR}, #{communityStatus,jdbcType=VARCHAR}, #{communityId,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linayi.sync.entity.TOrders">
+    insert into orders
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ordersId != null">
+        orders_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="receiverName != null">
+        receiver_name,
+      </if>
+      <if test="mobile != null">
+        mobile,
+      </if>
+      <if test="addressOne != null">
+        address_one,
+      </if>
+      <if test="addressTwo != null">
+        address_two,
+      </if><if test="addressThree != null">
+      address_three,
+    </if>
+      <if test="payWay != null">
+        pay_way,
+      </if>
+      <if test="saveAmount != null">
+        save_amount,
+      </if>
+      <if test="serviceFee != null">
+        service_fee,
+      </if>
+      <if test="extraFee != null">
+        extra_fee,
+      </if>
+      <if test="arriveTime != null">
+        arrive_time,
+      </if>
+      <if test="actualArriveTime != null">
+        actual_arrive_time,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="quantity != null">
+        quantity,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="userStatus != null">
+        user_status,
+      </if>
+      <if test="communityStatus != null">
+        community_status,
+      </if>
+      <if test="communityId != null">
+        community_id,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ordersId != null">
+        #{ordersId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="receiverName != null">
+        #{receiverName,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null">
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="addressOne != null">
+        #{addressOne,jdbcType=VARCHAR},
+      </if>
+      <if test="addressTwo != null">
+        #{addressTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="addressThree != null">
+        #{addressThree,jdbcType=VARCHAR},
+      </if>
+      <if test="payWay != null">
+        #{payWay,jdbcType=VARCHAR},
+      </if>
+      <if test="saveAmount != null">
+        #{saveAmount,jdbcType=INTEGER},
+      </if>
+      <if test="serviceFee != null">
+        #{serviceFee,jdbcType=INTEGER},
+      </if>
+      <if test="extraFee != null">
+        #{extraFee,jdbcType=INTEGER},
+      </if>
+      <if test="arriveTime != null">
+        #{arriveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actualArriveTime != null">
+        #{actualArriveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null">
+        #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="userStatus != null">
+        #{userStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="communityStatus != null">
+        #{communityStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="communityId != null">
+        #{communityId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="getAfterOrderList" resultMap="BaseResultMap">
+    select orders_id, user_id, receiver_name, mobile, address_one, address_two, address_three, pay_way, save_amount, service_fee, extra_fee, arrive_time, actual_arrive_time,
+    remark, quantity, amount, user_status, community_status, community_id, update_time, create_time
+    from orders
+    where user_id = #{userId} AND (user_status = #{refusReceive} OR user_status = #{refunded})
+    order by create_time desc
+  </select>
+
+
+
+  <select id="getBuyOrderList" resultMap="BaseResultMap">
+    select os.orders_id, os.user_id, os.receiver_name, os.mobile, os.address_one, os.address_two, os.address_three, os.pay_way, os.save_amount, os.service_fee, os.extra_fee, os.arrive_time, os.actual_arrive_time,
+    os.remark, os.quantity, os.amount, os.user_status, os.community_status, os.community_id, os.update_time, os.create_time
+    from orders os join orders_goods ogs on ogs.orders_id = os.orders_id where ogs.supermarket_id = #{supermarketId} and os.community_status = 'PROCURING'
+  </select>
+
+
+  <select id="getOrderById" resultMap="BaseResultMap">
+    select orders_id, user_id, receiver_name, mobile, address_one, address_two, address_three, pay_way, save_amount, service_fee, extra_fee, arrive_time, actual_arrive_time,
+    remark, quantity, amount, user_status, community_status, community_id, update_time, create_time from orders where orders_id = #{ordersId}
+  </select>
+
+</mapper>

@@ -1,0 +1,135 @@
+.dataTable{
+	width: 100% !important;
+}
+.dataTables_length{
+	margin-top: 3px;
+	margin-left: 5px;
+}
+.dataTables_paginate.paging_bootstrap{
+	padding-right: 70px !important;
+}
+.dataTables_length{
+	width: 65px !important;
+}
+.dataTables_wrapper{
+	overflow: auto !important;
+}
+
+/* 解决下拉选择框宽度响应式问题 */
+.ui-select-match{
+	outline: none !important;
+	width: 100% !important;
+}
+.ui-select-search,.ui-select-multiple,.select2-search-field,.select2-search-field input{
+	width: 100% !important;
+}
+.ui-select-toggle{
+	width: inherit !important;
+}
+
+.modal-preview .modal{
+	max-width: none;
+}
+
+/**jqgrid表格最小高度*/
+.ui-jqgrid tr.ui-row-ltr td{
+	min-height: 26px !important;
+}
+
+.ui-jqgrid-btable{
+	outline: none;
+}
+/**设置jqgrid中的复选框*/
+.ui-jqgrid-btable>tbody>tr>td>.cbox{
+	opacity: 1 !important;	
+	position: static !important;
+}
+.ui-jqgrid-htable>thead>tr>th>.ui-th-div>.cbox{
+	opacity: 1 !important;	
+	margin: 0 !important;
+	position: static !important;
+}
+/* 设置jqgrid自定义列的字体样式 */
+.btn.td-compile{
+	color: white !important;
+	margin-top: 2px;
+}
+/**设置高度自适应*/
+.ui-jqgrid .ui-jqgrid-btable tbody tr.jqgrow td{
+	 white-space: pre-wrap !important;
+}
+
+/**设置jqgrid的每一行的第一个格子左边框阴影*/
+.jqgrow>.jqgrid-rownum{
+    box-shadow: 1px 0 0 #ddd inset !important;
+}
+.ui-jqgrid-btable>tbody>tr>td{
+	vertical-align: middle;
+}
+
+/*隐藏jqgrid的垂直滚动条*/
+.ui-jqgrid-bdiv{
+	overflow: hidden !important;
+}
+/* 解决闪动 */
+.ng-hide{ display: none !important; }
+
+/* 解决切换皮肤顶部出现一条线 */
+.loading-container{
+	height: 0px !important;
+}
+
+/* 解决widget最大化时出现滚动条 */
+.widget.maximized{
+	height: auto !important;	
+}
+
+/**修改nestable在模态框中拖动时文字不显示*/
+.dd-dragel{
+	z-index: 9999;
+	height: 43px !important;	
+}
+.dd-dragel .checkbox{
+	padding-top: 0px !important;	
+}
+.dd-item .checkbox{
+	padding-top: 0px !important;	
+}
+
+/**nestable背景*/
+.angular-ui-tree-handle{
+		margin : 10px !important;
+		border: 1px solid #dae2ea !important;
+	    background: #f8faff !important;
+	    color: #7c9eb2 !important;
+	    padding: 10px !important;
+}
+
+/**重置点击按钮边框*/
+.btn-primary.active.focus, 
+.btn-primary.active:focus, 
+.btn-primary.active:hover, 
+.btn-primary:active.focus, 
+.btn-primary:active:focus, 
+.btn-primary:active:hover, 
+.open>.dropdown-toggle.btn-primary.focus, 
+.open>.dropdown-toggle.btn-primary:focus, 
+.open>.dropdown-toggle.btn-primary:hover{
+	    border-color:transparent;
+}
+
+/**设置查询条件上下间隔*/
+.form-group-margin{
+	margin-bottom: 12px !important;	
+}
+/**重置boostrap*/
+.form-horizontal .form-group {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+.input-group-addon {
+/*     padding: 6px 5px; */
+}
+.form-control, select {
+/*     padding: 6px 5px; */
+}

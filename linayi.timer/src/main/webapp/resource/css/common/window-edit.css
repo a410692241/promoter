@@ -1,0 +1,50 @@
+.chanxa-window-content{
+/* 	height: 100%; */
+/* 	overflow: hidden; */
+}
+.chanxa-window-body{
+/* 	height:calc(100% - 35px); */
+/* 	overflow: auto; */
+/* 	padding: 20px 50px; */
+	box-sizing:border-box;
+	-moz-box-sizing:border-box; /* Firefox */
+	-webkit-box-sizing:border-box; /* Safari */
+}
+.chanxa-window-bottom{
+	height:35px;
+	display: box; 
+	display: -webkit-box; 
+	display: -moz-box; 
+	-webkit-box-pack:center; 
+	-moz-box-pack:center; 
+	-webkit-box-align:center; 
+	-moz-box-align:center; 
+	text-align:center;
+	position: relative;
+	border-top: 1px solid #ececec;
+	background:-webkit-gradient(linear,0 0,0 100%,from(#fcfcfc),to(#f4f4f4));
+}
+.chanxa-window-table{
+	border-collapse: collapse;
+	margin: 0px auto;
+}
+.chanxa-window-table>tbody>tr>td{
+	height:35px;
+/* 	font: 12px/1.333 tahoma,arial,\5b8b\4f53,sans-serif; */
+/* 	font-size: 12px; */
+	text-align: left;
+	padding: 5px 0px;
+}
+.tdTitle{
+	padding-left: 10px  !important;;
+	width: 100px;
+	white-space: nowrap;
+}
+
+.tdInput{
+	padding-right: 10px !important;
+}
+
+.multiline{
+	height:30px;
+}
