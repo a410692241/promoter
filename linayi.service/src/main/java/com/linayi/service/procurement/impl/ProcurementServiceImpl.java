@@ -200,12 +200,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 			procurementTask.setCommunityId(communityId);
 		}
 
-		List<ProcurementTask> procurementTaskList = null;
-		try {
-			procurementTaskList = procurementTaskMapper.getCommunityProcurementList(procurementTask);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		List<ProcurementTask> procurementTaskList = procurementTaskList = procurementTaskMapper.getCommunityProcurementList(procurementTask);
 		ProcurementTask procurementTask1 = null;
 		if (procurementTaskList != null && procurementTaskList.size() > 0){
 			procurementTask1 = procurementTaskList.get(0);
