@@ -121,10 +121,12 @@ public class ProcurementController extends BaseController {
 	@RequestMapping("/updateProcurStatus.do")
 	public Object updateProcurmentStatus(@RequestBody Map<String, Object> param){
 		try {
-			ParamValidUtil<ProcurementTask> pvu = new ParamValidUtil<>(param);
-			pvu.Exist("quantity","goodsSkuId");
 			//实际采买数量
-			Integer quantity = Integer.parseInt(param.get("quantity") +"");
+            Object obj = param.get("quantity");
+            Integer quantity = null;
+            if(obj != null){
+                quantity = Integer.parseInt(param.get("quantity") +"");
+            }
 			Integer goodsSkuId = Integer.parseInt(param.get("goodsSkuId") +"");
 			Integer userId = getUserId();
 			procurementService.updateProcurmentStatus(goodsSkuId, quantity,userId);
@@ -143,7 +145,6 @@ public class ProcurementController extends BaseController {
 	@RequestMapping("/getProcureDetails.do")
 	public Object getProcureDetails(@RequestBody Map<String, Object> param) {
 		try {
-
 			ParamValidUtil<ProcurementTask> pvu = new ParamValidUtil<>(param);
 			ProcurementTask procurementTask = pvu.transObj(ProcurementTask.class);
 			Integer userId = getUserId();
