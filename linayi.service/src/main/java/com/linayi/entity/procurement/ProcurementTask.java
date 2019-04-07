@@ -84,8 +84,10 @@ public class ProcurementTask extends BaseEntity{
     private Integer procureQuantity;
 
     private Integer receiveQuantity;
-
+    //总采买数量
     private Integer totalProcureQuantity;
+    //总采买金额
+    private Integer totalProcurePrice;
 
     private Integer boxQuantity;
 
@@ -429,5 +431,13 @@ public class ProcurementTask extends BaseEntity{
 
     public void setTotalProcureQuantity(Integer totalProcureQuantity) {
         this.totalProcureQuantity = totalProcureQuantity;
+    }
+
+    public Integer getTotalProcurePrice() {
+        return totalProcurePrice;
+    }
+
+    public void setTotalProcurePrice(Integer totalProcurePrice) {
+        this.totalProcurePrice = totalProcurePrice;
     }
 }
