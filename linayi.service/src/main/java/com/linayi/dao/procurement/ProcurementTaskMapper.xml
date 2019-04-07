@@ -455,6 +455,12 @@
              <if test="procureStatus != null and procureStatus == 'FINISHED'">
                  pt.procure_status != 'PROCURING'
              </if>
+             <if test="procureTime != null and procureTime != ''">
+                 pt.procure_time = procureTime
+             </if>
+             <if test="goodsSkuId != null and goodsSkuId != ''">
+                 pt.goods_sku_id = goodsSkuId
+             </if>
          </where>
          GROUP BY
          <if test="procureStatus != null and procureStatus == 'FINISHED'">
