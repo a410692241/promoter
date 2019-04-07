@@ -1,41 +1,34 @@
 package com.linayi.service.procurement.impl;
 
 
-import java.util.*;
-
-import com.linayi.dao.area.AreaMapper;
-import com.linayi.dao.supermarket.SupermarketMapper;
-import com.linayi.dao.user.UserMapper;
-import com.linayi.entity.area.Area;
-import com.linayi.entity.supermarket.Supermarket;
-import com.linayi.service.community.CommunityService;
-import com.linayi.service.community.CommunitySupermarketService;
-import com.linayi.service.order.OrderService;
-import com.linayi.service.order.OrdersGoodsService;
-import com.linayi.service.order.impl.OrderServiceImpl;
-import com.linayi.service.supermarket.SupermarketService;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.alibaba.fastjson.JSON;
+import com.linayi.dao.area.AreaMapper;
 import com.linayi.dao.community.CommunityMapper;
 import com.linayi.dao.goods.GoodsSkuMapper;
 import com.linayi.dao.order.OrdersGoodsMapper;
 import com.linayi.dao.order.OrdersMapper;
 import com.linayi.dao.procurement.ProcurementTaskMapper;
+import com.linayi.dao.supermarket.SupermarketMapper;
+import com.linayi.dao.user.UserMapper;
+import com.linayi.entity.area.Area;
 import com.linayi.entity.community.Community;
 import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.order.Orders;
 import com.linayi.entity.order.OrdersGoods;
+import com.linayi.entity.procurement.ProcurementTask;
+import com.linayi.entity.supermarket.Supermarket;
+import com.linayi.service.community.CommunityService;
+import com.linayi.service.community.CommunitySupermarketService;
+import com.linayi.service.order.OrderService;
+import com.linayi.service.procurement.ProcurementService;
+import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.util.ImageUtil;
 import com.linayi.util.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.linayi.entity.procurement.ProcurementTask;
-import com.linayi.service.procurement.ProcurementService;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -206,7 +199,13 @@ public class ProcurementServiceImpl implements ProcurementService {
 			Integer communityId = supermarketMapper.getSupermarketCommunityId(procurementTask.getUserId());
 			procurementTask.setCommunityId(communityId);
 		}
-		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementList(procurementTask);
+
+		List<ProcurementTask> procurementTaskList = null;
+		try {
+			procurementTaskList = procurementTaskMapper.getCommunityProcurementList(procurementTask);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		ProcurementTask procurementTask1 = null;
 		if (procurementTaskList != null && procurementTaskList.size() > 0){
 			procurementTask1 = procurementTaskList.get(0);

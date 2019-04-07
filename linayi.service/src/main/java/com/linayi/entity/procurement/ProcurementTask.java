@@ -1,6 +1,7 @@
 package com.linayi.entity.procurement;
 
 import com.linayi.entity.BaseEntity;
+import com.linayi.util.DateUtil;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -68,6 +69,8 @@ public class ProcurementTask extends BaseEntity{
     private Date createTime;
 
     private Date procureTime;
+
+    private String  procureTimeStr;
 
     private Date receiveTime;
 
@@ -439,5 +442,13 @@ public class ProcurementTask extends BaseEntity{
 
     public void setTotalProcurePrice(Integer totalProcurePrice) {
         this.totalProcurePrice = totalProcurePrice;
+    }
+
+    public String getProcureTimeStr() {
+        return procureTimeStr;
+    }
+
+    public void setProcureTimeStr(String procureTimeStr) {
+        this.procureTimeStr = procureTimeStr;
     }
 }

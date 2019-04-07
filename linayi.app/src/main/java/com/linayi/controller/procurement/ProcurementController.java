@@ -1,12 +1,14 @@
 package com.linayi.controller.procurement;
 
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.linayi.entity.community.Community;
 import com.linayi.entity.supermarket.Supermarket;
+import com.linayi.util.DateUtil;
 import com.linayi.util.PageResult;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,12 +137,15 @@ public class ProcurementController extends BaseController {
 
 	/**
 	 * 用户端买合并采买任务详情页
-	 * @param procurementTask 采买时间
+	 * @param param
 	 * @return
 	 */
 	@RequestMapping("/getProcureDetails.do")
-	public Object getProcureDetails(@RequestBody ProcurementTask procurementTask) {
+	public Object getProcureDetails(@RequestBody Map<String, Object> param) {
 		try {
+
+			ParamValidUtil<ProcurementTask> pvu = new ParamValidUtil<>(param);
+			ProcurementTask procurementTask = pvu.transObj(ProcurementTask.class);
 			Integer userId = getUserId();
 			procurementTask.setUserId(userId);
 			ProcurementTask procurementTask1 = procurementService.getprocurementDeatil(procurementTask);

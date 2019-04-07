@@ -4,6 +4,7 @@ import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
 
 import java.lang.reflect.Field;
+import java.util.Date;
 import java.util.Map;
 
 public class ParamValidUtil<T> {
@@ -40,7 +41,7 @@ public class ParamValidUtil<T> {
                 String name = field.getName();
                 for (Map.Entry<String, Object> ma : map.entrySet()) {
                     String key = ma.getKey();
-                    if (name.equals(key)) {
+                    if (name.equals(key.trim())) {
                         try {
                             packEntity(b, field, map.get(name));
                         } catch (Exception e) {
@@ -105,6 +106,8 @@ public class ParamValidUtil<T> {
             field.set(b, Short.parseShort(o2 + ""));       //给int或Integer属性设值
         } else if (type.endsWith("Long") || type.endsWith("long")) {
             field.set(b, Long.parseLong(o2 + ""));       //给long或Long属性设值
+        } else if (type.endsWith("Date")) {
+            field.set(b, new Date(Long.parseLong(o2 + "")));       //给Date属性设值
         } else {
             field.set(b, o2);
         }
