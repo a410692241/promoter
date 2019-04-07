@@ -266,7 +266,7 @@ public class UserServiceImpl implements UserService {
             if(StringUtils.isBlank(result)){
                 return "FALSE";
             }else{
-                return result.contains("TRUE") ? "TRUE" : "FALSE";
+                return result.contains("true") ? "TRUE" : "FALSE";
             }
         }catch (Exception ex){
             ex.printStackTrace();
