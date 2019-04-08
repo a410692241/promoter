@@ -352,7 +352,7 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
 		});
 	}
 
-	/**删除*/
+	/**更新社区价格*/
 	function updateCommunityPrice( communityId ){
 		messager.confirm("确认更新该社区所有商品价格？",function( $modalInstance ){
 			communityService.updateCommunityPrice({
