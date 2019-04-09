@@ -58,4 +58,10 @@ public class UserTest {
         System.out.println("Method:价格生效结束！！！");
     }
 
+    @Test
+    public void test() {
+        int a = 10;
+        int b = 8;
+        System.out.println(a >> 3);
+    }
 }

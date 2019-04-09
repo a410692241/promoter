@@ -58,7 +58,7 @@ public class CorrectController extends BaseController {
 	public Object correct(Correct correct,MultipartFile file){
 		try {
 			if(	(correct.getPrice() == null || correct.getPrice() <= 0) ||
-				(file == null) ||
+//				(file == null) ||
 				(correct.getPriceType() == null || "".equals(correct.getPriceType())) ||
 				(correct.getStartTime() == null) ||
 				(correct.getEndTime() == null) ||
