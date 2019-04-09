@@ -5,18 +5,14 @@ import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.correct.Correct;
 import com.linayi.entity.user.User;
 import com.linayi.enums.CorrectStatus;
-import com.linayi.enums.Sex;
 import com.linayi.service.correct.CorrectService;
 import com.linayi.service.user.UserService;
-import com.linayi.util.ImageUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import java.util.Date;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
