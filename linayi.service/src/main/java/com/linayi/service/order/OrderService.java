@@ -153,4 +153,6 @@ public interface OrderService {
      * @return
      */
     PageResult<Orders> getProcureOrderList(Orders orders);
+
+    OrdersGoods generateOrdersGoods(Orders order, List<SupermarketGoods> supermarketGoodsList, Integer num, Integer goodsSkuId);
 }
