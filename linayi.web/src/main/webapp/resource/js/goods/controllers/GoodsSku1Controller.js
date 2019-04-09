@@ -57,7 +57,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 			colModel : [
 /*			            {name:'supermarketGoodsId',label:'主键'}, */
 			            {name:'supermarketName',label:'超市名称'}, 
-			            {name:'name',label:'商品名称',sortable:false}, 
+			            {name:'fullName',label:'商品名称',sortable:false},
 			            {name:'priceStr',label:'价格(单位:元)',sortable:false},
 /*			            {name:'correctId',label:'价格纠错ID',sortable:false},*/
 /*			            {name:'status',label:'审核状态',sortable:false,width:50,formatter:function(cellvalue, options, rowObject){

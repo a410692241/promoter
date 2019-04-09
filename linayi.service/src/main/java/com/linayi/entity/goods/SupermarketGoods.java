@@ -27,6 +27,8 @@ public class SupermarketGoods extends BaseEntity implements Serializable{
     
     private String name;
 
+	private String fullName;
+
     private String status;
     
     private String priceStr;
@@ -144,5 +146,12 @@ public class SupermarketGoods extends BaseEntity implements Serializable{
 	public void setPriceStr(String priceStr) {
 		this.priceStr = priceStr;
 	}
-    
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
 }

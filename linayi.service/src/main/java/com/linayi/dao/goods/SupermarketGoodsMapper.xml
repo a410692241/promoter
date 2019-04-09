@@ -12,7 +12,7 @@
 
     <select id="getSkuList" resultType="com.linayi.entity.goods.SupermarketGoods">
         select
-        supermarket_goods_id, sg.supermarket_id supermarketId, gs.name name, sg.goods_sku_id goodsSkuId, price, correct_id, sm.name supermarketName
+        supermarket_goods_id, sg.supermarket_id supermarketId, gs.name name, gs.full_name, sg.goods_sku_id goodsSkuId, price, correct_id, sm.name supermarketName
         from
         supermarket_goods sg JOIN goods_sku gs on sg.goods_sku_id = gs.goods_sku_id JOIN supermarket sm on sg.supermarket_id = sm.supermarket_id
         <where>
@@ -20,7 +20,7 @@
                 sg.supermarket_goods_id = #{supermarketGoodsId}
             </if>
             <if test="name != null and name!=''">
-                AND  gs.name like concat ('%',#{name},'%')
+                AND  gs.full_name like concat ('%',#{name},'%')
             </if>
             <if test="supermarketId != null and supermarketId!=''">
                 AND sg.supermarket_id = #{supermarketId}
