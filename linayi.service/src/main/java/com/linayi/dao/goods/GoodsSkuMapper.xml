@@ -358,42 +358,39 @@
 
     <!-- 通过品牌id分类id商品名获取商品列表 -->
   <!-- List<GoodsSku>getGoodsListBybrandIdcategoryIdGoodsName() -->
-  <select id="getGoodsListBybrandIdcategoryIdGoodsName" resultType="com.linayi.entity.goods.GoodsSku" >
-  		SELECT
-  			gs.goods_sku_id,
-  			gs.name,
-  			gs.full_name,
-  			gs.barcode,
-  			gs.category_id,
-  			gs.brand_id,
-  			gs.status,
-  			gs.image,
-  			gs.update_time,
-  			gs.create_time,
-  			gs.model,
-  			gs.function,
-  			gs.produce_address,
-  			gs.produce_date,
-  			gs.valid_date,
-  			gs.manufacturer,
-  			gs.other_attribute,
-  			cg.min_price minPrice,
-  			ss.name minSupermarket
-		FROM
-  			goods_sku gs JOIN community_goods cg ON gs.goods_sku_id=cg.goods_sku_id JOIN supermarket ss ON cg.min_supermarket_id=ss.supermarket_id
-  		<where>
-  			cg.community_id=#{communityId}
-  			<if test="categoryId!=null">
-  			and gs.category_id=#{categoryId}
-  			</if>
-  			<if test="brandId!=null">
-  			and gs.brand_id=#{brandId}
-  			</if>
-  			<if test="fullName!=null and fullName!=''">
-  			and gs.full_name like concat('%',#{fullName},'%')
-  			</if>
-  		 </where>
-  </select>
+    <select id="getGoodsListBybrandIdcategoryIdGoodsName" resultType="com.linayi.entity.goods.GoodsSku" >
+        SELECT
+        gs.goods_sku_id,gs.name,gs.full_name,gs.barcode,gs.category_id,gs.brand_id,gs.status,gs.image,gs.update_time,gs.create_time,gs.model,
+        gs.function,gs.produce_address,gs.produce_date,gs.valid_date,gs.manufacturer,gs.other_attribute,cg.min_price minPrice,ss.name minSupermarket,
+        cg.min_supermarket_id_normal,cg.min_price_normal,cg.max_supermarket_id_normal,cg.max_price_normal,cg.min_supermarket_id_senior,cg.min_price_senior,
+        cg.max_supermarket_id_senior,cg.max_price_senior,cg.min_supermarket_id_super,cg.min_price_super,cg.max_supermarket_id_super,cg.max_price_super
+        FROM
+        goods_sku gs JOIN community_goods cg ON gs.goods_sku_id=cg.goods_sku_id JOIN supermarket ss ON cg.min_supermarket_id=ss.supermarket_id
+        <where>
+            cg.community_id=#{communityId}
+            <if test="categoryId!=null">
+                and gs.category_id=#{categoryId}
+            </if>
+            <if test="brandId!=null">
+                and gs.brand_id=#{brandId}
+            </if>
+            <if test="fullName!=null and fullName!=''">
+                and gs.full_name like concat('%',#{fullName},'%')
+            </if>
+            <if test="memberLevel!=null and memberLevel!='NORMAL'">
+                and cg.min_price_normal IS NOT NULL
+            </if>
+            <if test="memberLevel!=null and memberLevel!='NOT_MEMBER'">
+                and cg.min_price_normal IS NOT NULL
+            </if>
+            <if test="memberLevel!=null and memberLevel!='SENIOR'">
+                and cg.min_price_senior IS NOT NULL
+            </if>
+            <if test="memberLevel!=null and memberLevel!='SUPER'">
+                and cg.min_price_super IS NOT NULL
+            </if>
+        </where>
+    </select>
   <select id="getGoodsById" resultMap="BaseResultMap">
       select  <include refid="columnList"/> from goods_sku where goods_sku_id = #{goodsSkuId}
   </select>
@@ -401,45 +398,59 @@
 
   <!-- 价差排行 -->
   <!--List<GoodsSku> getDifferenceRanking()-->
-  <select id="getDifferenceRanking" resultType="com.linayi.entity.goods.GoodsSku">
-  		SELECT
-  			gs.goods_sku_id  goodsSkuId,
-  			gs.NAME name,
-  			gs.full_name fullName,
-  			gs.barcode,
-  			gs.category_id categoryId,
-  			gs.brand_id brandId,
-  			gs.STATUS status,
-  			gs.image,
-  			gs.update_time  updateTime,
-  			gs.create_time  createTime,
-  			gs.model,
-  			gs.FUNCTION function,
-  			gs.produce_address produceAddress,
-  			gs.produce_date  produceDate,
-  			gs.valid_date validDate,
-  			gs.manufacturer,
-  			gs.other_attribute  otherAttribute,
-  			cg.min_price minPrice,
-  			cg.max_price maxPrice,
-  			cg.max_supermarket_id maxSupermarketId,
-  			cg.min_supermarket_id minSupermarketId
-  		FROM
-  			goods_sku gs,community_goods cg
-  		<where>
-  			gs.goods_sku_id=cg.goods_sku_id
-  			<if test="communityId!=null and communityId!=''">
-  			    AND	cg.community_id=#{communityId}
-  			</if>
-  			<if test="categoryId!=null and categoryId!=''">
-  				AND gs.category_id=#{categoryId}
-  			</if>
-  			<if test="brandId!=null and brandId!=''">
-  				AND gs.brand_id=#{brandId}
-  			</if>
-  		ORDER BY (cg.max_price-cg.min_price)/cg.min_price DESC
-  		</where>
-  	</select>
+    <select id="getDifferenceRanking" resultType="com.linayi.entity.goods.GoodsSku">
+        SELECT
+        gs.goods_sku_id  goodsSkuId,
+        gs.NAME name,
+        gs.full_name fullName,
+        gs.barcode,
+        gs.category_id categoryId,
+        gs.brand_id brandId,
+        gs.STATUS status,
+        gs.image,
+        gs.update_time  updateTime,
+        gs.create_time  createTime,
+        gs.model,
+        gs.FUNCTION function,
+        gs.produce_address produceAddress,
+        gs.produce_date  produceDate,
+        gs.valid_date validDate,
+        gs.manufacturer,
+        gs.other_attribute  otherAttribute,
+        cg.min_price minPrice,
+        cg.max_price maxPrice,
+        cg.max_supermarket_id maxSupermarketId,
+        cg.min_supermarket_id minSupermarketId,
+        cg.min_supermarket_id_normal,cg.min_price_normal,cg.max_supermarket_id_normal,cg.max_price_normal,cg.min_supermarket_id_senior,cg.min_price_senior,
+        cg.max_supermarket_id_senior,cg.max_price_senior,cg.min_supermarket_id_super,cg.min_price_super,cg.max_supermarket_id_super,cg.max_price_super
+        FROM
+        goods_sku gs,community_goods cg
+        <where>
+            gs.goods_sku_id=cg.goods_sku_id
+            <if test="communityId!=null and communityId!=''">
+                AND	cg.community_id=#{communityId}
+            </if>
+            <if test="categoryId!=null and categoryId!=''">
+                AND gs.category_id=#{categoryId}
+            </if>
+            <if test="brandId!=null and brandId!=''">
+                AND gs.brand_id=#{brandId}
+            </if>
+            <if test="memberLevel!=null and memberLevel!='NORMAL'">
+                and cg.min_price_normal IS NOT NULL
+            </if>
+            <if test="memberLevel!=null and memberLevel!='NOT_MEMBER'">
+                and cg.min_price_normal IS NOT NULL
+            </if>
+            <if test="memberLevel!=null and memberLevel!='SENIOR'">
+                and cg.min_price_senior IS NOT NULL
+            </if>
+            <if test="memberLevel!=null and memberLevel!='SUPER'">
+                and cg.min_price_super IS NOT NULL
+            </if>
+            ORDER BY (cg.max_price-cg.min_price)/cg.min_price DESC
+        </where>
+    </select>
 
 
   		<!-- 根据商品名称模糊查询商品列表 -->
@@ -480,51 +491,65 @@
   		</select>
 
   		<!-- 自定义下单 -->
-  		<select id="customSearch" resultType="com.linayi.entity.goods.GoodsSku">
-  		SELECT
-  			gs.goods_sku_id,
-  			gs.name,
-  			gs.full_name ,
-  			gs.barcode,
-  			gs.category_id,
-  			gs.brand_id,
-  			gs.status,
-  			gs.image,
-  			gs.update_time,
-  			gs.create_time,
-  			gs.model,
-  			gs.function,
-  			gs.produce_address,
-  			gs.produce_date,
-  			gs.valid_date,
-  			gs.manufacturer,
-  			gs.other_attribute,
-  			cg.min_price minPrice,
-  			cg.max_price maxPrice,
-  			(cg.max_price-cg.min_price)/cg.min_price spreadRate,
-  			ss.name minSupermarket
-  		FROM
-  			goods_sku gs,community_goods cg,supermarket ss,brand b
-  		<where>
-  			gs.goods_sku_id=cg.goods_sku_id
-  		AND
-  			cg.min_supermarket_id=ss.supermarket_id
-  		AND
-  			gs.brand_id = b.brand_id
-  			<if test="communityId!=null">
-  			and cg.community_id=#{communityId}
-  			</if>
-  			<if test="brandName!=null and brandName!=''">
-  			and b.name=#{brandName}
-  			</if>
-  			<if test="fullName!=null and fullName!=''">
-  			and gs.full_name like concat('%',#{fullName},'%')
-  			</if>
-  			<if test="valueName!=null and valueName!=''">
-  			and gs.full_name like concat('%',#{valueName},'%')
-  			</if>
-  		 </where>
-  		</select>
+    <select id="customSearch" resultType="com.linayi.entity.goods.GoodsSku">
+        SELECT
+        gs.goods_sku_id,
+        gs.name,
+        gs.full_name ,
+        gs.barcode,
+        gs.category_id,
+        gs.brand_id,
+        gs.status,
+        gs.image,
+        gs.update_time,
+        gs.create_time,
+        gs.model,
+        gs.function,
+        gs.produce_address,
+        gs.produce_date,
+        gs.valid_date,
+        gs.manufacturer,
+        gs.other_attribute,
+        cg.min_price minPrice,
+        cg.max_price maxPrice,
+        (cg.max_price-cg.min_price)/cg.min_price spreadRate,
+        ss.name minSupermarket,
+        cg.min_supermarket_id_normal,cg.min_price_normal,cg.max_supermarket_id_normal,cg.max_price_normal,cg.min_supermarket_id_senior,cg.min_price_senior,
+        cg.max_supermarket_id_senior,cg.max_price_senior,cg.min_supermarket_id_super,cg.min_price_super,cg.max_supermarket_id_super,cg.max_price_super
+        FROM
+        goods_sku gs,community_goods cg,supermarket ss,brand b
+        <where>
+            gs.goods_sku_id=cg.goods_sku_id
+            AND
+            cg.min_supermarket_id=ss.supermarket_id
+            AND
+            gs.brand_id = b.brand_id
+            <if test="communityId!=null">
+                and cg.community_id=#{communityId}
+            </if>
+            <if test="brandName!=null and brandName!=''">
+                and b.name=#{brandName}
+            </if>
+            <if test="fullName!=null and fullName!=''">
+                and gs.full_name like concat('%',#{fullName},'%')
+            </if>
+            <if test="valueName!=null and valueName!=''">
+                and gs.full_name like concat('%',#{valueName},'%')
+            </if>
+            <if test="memberLevel!=null and memberLevel!='NORMAL'">
+                and cg.min_price_normal IS NOT NULL
+            </if>
+            <if test="memberLevel!=null and memberLevel!='NOT_MEMBER'">
+                and cg.min_price_normal IS NOT NULL
+            </if>
+            <if test="memberLevel!=null and memberLevel!='SENIOR'">
+                and cg.min_price_senior IS NOT NULL
+            </if>
+            <if test="memberLevel!=null and memberLevel!='SUPER'">
+                and cg.min_price_super IS NOT NULL
+            </if>
+        </where>
+    </select>
 
 
   <select id="getGoodsByName" resultMap="BaseResultMap">
