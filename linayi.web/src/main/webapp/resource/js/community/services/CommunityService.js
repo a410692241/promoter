@@ -62,10 +62,16 @@ app.service('communityService', [function() {
 		options.url = urls.ms+"/community/community/delete.do";
 		ajax( options );
 	}
+
+	function updateCommunityPrice( options ){
+		options.url = urls.ms+"/community/community/updateCommunityPrice.do";
+		ajax( options );
+	}
 	
 	return {
 		remove:remove,
 		getById:getById,
-		save:save
+		save:save,
+		updateCommunityPrice:updateCommunityPrice
 	};
 }]);

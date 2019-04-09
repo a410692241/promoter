@@ -62,4 +62,6 @@ public interface SupermarketService {
 
 
     Supermarket getSupermarketByUserId(Integer userId);
+
+    Supermarket getSupermarketById(Integer SupermarketId);
 }

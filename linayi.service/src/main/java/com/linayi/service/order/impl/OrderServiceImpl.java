@@ -33,10 +33,12 @@ import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.entity.user.ReceiveAddress;
 import com.linayi.entity.user.ShoppingCar;
 import com.linayi.entity.user.User;
+import com.linayi.enums.MemberLevel;
 import com.linayi.enums.OrderStatus;
 import com.linayi.service.goods.BrandService;
 import com.linayi.service.goods.SupermarketGoodsService;
 import com.linayi.service.order.OrderService;
+import com.linayi.service.promoter.OpenMemberInfoService;
 import com.linayi.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,6 +83,8 @@ public class OrderServiceImpl implements OrderService {
     private PromoterOrderManMapper promoterOrderManMapper;
     @Autowired
     private OpenMemberInfoMapper openMemberInfoMapper;
+    @Autowired
+    private OpenMemberInfoService openMemberInfoService;
 
     @Transactional
     @Override
@@ -156,7 +160,7 @@ public class OrderServiceImpl implements OrderService {
             List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getSupermarketGoodsList(car.getGoodsSkuId(), smallCommunity.getCommunityId());
             OrdersGoods ordersGoods = generateOrdersGoods(order,supermarketGoodsList, car.getQuantity(), car.getGoodsSkuId());
             ordersGoodsMapper.insert(ordersGoods);
-            Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(supermarketGoodsList.get(supermarketGoodsList.size() - 1).getSupermarketId());
+            Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(MemberPriceUtil.supermarketGoods.get(MemberPriceUtil.supermarketGoods.size() - 1).getSupermarketId());
             //待采买任务
             ProcurementTask procurementTask = generateProcurementTask(smallCommunity, ordersGoods, supermarket);
             procurementTaskMapper.insert(procurementTask);
@@ -164,24 +168,28 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    public static OrdersGoods generateOrdersGoods(Orders order, List<SupermarketGoods> supermarketGoodsList, Integer quantity, Integer goodsSkuId) {
+    @Override
+    public  OrdersGoods generateOrdersGoods(Orders order, List<SupermarketGoods> supermarketGoodsList, Integer quantity, Integer goodsSkuId) {
         OrdersGoods ordersGoods = new OrdersGoods();
         ordersGoods.setOrdersId(order.getOrdersId());
         Integer minPrice = 0;
         Integer maxPrice = 0;
+        MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(order.getUserId());
+        Integer[] supermarketPriceByLevel =new Integer[4];
         if (supermarketGoodsList != null && supermarketGoodsList.size() > 0) {
-            minPrice = supermarketGoodsList.get(supermarketGoodsList.size() - 1).getPrice();
-            maxPrice = supermarketGoodsList.get(0).getPrice();
+            supermarketPriceByLevel = MemberPriceUtil.supermarketPriceByLevel(currentMemberLevel, supermarketGoodsList);
+            minPrice = supermarketPriceByLevel[0];
+            maxPrice = supermarketPriceByLevel[2];
         }
 
-        String jsonStr = dealSupermarket(supermarketGoodsList);
+        String jsonStr = dealSupermarket(MemberPriceUtil.supermarketGoods);
         ordersGoods.setSupermarketList(jsonStr);
         ordersGoods.setMaxPrice(maxPrice);
         ordersGoods.setPrice(minPrice);
         ordersGoods.setQuantity(quantity);
         ordersGoods.setGoodsSkuId(goodsSkuId);
-        ordersGoods.setSupermarketId(supermarketGoodsList.get(supermarketGoodsList.size() - 1).getSupermarketId());
-        ordersGoods.setMaxSupermarketId(supermarketGoodsList.get(0).getSupermarketId());
+        ordersGoods.setSupermarketId(supermarketPriceByLevel[1]);
+        ordersGoods.setMaxSupermarketId(supermarketPriceByLevel[3]);
         ordersGoods.setCreateTime(new Date());
         //待采买状态
         ordersGoods.setProcureStatus("PROCURING");
@@ -262,7 +270,7 @@ public class OrderServiceImpl implements OrderService {
 
     private static String dealSupermarket(List<SupermarketGoods> supermarketGoodsList) {
         if (supermarketGoodsList != null && supermarketGoodsList.size() > 0) {
-            List<Map> list = new ArrayList<Map>();
+            List<Map> list = new ArrayList<>();
             for (int i = supermarketGoodsList.size() - 1; i >= 0; i--) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("supermarket_id", supermarketGoodsList.get(i).getSupermarketId());

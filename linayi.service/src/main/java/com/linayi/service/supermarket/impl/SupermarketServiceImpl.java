@@ -4,9 +4,13 @@ import com.linayi.dao.area.AreaMapper;
 import com.linayi.dao.community.CommunitySupermarketMapper;
 import com.linayi.dao.supermarket.SupermarketMapper;
 import com.linayi.entity.area.Area;
+import com.linayi.entity.promoter.OpenMemberInfo;
 import com.linayi.entity.supermarket.Supermarket;
+import com.linayi.enums.MemberLevel;
+import com.linayi.service.promoter.OpenMemberInfoService;
 import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.util.ImageUtil;
+import com.linayi.util.MemberPriceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -20,14 +24,16 @@ import java.util.List;
 
 @Service
 public class SupermarketServiceImpl implements SupermarketService {
-	
+
 	@Autowired
 	private SupermarketMapper supermarketMapper;
 	@Autowired
 	private AreaMapper areaMapper;
 	@Resource
 	private CommunitySupermarketMapper communitySupermarketMapper;
-	
+	@Resource
+	private OpenMemberInfoService openMemberInfoService;
+
 	@Override
 
 	public List<Supermarket> selectAll(Supermarket supermarket,Integer communityId,String type) {
@@ -54,12 +60,12 @@ public class SupermarketServiceImpl implements SupermarketService {
 				list.get(i).setType("unBind");
 			}
 			return list;
-		}		
+		}
 
 		list = supermarketMapper.selectAll(supermarket);
 		for(int i = 0;i<list.size();i++){
 			Integer sId = list.get(i).getSupermarketId();
-			
+
 			if(supermarketIdList.size()>0){
 				list.get(i).setType("bind");
 			}
@@ -83,7 +89,7 @@ public class SupermarketServiceImpl implements SupermarketService {
 	public void insertSupermarket(Supermarket supermarket) {
 		supermarketMapper.insertSupermarket(supermarket);
 	}
-	
+
 	@Override
 	public void updateSupermarketBysupermarketId(Supermarket supermarket) {
 		supermarketMapper.updateSupermarketBysupermarketId(supermarket);
@@ -110,7 +116,7 @@ public class SupermarketServiceImpl implements SupermarketService {
 	@Override
 	public Supermarket selectSupermarketBysupermarketId(Integer supermarketId) {
 		Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(supermarketId);
-		
+
 		try {
 			supermarket.setLogo(ImageUtil.dealToShow(supermarket.getLogo()));
 			//通过areacode设置地区名
@@ -138,16 +144,16 @@ public class SupermarketServiceImpl implements SupermarketService {
 		}
 		return supermarket;
 	}
-	
+
 	private Area getAreaNameByCode(String code){
 		return areaMapper.selectByPrimaryKey(code);
-		
+
 	}
 
 	@Override
 	public void deleteSupermarketrBysupermarketId(Integer supermarketId) {
 		Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(supermarketId);
-		
+
 		if(supermarket.getLogo() != null){
 			File file = new File(supermarket.getLogo());
 			if(file.isFile() && file.exists()){
@@ -172,17 +178,30 @@ public class SupermarketServiceImpl implements SupermarketService {
         supermarket.setStatus("NORMAL");
         supermarket.setUpdateTime(new Date());
 		supermarketMapper.updateSupermarketBysupermarketId(supermarket);
-		
+
 	}
-	
+
 	 @Override
 		public List<Supermarket> getSupermarketByAddress(Integer userId) {
 
+		//根据用户id获取绑定的超市集合(已按距离由近到远排序)
 		 List<Supermarket> supermarketList = supermarketMapper.getSupermarketByAddress(userId);
 
-		 if(supermarketList.size()>5) {
-			 supermarketList = supermarketList.subList(0, 5);
+		 //获取用户的会员等级
+		 MemberLevel memberLevel = openMemberInfoService.getCurrentMemberLevel(userId);
+		 //普通用户和普通会员(5家超市)
+		 if(MemberLevel.NOT_MEMBER.toString().equals(memberLevel.toString()) || MemberLevel.NORMAL.toString().equals(memberLevel.toString())){
+			 supermarketList = supermarketList.size()> MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.NORMAL.toString()) ? supermarketList.subList(0,  MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.NORMAL.toString())) : supermarketList;
 		 }
+		 //高级会员(8家超市)
+		 else if(MemberLevel.SENIOR.toString().equals(memberLevel.toString())){
+			 supermarketList = supermarketList.size()> MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.SENIOR.toString()) ? supermarketList.subList(0,  MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.SENIOR.toString())) : supermarketList;
+		 }
+		 //超级VIP(12家超市)
+		 else if(MemberLevel.SUPER.toString().equals(memberLevel.toString())){
+			 supermarketList = supermarketList.size()> MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.SUPER.toString()) ? supermarketList.subList(0, MemberPriceUtil.levelAndSupermarketNum.get(MemberLevel.SUPER.toString())) : supermarketList;
+		 }
+
 		 System.out.println(supermarketList.size());
 		 for(Supermarket i:supermarketList) {
 			 i.setLogo(ImageUtil.dealToShow(i.getLogo()));
@@ -201,5 +220,10 @@ public class SupermarketServiceImpl implements SupermarketService {
 		supermarket.setUserId(userId);
 		List<Supermarket> supermarketList = supermarketMapper.selectSupermarketList(supermarket);
 		return supermarketList != null && supermarketList.size() > 0 ? supermarketList.get(0) : null;
+	}
+
+	@Override
+	public Supermarket getSupermarketById(Integer SupermarketId) {
+		return supermarketMapper.selectSupermarketBysupermarketId(SupermarketId);
 	}
 }

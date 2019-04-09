@@ -41,7 +41,7 @@ public class GoodsSkuController extends BaseController {
 
 	}
 
-	//根据用户地址获取绑定的5家超市对象
+	//根据用户地址获取绑定的超市对象集合
     @RequestMapping("/supermarket.do")
     @ResponseBody
     public Object addShopCar() {
@@ -219,7 +219,9 @@ public class GoodsSkuController extends BaseController {
     //自定义搜索
     @RequestMapping("/customSearch.do")
     public Object customSearch(@RequestBody GoodsSku goodsSku) {
+    	
     	try {
+    		
     		if(goodsSku.getBrandName()==null&&goodsSku.getFullName()==null&&goodsSku.getValueName()==null) {
     			return null;
     		}

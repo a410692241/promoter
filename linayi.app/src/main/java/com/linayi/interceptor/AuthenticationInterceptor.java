@@ -24,23 +24,24 @@ public class AuthenticationInterceptor {
     @Resource
     private RedisService redisService;
 
+	private final static List<String> notNeedCheckTokenMethods = new ArrayList<>();
+	static {
+		notNeedCheckTokenMethods.add("/account/account/login.do");
+		notNeedCheckTokenMethods.add("/account/account/regist.do");
+		notNeedCheckTokenMethods.add("/user/weixin/getAuthUrl.do");
+		notNeedCheckTokenMethods.add("/user/weixin/getCode.do");
+		notNeedCheckTokenMethods.add("/account/account/getValidCode.do");
+		notNeedCheckTokenMethods.add("/account/account/changePsw.do");
+		notNeedCheckTokenMethods.add("/account/account/resetPsw.do");
+		notNeedCheckTokenMethods.add("/account/account/logout.do");
+		notNeedCheckTokenMethods.add("/common/picture/upload.do");
+		notNeedCheckTokenMethods.add("/account/account/communityLogin.do");
+		notNeedCheckTokenMethods.add("/area/area/getAreaMap.do");
+	}
+
+
     @Around("execution(* com.linayi.controller..*.*(..))")
     public Object around(ProceedingJoinPoint point) throws Throwable {
-    	
-    	List<String> notNeedCheckTokenMethods = new ArrayList<>();
-    	notNeedCheckTokenMethods.add("/account/account/login.do");
-    	notNeedCheckTokenMethods.add("/account/account/regist.do");
-    	notNeedCheckTokenMethods.add("/user/weixin/getAuthUrl.do");
-    	notNeedCheckTokenMethods.add("/user/weixin/getCode.do");
-    	notNeedCheckTokenMethods.add("/user/weixin/getLinShengCode.do");
-    	notNeedCheckTokenMethods.add("/account/account/getValidCode.do");
-    	notNeedCheckTokenMethods.add("/account/account/changePsw.do");
-    	notNeedCheckTokenMethods.add("/account/account/resetPsw.do");
-    	notNeedCheckTokenMethods.add("/account/account/logout.do");
-    	notNeedCheckTokenMethods.add("/common/picture/upload.do");
-    	notNeedCheckTokenMethods.add("/account/account/communityLogin.do");
-    	notNeedCheckTokenMethods.add("/area/area/getAreaMap.do");
-
 
     	boolean needCheck;
     	if(notNeedCheckTokenMethods.contains(getMethodName())){
@@ -48,7 +49,7 @@ public class AuthenticationInterceptor {
     	}else{
     		needCheck = true;
     	}
-    	
+
     	if(needCheck){
     		String accessToken= getRequest().getHeader("accessToken");
     		boolean checkPass = redisService.checkAccessToken(accessToken);

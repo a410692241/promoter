@@ -1,5 +1,12 @@
 package com.linayi.service.goods;
 
-public interface CommunityGoodsService {
+import com.linayi.entity.goods.CommunityGoods;
 
+public interface CommunityGoodsService {
+    /**
+     * 根据商品Id查社区商品
+     * @param goodsSkuId
+     * @return
+     */
+    CommunityGoods getCommunityGoodsByGoodsId(Integer goodsSkuId);
 }

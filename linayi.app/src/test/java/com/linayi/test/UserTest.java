@@ -43,7 +43,6 @@ public class UserTest {
         userService.saveUserInfo(null,user);
     }
 
-
     @Test
     public void PriceAffectTimer() {
         System.out.println("Method:价格生效方法开始！");

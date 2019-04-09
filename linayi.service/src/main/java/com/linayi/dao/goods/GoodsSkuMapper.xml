@@ -534,15 +534,15 @@
   <select id="deleteGoodsById">
       delete from goods_sku where goods_sku_id = #{goodsSkuId}
   </select>
-
-
+  
+  
     <!-- 获取所有商品id -->
   <select id="getGoodsSkuIdBygoodsSku" resultType="java.lang.Integer">
   	SELECT
   		goods_sku_id
   	FROM
-  		goods_sku
-
+  		goods_sku	 
+ 
   </select>
 
   <select id="selectNamebyId" resultType="com.linayi.entity.goods.GoodsSku">

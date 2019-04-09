@@ -1,22 +1,19 @@
 package com.linayi.controller;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
-import com.linayi.dao.account.AccountRoleMapper;
-import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.account.Account;
+import com.linayi.entity.promoter.OpenMemberInfo;
 import com.linayi.enums.UserType;
 import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
-import com.linayi.service.account.AccountService;
 import com.linayi.service.community.CommunityService;
 import com.linayi.service.redis.RedisService;
+import com.linayi.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.linayi.service.user.UserService;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 public class BaseController {
 	@Resource
@@ -56,5 +53,9 @@ public class BaseController {
 			return userByToken.getUserId();
 		}
 		throw new BusinessException(ErrorType.NOT_A_COMMUNITY_ACCOUNT);
+	}
+
+	public OpenMemberInfo getCurrentMemberInfo() {
+		return null;
 	}
 }
