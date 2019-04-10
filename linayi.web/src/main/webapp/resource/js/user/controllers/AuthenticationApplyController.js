@@ -84,12 +84,12 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 						{name:'idCardBack',label:'身份证反面',sortable:false,hidden:true},
 						{name:'smallCommunityId',label:'小区id',sortable:false,hidden:true},
 			            {label:"操作",name:"opt",width:300,sortable:false,formatter:function(cellvalue, options, rowObject){
-			            	console.log(cellvalue)
-			            	console.log(options)
-			            	console.log(cellvalue)
+			            	var status = rowObject.status;
 			            	var opts = "";
 			            	opts = opts + "<a href='javascript:void(0);' ng-click='show( "+rowObject.applyId+" )' class='btn btn-primary shiny fa fa-eye btn-sm td-compile'>详情</a> ";
-			            	opts = opts + "<a href='javascript:void(0);' ng-click='audit( "+rowObject._rowId+" )' class='btn btn-darkorange fa fa-edit btn-sm td-compile'>审核</a> ";
+			            	if (status === "WAIT_AUDIT" ) {
+								opts = opts + "<a href='javascript:void(0);' ng-click='audit( " + rowObject._rowId + " )' class='btn btn-darkorange fa fa-edit btn-sm td-compile'>审核</a> ";
+							}
 			            	return opts;
 			            }}
 			            ],
