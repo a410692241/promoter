@@ -142,77 +142,77 @@
             </if>
         </trim>
     </insert>
-  <select id="getProcurementList" resultType="com.linayi.entity.procurement.ProcurementTask">
-    select <include refid="Base_Column_List"/> from procurement_task
-    <where>
-      <if test="ordersId != null">
-        orders_id = #{ordersId}
-      </if>
-      <if test="boxNo != null">
-       and box_no = #{boxNo}
-      </if>
-      <if test="supermarketId != null">
-        AND supermarket_id = #{supermarketId}
-      </if>
-      <if test="goodsSkuId != null">
-        AND goods_sku_id = #{goodsSkuId}
-      </if>
-      <if test="price != null">
-        AND price = #{price}
-      </if>
-      <if test="quantity != null">
-        AND quantity = #{quantity}
-      </if>
-      <if test="actualQuantity != null">
-        AND actual_quantity = #{actualQuantity}
-      </if>
-      <if test="procureStatus != null and procureStatus != 'FINISHED'">
-        AND procure_status = #{procureStatus}
-      </if>
-        <if test="procureStatus == 'FINISHED'">
-            AND procure_status != 'PROCURING'
-        </if>
-      <if test="receiveStatus != null">
-        AND receive_status = #{receiveStatus}
-      </if>
-    <if test="userId != null">
-        AND user_id = #{userId}
-    </if>
-      <if test="updateTime != null">
-        AND update_time = #{updateTime}
-      </if>
-      <if test="createTime != null">
-        AND create_time = #{createTime}
-      </if>
-    </where>
-    order by create_time DESC
-  </select>
+    <select id="getProcurementList" resultType="com.linayi.entity.procurement.ProcurementTask">
+        select <include refid="Base_Column_List"/> from procurement_task
+        <where>
+            <if test="ordersId != null">
+                orders_id = #{ordersId}
+            </if>
+            <if test="boxNo != null">
+                and box_no = #{boxNo}
+            </if>
+            <if test="supermarketId != null">
+                AND supermarket_id = #{supermarketId}
+            </if>
+            <if test="goodsSkuId != null">
+                AND goods_sku_id = #{goodsSkuId}
+            </if>
+            <if test="price != null">
+                AND price = #{price}
+            </if>
+            <if test="quantity != null">
+                AND quantity = #{quantity}
+            </if>
+            <if test="actualQuantity != null">
+                AND actual_quantity = #{actualQuantity}
+            </if>
+            <if test="procureStatus != null and procureStatus != 'FINISHED'">
+                AND procure_status = #{procureStatus}
+            </if>
+            <if test="procureStatus == 'FINISHED'">
+                AND procure_status != 'PROCURING'
+            </if>
+            <if test="receiveStatus != null">
+                AND receive_status = #{receiveStatus}
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="updateTime != null">
+                AND update_time = #{updateTime}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+        </where>
+        order by create_time DESC
+    </select>
 
-	  <!-- 根据任务id获取任务信息 -->
-	  <select id="getProcurementById" resultType="com.linayi.entity.procurement.ProcurementTask">
-	    select <include refid="Base_Column_List"/>
-	    from
-	    	 procurement_task
-	    where
-	    	procurement_task_id = #{procurementTaskId}
-	  </select>
+    <!-- 根据任务id获取任务信息 -->
+    <select id="getProcurementById" resultType="com.linayi.entity.procurement.ProcurementTask">
+        select <include refid="Base_Column_List"/>
+        from
+        procurement_task
+        where
+        procurement_task_id = #{procurementTaskId}
+    </select>
 
 
 
-  <select id="selectSIdPriceByOgId" resultType="com.linayi.entity.procurement.ProcurementTask">
+    <select id="selectSIdPriceByOgId" resultType="com.linayi.entity.procurement.ProcurementTask">
     SELECT supermarket_id supermarketId,price,procure_status procureStatus FROM procurement_task WHERE orders_goods_id=#{ordersGoodsId}
   </select>
 
 
 
 
-  <select id="selectAllProcurementTask" resultType="com.linayi.entity.procurement.ProcurementTask">
+    <select id="selectAllProcurementTask" resultType="com.linayi.entity.procurement.ProcurementTask">
     SELECT procurement_task_id procurementTaskId,orders_id ordersId,goods_sku_id goodsSkuId,price,supermarket_id supermarketId,create_time createTime,quantity,procure_status procureStatus FROM procurement_task
   </select>
 
-  <!-- 根据订单id和实际采买数量大于0查询采买任务表 -->
-  <!-- List<ProcurementTask> getProcurementTaskByOrderIdAndActualQuantity(Long orderId) -->
-  <select id="getProcurementTaskByOrderIdAndActualQuantity" resultType="com.linayi.entity.procurement.ProcurementTask">
+    <!-- 根据订单id和实际采买数量大于0查询采买任务表 -->
+    <!-- List<ProcurementTask> getProcurementTaskByOrderIdAndActualQuantity(Long orderId) -->
+    <select id="getProcurementTaskByOrderIdAndActualQuantity" resultType="com.linayi.entity.procurement.ProcurementTask">
   	SELECT
   		p.procurement_task_id,
   		p.orders_id,
@@ -248,20 +248,20 @@
   		p.actual_quantity>0
   </select>
 
-  <select id="selectProcuringByOrdersId" resultType="com.linayi.entity.procurement.ProcurementTask">
-    select procurement_task_id procurementTaskId,orders_id ordersId,goods_sku_id goodsSkuId,price,supermarket_id supermarketId,create_time createTime,quantity,procure_status procureStatus from procurement_task
-    <where>
-          <if test="ordersId != null">
+    <select id="selectProcuringByOrdersId" resultType="com.linayi.entity.procurement.ProcurementTask">
+        select procurement_task_id procurementTaskId,orders_id ordersId,goods_sku_id goodsSkuId,price,supermarket_id supermarketId,create_time createTime,quantity,procure_status procureStatus from procurement_task
+        <where>
+            <if test="ordersId != null">
                 orders_id = #{ordersId}
-          </if>
-          <if test="procureStatus=='LACK'">
-              AND procure_status='PROCURING'
-          </if>
-          <if test="procureStatus=='PRICE_HIGH'">
-              AND  procure_status='PROCURING'
-          </if>
-    </where>
-  </select>
+            </if>
+            <if test="procureStatus=='LACK'">
+                AND procure_status='PROCURING'
+            </if>
+            <if test="procureStatus=='PRICE_HIGH'">
+                AND  procure_status='PROCURING'
+            </if>
+        </where>
+    </select>
     <select id="getProcurementTaskList" resultType="com.linayi.entity.procurement.ProcurementTask">
         select <include refid="Base_Column_List"/>
         from procurement_task
@@ -309,11 +309,11 @@
         order by create_time DESC
     </select>
 
-      <select id="getProcurementTaskStatus" resultType="com.linayi.entity.procurement.ProcurementTask">
+    <select id="getProcurementTaskStatus" resultType="com.linayi.entity.procurement.ProcurementTask">
         select <include refid="Base_Column_List"/>
         from procurement_task
-       where
-           community_id = #{communityId}
+        where
+        community_id = #{communityId}
         AND  receive_status="WAIT_RECEIVE"
         AND  actual_quantity>0
     </select>
@@ -396,7 +396,7 @@
                 procure_status = #{procureStatus},
             </if>
             <if test="procureQuantity !=null">
-            	procure_quantity=#{procureQuantity},
+                procure_quantity=#{procureQuantity},
             </if>
             <if test="receiveStatus != null">
                 receive_status = #{receiveStatus},
@@ -405,7 +405,7 @@
                 update_time = #{updateTime},
             </if>
             <if test="boxNo != null">
-            	box_no=#{boxNo},
+                box_no=#{boxNo},
             </if>
             <if test="createTime != null">
                 create_time = #{createTime},
@@ -419,7 +419,7 @@
 
 
     <!-- 根据orderId查询采买完成的然后去采买任务中获取数量大于0的收货状态 -->
-	<select id="getReceiveStatusByOrderId" resultType="java.lang.String">
+    <select id="getReceiveStatusByOrderId" resultType="java.lang.String">
 		SELECT
 			pt.receive_status
 		FROM
@@ -432,8 +432,8 @@
 			pt.actual_quantity>0
 
 	</select>
-	<!-- 通过订单Id和实际数量大于0获取商品id和数量  List<ProcurementTask> getListByOrdersId(Long ordersId); -->
-	<select id="getListByOrdersId" resultType="com.linayi.entity.procurement.ProcurementTask">
+    <!-- 通过订单Id和实际数量大于0获取商品id和数量  List<ProcurementTask> getListByOrdersId(Long ordersId); -->
+    <select id="getListByOrdersId" resultType="com.linayi.entity.procurement.ProcurementTask">
 		select
 			goods_sku_id,actual_quantity
 		from
@@ -445,39 +445,39 @@
 		and
 			box_no =#{boxNo}
 	</select>
-    and pt.community_id = #{communityId}
-	<select id="getCommunityProcurementList" resultType="com.linayi.entity.procurement.ProcurementTask">
+
+    <select id="getCommunityProcurementList" resultType="com.linayi.entity.procurement.ProcurementTask">
         select MIN(pt.price) * SUM(pt.quantity) totalPrice, SUM(pt.quantity) totalQuantity,SUM(pt.procure_quantity) totalProcureQuantity,AVG(pt.price) * SUM(pt.procure_quantity) totalProcurePrice,AVG(pt.price) price, pt.procure_time procureTime, c.name communityName, pt.goods_sku_id goodsSkuId from procurement_task pt
         join community c on c.community_id = pt.community_id join supermarket s on s.user_id = #{userId} and s.supermarket_id = pt.supermarket_id
-         <where>
-             <if test="procureStatus != null and procureStatus == 'PROCURING'">
-                 pt.procure_status = #{procureStatus}
-             </if>
-             <if test="procureStatus != null and procureStatus == 'FINISHED'">
-                 pt.procure_status != 'PROCURING'
-             </if>
-             <if test="procureTimeStr != null and procureTimeStr != ''">
-                 and pt.procure_time = #{procureTimeStr}
-             </if>
-             <if test="goodsSkuId != null and goodsSkuId != ''">
-                 and pt.goods_sku_id = #{goodsSkuId}
-             </if>
-         </where>
-         GROUP BY
-         <if test="procureStatus != null and procureStatus == 'FINISHED'">
+        <where>
+            <if test="procureStatus != null and procureStatus == 'PROCURING'">
+                pt.procure_status = #{procureStatus}
+            </if>
+            <if test="procureStatus != null and procureStatus == 'FINISHED'">
+                pt.procure_status != 'PROCURING'
+            </if>
+            <if test="procureTimeStr != null and procureTimeStr != ''">
+                and pt.procure_time = #{procureTimeStr}
+            </if>
+            <if test="goodsSkuId != null and goodsSkuId != ''">
+                and pt.goods_sku_id = #{goodsSkuId}
+            </if>
+        </where>
+        GROUP BY
+        <if test="procureStatus != null and procureStatus == 'FINISHED'">
             pt.procure_time ,
-          </if>
-            pt.goods_sku_id,
-            c.name
-         ORDER BY pt.procure_time DESC, SUM(pt.quantity) DESC
+        </if>
+        pt.goods_sku_id,
+        c.name
+        ORDER BY pt.procure_time DESC, SUM(pt.quantity) DESC
     </select>
-	<select id="getProcurements" resultType="com.linayi.entity.procurement.ProcurementTask">
+    <select id="getProcurements" resultType="com.linayi.entity.procurement.ProcurementTask">
         select  <include refid="Base_Column_List"/> from procurement_task where supermarket_id = (select s.supermarket_id from supermarket s where s.user_id = #{userId}) and procure_status = 'PROCURING' and goods_sku_id = #{goodsSkuId}
         ORDER BY create_time ASC
     </select>
 
 
-<select id="getProcurementTaskByOrdersId" resultType="com.linayi.entity.procurement.ProcurementTask">
+    <select id="getProcurementTaskByOrdersId" resultType="com.linayi.entity.procurement.ProcurementTask">
     SELECT
   		procurement_task_id,
   		orders_id,
