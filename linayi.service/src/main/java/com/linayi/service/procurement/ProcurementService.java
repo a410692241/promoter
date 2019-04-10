@@ -73,9 +73,9 @@ public interface ProcurementService {
     void updateProcurmentStatus(Integer goodsSkuId, Integer quantity, Integer userId);
 
     /**
-     * 查询采买任务详情
+     * 查询采买任务详情列表
      * @param procurementTask
      * @return
      */
-    ProcurementTask getprocurementDeatil(ProcurementTask procurementTask);
+    List<ProcurementTask> getprocurementDeatil(ProcurementTask procurementTask);
 }

@@ -190,17 +190,19 @@ public class ProcurementServiceImpl implements ProcurementService {
 	 * @return
 	 */
 	@Override
-	public ProcurementTask getprocurementDeatil(ProcurementTask procurementTask) {
+	public List<ProcurementTask> getprocurementDeatil(ProcurementTask procurementTask) {
 
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementList(procurementTask);
 		ProcurementTask procurementTask1 = null;
 		if (procurementTaskList != null && procurementTaskList.size() > 0){
-			procurementTask1 = procurementTaskList.get(0);
-			GoodsSku goodsSku = goodsSkuMapper.getGoodsById(procurementTask.getGoodsSkuId());
-			procurementTask1.setImage(ImageUtil.dealToShow(goodsSku.getImage()));
-			procurementTask1.setGoodsSkuName(goodsSku.getFullName());
+			for (ProcurementTask task : procurementTaskList) {
+				GoodsSku goodsSku = goodsSkuMapper.getGoodsById(task.getGoodsSkuId());
+				procurementTask1.setImage(ImageUtil.dealToShow(goodsSku.getImage()));
+				procurementTask1.setGoodsSkuName(goodsSku.getFullName());
+			}
+
 		}
-		return procurementTask1;
+		return procurementTaskList;
 	}
 
 	@Override

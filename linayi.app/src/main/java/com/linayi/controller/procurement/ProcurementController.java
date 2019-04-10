@@ -149,8 +149,9 @@ public class ProcurementController extends BaseController {
 			ProcurementTask procurementTask = pvu.transObj(ProcurementTask.class);
 			Integer userId = getUserId();
 			procurementTask.setUserId(userId);
-			ProcurementTask procurementTask1 = procurementService.getprocurementDeatil(procurementTask);
-			return new  ResponseData(procurementTask1);
+			List<ProcurementTask> procurementTasks = procurementService.getprocurementDeatil(procurementTask);
+			PageResult<ProcurementTask> pageResult = new PageResult<>(procurementTasks, procurementTask);
+			return new  ResponseData(pageResult);
 		} catch (Exception e) {
 			return new ResponseData(ErrorType.SYSTEM_ERROR);
 		}
@@ -183,8 +184,8 @@ public class ProcurementController extends BaseController {
 		try {
 			Integer userId = getUserId();
 			procurementTask.setCommunityId(userId);
-			ProcurementTask procurementTask1 = procurementService.getprocurementDeatil(procurementTask);
-			return new  ResponseData(procurementTask1);
+			List<ProcurementTask> procurementTask1 = procurementService.getprocurementDeatil(procurementTask);
+			return new  ResponseData(procurementTask1.get(0));
 		} catch (Exception e) {
 			return new ResponseData(ErrorType.SYSTEM_ERROR);
 		}
