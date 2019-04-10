@@ -47,6 +47,12 @@ public class SupermarketServiceImpl implements SupermarketService {
 				supermarket.setSupermarketIdList(supermarketIdList);
 				list = supermarketMapper.selectSupermarketList(supermarket);
 				for(int i=0;i<list.size();i++){
+					Integer sId = list.get(i).getSupermarketId();
+					list.get(i).setAreaName(selectSupermarketBysupermarketId(sId).getAreaName());
+					Integer rank = communitySupermarketMapper.getRankByCommunityIdAndSupermarketId(
+							communityId,list.get(i).getSupermarketId());
+
+					list.get(i).setRank(rank);
 					list.get(i).setType("bind");
 				}
 				return list;
@@ -57,6 +63,8 @@ public class SupermarketServiceImpl implements SupermarketService {
 			supermarket.setSupermarketIdList(supermarketIdList);
 			list = supermarketMapper.selectSupermarketListTwo(supermarket);
 			for(int i=0;i<list.size();i++){
+				Integer sId = list.get(i).getSupermarketId();
+				list.get(i).setAreaName(selectSupermarketBysupermarketId(sId).getAreaName());
 				list.get(i).setType("unBind");
 			}
 			return list;
@@ -75,6 +83,10 @@ public class SupermarketServiceImpl implements SupermarketService {
 				if(supermarketId !=null && sId == supermarketId){
 					list.get(i).setAreaName(selectSupermarketBysupermarketId(sId).getAreaName());
 					list.get(i).setType("bind");
+					Integer rank = communitySupermarketMapper.getRankByCommunityIdAndSupermarketId(
+							communityId,list.get(i).getSupermarketId());
+
+					list.get(i).setRank(rank);
 					break;
 				}else{
 					list.get(i).setAreaName(selectSupermarketBysupermarketId(sId).getAreaName());

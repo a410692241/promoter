@@ -9,6 +9,8 @@ import java.util.List;
 public class Supermarket extends BaseEntity {
     private Integer supermarketId;
 
+    private Integer rank;//[超市排序]
+
     private String name;
 
     private String areaCode;
@@ -220,5 +222,13 @@ public class Supermarket extends BaseEntity {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Integer getRank() {
+        return rank;
+    }
+
+    public void setRank(Integer rank) {
+        this.rank = rank;
     }
 }
