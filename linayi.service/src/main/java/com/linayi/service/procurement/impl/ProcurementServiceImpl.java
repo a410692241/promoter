@@ -93,10 +93,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 
 	@Override
 	public List<ProcurementTask> getCommunityProcurement(ProcurementTask procurementTask) {
-		if (procurementTask.getCommunityId() ==null){
-			Integer communityId = supermarketMapper.getSupermarketCommunityId(procurementTask.getUserId());
-			procurementTask.setCommunityId(communityId);
-		}
+
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementList(procurementTask);
 		return procurementTaskList;
 	}
