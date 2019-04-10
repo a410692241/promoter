@@ -448,7 +448,7 @@
     and pt.community_id = #{communityId}
 	<select id="getCommunityProcurementList" resultType="com.linayi.entity.procurement.ProcurementTask">
         select MIN(pt.price) * SUM(pt.quantity) totalPrice, SUM(pt.quantity) totalQuantity,SUM(pt.procure_quantity) totalProcureQuantity,AVG(pt.price) * SUM(pt.procure_quantity) totalProcurePrice,AVG(pt.price) price, pt.procure_time procureTime, c.name communityName, pt.goods_sku_id goodsSkuId from procurement_task pt
-       join goods_sku gs on gs.goods_sku_id = pt.goods_sku_id join community c on c.community_id = pt.community_id join supermarket s on s.user_id = #{userId} and s.supermarket_id = pt.supermarket_id
+        join community c on c.community_id = pt.community_id join supermarket s on s.user_id = #{userId} and s.supermarket_id = pt.supermarket_id
          <where>
              <if test="procureStatus != null and procureStatus == 'PROCURING'">
                  pt.procure_status = #{procureStatus}
@@ -472,7 +472,7 @@
          ORDER BY pt.procure_time DESC, SUM(pt.quantity) DESC
     </select>
 	<select id="getProcurements" resultType="com.linayi.entity.procurement.ProcurementTask">
-        select  <include refid="Base_Column_List"/> from procurement_task where community_id = #{communityId} and procure_status = 'PROCURING' and goods_sku_id = #{goodsSkuId}
+        select  <include refid="Base_Column_List"/> from procurement_task where supermarket_id = (select s.supermarket_id from supermarket s where s.user_id = #{userId}) and procure_status = 'PROCURING' and goods_sku_id = #{goodsSkuId}
         ORDER BY create_time ASC
     </select>
 

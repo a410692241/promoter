@@ -67,10 +67,9 @@ public interface ProcurementTaskMapper {
     List<ProcurementTask> getCommunityProcurementList(ProcurementTask procurementTask);
 
     /**
-     * 获取在同一个社区商品一样的所有的采买任务
+     * 获取在同一个超市商品一样的所有的采买任务
      * @param goodsSkuId
-     * @param communityId
      * @return
      */
-    List<ProcurementTask> getProcurements(@Param("goodsSkuId")Integer goodsSkuId, @Param("communityId")Integer communityId);
+    List<ProcurementTask> getProcurements(@Param("goodsSkuId")Integer goodsSkuId, @Param("userId")Integer userId);
 }

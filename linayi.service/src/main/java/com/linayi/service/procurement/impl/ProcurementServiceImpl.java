@@ -101,8 +101,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 	@Transactional
 	@Override
 	public void updateProcurmentStatus(Integer goodsSkuId, Integer quantity, Integer userId) {
-		Integer communityId = supermarketMapper.getSupermarketCommunityId(userId);
-		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurements(goodsSkuId,communityId);
+		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurements(goodsSkuId,userId);
 		Date procureTime = new Date();
 		if (quantity == null){
 			//价高
@@ -192,12 +191,8 @@ public class ProcurementServiceImpl implements ProcurementService {
 	 */
 	@Override
 	public ProcurementTask getprocurementDeatil(ProcurementTask procurementTask) {
-		if (procurementTask.getCommunityId() ==null){
-			Integer communityId = supermarketMapper.getSupermarketCommunityId(procurementTask.getUserId());
-			procurementTask.setCommunityId(communityId);
-		}
 
-		List<ProcurementTask> procurementTaskList = procurementTaskList = procurementTaskMapper.getCommunityProcurementList(procurementTask);
+		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementList(procurementTask);
 		ProcurementTask procurementTask1 = null;
 		if (procurementTaskList != null && procurementTaskList.size() > 0){
 			procurementTask1 = procurementTaskList.get(0);
