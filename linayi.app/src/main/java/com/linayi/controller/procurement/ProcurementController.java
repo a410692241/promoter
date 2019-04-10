@@ -128,8 +128,9 @@ public class ProcurementController extends BaseController {
                 quantity = Integer.parseInt(param.get("quantity") +"");
             }
 			Integer goodsSkuId = Integer.parseInt(param.get("goodsSkuId") +"");
-			Integer userId = getUserId();
-			procurementService.updateProcurmentStatus(goodsSkuId, quantity,userId);
+			Integer communityId = Integer.parseInt(param.get("communityId") +"");
+
+			procurementService.updateProcurmentStatus(goodsSkuId, quantity,communityId);
 			return new ResponseData("success");
 		} catch (Exception e) {
 			e.printStackTrace();

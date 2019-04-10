@@ -100,8 +100,8 @@ public class ProcurementServiceImpl implements ProcurementService {
 
 	@Transactional
 	@Override
-	public void updateProcurmentStatus(Integer goodsSkuId, Integer quantity, Integer userId) {
-		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurements(goodsSkuId,userId);
+	public void updateProcurmentStatus(Integer goodsSkuId, Integer quantity, Integer communityId) {
+		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurements(goodsSkuId,communityId);
 		Date procureTime = new Date();
 		if (quantity == null){
 			//价高
