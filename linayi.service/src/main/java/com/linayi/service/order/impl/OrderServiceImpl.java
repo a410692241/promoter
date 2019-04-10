@@ -415,7 +415,6 @@ public class OrderServiceImpl implements OrderService {
                 procurement.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
                 List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurement);
                 shoppingCar.setStatus(procurementTaskList.get(0).getProcureStatus());
-                List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getSupermarketGoodsList(ordersGoods.getGoodsSkuId(), orders1.getCommunityId());
                 Integer minPrice = 0;
                 Integer maxPrice = 0;
                 String supermarketList = ordersGoods.getSupermarketList();
