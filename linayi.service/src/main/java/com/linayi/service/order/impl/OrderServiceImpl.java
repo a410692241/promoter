@@ -39,6 +39,7 @@ import com.linayi.service.goods.BrandService;
 import com.linayi.service.goods.SupermarketGoodsService;
 import com.linayi.service.order.OrderService;
 import com.linayi.service.promoter.OpenMemberInfoService;
+import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -85,6 +86,8 @@ public class OrderServiceImpl implements OrderService {
     private OpenMemberInfoMapper openMemberInfoMapper;
     @Autowired
     private OpenMemberInfoService openMemberInfoService;
+    @Autowired
+    private SupermarketService supermarketService;
 
     @Transactional
     @Override
@@ -398,25 +401,30 @@ public class OrderServiceImpl implements OrderService {
                 procurement.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
                 List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurement);
                 shoppingCar.setStatus(procurementTaskList.get(0).getProcureStatus());
-                List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getSupermarketGoodsList(ordersGoods.getGoodsSkuId(), orders1.getCommunityId());
                 Integer minPrice = 0;
                 Integer maxPrice = 0;
                 String supermarketList = ordersGoods.getSupermarketList();
+
                 List<Map> list = null;
+                String minPriceSupermarketName = "";
+                String maxPriceSupermarketName = "";
                 if (supermarketList != null && !"".equals(supermarketList)) {
                     list = JSON.parseArray(supermarketList, Map.class);
-                    if (list.get(list.size() - 1).get("price") != null)
+                    if (list.get(0).get("price") != null) {
                         minPrice = Integer.parseInt(list.get(0).get("price") + "");
-                    if (list.get(0).get("price") != null)
+                        minPriceSupermarketName = supermarketService.getSupermarketById(Integer.parseInt(list.get(0).get("supermarket_id") + "")).getName();
+                    }
+                    if (list.get(list.size() - 1).get("price") != null) {
                         maxPrice = Integer.parseInt(list.get(list.size() - 1).get("price") + "");
+                        maxPriceSupermarketName = supermarketService.getSupermarketById(Integer.parseInt(list.get(list.size() - 1).get("supermarket_id") + "")).getName();
+                    }
                 }
-
 
                 shoppingCar.setQuantity(ordersGoods.getQuantity());
                 shoppingCar.setMinPrice(getpriceString(minPrice));
                 shoppingCar.setMaxPrice(getpriceString(maxPrice));
-                shoppingCar.setMaxSupermarketName(supermarketGoodsList.get(0).getSupermarketName());
-                shoppingCar.setMinSupermarketName(supermarketGoodsList.get(supermarketGoodsList.size() - 1).getSupermarketName());
+                shoppingCar.setMaxSupermarketName(maxPriceSupermarketName);
+                shoppingCar.setMinSupermarketName(minPriceSupermarketName);
                 shoppingCar.setSpreadRate(NumberUtil.formatDouble((maxPrice - minPrice) * 100 / Double.parseDouble("" + minPrice)) + "%");
                 shoppingCar.setHeJiPrice(getpriceString(ordersGoods.getQuantity() * ordersGoods.getPrice()));
                 cars.add(shoppingCar);
