@@ -447,12 +447,18 @@
 	</select>
 
     <select id="getCommunityProcurementList" resultType="com.linayi.entity.procurement.ProcurementTask">
-        select MIN(pt.price) * SUM(pt.quantity) totalPrice, SUM(pt.quantity) totalQuantity,SUM(pt.procure_quantity) totalProcureQuantity,AVG(pt.price) * SUM(pt.procure_quantity) totalProcurePrice,AVG(pt.price) price, pt.procure_time procureTime, c.name communityName,c.community_id communityId
+        select <if test="communityId != null and communityId != ''">
+        MIN(pt.price) * SUM(pt.quantity) totalPrice,
+        </if>
+        <if test="communityId == null or communityId == ''">
+            SUM(pt.price * pt.quantity) totalPrice,
+        </if>
+        SUM(pt.quantity) totalQuantity,SUM(pt.procure_quantity) totalProcureQuantity,AVG(pt.price) * SUM(pt.procure_quantity) totalProcurePrice,AVG(pt.price) price, pt.procure_time procureTime, c.name communityName,c.community_id communityId
         <if test="communityId != null and communityId != ''">
-            pt.goods_sku_id goodsSkuId
+            , pt.goods_sku_id goodsSkuId
         </if>
          from procurement_task pt
-        join community c on c.community_id = pt.community_id join supermarket s on s.user_id = #{userId} and s.supermarket_id = pt.supermarket_id
+        join community c on c.community_id = pt.community_id join supermarket s on s.procurer_id = #{userId} and s.supermarket_id = pt.supermarket_id
         <where>
             <if test="procureStatus != null and procureStatus == 'PROCURING'">
                 pt.procure_status = #{procureStatus}
@@ -464,7 +470,7 @@
                 and pt.procure_time = #{procureTimeStr}
             </if>
             <if test="communityId != null and communityId != ''">
-                and pt.communityId = #{communityId}
+                and pt.community_id = #{communityId}
             </if>
         </where>
         GROUP BY
