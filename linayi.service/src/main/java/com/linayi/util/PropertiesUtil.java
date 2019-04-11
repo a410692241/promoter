@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class PropertiesUtil {
-    private static Properties properties = new Properties();
+    private final static Properties properties = new Properties();
 
     static {
         // 使用ClassLoader加载properties配置文件生成对应的输入流
