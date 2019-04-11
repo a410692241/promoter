@@ -337,20 +337,6 @@ public class OrderServiceImpl implements OrderService {
         return ordersPageResult;
     }
 
-    @Override
-    public PageResult<Orders> getProcureOrderList(Orders orders) {
-        String communityStatus = orders.getCommunityStatus();
-        if (communityStatus != null) {
-            orders.setUserId(null);
-            if ("ALL".equals(communityStatus))
-                orders.setCommunityStatus(null);
-        }
-
-        List<Orders> ordersList = ordersMapper.getOrderList(orders);
-        PageResult<Orders> ordersPageResult = new PageResult<>(ordersList,orders);
-        return ordersPageResult;
-    }
-
     public List<Orders> getOrdersList(Collection<Orders> ordersList, String type) {
         List<Orders> orders3 = new ArrayList<>();
         for (Orders orders1 : ordersList) {
@@ -415,7 +401,6 @@ public class OrderServiceImpl implements OrderService {
                 procurement.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
                 List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurement);
                 shoppingCar.setStatus(procurementTaskList.get(0).getProcureStatus());
-                List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getSupermarketGoodsList(ordersGoods.getGoodsSkuId(), orders1.getCommunityId());
                 Integer minPrice = 0;
                 Integer maxPrice = 0;
                 String supermarketList = ordersGoods.getSupermarketList();
@@ -433,7 +418,7 @@ public class OrderServiceImpl implements OrderService {
                         maxPrice = Integer.parseInt(list.get(list.size() - 1).get("price") + "");
                         maxPriceSupermarketName = supermarketService.getSupermarketById(Integer.parseInt(list.get(list.size() - 1).get("supermarket_id") + "")).getName();
                     }
-                    }
+                }
 
                 shoppingCar.setQuantity(ordersGoods.getQuantity());
                 shoppingCar.setMinPrice(getpriceString(minPrice));

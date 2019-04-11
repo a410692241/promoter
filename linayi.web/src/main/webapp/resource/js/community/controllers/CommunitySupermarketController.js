@@ -39,7 +39,7 @@ app.controller('communitySupermarketCtrl', function($scope,toaster,communitySupe
 				{name:'supermarketId',label:'超市ID',sortable:false,hidden:true}, 
 				{name:'name',label:'名称',sortable:false}, 
 				{name:'areaName',label:'地址',sortable:false}, 
-				{name:'address',label:'详细地址',sortable:false}, 
+				{name:'address',label:'详细地址',sortable:false},
 				{name:'type',label:'绑定类型',sortable:false,formatter:function(cellvalue, options, rowObject){
 					if(cellvalue == "bind"){
 						return cellvalue = "绑定";
@@ -47,6 +47,7 @@ app.controller('communitySupermarketCtrl', function($scope,toaster,communitySupe
 						return cellvalue = "未绑定";
 					}
 				}},
+				{name:'rank',label:'超市排序',sortable:false},
 //				formatter:function( cellvalue, options, rowObject ){
 //					if( rowObject.type == 10 ){
 //						return "负责超市";

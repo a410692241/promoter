@@ -16,8 +16,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import javax.sound.midi.Soundbank;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:config/spring-context.xml")
@@ -58,4 +62,49 @@ public class UserTest {
         System.out.println("Method:价格生效结束！！！");
     }
 
+    @Test
+    public void test() {
+        int a = 10;
+        int b = 8;
+        System.out.println(a >> 3);
+    }
+
+    @Test
+    public void threadTest() {
+        System.out.println("注册开始");
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+              /*  for (int i = 0;i<10000;i++){
+                    System.out.println(i);
+                }*/
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("线程结束");
+
+
+            }
+        });
+
+//        MyThread myThread = new MyThread();
+//        myThread.start();
+
+        System.out.println("注册成功");
+    }
 }
+
+
+class MyThread extends Thread{
+    @Override
+    public void run(){
+            for (int i = 0;i<10000;i++){
+                System.out.println(i);
+            }
+        System.out.println("线程结束");
+        }
+
+        }
