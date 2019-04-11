@@ -41,7 +41,7 @@ public class SupermarketServiceImpl implements SupermarketService {
 		List<Integer> supermarketIdList = communitySupermarketMapper.getSupermarketIdList(communityId);
 
 		List<Supermarket> list = new ArrayList<>();
-		//通过社区Id和绑定状态获取超市信息a
+		//通过社区Id和绑定状态获取超市信息
 		if("showBind".equals(type)){
 			if(supermarketIdList.size()>0){
 				supermarket.setSupermarketIdList(supermarketIdList);
