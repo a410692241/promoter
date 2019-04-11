@@ -486,6 +486,9 @@
             <if test="valueName!=null and valueName!=''">
                 and full_name like concat('%',#{valueName},'%')
             </if>
+            <if test="barcode!=null and barcode!=''">
+                and barcode like concat('%',#{barcode},'%')
+            </if>
         </where>
 
     </select>
