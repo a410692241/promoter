@@ -34,9 +34,9 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 	
 	@Override
 	public Object applySharer(AuthenticationApply apply, MultipartFile[] file) {
-		apply.setAuthenticationType("SHARER");
+/*		apply.setAuthenticationType("SHARER");
 		AuthenticationApply authenticationApply1 = authenticationApplyMapper.getAuthenticationApplyByUserIdAndType(apply);
-		if(authenticationApply1 == null){
+		if(authenticationApply1 == null){*/
 			try {
 				AuthenticationApply authenticationApply = new AuthenticationApply();
 				authenticationApply.setRealName(apply.getRealName());
@@ -56,7 +56,7 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				e.printStackTrace();
 			}
 			return new ResponseData("操作成功！").toString();
-		}else{
+/*		}else{
 			if("SHARER".equals(authenticationApply1.getAuthenticationType())){
 				return new ResponseData("F","已申请！").toString();
 			}else{
@@ -80,7 +80,7 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				}
 				return new ResponseData("操作成功！").toString();
 			}
-		}
+		}*/
 	}
 
 	@Override
@@ -174,9 +174,9 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 
 	@Override
 	public Object applyProcurer(AuthenticationApply apply, MultipartFile[] file) {
-		apply.setAuthenticationType("PROCURER");
+/*		apply.setAuthenticationType("PROCURER");
 		AuthenticationApply authenticationApply1 = authenticationApplyMapper.getAuthenticationApplyByUserIdAndType(apply);
-		if(authenticationApply1 == null){
+		if(authenticationApply1 == null){*/
 			try {
 				AuthenticationApply authenticationApply = new AuthenticationApply();
 				authenticationApply.setAddress(apply.getAddress());
@@ -199,7 +199,7 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				e.printStackTrace();
 			}
 			return new ResponseData("操作成功！").toString();
-		}else{
+/*		}else{
 			if("PROCURER".equals(authenticationApply1.getAuthenticationType())){
 				return new ResponseData("F","已申请！").toString();
 			}else{
@@ -226,14 +226,14 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				}
 				return new ResponseData("操作成功！").toString();
 			}
-		}
+		}*/
 	}
 
 	@Override
 	public Object applyDeliverer(AuthenticationApply apply, MultipartFile[] file) {
-		apply.setAuthenticationType("DELIVERER");
+/*		apply.setAuthenticationType("DELIVERER");
 		AuthenticationApply authenticationApply1 = authenticationApplyMapper.getAuthenticationApplyByUserIdAndType(apply);
-		if(authenticationApply1 == null){
+		if(authenticationApply1 == null){*/
 			try {
 				AuthenticationApply authenticationApply = new AuthenticationApply();
 				authenticationApply.setAddress(apply.getAddress());
@@ -255,7 +255,7 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				e.printStackTrace();
 			}
 			return new ResponseData("操作成功！").toString();
-		}else{
+/*		}else{
 			if("DELIVERER".equals(authenticationApply1.getAuthenticationType())){
 				return new ResponseData("F","已申请！").toString();
 			}else{
@@ -281,7 +281,7 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				}
 				return new ResponseData("操作成功！").toString();
 			}
-		}
+		}*/
 	}
 
 }
