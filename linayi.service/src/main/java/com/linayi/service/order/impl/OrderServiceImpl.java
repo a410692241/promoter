@@ -337,6 +337,21 @@ public class OrderServiceImpl implements OrderService {
         return ordersPageResult;
     }
 
+
+    @Override
+    public PageResult<Orders> getProcureOrderList(Orders orders) {
+        String communityStatus = orders.getCommunityStatus();
+        if (communityStatus != null) {
+            orders.setUserId(null);
+            if ("ALL".equals(communityStatus))
+                orders.setCommunityStatus(null);
+        }
+
+        List<Orders> ordersList = ordersMapper.getOrderList(orders);
+        PageResult<Orders> ordersPageResult = new PageResult<>(ordersList,orders);
+        return ordersPageResult;
+    }
+
     public List<Orders> getOrdersList(Collection<Orders> ordersList, String type) {
         List<Orders> orders3 = new ArrayList<>();
         for (Orders orders1 : ordersList) {
