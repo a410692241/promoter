@@ -10,7 +10,7 @@ public interface AuthenticationApplyService {
 	
 	/**
 	 * 
-	 * @param	apply	apply对象
+	 * @param	apply	apply对象a
 	 * @param	file	图片数组(正面在前，反面在后)
 	 * @return	ResponseData对象json字符串
 	 */

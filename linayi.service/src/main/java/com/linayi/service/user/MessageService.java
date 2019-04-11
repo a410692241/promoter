@@ -7,7 +7,7 @@ import java.util.List;
 public interface MessageService {
 
     /**
-     * 通过用户id查询消息
+     * 通过用户id查询消息a
      * @param userId
      * @return
      */
