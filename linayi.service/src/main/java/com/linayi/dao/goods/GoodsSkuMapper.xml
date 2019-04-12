@@ -489,6 +489,9 @@
             <if test="barcode!=null and barcode!=''">
                 and barcode like concat('%',#{barcode},'%')
             </if>
+            <if test="status!=null and status!=''">
+                and status=#{status}
+            </if>
         </where>
 
     </select>
