@@ -56,6 +56,10 @@ public class Supermarket extends BaseEntity {
 	@DateTimeFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
 	private Date createTimeEnd;
 
+    /**
+     * 商品id
+     */
+	private Long goodsSkuId;
 
     public Date getCreateTimeStart() {
 		return createTimeStart;
@@ -206,7 +210,15 @@ public class Supermarket extends BaseEntity {
 		this.correctId = correctId;
 	}
 
-	@Override
+    public Long getGoodsSkuId() {
+        return goodsSkuId;
+    }
+
+    public void setGoodsSkuId(Long goodsSkuId) {
+        this.goodsSkuId = goodsSkuId;
+    }
+
+    @Override
 	public String toString() {
 		return "Supermarket [supermarketId=" + supermarketId + ", name=" + name + ", areaCode=" + areaCode
 				+ ", areaName=" + areaName + ", address=" + address + ", status=" + status + ", logo=" + logo

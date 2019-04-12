@@ -155,8 +155,11 @@ public class SupermarketGoodsServiceImpl implements SupermarketGoodsService {
                     supermarket.setCorrectId(currentCorrect1.getCorrectId());
                 } else {
                     supermarket.setCorrectType("CORRECT");
-                    supermarket.setGoodsPrice(currentCorrect.getPrice().toString());
+                    //获取该商品的超市价格
+                    SupermarketGoods currentSupermarketGoods = supermarketGoodsMapper.getSupermarketGoodsBysupermarketIdAndgoodsSkuId(currentCorrect.getGoodsSkuId().intValue(),currentCorrect.getSupermarketId());
+                    supermarket.setGoodsPrice(currentSupermarketGoods.getPrice().toString());
                     supermarket.setCorrectId(currentCorrect.getCorrectId());
+                    supermarket.setGoodsSkuId(currentCorrect.getGoodsSkuId());
                 }
 
                 // 否则表示该商品无价格
