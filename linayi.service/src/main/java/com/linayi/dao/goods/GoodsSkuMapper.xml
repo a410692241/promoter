@@ -377,16 +377,16 @@
             <if test="fullName!=null and fullName!=''">
                 and gs.full_name like concat('%',#{fullName},'%')
             </if>
-            <if test="memberLevel!=null and memberLevel!='NORMAL'">
+            <if test="memberLevel!=null and memberLevel=='NORMAL'">
                 and cg.min_price_normal IS NOT NULL
             </if>
-            <if test="memberLevel!=null and memberLevel!='NOT_MEMBER'">
+            <if test="memberLevel!=null and memberLevel=='NOT_MEMBER'">
                 and cg.min_price_normal IS NOT NULL
             </if>
-            <if test="memberLevel!=null and memberLevel!='SENIOR'">
+            <if test="memberLevel!=null and memberLevel=='SENIOR'">
                 and cg.min_price_senior IS NOT NULL
             </if>
-            <if test="memberLevel!=null and memberLevel!='SUPER'">
+            <if test="memberLevel!=null and memberLevel=='SUPER'">
                 and cg.min_price_super IS NOT NULL
             </if>
         </where>
@@ -436,16 +436,16 @@
             <if test="brandId!=null and brandId!=''">
                 AND gs.brand_id=#{brandId}
             </if>
-            <if test="memberLevel!=null and memberLevel!='NORMAL'">
+            <if test="memberLevel!=null and memberLevel=='NORMAL'">
                 and cg.min_price_normal IS NOT NULL
             </if>
-            <if test="memberLevel!=null and memberLevel!='NOT_MEMBER'">
+            <if test="memberLevel!=null and memberLevel=='NOT_MEMBER'">
                 and cg.min_price_normal IS NOT NULL
             </if>
-            <if test="memberLevel!=null and memberLevel!='SENIOR'">
+            <if test="memberLevel!=null and memberLevel=='SENIOR'">
                 and cg.min_price_senior IS NOT NULL
             </if>
-            <if test="memberLevel!=null and memberLevel!='SUPER'">
+            <if test="memberLevel!=null and memberLevel=='SUPER'">
                 and cg.min_price_super IS NOT NULL
             </if>
             ORDER BY (cg.max_price-cg.min_price)/cg.min_price DESC
@@ -539,16 +539,16 @@
             <if test="valueName!=null and valueName!=''">
                 and gs.full_name like concat('%',#{valueName},'%')
             </if>
-            <if test="memberLevel!=null and memberLevel!='NORMAL'">
+            <if test="memberLevel!=null and memberLevel=='NORMAL'">
                 and cg.min_price_normal IS NOT NULL
             </if>
-            <if test="memberLevel!=null and memberLevel!='NOT_MEMBER'">
+            <if test="memberLevel!=null and memberLevel=='NOT_MEMBER'">
                 and cg.min_price_normal IS NOT NULL
             </if>
-            <if test="memberLevel!=null and memberLevel!='SENIOR'">
+            <if test="memberLevel!=null and memberLevel=='SENIOR'">
                 and cg.min_price_senior IS NOT NULL
             </if>
-            <if test="memberLevel!=null and memberLevel!='SUPER'">
+            <if test="memberLevel!=null and memberLevel=='SUPER'">
                 and cg.min_price_super IS NOT NULL
             </if>
         </where>
