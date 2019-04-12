@@ -352,12 +352,19 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
 		});
 	}
 
+	var isTrue = true;
 	/**更新社区价格*/
 	function updateCommunityPrice( communityId ){
 		messager.confirm("确认更新该社区所有商品价格？",function( $modalInstance ){
+			if(isTrue){
+				isTrue =false;
+			}else {
+				return;
+			}
 			communityService.updateCommunityPrice({
 				"data":{communityId:communityId},
 				"success":function( data ){
+					isTrue == true;
 					if( data.respCode =="S" ){
 						$("#communityList").trigger("reloadGrid");
 						// list();

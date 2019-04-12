@@ -684,8 +684,14 @@ app.controller('goodsCtrl'/**
                 url: url
             });
         }
+        var isTrue =true;
         //商品列表确认分享
         function saveShare($modalInstance, data, $scope) {
+            if(isTrue){
+                isTrue =false;
+            }else {
+                return;
+            }
             console.log($scope);
             var correct = $scope.correct;
             correct.price = ($("#price").val() * 100).toFixed(0);
@@ -699,6 +705,7 @@ app.controller('goodsCtrl'/**
                 dataType: "json",
                 type: "post",
                 success: function (data) {
+                    isTrue = true;
                     if (data.respCode === "S") {
 					$modalInstance.close();
                         alert("修改价格成功,等待审核!");
