@@ -1,5 +1,6 @@
 package com.linayi.service.weixin.Impl;
 
+import com.github.binarywang.java.emoji.EmojiConverter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.linayi.config.WeixinConfig;
@@ -34,6 +35,7 @@ public class WeixinServiceImpl implements WeixinService {
     private RedisService redisService;
     @Autowired
     private UserService userService;
+    private EmojiConverter emojiConverter = EmojiConverter.getInstance();
 
     @Override
     public Object getCode(String code, HttpServletResponse response,boolean linsheng) {
@@ -67,7 +69,9 @@ public class WeixinServiceImpl implements WeixinService {
             if (accountDB == null) {
                 //新用户
                 User user = new User();
-                user.setNickname(userInfoMap.get("nickname") + "");
+                String nickname = userInfoMap.get("nickname") + "";
+                nickname = emojiConverter.toAlias(nickname);
+                user.setNickname(nickname);
                 user.setSex((Double) userInfoMap.get("sex") > 1.0 ? Sex.FEMALE.name() : Sex.MALE.name());
                 //下载微信头像图片
                 String headimgurl = userInfoMap.get("headimgurl") + "";
@@ -86,7 +90,7 @@ public class WeixinServiceImpl implements WeixinService {
                 userId = user.getUserId();
                 accountPM.setUserId(userId);
                 accountPM.setUserType(UserType.USER.name());
-                accountPM.setUserName(userInfoMap.get("nickname") + "");
+                accountPM.setUserName(nickname);
                 accountService.insertAccount(accountPM);
                 accountId = accountPM.getAccountId();
             } else {
