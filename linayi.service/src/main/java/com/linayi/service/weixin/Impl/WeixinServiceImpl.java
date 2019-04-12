@@ -35,8 +35,7 @@ public class WeixinServiceImpl implements WeixinService {
     private RedisService redisService;
     @Autowired
     private UserService userService;
-    private EmojiConverter emojiConverter = EmojiConverter.getInstance();
-
+    private static EmojiConverter emojiConverter = EmojiConverter.getInstance();
     @Override
     public Object getCode(String code, HttpServletResponse response,boolean linsheng) {
         //获取access_token
@@ -182,5 +181,4 @@ public class WeixinServiceImpl implements WeixinService {
             e.printStackTrace();
         }
     }
-
 }

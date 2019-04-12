@@ -1,5 +1,6 @@
 package com.linayi.service.user.impl;
 
+import com.github.binarywang.java.emoji.EmojiConverter;
 import com.linayi.dao.account.AccountMapper;
 import com.linayi.dao.account.AdminAccountMapper;
 import com.linayi.dao.account.EmployeeMapper;
@@ -311,6 +312,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserForSpokesMan(Integer userId) {
         User user = userMapper.getUserForSpokesMan(userId);
+        if (user.getNickname() != null) {
+            user.setNickname(EmojiConverter.getInstance().toUnicode(user.getNickname()));
+        }
         //获取省市区街道和小区
         String areaCode = user.getCode();
         String addressTwo = user.getName();
