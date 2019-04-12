@@ -19,6 +19,7 @@ public enum ErrorType {
     PARAM_ERROR(1901, "请求参数错误!"),
     WECHAT_CALL_ERROR(1902, "微信调用出错!"),
     THE_PHONE_NUMBER_HAS_BEEN_BOUND(1904, "该手机号已被绑定!"),
+    THE_PHONE_NUMBER_HAS_BEEN_REGIST(1904, "该手机号已被注册!"),
     MESSAGE_FAILED_TO_SEND(1905, "短信发送失败!"),
     TOKEN_DISABLED(1906, "accessToken失效!"),
     ACCOUNT_ERROR(1908,"账号重复"),

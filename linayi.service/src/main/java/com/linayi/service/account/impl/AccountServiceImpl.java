@@ -169,7 +169,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Object regist(String mobile, String code, String password) {
         if (existMobile(mobile)) {
-            throw new BusinessException(ErrorType.THE_PHONE_NUMBER_HAS_BEEN_BOUND);
+            throw new BusinessException(ErrorType.THE_PHONE_NUMBER_HAS_BEEN_REGIST);
         }
         boolean b = redisService.validValidCode(mobile, code);
         //验证码错误
