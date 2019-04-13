@@ -2,7 +2,7 @@ package com.linayi.test;
 
 
 import com.linayi.entity.goods.GoodsSku;
-import com.linayi.service.search.GoodsSearchService;
+import com.linayi.search.GoodsSearchService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

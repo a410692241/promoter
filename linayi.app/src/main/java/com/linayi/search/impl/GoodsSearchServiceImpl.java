@@ -1,9 +1,8 @@
-package com.linayi.service.search.impl;
+package com.linayi.search.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.linayi.entity.goods.GoodsSku;
-import com.linayi.service.search.GoodsSearchService;
-import org.apache.commons.lang3.StringUtils;
+import com.linayi.search.GoodsSearchService;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -16,7 +15,6 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.elasticsearch.search.sort.FieldSortBuilder;
-import org.elasticsearch.search.sort.ScoreSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
