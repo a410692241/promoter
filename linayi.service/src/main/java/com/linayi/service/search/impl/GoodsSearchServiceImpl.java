@@ -45,7 +45,7 @@ public class GoodsSearchServiceImpl implements GoodsSearchService {
      * @throws Exception
      */
     @Override
-    public List<GoodsSku> search(Object text,boolean isHighlight,Integer pageNum,Integer pageSize,String sortField,boolean order, String... fieldNames) throws Exception {
+    public List<GoodsSku>  search(Object text,boolean isHighlight,Integer pageNum,Integer pageSize,String sortField,boolean order, String... fieldNames) throws Exception {
         String preTag = "<font color='#dd4b39'>";//google的色值
         String postTag = "</font>";
 
@@ -92,10 +92,7 @@ public class GoodsSearchServiceImpl implements GoodsSearchService {
         List<GoodsSku> list = new ArrayList<>();
         for (SearchHit hit : hits) {
             Map tempSource = hit.getSourceAsMap();
-            System.out.println(tempSource);
-
             GoodsSku goodsSku = JSON.parseObject(JSON.toJSONString(tempSource), GoodsSku.class);
-
             //获取对应的高亮域
             Map<String, HighlightField> highlightFields = hit.getHighlightFields();
             if (isHighlight) {
