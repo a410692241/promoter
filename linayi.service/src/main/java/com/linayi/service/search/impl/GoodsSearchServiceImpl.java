@@ -69,22 +69,22 @@ public class GoodsSearchServiceImpl implements GoodsSearchService {
             sourceBuilder.sort(new FieldSortBuilder(sortField).order(sortOrder));
         }
         //是否高亮
-        HighlightBuilder highlightBuilder = new HighlightBuilder();
         if (isHighlight) {
+            HighlightBuilder highlightBuilder = new HighlightBuilder();
             if (fieldNames != null && fieldNames.length > 0) {
                 for (String fieldName : fieldNames) {
                     highlightBuilder.field(fieldName);
                 }
                 highlightBuilder.preTags(preTag).postTags(postTag);
             }
+            sourceBuilder.highlighter(highlightBuilder);
         }
         if (pageNum != null && pageSize != null) {
             sourceBuilder.from((pageNum - 1) * pageSize).size(pageNum * pageSize);
-            sourceBuilder.highlighter(highlightBuilder);
         }
         //4创建搜索Request
-        SearchRequest request = new SearchRequest("goods_index");
-        request.types("goods");
+        SearchRequest request = new SearchRequest("goods_sku_index");
+        request.types("goods_sku");
         request.source(sourceBuilder);
         //5解析反馈结果
         SearchResponse response = client.search(request);
@@ -144,10 +144,21 @@ public class GoodsSearchServiceImpl implements GoodsSearchService {
         if (null == fieldName || "".equals(fieldName)) {
             return null;
         }
+        while (true){
+            int indexOf = fieldName.indexOf("_");
+            if(indexOf < 0){
+                break;
+            }
+            String pre = fieldName.substring(0, indexOf);
+            String mid = fieldName.substring(indexOf+1, indexOf + 2).toUpperCase();
+            String suf = fieldName.substring(indexOf + 2);
+            fieldName = pre + mid + suf;
+        }
+
         int startIndex = 0;
-        if (fieldName.charAt(0) == '_')
-            startIndex = 1;
         return "set" + fieldName.substring(startIndex, startIndex + 1).toUpperCase()
                 + fieldName.substring(startIndex + 1);
     }
+
+
 }

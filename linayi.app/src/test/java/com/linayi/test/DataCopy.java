@@ -24,9 +24,9 @@ public class DataCopy {
     public void test(){
 
         try {
-            List<GoodsSku> search = goodsSearchService.search("墨菲", true, 1, 10, "price", false, "desc");
+            List<GoodsSku> search = goodsSearchService.search("奶", true, 1, 10, "goods_sku_id", false, "full_name","name");
             for (GoodsSku goodsSku : search) {
-                System.out.println("goodsSku = " + goodsSku.getDesc());
+                System.out.println(goodsSku.getFullName());
             }
         } catch (Exception e) {
             e.printStackTrace();

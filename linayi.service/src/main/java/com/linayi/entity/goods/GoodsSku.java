@@ -115,10 +115,6 @@ public class GoodsSku extends BaseEntity {
 
     private String memberLevel;
 
-
-    //es
-    private String desc;
-
     public String getMemberLevel() {
         return memberLevel;
     }
@@ -587,13 +583,5 @@ public class GoodsSku extends BaseEntity {
 
     public void setMaxPriceSuper(Integer maxPriceSuper) {
         this.maxPriceSuper = maxPriceSuper;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
     }
 }
