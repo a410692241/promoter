@@ -444,7 +444,7 @@
 			box_no =#{boxNo}
 	</select>
 	<select id="getCommunityProcurementList" resultType="com.linayi.entity.procurement.ProcurementTask">
-        select MIN(p.price) price, SUM(pt.quantity) totalQuantity, gs.full_name fullName, pt.goods_sku_id .goodsSkuId from procurement_task pt
+        select MIN(pt.price) price, SUM(pt.quantity) totalQuantity, gs.full_name fullName, pt.goods_sku_id .goodsSkuId from procurement_task pt
        join goodsSku gs on gs.goods_sku_id = pt.goods_sku_id and pt.community_id = #{communityId}
          <where>
              <if test="procureStatus != null and procureStatus == 'PROCURING'">
