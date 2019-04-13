@@ -698,7 +698,10 @@ app.controller('goodsCtrl'/**
             var priceType = correct.priceType;
             correct.correctType = $("#correctType").val();
             correct.correctId = $("#correctId").val();
-
+            var startTime = $scope.correct.startTime;
+            var endTime = $scope.correct.endTime;
+            $scope.correct.startTime = startTime.substring(0,16);
+            $scope.correct.endTime = endTime.substring(0,16);
             $.ajax({
                 url: urls.ms + "/correct/correct/updatePriceForAdmin.do",
                 data: $scope.correct,
