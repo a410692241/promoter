@@ -93,9 +93,55 @@ public class ProcurementServiceImpl implements ProcurementService {
 
 	@Override
 	public List<ProcurementTask> getCommunityProcurement(ProcurementTask procurementTask) {
+		//根据时间断查询
+		//采买时间12:00-15:00  查下单时间8:00-13:00及之前的
+		boolean nowBetween1 = getNowBetween(12, 15);
+		if (nowBetween1){
+			Date fix = getDateFix(13);
+			procurementTask.setCreateTime(fix);
+		}
+		//采买时间17:00-20:00  查下单时间13:00-18:00及之前的
+		boolean nowBetween2 = getNowBetween( 17, 20);
+		if (nowBetween2){
+			Date fix = getDateFix(18);
+			procurementTask.setCreateTime(fix);
+		}
+
+		//采买时间08:00-11:00  查下单时间18:00-8:00及之前的
+		boolean nowBetween3 = getNowBetween(8, 11);
+		if (nowBetween3){
+			Date fix = getDateFix(8);
+			procurementTask.setCreateTime(fix);
+		}
 
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementList(procurementTask);
 		return procurementTaskList;
+	}
+
+	private boolean getNowBetween(int from,int to) {
+		Date now = new Date();
+		Calendar cl = Calendar.getInstance();
+		long time = now.getTime();
+		cl.setTime(now);
+		cl.set(Calendar.HOUR_OF_DAY,from);
+		cl.set(Calendar.MINUTE,0);
+		cl.set(Calendar.MILLISECOND,0);
+		long start = cl.getTimeInMillis();
+		cl.set(Calendar.HOUR_OF_DAY,to);
+		long end = cl.getTimeInMillis();
+		if (time >= start && time <= end)
+			return true;
+		return false;
+	}
+
+	private Date getDateFix(int hours){
+		Date now = new Date();
+		Calendar cl = Calendar.getInstance();
+		cl.setTime(now);
+		cl.set(Calendar.HOUR_OF_DAY,hours);
+		cl.set(Calendar.MINUTE,0);
+		cl.set(Calendar.MILLISECOND,0);
+		return cl.getTime();
 	}
 
 	@Transactional
