@@ -60,8 +60,8 @@ public class GoodsSearchServiceImpl implements GoodsSearchService {
         //sourceBuilder.fetchSource(new String[]{"id","price","title","brand"},null);
         sourceBuilder.query(boolQueryBuilder);
         //默认相关度倒叙排序
-        sourceBuilder.sort(new ScoreSortBuilder().order(SortOrder.DESC));
-        if (StringUtils.isEmpty(sortField)) {
+//        sourceBuilder.sort(new ScoreSortBuilder().order(SortOrder.DESC));
+        if (sortField != null && !"".equals(sortField)) {
             SortOrder sortOrder = SortOrder.ASC;
             if (!order) {
                 sortOrder = SortOrder.DESC;
