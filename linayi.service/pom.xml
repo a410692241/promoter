@@ -135,12 +135,41 @@
             <artifactId>lombok</artifactId>
             <version>1.16.10</version>
         </dependency>
+
         <!--支持表情包昵称-->
-      <!--  <dependency>
+        <!--  <dependency>
             <groupId>com.github.binarywang</groupId>
             <artifactId>java-emoji-converter</artifactId>
             <version>0.1.1</version>
-        </dependency>-->
+        </dependency> -->
+
+        <!--elasticsearch-->
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-high-level-client</artifactId>
+            <version>6.7.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.pilato.spring</groupId>
+            <artifactId>spring-elasticsearch</artifactId>
+            <version>6.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-elasticsearch</artifactId>
+            <version>3.1.6.RELEASE</version>
+        </dependency>
+
+
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.8.1</version>
+        </dependency>
+
     </dependencies>
 
 

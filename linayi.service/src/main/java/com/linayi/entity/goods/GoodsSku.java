@@ -58,17 +58,17 @@ public class GoodsSku extends BaseEntity {
     private String categoryName;
     /*所有规格的值*/
     private String attrValues;
-    
+
     private String minSupermarket;
-    
+
     private Integer minPrice;
-    
+
     private String maxSupermarket;
-    
+
     private Integer maxPrice;
-    
+
     private Integer maxSupermarketId; //最高价超市id
-    
+
     private Integer minSupermarketId; //最低价超市id
 
     private Integer minSupermarketIdNormal; //普通会员最低价超市id
@@ -104,16 +104,20 @@ public class GoodsSku extends BaseEntity {
     private List<SupermarketGoods> supermarketGoodsList;//所有有该商品的超市
 
     private String spreadRateString; // 差价率0.12%
-    
+
     private Integer userId; //用户id
-    
+
     private Integer communityId; //社区id
-    
+
     private String  valueName; //规格名
 
     private String  createName; //新增商品用户名
 
     private String memberLevel;
+
+
+    //es
+    private String desc;
 
     public String getMemberLevel() {
         return memberLevel;
@@ -132,7 +136,7 @@ public class GoodsSku extends BaseEntity {
     }
 
     private String establishName;
-    
+
 	public String getValueName() {
 		return valueName;
 	}
@@ -583,5 +587,13 @@ public class GoodsSku extends BaseEntity {
 
     public void setMaxPriceSuper(Integer maxPriceSuper) {
         this.maxPriceSuper = maxPriceSuper;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }
