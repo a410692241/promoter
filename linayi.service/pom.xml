@@ -137,11 +137,11 @@
         </dependency>
 
         <!--支持表情包昵称-->
-        <!--  <dependency>
+        <dependency>
             <groupId>com.github.binarywang</groupId>
             <artifactId>java-emoji-converter</artifactId>
             <version>0.1.1</version>
-        </dependency> -->
+        </dependency>
 
         <!--elasticsearch-->
         <dependency>
@@ -161,7 +161,6 @@
             <artifactId>spring-data-elasticsearch</artifactId>
             <version>3.1.6.RELEASE</version>
         </dependency>
-
 
 
         <dependency>

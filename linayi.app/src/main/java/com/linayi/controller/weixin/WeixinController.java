@@ -7,7 +7,6 @@ import com.linayi.exception.ErrorType;
 import com.linayi.service.weixin.WeixinService;
 import com.linayi.util.Configuration;
 import com.linayi.util.ParamValidUtil;
-import com.linayi.util.PropertiesUtil;
 import com.linayi.util.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Map;
 
@@ -30,8 +30,8 @@ public class WeixinController {
 
 
     /**
-     * @param param
      * @return 获取用户授权页面
+     * @throws UnsupportedEncodingException
      */
     @RequestMapping("getAuthUrl.do")
     @ResponseBody
@@ -39,7 +39,7 @@ public class WeixinController {
         try {
             ParamValidUtil pa = new ParamValidUtil(param);
             pa.Exist();
-            String appId = PropertiesUtil.getValueByKey(WeixinConfig.APPID);
+            String appId = Configuration.getConfig().getValue(WeixinConfig.APPID);
             String url = WeixinConfig.GET_CODE_URL + "appid=" + appId + "&redirect_uri=" + URLEncoder.encode(Configuration.getConfig().getValue(WeixinConfig.REDIRECT_URI), "UTF-8") + "&response_type=code" + "&scope=" + WeixinConfig.SCOPE + "&state=STATE#wechat_redirect";
             return new ResponseData(url).toString();
         } catch (BusinessException e) {
