@@ -39,7 +39,7 @@ public class GoodsSearchServiceImpl implements GoodsSearchService {
      * @param pageNum 页码   从1开始
      * @param pageSize 页的大小
      * @param sortField 排序属性
-     * @param order 排序顺序  false正序 true逆序
+     * @param order 排序顺序  true正序 false逆序
      * @param fieldNames 查询的属性
      * @return
      * @throws Exception
@@ -92,6 +92,7 @@ public class GoodsSearchServiceImpl implements GoodsSearchService {
         List<GoodsSku> list = new ArrayList<>();
         for (SearchHit hit : hits) {
             Map tempSource = hit.getSourceAsMap();
+            System.out.println(tempSource);
             GoodsSku goodsSku = JSON.parseObject(JSON.toJSONString(tempSource), GoodsSku.class);
             //获取对应的高亮域
             Map<String, HighlightField> highlightFields = hit.getHighlightFields();
