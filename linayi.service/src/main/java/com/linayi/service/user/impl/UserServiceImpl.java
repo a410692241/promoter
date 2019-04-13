@@ -1,20 +1,16 @@
 package com.linayi.service.user.impl;
 
-import com.github.binarywang.java.emoji.EmojiConverter;
 import com.linayi.dao.account.AccountMapper;
 import com.linayi.dao.account.AdminAccountMapper;
 import com.linayi.dao.account.EmployeeMapper;
 import com.linayi.dao.area.AreaMapper;
 import com.linayi.dao.area.SmallCommunityMapper;
-import com.linayi.dao.user.AuthenticationApplyMapper;
 import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.account.Account;
 import com.linayi.entity.account.AdminAccount;
 import com.linayi.entity.account.Employee;
 import com.linayi.entity.area.Area;
 import com.linayi.entity.area.SmallCommunity;
-import com.linayi.entity.procurement.ProcurementTask;
-import com.linayi.entity.user.AuthenticationApply;
 import com.linayi.entity.user.User;
 import com.linayi.enums.EnabledDisabled;
 import com.linayi.exception.ErrorType;
@@ -27,10 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
-
-import javax.annotation.Resource;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -313,7 +308,7 @@ public class UserServiceImpl implements UserService {
     public User getUserForSpokesMan(Integer userId) {
         User user = userMapper.getUserForSpokesMan(userId);
         if (user.getNickname() != null) {
-            user.setNickname(EmojiConverter.getInstance().toUnicode(user.getNickname()));
+//            user.setNickname(EmojiConverter.getInstance().toUnicode(user.getNickname()));
         }
         //获取省市区街道和小区
         String areaCode = user.getCode();
