@@ -137,11 +137,11 @@
         </dependency>
 
         <!--支持表情包昵称-->
-        <!--  <dependency>
+        <dependency>
             <groupId>com.github.binarywang</groupId>
             <artifactId>java-emoji-converter</artifactId>
             <version>0.1.1</version>
-        </dependency> -->
+        </dependency>
 
         <!--elasticsearch-->
         <dependency>
