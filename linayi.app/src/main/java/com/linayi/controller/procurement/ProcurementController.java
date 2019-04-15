@@ -206,7 +206,7 @@ public class ProcurementController extends BaseController {
 		try {
 			procurementTask.setCommunityId(getUserId());
 			procurementService.updateOrderStatus(procurementTask);
-			return "SUCCESS";
+			return new ResponseData("success");
 		} catch (Exception e) {
 			return new ResponseData(ErrorType.SYSTEM_ERROR);
 		}
