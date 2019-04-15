@@ -93,16 +93,33 @@ public class ProcurementServiceImpl implements ProcurementService {
 	}
 
 
+    @Override
+    public List<ProcurementTask> getCommunityProcurements(ProcurementTask procurementTask) {
+
+        String procureStatus = procurementTask.getProcureStatus();
+        if("PROCURING".equals(procureStatus)){
+            getQueryTime(procurementTask);
+        }
+
+        List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementList(procurementTask);
+        if (procurementTaskList != null && procurementTaskList.size() > 0){
+            for (ProcurementTask task : procurementTaskList) {
+                GoodsSku goods = goodsSkuMapper.getGoodsById(task.getGoodsSkuId());
+                task.setGoodsImage(ImageUtil.dealToShow(goods.getImage()));
+            }
+        }
+
+        return procurementTaskList;
+    }
+
 	//采买任务收货详情
 	@Override
 	public List<ProcurementTask> getCommunityProcurement(ProcurementTask procurementTask) {
-
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementList(procurementTask);
 		for (ProcurementTask task : procurementTaskList) {
 			task.setGoodsImage(ImageUtil.dealToShow(task.getGoodsImage()));
-            task.setAccessTime(new Date());
+			task.setAccessTime(new Date());
 		}
-
 		return procurementTaskList;
 	}
 
