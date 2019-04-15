@@ -100,6 +100,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementList(procurementTask);
 		for (ProcurementTask task : procurementTaskList) {
 			task.setGoodsImage(ImageUtil.dealToShow(task.getGoodsImage()));
+            task.setAccessTime(new Date());
 		}
 
 		return procurementTaskList;
@@ -494,36 +495,24 @@ public class ProcurementServiceImpl implements ProcurementService {
 	}
 
 	@Override
-	public Integer updateOrderStatus(ProcurementTask procurementTask) {
-		Integer quantity = procurementTask.getQuantity();
-		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurements(procurementTask.getGoodsSkuId(),procurementTask.getCommunityId());
-
-		//根据procurementTaskId查询任务列表
-		//ProcurementTask newProcurementTask = procurementTaskMapper.getProcurementById(procurementTask.getProcurementTaskId());
-		int num = 0;
-		if(procurementTaskList != null && procurementTaskList.size() > 0){
-			for (ProcurementTask task : procurementTaskList) {
-			if(task.getProcureQuantity() <= quantity){
-				num = task.getProcureQuantity();
-				quantity -= task.getProcureQuantity();
-			}else {
-				num = quantity;
-				quantity = 0;
-			}
-				procurementTask.setReceiveQuantity(num);
-				procurementTask.setActualQuantity(num);
+	public void updateOrderStatus(ProcurementTask procurementTask) {
 
 				procurementTask.setReceiveStatus("RECEIVED");
 				//将采买任务表改成已收货
-				procurementTaskMapper.updateProcurementTaskById(procurementTask);
-				Long ordersId = procurementTaskMapper.getProcurementById(procurementTask.getProcurementTaskId()).getOrdersId();
-				//更新订单状态为已完成
-				orderService.updateOrderReceivedStatus(ordersId);
-			}
+				procurementTaskMapper.updateProcurementTaskByGoodsSkuId(procurementTask);
+
+				ProcurementTask procurementTask1 = new ProcurementTask();
+				procurementTask1.setGoodsSkuId(procurementTask.getGoodsSkuId());
+				procurementTask1.setAccessTime(procurementTask.getAccessTime());
+				List<ProcurementTask> procurementTasks = procurementTaskMapper.getProcurementListByGoodsSkuId(procurementTask1);
+				for (ProcurementTask task : procurementTasks) {
+					//更新订单状态为已完成
+					orderService.updateOrderReceivedStatus(task.getOrdersId());
+				}
+
 		}
 
-		return quantity;
-	}
+
 
 	@Override
 	public List<ProcurementTask> getNotReceivingGoods(ProcurementTask procurTask) {

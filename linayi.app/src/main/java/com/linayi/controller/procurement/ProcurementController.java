@@ -200,8 +200,8 @@ public class ProcurementController extends BaseController {
 	public Object inspectionComplete(@RequestBody ProcurementTask procurementTask) {
 		try {
 			procurementTask.setCommunityId(getUserId());
-			Integer newprocurementTask = procurementService.updateOrderStatus(procurementTask);
-			return new  ResponseData(newprocurementTask);
+			procurementService.updateOrderStatus(procurementTask);
+			return "SUCCESS";
 		} catch (Exception e) {
 			return new ResponseData(ErrorType.SYSTEM_ERROR);
 		}
