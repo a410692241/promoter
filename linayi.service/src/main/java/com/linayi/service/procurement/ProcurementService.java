@@ -113,4 +113,10 @@ public interface ProcurementService {
      * @return
      */
     void confirmDeliverGoods(Integer communityId,Integer goodsSkuId);
+    /**
+     * 流转中心任务 查询出未发货的商品列表
+     * @param procurTask
+     * @return
+     */
+    List<ProcurementTask> getDeliverGoodsList(ProcurementTask procurTask);
 }

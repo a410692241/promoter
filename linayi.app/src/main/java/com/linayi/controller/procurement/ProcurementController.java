@@ -223,7 +223,7 @@ public class ProcurementController extends BaseController {
 	    }
 
 	/**
-	 * 获取未收货的商品列表
+	 * 流转中心任务 获取未收货的商品列表
  	 * @param param
 	 * @return
 	 */
@@ -241,7 +241,7 @@ public class ProcurementController extends BaseController {
         }
 	}
 	/**
-	 * 对商品进行确认收货操作
+	 * 流转中心任务 对商品进行确认收货操作
 	 * @param param
 	 * @return
 	 */
@@ -260,7 +260,7 @@ public class ProcurementController extends BaseController {
         }
 	}
     /**
-     * 获取未发货的商品列表
+     * 流转中心任务 获取未发货的商品列表
      * @param param
      * @return
      */
@@ -278,7 +278,7 @@ public class ProcurementController extends BaseController {
         }
     }
     /**
-     * 对商品进行确认发货操作
+     * 流转中心任务 对商品进行确认发货操作
      * @param param
      * @return
      */
@@ -292,6 +292,24 @@ public class ProcurementController extends BaseController {
             Integer communityId = procurementTask.getCommunityId();
             procurementService.confirmDeliverGoods(communityId,goodsSkuId);
             return new ResponseData("success");
+        } catch (Exception e) {
+            return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+        }
+    }
+    /**
+     * 流转中心任务 获取未发货的商品列表
+     * @param param
+     * @return
+     */
+    @RequestMapping("/getDeliverGoodsList.do")
+    public Object getDeliverGoodsList(@RequestBody Map<String, Object> param){
+        try {
+            ParamValidUtil<ProcurementTask> pvu = new ParamValidUtil<>(param);
+            ProcurementTask procurementTask = pvu.transObj(ProcurementTask.class);
+
+            List<ProcurementTask> list = procurementService.getDeliverGoodsList(procurementTask);
+            PageResult<ProcurementTask> pr = new PageResult<>(list,procurementTask);
+            return new ResponseData(pr);
         } catch (Exception e) {
             return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
         }

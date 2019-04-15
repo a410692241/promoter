@@ -564,4 +564,14 @@ public class ProcurementServiceImpl implements ProcurementService {
 		procurTask.setFlowOutTime(new Date());
 		procurementTaskMapper.confirmDeliverGoods(procurTask);
 	}
+	@Override
+	public List<ProcurementTask> getDeliverGoodsList(ProcurementTask procurTask) {
+		procurTask.setReceiveStatus("WAIT_RECEIVE");
+		List<ProcurementTask> list = procurementTaskMapper.getDeliverGoodsList(procurTask);
+		for(int i=0;i<list.size();i++){
+			String image = list.get(i).getImage();
+			list.get(i).setImage(ImageUtil.dealToShow(image));
+		}
+		return list;
+	}
 }

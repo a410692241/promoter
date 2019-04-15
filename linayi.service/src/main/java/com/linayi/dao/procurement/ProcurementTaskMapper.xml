@@ -547,7 +547,7 @@
   	WHERE
   	    orders_id = #{ordersId}
 </select>
-  <!--查询出未收货的商品列表 List<ProcurementTask> getNotReceivingGoods(ProcurementTask procurTask)-->
+  <!--流转中心任务 查询出未收货的商品列表 List<ProcurementTask> getNotReceivingGoods(ProcurementTask procurTask)-->
   <select id="getNotReceivingGoods" resultType="com.linayi.entity.procurement.ProcurementTask">
      SELECT
         SUM(pt.actual_quantity) totalProcureQuantity,gs.goods_sku_id,gs.full_name ,
@@ -558,6 +558,7 @@
         pt.receive_status=#{receiveStatus}
      AND
         pt.actual_quantity > 0 GROUP BY gs.goods_sku_id
+      order by pt.procure_out_time
   </select>
 
   <!--流转中心任务 对未收货的商品进行收货操作
@@ -574,7 +575,7 @@
       and
           procure_out_time &lt;= #{accessTime}
   </update>
-    <!--查询出未发货的商品列表 List<ProcurementTask> getNotReceivingGoods(ProcurementTask procurTask)-->
+    <!--流转中心任务 查询出未发货的商品列表 List<ProcurementTask> getNotReceivingGoods(ProcurementTask procurTask)-->
     <select id="getNotDeliverGoods" resultType="com.linayi.entity.procurement.ProcurementTask">
      SELECT
         SUM(pt.actual_quantity) totalProcureQuantity,gs.goods_sku_id,gs.full_name ,c.community_id communityId,c.name communityName,
@@ -602,4 +603,18 @@
       and
           community_id=#{communityId}
   </update>
+    <!--流转中心任务 查询出已收货的商品列表 List<ProcurementTask> getDeliverGoodsList(ProcurementTask procurTask)-->
+    <select id="getDeliverGoodsList" resultType="com.linayi.entity.procurement.ProcurementTask">
+    SELECT
+        SUM(pt.actual_quantity) totalProcureQuantity,gs.goods_sku_id,gs.full_name ,c.community_id communityId,c.name communityName,
+        gs.image,pt.price,SUM(pt.price*pt.actual_quantity) totalPrice
+     FROM
+        procurement_task pt JOIN goods_sku gs ON pt.goods_sku_id=gs.goods_sku_id
+                            join community c on c.community_id=pt.community_id
+     WHERE
+        pt.receive_status=#{receiveStatus}
+     AND
+        pt.actual_quantity > 0 GROUP BY gs.goods_sku_id,c.community_id
+      order by pt.flow_out_time desc
+  </select>
 </mapper>
