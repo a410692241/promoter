@@ -166,8 +166,7 @@ public class ProcurementController extends BaseController {
 	@RequestMapping("/getProcurementTask.do")
 	public Object getProcurementTask(@RequestBody ProcurementTask procurementTask) {
 		try {
-			Integer userId = getUserId();
-			procurementTask.setCommunityId(userId);
+			procurementTask.setCommunityId(getCommunityId());
 			List<ProcurementTask> procurementTaskList = procurementService.getCommunityProcurement(procurementTask);
 			PageResult<ProcurementTask> pageResult = new PageResult<>(procurementTaskList, procurementTask);
 			return new ResponseData(pageResult);
