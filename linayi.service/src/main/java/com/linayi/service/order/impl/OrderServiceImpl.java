@@ -531,25 +531,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void againOrders(Orders orders) {
         List<OrdersGoods> ordersGoods = ordersGoodsMapper.getOrdersGoodsByOrdersId(orders.getOrdersId());
-        List<Orders> orderList = ordersMapper.getOrderList(orders);
-        ReceiveAddress receiveAddress = new ReceiveAddress();
-        if (orderList != null && orderList.size() > 0) {
-            Orders orders1 = orderList.get(0);
-            SmallCommunity smallCommunity = new SmallCommunity();
-            smallCommunity.setName(orders1.getAddressTwo());
-            smallCommunity.setCommunityId(orders1.getCommunityId());
-            SmallCommunity smallCommunity1 = smallCommunityMapper.getSmallCommunity(smallCommunity);
-            receiveAddress.setAddressOne(smallCommunity1.getSmallCommunityId());
-            receiveAddress.setAddressTwo(orders1.getAddressThree());
-            receiveAddress.setUserId(orders1.getUserId());
-            receiveAddress = receiveAddressMapper.selectAddbyacGdAdId(receiveAddress);
-        }
+        User user = userMapper.selectUserByuserId(orders.getUserId());
+        Integer receiveAddressId = user.getDefaultReceiveAddressId();
         if (ordersGoods != null && ordersGoods.size() > 0) {
             for (OrdersGoods ordersGood : ordersGoods) {
                 ShoppingCar shoppingCar = new ShoppingCar();
                 shoppingCar.setGoodsSkuId(ordersGood.getGoodsSkuId());
                 shoppingCar.setQuantity(ordersGood.getQuantity());
-                shoppingCar.setReceiveAddressId(receiveAddress.getReceiveAddressId());
+                shoppingCar.setReceiveAddressId(receiveAddressId);
                 shoppingCar.setSelectStatus("SELECTED");
                 shoppingCar.setUserId(orders.getUserId());
                 shoppingCarMapper.insert(shoppingCar);
