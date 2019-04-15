@@ -100,7 +100,7 @@ public class ProcurementController extends BaseController {
 			Integer userId = getUserId();
 			ProcurementTask procurementTask = pvu.transObj(ProcurementTask.class);
 			procurementTask.setUserId(userId);
-			List<ProcurementTask> procurementTaskList = procurementService.getCommunityProcurement(procurementTask);
+			List<ProcurementTask> procurementTaskList = procurementService.getCommunityProcurements(procurementTask);
 			PageResult<ProcurementTask> pageResult = new PageResult<>(procurementTaskList, procurementTask);
 			return new ResponseData(pageResult);
 		} catch (Exception e) {

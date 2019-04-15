@@ -121,4 +121,5 @@ public interface ProcurementTaskMapper {
      */
     List<ProcurementTask>getProcurementListByGoodsSkuId(ProcurementTask procurementTask);
 
+    List<ProcurementTask> getCommunityProcurementsList(ProcurementTask procurementTask);
 }

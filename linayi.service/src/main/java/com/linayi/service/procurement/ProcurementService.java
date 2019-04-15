@@ -46,7 +46,7 @@ public interface ProcurementService {
 
     /**
      * 根据订单id和实际采买数量大于0查询采买任务表
-     * @param orderId
+     * @param procurementTask
      * @return
      */
     List<ProcurementTask> getProcurementTaskByOrderIdAndActualQuantity(ProcurementTask procurementTask);
@@ -113,6 +113,8 @@ public interface ProcurementService {
      * @return
      */
     void confirmDeliverGoods(Integer communityId,Integer goodsSkuId);
+
+    List<ProcurementTask> getCommunityProcurements(ProcurementTask procurementTask);
     /**
      * 流转中心任务 查询出未发货的商品列表
      * @param procurTask

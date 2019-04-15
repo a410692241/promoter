@@ -101,7 +101,7 @@ public class ProcurementServiceImpl implements ProcurementService {
             getQueryTime(procurementTask);
         }
 
-        List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementList(procurementTask);
+        List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementsList(procurementTask);
         if (procurementTaskList != null && procurementTaskList.size() > 0){
             for (ProcurementTask task : procurementTaskList) {
                 GoodsSku goods = goodsSkuMapper.getGoodsById(task.getGoodsSkuId());
