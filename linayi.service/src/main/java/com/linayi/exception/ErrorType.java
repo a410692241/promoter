@@ -47,7 +47,8 @@ public enum ErrorType {
     BRAND_ERROR(2018,"品牌重复"),
     NO_PROCURE_GOODS(2019,"没有采买到任何商品，装箱失败!"),
     HAVE_OPEN_Promoter(2020,"此手机号已开通了会员!"),
-    NOT_ORDER_MAN(2021,"你不是下单员!")
+    NOT_ORDER_MAN(2021,"你不是下单员!"),
+    NOT_MODIFY(2008,"订单已取消，不能更改状态!")
 	;
 
 

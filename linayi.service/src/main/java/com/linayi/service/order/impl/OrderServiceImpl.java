@@ -35,6 +35,8 @@ import com.linayi.entity.user.ShoppingCar;
 import com.linayi.entity.user.User;
 import com.linayi.enums.MemberLevel;
 import com.linayi.enums.OrderStatus;
+import com.linayi.exception.BusinessException;
+import com.linayi.exception.ErrorType;
 import com.linayi.service.goods.BrandService;
 import com.linayi.service.goods.SupermarketGoodsService;
 import com.linayi.service.order.OrderService;
@@ -681,9 +683,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Integer updateOrderById(Orders orders) {
-        if ("CANCELED".equals(orders.getCommunityStatus())){
-            orders.setUserStatus("CANCELED");
+        Orders order = ordersMapper.getOrderById(orders.getOrdersId());
+        if (order.getCommunityStatus().equals("CANCELED")){
+            return 0;
         }
+            if ("CANCELED".equals(orders.getCommunityStatus())){
+                orders.setUserStatus("CANCELED");
+            }
         return ordersMapper.updateOrderById(orders);
     }
 
