@@ -150,8 +150,22 @@ public class ProcurementController extends BaseController {
 		} catch (Exception e) {
 			return new ResponseData(ErrorType.SYSTEM_ERROR);
 		}
-
 	}
+
+
+	@RequestMapping("/updateProcurReceiveStatus.do")
+    public Object updateProcurReceiveStatus(@RequestBody Map<String, Object> param){
+	    try {
+            ParamValidUtil<ProcurementTask> pvu = new ParamValidUtil<>(param);
+            ProcurementTask procurementTask = pvu.transObj(ProcurementTask.class);
+            procurementService.updateProcurReceiveStatus(procurementTask);
+            return new ResponseData("success");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseData("F", ErrorType.SYSTEM_ERROR.getErrorMsg());
+    }
+
 
 	//社区端根据社区id和收货状态查询合并采买任务列表
 	@RequestMapping("/getProcurementTask.do")

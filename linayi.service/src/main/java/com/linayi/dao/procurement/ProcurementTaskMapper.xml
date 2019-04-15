@@ -493,9 +493,15 @@
     	box_status,
     	delivery_box_id
     	 FROM supermarket s join procurement_task pt on s.procurer_id = #{userId} and pt.supermarket_id = s.supermarket_id
-        where pt.goods_sku_id = #{goodsSkuId} and pt.procure_status = 'PROCURING'
+        where pt.goods_sku_id = #{goodsSkuId}
+        <if test="procureStatus != null and procureStatus != ''">
+            and pt.procure_status = #{procureStatus}
+        </if>
         <if test="createTime != null">
             and pt.create_time &lt;= #{createTime}
+        </if>
+        <if test="procureTimeStr != null and procureTimeStr != ''">
+            and pt.procure_time = #{procureTimeStr}
         </if>
         order by create_time ASC
     </select>

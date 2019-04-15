@@ -164,7 +164,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		Integer quantity = procurTask.getQuantity();
 		procurTask.setCurrentPage(1);
 		procurTask.setPageSize(procurTask.getCounts());
-
+		procurTask.setProcureStatus("PROCURING");
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementLists(procurTask);
 		Date procureTime = new Date();
 		if (quantity == null){
@@ -256,6 +256,19 @@ public class ProcurementServiceImpl implements ProcurementService {
 		procurementTask.setImage(ImageUtil.dealToShow(goodsSku.getImage()));
 		procurementTask.setGoodsSkuName(goodsSku.getFullName());
 		return procurementTask;
+	}
+
+	@Override
+	public void updateProcurReceiveStatus(ProcurementTask procurementTask) {
+		procurementTask.setProcureStatus("FINISHED");
+		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementLists(procurementTask);
+		if (procurementTaskList != null && procurementTaskList.size() > 0){
+			for (ProcurementTask task : procurementTaskList) {
+				task.setReceiveStatus("OUTED");
+				procurementTaskMapper.updateProcurementTaskById(task);
+			}
+		}
+
 	}
 
 	@Override

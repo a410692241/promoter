@@ -78,4 +78,10 @@ public interface ProcurementService {
      * @return
      */
     ProcurementTask getprocurementDeatil(ProcurementTask procurementTask);
+
+    /**
+     * 采买任务改发货状态
+     * @param procurementTask
+     */
+    void updateProcurReceiveStatus(ProcurementTask procurementTask);
 }
