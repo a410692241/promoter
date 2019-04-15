@@ -547,7 +547,7 @@
   	WHERE
   	    orders_id = #{ordersId}
 </select>
-  <!--查询出未收货的商品列表 List<ProcurementTask> getNotReceivingGoods(ProcurementTask procurTask)-->
+  <!--流转中心任务 查询出未收货的商品列表 List<ProcurementTask> getNotReceivingGoods(ProcurementTask procurTask)-->
   <select id="getNotReceivingGoods" resultType="com.linayi.entity.procurement.ProcurementTask">
      SELECT
         SUM(pt.actual_quantity) totalProcureQuantity,gs.goods_sku_id,gs.full_name ,
@@ -558,6 +558,7 @@
         pt.receive_status=#{receiveStatus}
      AND
         pt.actual_quantity > 0 GROUP BY gs.goods_sku_id
+      order by pt.procure_out_time
   </select>
 
   <!--流转中心任务 对未收货的商品进行收货操作
@@ -574,7 +575,7 @@
       and
           procure_out_time &lt;= #{accessTime}
   </update>
-    <!--查询出未发货的商品列表 List<ProcurementTask> getNotReceivingGoods(ProcurementTask procurTask)-->
+    <!--流转中心任务 查询出未发货的商品列表 List<ProcurementTask> getNotReceivingGoods(ProcurementTask procurTask)-->
     <select id="getNotDeliverGoods" resultType="com.linayi.entity.procurement.ProcurementTask">
      SELECT
         SUM(pt.actual_quantity) totalProcureQuantity,gs.goods_sku_id,gs.full_name ,c.community_id communityId,c.name communityName,
@@ -602,4 +603,84 @@
       and
           community_id=#{communityId}
   </update>
+    <!--流转中心任务 查询出已收货的商品列表 List<ProcurementTask> getDeliverGoodsList(ProcurementTask procurTask)-->
+    <select id="getDeliverGoodsList" resultType="com.linayi.entity.procurement.ProcurementTask">
+    SELECT
+        SUM(pt.actual_quantity) totalProcureQuantity,gs.goods_sku_id,gs.full_name ,c.community_id communityId,c.name communityName,
+        gs.image,pt.price,SUM(pt.price*pt.actual_quantity) totalPrice
+     FROM
+        procurement_task pt JOIN goods_sku gs ON pt.goods_sku_id=gs.goods_sku_id
+                            join community c on c.community_id=pt.community_id
+     WHERE
+        pt.receive_status=#{receiveStatus}
+     AND
+        pt.actual_quantity > 0 GROUP BY gs.goods_sku_id,c.community_id
+      order by pt.flow_out_time desc
+  </select>
+    <update id="updateProcurementTaskByGoodsSkuId" parameterType="com.linayi.entity.procurement.ProcurementTask">
+        update procurement_task
+        <set>
+            <if test="ordersId != null">
+                orders_id = #{ordersId},
+            </if>
+            <if test="supermarketId != null">
+                supermarket_id = #{supermarketId},
+            </if>
+            <if test="goodsSkuId != null">
+                goods_sku_id = #{goodsSkuId},
+            </if>
+            <if test="ordersGoodsId != null">
+                orders_goods_id = #{ordersGoodsId},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="actualQuantity != null">
+                actual_quantity = #{actualQuantity},
+            </if>
+            <if test="boxQuantity != null">
+                box_quantity = #{boxQuantity},
+            </if>
+            <if test="procureStatus != null">
+                procure_status = #{procureStatus},
+            </if>
+            <if test="procureQuantity !=null">
+                procure_quantity=#{procureQuantity},
+            </if>
+            <if test="receiveStatus != null">
+                receive_status = #{receiveStatus},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="boxNo != null">
+                box_no=#{boxNo},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="procureTime != null">
+                procure_time = #{procureTime}
+            </if>
+        </set>
+        where
+            goods_sku_id = #{goodsSkuId}
+        AND
+            procure_time <![CDATA[<=]]> #{accessTime}
+    </update>
+
+    <select id="getProcurementListByGoodsSkuId" resultType="com.linayi.entity.procurement.ProcurementTask">
+        select <include refid="Base_Column_List"/> from procurement_task
+        WHERE
+              goods_sku_id = #{goodsSkuId}
+         AND
+              procure_time <![CDATA[<=]]> #{accessTime}
+    </select>
+
 </mapper>

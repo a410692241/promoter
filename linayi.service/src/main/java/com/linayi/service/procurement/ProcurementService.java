@@ -42,7 +42,7 @@ public interface ProcurementService {
     List<ProcurementTask> showProcurementTaskAndOrderGoods(ProcurementTask procurementTask);
 
     //根据任务id获取orderId而后修改订单状态
-    Integer updateOrderStatus(ProcurementTask procurementTask);
+    void updateOrderStatus(ProcurementTask procurementTask);
 
     /**
      * 根据订单id和实际采买数量大于0查询采买任务表
@@ -113,4 +113,10 @@ public interface ProcurementService {
      * @return
      */
     void confirmDeliverGoods(Integer communityId,Integer goodsSkuId);
+    /**
+     * 流转中心任务 查询出未发货的商品列表
+     * @param procurTask
+     * @return
+     */
+    List<ProcurementTask> getDeliverGoodsList(ProcurementTask procurTask);
 }

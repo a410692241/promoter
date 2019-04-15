@@ -104,5 +104,21 @@ public interface ProcurementTaskMapper {
      * @return
      */
     void confirmDeliverGoods(ProcurementTask procurTask);
+    /**
+     * 流转中心任务 查询出未发货的商品列表
+     * @param procurTask
+     * @return
+     */
+    List<ProcurementTask> getDeliverGoodsList(ProcurementTask procurTask);
+    void confirmDeliverGoods(@Param("communityId") Integer communityId,@Param("goodsSkuId")Integer goodsSkuId);
+
+    Integer updateProcurementTaskByGoodsSkuId(ProcurementTask procurementTask);
+
+    /**
+     * 根据goodsSkuId获取ProcurementList比较当前时间
+     * @param procurementTask
+     * @return
+     */
+    List<ProcurementTask>getProcurementListByGoodsSkuId(ProcurementTask procurementTask);
 
 }
