@@ -394,16 +394,15 @@ public class OrderServiceImpl implements OrderService {
                 orders2.setDeliveryTime(DateUtil.date2String(orders1.getArriveTime(), DateUtil.Y_M_D_H_M_PATTERN));
                 //收货时间
                 orders2.setReceiptTime(DateUtil.date2String(orders1.getActualArriveTime(), DateUtil.Y_M_D_H_M_PATTERN));
-
-                //网点名字和联系方式
-                Integer communityId = orders1.getCommunityId();
-                Community community = new Community();
-                community.setCommunityId(communityId);
-                Community community1 = communityMapper.getCommunity(community);
-                orders2.setCommunityId(communityId);
-                orders2.setCommunityPhone(community1.getMobile());
-                orders2.setCommunityName(community1.getName());
             }
+            //网点名字和联系方式
+            Integer communityId = orders1.getCommunityId();
+            Community community = new Community();
+            community.setCommunityId(communityId);
+            Community community1 = communityMapper.getCommunity(community);
+            orders2.setCommunityId(communityId);
+            orders2.setServiceMobile(community1.getMobile());
+            orders2.setCommunityName(community1.getName());
 
             orders2.setCreateDateStr(DateUtil.date2String(orders1.getCreateTime(), DateUtil.Y_M_D_H_M_PATTERN));
             List<ShoppingCar> cars = new ArrayList<>();
@@ -564,25 +563,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void againOrders(Orders orders) {
         List<OrdersGoods> ordersGoods = ordersGoodsMapper.getOrdersGoodsByOrdersId(orders.getOrdersId());
-        List<Orders> orderList = ordersMapper.getOrderList(orders);
-        ReceiveAddress receiveAddress = new ReceiveAddress();
-        if (orderList != null && orderList.size() > 0) {
-            Orders orders1 = orderList.get(0);
-            SmallCommunity smallCommunity = new SmallCommunity();
-            smallCommunity.setName(orders1.getAddressTwo());
-            smallCommunity.setCommunityId(orders1.getCommunityId());
-            SmallCommunity smallCommunity1 = smallCommunityMapper.getSmallCommunity(smallCommunity);
-            receiveAddress.setAddressOne(smallCommunity1.getSmallCommunityId());
-            receiveAddress.setAddressTwo(orders1.getAddressThree());
-            receiveAddress.setUserId(orders1.getUserId());
-            receiveAddress = receiveAddressMapper.selectAddbyacGdAdId(receiveAddress);
-        }
+        User user = userMapper.selectUserByuserId(orders.getUserId());
+        Integer receiveAddressId = user.getDefaultReceiveAddressId();
         if (ordersGoods != null && ordersGoods.size() > 0) {
             for (OrdersGoods ordersGood : ordersGoods) {
                 ShoppingCar shoppingCar = new ShoppingCar();
                 shoppingCar.setGoodsSkuId(ordersGood.getGoodsSkuId());
                 shoppingCar.setQuantity(ordersGood.getQuantity());
-                shoppingCar.setReceiveAddressId(receiveAddress.getReceiveAddressId());
+                shoppingCar.setReceiveAddressId(receiveAddressId);
                 shoppingCar.setSelectStatus("SELECTED");
                 shoppingCar.setUserId(orders.getUserId());
                 shoppingCarMapper.insert(shoppingCar);
