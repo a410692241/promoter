@@ -218,7 +218,7 @@
     </select>
     <select id="getGoodsLists" resultType="com.linayi.entity.goods.GoodsSku">
         select gs.goods_sku_id goodsSkuId, gs.name NAME, gs.full_name fullName,gs.barcode barcode, gs.category_id categoryId,c.name categoryName, gs.brand_id brandId,b.name brandName, gs.status STATUS, gs.image image, gs.update_time updateTime, gs.create_time createTime, gs.model model, gs.function FUNCTION , gs.produce_address produceAddress, gs.produce_date produceDate, gs.valid_date validDate, gs.manufacturer manufacturer, gs.other_attribute otherAttribute
-        ,e.real_name createName,aa.user_name userName from goods_sku gs left join admin_account aa on aa.account_id = gs.user_id left join employee e on aa.user_id = e.employee_id join brand b on b.brand_id = gs.brand_id join category c on c.category_id = gs.category_id
+        ,e.real_name createName,aa.user_name userName from goods_sku gs left join admin_account aa on aa.account_id = gs.user_id left join employee e on aa.user_id = e.employee_id left join brand b on b.brand_id = gs.brand_id left join category c on c.category_id = gs.category_id
         <where>
             <if test="goodsSkuId != null and goodsSkuId != ''">
                 gs.goods_sku_id like #{goodsSkuId}
