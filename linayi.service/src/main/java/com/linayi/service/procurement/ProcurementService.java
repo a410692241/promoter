@@ -106,4 +106,11 @@ public interface ProcurementService {
      * @return
      */
     List<ProcurementTask> getNotDeliverGoods(ProcurementTask procurTask);
+    /**
+     * 流转中心任务 对收货的商品进行发货操作
+     * @param communityId
+     * @param goodsSkuId
+     * @return
+     */
+    void confirmDeliverGoods(Integer communityId,Integer goodsSkuId);
 }

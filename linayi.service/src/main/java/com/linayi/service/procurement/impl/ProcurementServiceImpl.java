@@ -543,11 +543,16 @@ public class ProcurementServiceImpl implements ProcurementService {
 	@Override
 	public List<ProcurementTask> getNotDeliverGoods(ProcurementTask procurTask) {
 		procurTask.setReceiveStatus("RECEIVED_FLOW");
-		List<ProcurementTask> list = procurementTaskMapper.getNotReceivingGoods(procurTask);
+		List<ProcurementTask> list = procurementTaskMapper.getNotDeliverGoods(procurTask);
 		for(int i=0;i<list.size();i++){
 			String image = list.get(i).getImage();
 			list.get(i).setImage(ImageUtil.dealToShow(image));
 		}
 		return list;
+	}
+	@Override
+	@Transactional
+	public void confirmDeliverGoods(Integer communityId,Integer goodsSkuId) {
+		procurementTaskMapper.confirmDeliverGoods(communityId,goodsSkuId);
 	}
 }
