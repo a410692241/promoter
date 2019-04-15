@@ -542,7 +542,7 @@
      FROM
         procurement_task pt JOIN goods_sku gs ON pt.goods_sku_id=gs.goods_sku_id
      WHERE
-        pt.receive_status='OUTED'
+        pt.receive_status=#{receiveStatus}
      AND
         pt.actual_quantity > 0 GROUP BY gs.goods_sku_id
   </select>

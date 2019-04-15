@@ -532,6 +532,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 
 	@Override
 	public List<ProcurementTask> getNotReceivingGoods(ProcurementTask procurTask) {
+		procurTask.setReceiveStatus("OUTED");
 		List<ProcurementTask> list = procurementTaskMapper.getNotReceivingGoods(procurTask);
 		for(int i=0;i<list.size();i++){
 			String image = list.get(i).getImage();
@@ -543,5 +544,15 @@ public class ProcurementServiceImpl implements ProcurementService {
 	@Transactional
 	public void confirmGoods(Date accessTime,Integer goodsSkuId) {
 		procurementTaskMapper.confirmGoods(accessTime,goodsSkuId);
+	}
+	@Override
+	public List<ProcurementTask> getNotDeliverGoods(ProcurementTask procurTask) {
+		procurTask.setReceiveStatus("RECEIVED_FLOW");
+		List<ProcurementTask> list = procurementTaskMapper.getNotReceivingGoods(procurTask);
+		for(int i=0;i<list.size();i++){
+			String image = list.get(i).getImage();
+			list.get(i).setImage(ImageUtil.dealToShow(image));
+		}
+		return list;
 	}
 }

@@ -260,4 +260,22 @@ public class ProcurementController extends BaseController {
             return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
         }
 	}
+    /**
+     * 获取未收货的商品列表
+     * @param param
+     * @return
+     */
+    @RequestMapping("/getNotDeliverGoods.do")
+    public Object getNotDeliverGoods(@RequestBody Map<String, Object> param){
+        try {
+            ParamValidUtil<ProcurementTask> pvu = new ParamValidUtil<>(param);
+            ProcurementTask procurementTask = pvu.transObj(ProcurementTask.class);
+
+            List<ProcurementTask> list = procurementService.getNotDeliverGoods(procurementTask);
+            PageResult<ProcurementTask> pr = new PageResult<>(list,procurementTask);
+            return new ResponseData(pr);
+        } catch (Exception e) {
+            return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+        }
+    }
 }
