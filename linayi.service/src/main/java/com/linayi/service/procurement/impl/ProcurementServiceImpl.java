@@ -531,7 +531,12 @@ public class ProcurementServiceImpl implements ProcurementService {
 
 	@Override
 	public List<ProcurementTask> getNotReceivingGoods(ProcurementTask procurTask) {
-		return procurementTaskMapper.getNotReceivingGoods(procurTask);
+		List<ProcurementTask> list = procurementTaskMapper.getNotReceivingGoods(procurTask);
+		for(int i=0;i<list.size();i++){
+			String image = list.get(i).getImage();
+			list.get(i).setImage(ImageUtil.dealToShow(image));
+		}
+		return list;
 	}
 
 }

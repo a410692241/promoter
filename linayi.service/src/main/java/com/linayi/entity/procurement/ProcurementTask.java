@@ -37,6 +37,14 @@ public class ProcurementTask extends BaseEntity{
 
     private Integer goodsSkuId;
 
+    private Date accessTime;//调用接口的日期
+    public Date getAccessTime() {
+        return accessTime;
+    }
+
+    public void setAccessTime(Date accessTime) {
+        this.accessTime = accessTime;
+    }
     public String getFullName() {
         return fullName;
     }

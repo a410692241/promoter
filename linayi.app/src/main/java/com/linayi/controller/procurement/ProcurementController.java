@@ -227,8 +227,8 @@ public class ProcurementController extends BaseController {
  	 * @param param
 	 * @return
 	 */
-	@RequestMapping("/getNotReceivingLit.do")
-	public Object getNotReceivingGoods(@RequestBody Map<String, Object> param){//前端参数 ordersId
+	@RequestMapping("/getNotReceivingGoods.do")
+	public Object getNotReceivingGoods(@RequestBody Map<String, Object> param){
 		ParamValidUtil<ProcurementTask> pvu = new ParamValidUtil<>(param);
 		ProcurementTask procurementTask = pvu.transObj(ProcurementTask.class);
 
@@ -236,5 +236,18 @@ public class ProcurementController extends BaseController {
 		PageResult<ProcurementTask> pr = new PageResult<>(list,procurementTask);
 		return new ResponseData(pr);
 	}
+	/**
+	 * 对商品进行确认收货操作
+	 * @param param
+	 * @return
+	 */
+	@RequestMapping("/confirmGoods.do")
+	public Object confirmGoods(@RequestBody Map<String, Object> param){
+		ParamValidUtil<ProcurementTask> pvu = new ParamValidUtil<>(param);
+		ProcurementTask procurementTask = pvu.transObj(ProcurementTask.class);
 
+		List<ProcurementTask> list = procurementService.getNotReceivingGoods(procurementTask);
+		PageResult<ProcurementTask> pr = new PageResult<>(list,procurementTask);
+		return new ResponseData(pr);
+	}
 }
