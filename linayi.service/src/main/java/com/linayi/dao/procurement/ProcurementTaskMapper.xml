@@ -454,7 +454,10 @@
               pt.procure_status = #{procureStatus}
             </if>
             <if test="procureStatus != null and procureStatus == 'FINISHED'">
-              pt.procure_status != 'PROCURING'
+                and pt.procure_status = 'BOUGHT' and pt.receive_status != 'WAIT_OUT'
+            </if>
+            <if test="procureStatus != null and procureStatus == 'WAIT_OUT'">
+                and pt.receive_status = 'WAIT_OUT' and pt.procure_status = 'BOUGHT'
             </if>
             <if test="procureTimeStr != null and procureTimeStr != ''">
               and pt.procure_time = #{procureTimeStr}
@@ -463,7 +466,16 @@
               and pt.create_time &lt;= #{createTime}
             </if>
         </where>
-       GROUP BY pt.goods_sku_id, gs.name ORDER BY SUM(pt.quantity) DESC
+       GROUP BY
+       <if test="procureStatus != null and procureStatus != 'PROCURING'">
+         pt.procure_time,
+       </if>
+       pt.goods_sku_id, gs.name
+       ORDER BY
+       <if test="procureStatus != null and procureStatus != 'PROCURING'">
+        pt.procure_time ASC,
+      </if>
+        SUM(pt.quantity) DESC
     </select>
 
     <select id="getProcurements" resultType="com.linayi.entity.procurement.ProcurementTask">
