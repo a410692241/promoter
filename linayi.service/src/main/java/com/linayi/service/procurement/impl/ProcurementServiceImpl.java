@@ -99,6 +99,13 @@ public class ProcurementServiceImpl implements ProcurementService {
 		}
 
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementList(procurementTask);
+		if (procurementTaskList != null && procurementTaskList.size() > 0){
+			for (ProcurementTask task : procurementTaskList) {
+				GoodsSku goods = goodsSkuMapper.getGoodsById(task.getGoodsSkuId());
+				task.setGoodsImage(ImageUtil.dealToShow(goods.getImage()));
+			}
+		}
+
 		return procurementTaskList;
 	}
 
