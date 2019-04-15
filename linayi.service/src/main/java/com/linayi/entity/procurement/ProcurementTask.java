@@ -121,6 +121,8 @@ public class ProcurementTask extends BaseEntity{
 
     private Integer serviceFeeString; //服务费
 
+    private Integer counts; //天数
+
     public Integer getServiceFeeString() {
         return serviceFeeString;
     }
@@ -450,5 +452,13 @@ public class ProcurementTask extends BaseEntity{
 
     public void setProcureTimeStr(String procureTimeStr) {
         this.procureTimeStr = procureTimeStr;
+    }
+
+    public Integer getCounts() {
+        return counts;
+    }
+
+    public void setCounts(Integer counts) {
+        this.counts = counts;
     }
 }

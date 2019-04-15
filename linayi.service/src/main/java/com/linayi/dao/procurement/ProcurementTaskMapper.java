@@ -72,4 +72,11 @@ public interface ProcurementTaskMapper {
      * @return
      */
     List<ProcurementTask> getProcurements(@Param("goodsSkuId")Integer goodsSkuId, @Param("communityId")Integer communityId);
+
+    /**
+     * 查询中此采买员所有的采买任务
+     * @param procurTask
+     * @return
+     */
+    List<ProcurementTask> getProcurementLists(ProcurementTask procurTask);
 }

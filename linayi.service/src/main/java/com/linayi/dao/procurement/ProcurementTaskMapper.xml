@@ -447,8 +447,8 @@
 	</select>
 
     <select id="getCommunityProcurementList" resultType="com.linayi.entity.procurement.ProcurementTask">
-        SELECT SUM(pt.price * pt.quantity) totalPrice, SUM(pt.quantity) totalQuantity,SUM(pt.procure_quantity) totalProcureQuantity,MIN(pt.price) * SUM(pt.procure_quantity) totalProcurePrice,MIN(pt.price) price, pt.procure_time procureTime,pt.goods_sku_id goodsSkuId, gs.name goodsSkuName
-        FROM supermarket s join procurement_task pt on s.user_id = #{userId} and pt.supermarket_id = s.supermarket_id join goods_sku gs on gs.goods_sku_id = pt.goods_sku_id
+        SELECT SUM(pt.price * pt.quantity) totalPrice, SUM(pt.quantity) totalQuantity,SUM(pt.procure_quantity) totalProcureQuantity,MIN(pt.price) * SUM(pt.procure_quantity) totalProcurePrice,MIN(pt.price) price, pt.procure_time procureTime,pt.goods_sku_id goodsSkuId, gs.name goodsSkuName,COUNT(pt.procurement_task_id) counts
+        FROM supermarket s join procurement_task pt on s.procurer_id = #{userId} and pt.supermarket_id = s.supermarket_id join goods_sku gs on gs.goods_sku_id = pt.goods_sku_id
         <where>
             <if test="procureStatus != null and procureStatus == 'PROCURING'">
               pt.procure_status = #{procureStatus}
@@ -465,9 +465,39 @@
         </where>
        GROUP BY pt.goods_sku_id, gs.name ORDER BY SUM(pt.quantity) DESC
     </select>
+
     <select id="getProcurements" resultType="com.linayi.entity.procurement.ProcurementTask">
         select  <include refid="Base_Column_List"/> from procurement_task where community_id = #{communityId} and procure_status = 'PROCURING' and goods_sku_id = #{goodsSkuId}
         ORDER BY create_time ASC
+    </select>
+    <select id="getProcurementLists" resultType="com.linayi.entity.procurement.ProcurementTask">
+        select
+  		procurement_task_id,
+  		orders_id,
+  		pt.supermarket_id,
+  		goods_sku_id,
+  		price,
+  		quantity,
+  		actual_quantity,
+  		receive_status,
+  		procure_status,
+  		community_id,
+  		pt.user_id,
+  		pt.update_time,
+  		pt.create_time,
+  		procure_time,
+  		receive_time,
+  		procure_quantity,
+		receive_quantity,
+		box_quantity,
+    	box_status,
+    	delivery_box_id
+    	 FROM supermarket s join procurement_task pt on s.procurer_id = #{userId} and pt.supermarket_id = s.supermarket_id
+        where pt.goods_sku_id = #{goodsSkuId} and pt.procure_status = 'PROCURING'
+        <if test="createTime != null">
+            and pt.create_time &lt;= #{createTime}
+        </if>
+        order by create_time ASC
     </select>
 
 

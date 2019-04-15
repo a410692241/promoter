@@ -70,12 +70,12 @@ public interface ProcurementService {
      */
     List<ProcurementTask> getCommunityProcurement(ProcurementTask procurementTask);
 
-    void updateProcurmentStatus(Integer goodsSkuId, Integer quantity, Integer userId);
+    void updateProcurmentStatus(ProcurementTask procurementTask);
 
     /**
      * 查询采买任务详情列表
      * @param procurementTask
      * @return
      */
-    List<ProcurementTask> getprocurementDeatil(ProcurementTask procurementTask);
+    ProcurementTask getprocurementDeatil(ProcurementTask procurementTask);
 }

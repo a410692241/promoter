@@ -121,16 +121,13 @@ public class ProcurementController extends BaseController {
 	@RequestMapping("/updateProcurStatus.do")
 	public Object updateProcurmentStatus(@RequestBody Map<String, Object> param){
 		try {
+			ParamValidUtil<ProcurementTask> pvu = new ParamValidUtil<>(param);
+			pvu.Exist("counts","goodsSkuId");
 			//实际采买数量
-            Object obj = param.get("quantity");
-            Integer quantity = null;
-            if(obj != null){
-                quantity = Integer.parseInt(param.get("quantity") +"");
-            }
-			Integer goodsSkuId = Integer.parseInt(param.get("goodsSkuId") +"");
-			Integer communityId = Integer.parseInt(param.get("communityId") +"");
-
-			procurementService.updateProcurmentStatus(goodsSkuId, quantity,communityId);
+			ProcurementTask procurementTask = pvu.transObj(ProcurementTask.class);
+			Integer userId = getUserId();
+			procurementTask.setUserId(userId);
+			procurementService.updateProcurmentStatus(procurementTask);
 			return new ResponseData("success");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -148,11 +145,8 @@ public class ProcurementController extends BaseController {
 		try {
 			ParamValidUtil<ProcurementTask> pvu = new ParamValidUtil<>(param);
 			ProcurementTask procurementTask = pvu.transObj(ProcurementTask.class);
-			Integer userId = getUserId();
-			procurementTask.setUserId(userId);
-			List<ProcurementTask> procurementTasks = procurementService.getprocurementDeatil(procurementTask);
-			PageResult<ProcurementTask> pageResult = new PageResult<>(procurementTasks, procurementTask);
-			return new  ResponseData(pageResult);
+			ProcurementTask procurementTasks = procurementService.getprocurementDeatil(procurementTask);
+			return new  ResponseData(procurementTasks);
 		} catch (Exception e) {
 			return new ResponseData(ErrorType.SYSTEM_ERROR);
 		}
@@ -185,8 +179,8 @@ public class ProcurementController extends BaseController {
 		try {
 			Integer userId = getUserId();
 			procurementTask.setCommunityId(userId);
-			List<ProcurementTask> procurementTask1 = procurementService.getprocurementDeatil(procurementTask);
-			return new  ResponseData(procurementTask1.get(0));
+			ProcurementTask procurementTask1 = procurementService.getprocurementDeatil(procurementTask);
+			return new  ResponseData(procurementTask1);
 		} catch (Exception e) {
 			return new ResponseData(ErrorType.SYSTEM_ERROR);
 		}
