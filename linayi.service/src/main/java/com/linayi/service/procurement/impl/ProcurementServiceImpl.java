@@ -186,10 +186,14 @@ public class ProcurementServiceImpl implements ProcurementService {
 					if (procurementTask.getQuantity() <= quantity){
 						procurementTask.setProcureStatus("BOUGHT");
                         procurementTask.setActualQuantity(procurementTask.getQuantity());
-					}else {
+					}else if(quantity >0 ){
                         procurementTask.setProcureStatus("LACK");
-                        procurementTask.setActualQuantity(0);
-                        procurementTask.setProcureQuantity(0);
+                        procurementTask.setActualQuantity(quantity);
+                        procurementTask.setProcureQuantity(quantity);
+					} else {
+						procurementTask.setProcureStatus("LACK");
+						procurementTask.setActualQuantity(0);
+						procurementTask.setProcureQuantity(0);
 					}
                     quantity -= procurementTask.getQuantity();
 
@@ -262,9 +266,11 @@ public class ProcurementServiceImpl implements ProcurementService {
 	public void updateProcurReceiveStatus(ProcurementTask procurementTask) {
 		procurementTask.setProcureStatus("FINISHED");
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementLists(procurementTask);
+		Date date = new Date();
 		if (procurementTaskList != null && procurementTaskList.size() > 0){
 			for (ProcurementTask task : procurementTaskList) {
 				task.setReceiveStatus("OUTED");
+				task.setProcureOutTime(date);
 				procurementTaskMapper.updateProcurementTaskById(task);
 			}
 		}

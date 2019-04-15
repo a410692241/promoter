@@ -80,6 +80,9 @@ public class ProcurementTask extends BaseEntity{
 
     private Date procureTime;
 
+    //采买发货时间
+    private Date procureOutTime;
+
     private String  procureTimeStr;
 
     private Date receiveTime;
@@ -490,5 +493,13 @@ public class ProcurementTask extends BaseEntity{
 
     public void setCounts(Integer counts) {
         this.counts = counts;
+    }
+
+    public Date getProcureOutTime() {
+        return procureOutTime;
+    }
+
+    public void setProcureOutTime(Date procureOutTime) {
+        this.procureOutTime = procureOutTime;
     }
 }

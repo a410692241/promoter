@@ -147,7 +147,11 @@ public class ProcurementController extends BaseController {
 		}
 	}
 
-
+	/**
+	 * 发货
+	 * @param param
+	 * @return
+	 */
 	@RequestMapping("/updateProcurReceiveStatus.do")
     public Object updateProcurReceiveStatus(@RequestBody Map<String, Object> param){
 	    try {
