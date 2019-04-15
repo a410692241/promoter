@@ -532,6 +532,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		for(int i=0;i<list.size();i++){
 			String image = list.get(i).getImage();
 			list.get(i).setImage(ImageUtil.dealToShow(image));
+			list.get(i).setAccessTime(new Date());
 		}
 		return list;
 	}
