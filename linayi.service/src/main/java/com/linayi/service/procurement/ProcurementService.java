@@ -84,4 +84,11 @@ public interface ProcurementService {
      * @param procurementTask
      */
     void updateProcurReceiveStatus(ProcurementTask procurementTask);
+
+    /**
+     * 查询出未收货的商品列表
+     * @param procurTask
+     * @return
+     */
+    List<ProcurementTask> getNotReceivingGoods(ProcurementTask procurTask);
 }

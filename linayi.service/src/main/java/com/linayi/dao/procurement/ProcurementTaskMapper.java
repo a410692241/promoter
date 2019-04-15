@@ -79,4 +79,11 @@ public interface ProcurementTaskMapper {
      * @return
      */
     List<ProcurementTask> getProcurementLists(ProcurementTask procurTask);
+
+    /**
+     * 查询出未收货的商品列表
+     * @param procurTask
+     * @return
+     */
+    List<ProcurementTask> getNotReceivingGoods(ProcurementTask procurTask);
 }

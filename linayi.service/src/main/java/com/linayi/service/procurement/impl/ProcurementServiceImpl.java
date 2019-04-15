@@ -529,5 +529,9 @@ public class ProcurementServiceImpl implements ProcurementService {
 		return quantity;
 	}
 
+	@Override
+	public List<ProcurementTask> getNotReceivingGoods(ProcurementTask procurTask) {
+		return procurementTaskMapper.getNotReceivingGoods(procurTask);
+	}
 
 }
