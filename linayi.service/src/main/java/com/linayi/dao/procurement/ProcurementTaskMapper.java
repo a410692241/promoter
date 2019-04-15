@@ -2,7 +2,7 @@ package com.linayi.dao.procurement;
 
 
 import java.util.List;
-
+import java.util.Date;
 import org.apache.ibatis.annotations.Param;
 
 import com.linayi.entity.procurement.ProcurementTask;
@@ -81,9 +81,16 @@ public interface ProcurementTaskMapper {
     List<ProcurementTask> getProcurementLists(ProcurementTask procurTask);
 
     /**
-     * 查询出未收货的商品列表
+     * 流转中心任务 查询出未收货的商品列表
      * @param procurTask
      * @return
      */
     List<ProcurementTask> getNotReceivingGoods(ProcurementTask procurTask);
+    /**
+     * 流转中心任务 对未收货的商品进行收货操作
+     * @param accessTime
+     * @param goodsSkuId
+     * @return
+     */
+    void confirmGoods(@Param("accessTime") Date accessTime,@Param("goodsSkuId")Integer goodsSkuId);
 }

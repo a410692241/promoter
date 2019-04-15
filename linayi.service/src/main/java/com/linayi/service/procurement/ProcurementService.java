@@ -2,7 +2,9 @@ package com.linayi.service.procurement;
 
 import com.linayi.entity.community.Community;
 import com.linayi.entity.procurement.ProcurementTask;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface ProcurementService {
@@ -86,9 +88,16 @@ public interface ProcurementService {
     void updateProcurReceiveStatus(ProcurementTask procurementTask);
 
     /**
-     * 查询出未收货的商品列表
+     * 流转中心任务 查询出未收货的商品列表
      * @param procurTask
      * @return
      */
     List<ProcurementTask> getNotReceivingGoods(ProcurementTask procurTask);
+    /**
+     * 流转中心任务 对未收货的商品进行收货操作
+     * @param accessTime
+     * @param goodsSkuId
+     * @return
+     */
+    void confirmGoods(Date accessTime,Integer goodsSkuId);
 }

@@ -2,6 +2,7 @@ package com.linayi.controller.procurement;
 
 
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import com.linayi.entity.community.Community;
@@ -229,12 +230,16 @@ public class ProcurementController extends BaseController {
 	 */
 	@RequestMapping("/getNotReceivingGoods.do")
 	public Object getNotReceivingGoods(@RequestBody Map<String, Object> param){
-		ParamValidUtil<ProcurementTask> pvu = new ParamValidUtil<>(param);
-		ProcurementTask procurementTask = pvu.transObj(ProcurementTask.class);
+        try {
+		    ParamValidUtil<ProcurementTask> pvu = new ParamValidUtil<>(param);
+		    ProcurementTask procurementTask = pvu.transObj(ProcurementTask.class);
 
-		List<ProcurementTask> list = procurementService.getNotReceivingGoods(procurementTask);
-		PageResult<ProcurementTask> pr = new PageResult<>(list,procurementTask);
-		return new ResponseData(pr);
+		    List<ProcurementTask> list = procurementService.getNotReceivingGoods(procurementTask);
+		    PageResult<ProcurementTask> pr = new PageResult<>(list,procurementTask);
+		    return new ResponseData(pr);
+        } catch (Exception e) {
+            return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+        }
 	}
 	/**
 	 * 对商品进行确认收货操作
@@ -243,11 +248,16 @@ public class ProcurementController extends BaseController {
 	 */
 	@RequestMapping("/confirmGoods.do")
 	public Object confirmGoods(@RequestBody Map<String, Object> param){
-		ParamValidUtil<ProcurementTask> pvu = new ParamValidUtil<>(param);
-		ProcurementTask procurementTask = pvu.transObj(ProcurementTask.class);
+        try {
+            ParamValidUtil<ProcurementTask> pvu = new ParamValidUtil<>(param);
+            ProcurementTask procurementTask = pvu.transObj(ProcurementTask.class);
 
-		List<ProcurementTask> list = procurementService.getNotReceivingGoods(procurementTask);
-		PageResult<ProcurementTask> pr = new PageResult<>(list,procurementTask);
-		return new ResponseData(pr);
+            Date date = procurementTask.getAccessTime();
+            Integer goodsSkuId = procurementTask.getGoodsSkuId();
+            procurementService.confirmGoods(date,goodsSkuId);
+		    return new ResponseData("success");
+        } catch (Exception e) {
+            return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+        }
 	}
 }

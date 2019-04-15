@@ -546,4 +546,19 @@
      AND
         pt.actual_quantity > 0 GROUP BY gs.goods_sku_id
   </select>
+
+  <!--流转中心任务 对未收货的商品进行收货操作
+   void modifyReceiveStatus(ProcurementTask procurTask);-->
+  <update id="confirmGoods" parameterType="com.linayi.entity.procurement.ProcurementTask">
+      update
+          procurement_task
+      set
+          receive_status='RECEIVED_FLOW'
+      where
+          goods_sku_id=#{goodsSkuId}
+      and
+          receive_status='OUTED'
+      and
+          procure_out_time &lt;= #{accessTime}
+  </update>
 </mapper>

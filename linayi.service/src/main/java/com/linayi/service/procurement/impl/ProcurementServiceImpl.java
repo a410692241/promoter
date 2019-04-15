@@ -24,6 +24,7 @@ import com.linayi.service.procurement.ProcurementService;
 import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.util.ImageUtil;
 import com.linayi.util.PageResult;
+import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -538,5 +539,9 @@ public class ProcurementServiceImpl implements ProcurementService {
 		}
 		return list;
 	}
-
+	@Override
+	@Transactional
+	public void confirmGoods(Date accessTime,Integer goodsSkuId) {
+		procurementTaskMapper.confirmGoods(accessTime,goodsSkuId);
+	}
 }
