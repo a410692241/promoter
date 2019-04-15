@@ -538,7 +538,11 @@ public class ProcurementServiceImpl implements ProcurementService {
 	@Override
 	@Transactional
 	public void confirmGoods(Date accessTime,Integer goodsSkuId) {
-		procurementTaskMapper.confirmGoods(accessTime,goodsSkuId);
+		ProcurementTask procurTask = new ProcurementTask();
+		procurTask.setAccessTime(accessTime);
+		procurTask.setGoodsSkuId(goodsSkuId);
+		procurTask.setFlowReceiveTime(new Date());
+		procurementTaskMapper.confirmGoods(procurTask);
 	}
 	@Override
 	public List<ProcurementTask> getNotDeliverGoods(ProcurementTask procurTask) {
@@ -553,6 +557,10 @@ public class ProcurementServiceImpl implements ProcurementService {
 	@Override
 	@Transactional
 	public void confirmDeliverGoods(Integer communityId,Integer goodsSkuId) {
-		procurementTaskMapper.confirmDeliverGoods(communityId,goodsSkuId);
+		ProcurementTask procurTask = new ProcurementTask();
+		procurTask.setCommunityId(communityId);
+		procurTask.setGoodsSkuId(goodsSkuId);
+		procurTask.setFlowOutTime(new Date());
+		procurementTaskMapper.confirmDeliverGoods(procurTask);
 	}
 }

@@ -133,6 +133,26 @@ public class ProcurementTask extends BaseEntity{
 
     private Integer counts; //天数
 
+    private Date flowReceiveTime;//[流转中心收货时间]
+
+    private Date flowOutTime;//[流转中心发货时间]
+
+    public Date getFlowOutTime() {
+        return flowOutTime;
+    }
+
+    public void setFlowOutTime(Date flowOutTime) {
+        this.flowOutTime = flowOutTime;
+    }
+
+    public Date getFlowReceiveTime() {
+        return flowReceiveTime;
+    }
+
+    public void setFlowReceiveTime(Date flowReceiveTime) {
+        this.flowReceiveTime = flowReceiveTime;
+    }
+
     public Integer getServiceFeeString() {
         return serviceFeeString;
     }

@@ -566,7 +566,7 @@
       update
           procurement_task
       set
-          receive_status='RECEIVED_FLOW'
+          receive_status='RECEIVED_FLOW',flow_receive_time=#{flowReceiveTime}
       where
           goods_sku_id=#{goodsSkuId}
       and
@@ -589,12 +589,12 @@
       order by c.community_id
   </select>
     <!--流转中心任务 对收货的商品进行发货操作
-   void confirmDeliverGoods(@Param("communityId") Integer communityId,@Param("goodsSkuId")Integer goodsSkuId);-->
+   void confirmDeliverGoods(ProcurementTask procurTask);-->
     <update id="confirmDeliverGoods" parameterType="com.linayi.entity.procurement.ProcurementTask">
       update
           procurement_task
       set
-          receive_status='WAIT_RECEIVE'
+          receive_status='WAIT_RECEIVE',flow_out_time=#{flowOutTime}
       where
           goods_sku_id=#{goodsSkuId}
       and
