@@ -37,7 +37,7 @@ public class ProcurementTask extends BaseEntity{
 
     private Integer goodsSkuId;
     //商品全称
-    private Integer fullName;
+    private String fullName;
 
     private Integer price;
 
@@ -422,11 +422,11 @@ public class ProcurementTask extends BaseEntity{
         this.totalQuantity = totalQuantity;
     }
 
-    public Integer getFullName() {
+    public String getFullName() {
         return fullName;
     }
 
-    public void setFullName(Integer fullName) {
+    public void setFullName(String fullName) {
         this.fullName = fullName;
     }
 
