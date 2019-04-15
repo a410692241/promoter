@@ -139,14 +139,17 @@ public class CommunitySupermarketServiceImpl implements CommunitySupermarketServ
 		communityGoods.setMaxPriceSuper(priceByLevel2[2]);
 		communityGoods.setMaxSupermarketIdSuper(priceByLevel2[3]);
 
-		//所有超市
-		communityGoods.setMinPrice(MemberPriceUtil.allSpermarketGoodsList.get(MemberPriceUtil.allSpermarketGoodsList.size() - 1).getPrice());
-		communityGoods.setMinSupermarketId(MemberPriceUtil.allSpermarketGoodsList.get(MemberPriceUtil.allSpermarketGoodsList.size() - 1).getSupermarketId());
-		communityGoods.setMaxPrice(MemberPriceUtil.allSpermarketGoodsList.get(0).getPrice());
-		communityGoods.setMaxSupermarketId(MemberPriceUtil.allSpermarketGoodsList.get(0).getSupermarketId());
+		if (MemberPriceUtil.allSpermarketGoodsList.size() != 0) {
+			//所有超市
+			communityGoods.setMinPrice(MemberPriceUtil.allSpermarketGoodsList.get(MemberPriceUtil.allSpermarketGoodsList.size() - 1).getPrice());
+			communityGoods.setMinSupermarketId(MemberPriceUtil.allSpermarketGoodsList.get(MemberPriceUtil.allSpermarketGoodsList.size() - 1).getSupermarketId());
+			communityGoods.setMaxPrice(MemberPriceUtil.allSpermarketGoodsList.get(0).getPrice());
+			communityGoods.setMaxSupermarketId(MemberPriceUtil.allSpermarketGoodsList.get(0).getSupermarketId());
+			//重新添加新的社区商品价格表信息
+			communityGoodsMapper.insertSelective(communityGoods);
+		}
 
-		//重新添加新的社区商品价格表信息
-		communityGoodsMapper.insertSelective(communityGoods);
+
 	}
 
 
