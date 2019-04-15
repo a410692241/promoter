@@ -26,7 +26,7 @@ public class DeliveryController {
 		
 		System.out.println(deliveryTask.getStatus());
 		return deliveryTaskService.selectAll(deliveryTask);
-		
+
 	}
 	@RequestMapping("/show.do")
 	public Object show(DeliveryTask deliveryTask){

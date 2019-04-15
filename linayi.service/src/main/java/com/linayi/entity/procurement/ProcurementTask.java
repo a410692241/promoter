@@ -45,13 +45,6 @@ public class ProcurementTask extends BaseEntity{
     public void setAccessTime(Date accessTime) {
         this.accessTime = accessTime;
     }
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
 
     //商品全称
     private String fullName;
@@ -437,6 +430,14 @@ public class ProcurementTask extends BaseEntity{
 
     public void setTotalQuantity(Integer totalQuantity) {
         this.totalQuantity = totalQuantity;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public Integer getTotalProcureQuantity() {

@@ -92,6 +92,8 @@ public class ProcurementServiceImpl implements ProcurementService {
 		return communities;
 	}
 
+
+	//采买任务收货详情
 	@Override
 	public List<ProcurementTask> getCommunityProcurement(ProcurementTask procurementTask) {
 		String procureStatus = procurementTask.getProcureStatus();
@@ -100,6 +102,9 @@ public class ProcurementServiceImpl implements ProcurementService {
 		}
 
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementList(procurementTask);
+		for (ProcurementTask task : procurementTaskList) {
+			task.setImage(ImageUtil.dealToShow(task.getImage()));
+		}
 		if (procurementTaskList != null && procurementTaskList.size() > 0){
 			for (ProcurementTask task : procurementTaskList) {
 				GoodsSku goods = goodsSkuMapper.getGoodsById(task.getGoodsSkuId());

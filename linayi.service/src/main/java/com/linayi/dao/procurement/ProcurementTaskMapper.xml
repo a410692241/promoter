@@ -454,7 +454,10 @@
               pt.procure_status = #{procureStatus}
             </if>
             <if test="procureStatus != null and procureStatus == 'FINISHED'">
-              pt.procure_status != 'PROCURING'
+                and pt.procure_status != 'PROCURING' and pt.receive_status != 'WAIT_OUT'
+            </if>
+            <if test="procureStatus != null and procureStatus == 'WAIT_OUT'">
+                and pt.receive_status = 'WAIT_OUT' and pt.procure_status != 'PROCURING'
             </if>
             <if test="procureTimeStr != null and procureTimeStr != ''">
               and pt.procure_time = #{procureTimeStr}
@@ -463,7 +466,16 @@
               and pt.create_time &lt;= #{createTime}
             </if>
         </where>
-       GROUP BY pt.goods_sku_id, gs.name ORDER BY SUM(pt.quantity) DESC
+       GROUP BY
+       <if test="procureStatus != null and procureStatus != 'PROCURING'">
+         pt.procure_time,
+       </if>
+       pt.goods_sku_id, gs.name
+       ORDER BY
+       <if test="procureStatus != null and procureStatus != 'PROCURING'">
+        pt.procure_time ASC,
+      </if>
+        SUM(pt.quantity) DESC
     </select>
 
     <select id="getProcurements" resultType="com.linayi.entity.procurement.ProcurementTask">
@@ -504,7 +516,28 @@
             and pt.procure_time = #{procureTimeStr}
         </if>
         order by create_time ASC
+        SELECT
+              p.procurement_task_id procurementTaskId,
+              p.orders_goods_id ordersGoodsId,
+              p.orders_id ordersId,
+              p.goods_sku_id goodsSkuId,
+              sum(p.quantity)  quantity,
+              sum(p.actual_quantity) actualQuantity,
+              p.price,
+              (sum(p.actual_quantity) * p.price) totalPrice,
+              g.full_name fullName,
+              g.image goodsImage
+         FROM
+              procurement_task p JOIN goods_sku g ON p.goods_sku_id=g.goods_sku_id
+         WHERE
+              p.community_id=#{communityId}
+         AND
+              p.actual_quantity>0
+         AND
+              p.receive_status='WAIT_RECEIVE'
+         GROUP BY p.goods_sku_id
     </select>
+
 
 
     <select id="getProcurementTaskByOrdersId" resultType="com.linayi.entity.procurement.ProcurementTask">
