@@ -448,6 +448,7 @@
 
     <select id="getCommunityProcurementList" resultType="com.linayi.entity.procurement.ProcurementTask">
         SELECT
+              GROUP_CONCAT(procurement_task_id) procurementTaskIdList,
               p.goods_sku_id goodsSkuId,
               sum(p.quantity)  quantity,
               sum(p.actual_quantity) actualQuantity,
@@ -634,72 +635,5 @@
         pt.actual_quantity > 0 GROUP BY gs.goods_sku_id,c.community_id
       order by pt.flow_out_time desc
   </select>
-    <update id="updateProcurementTaskByGoodsSkuId" parameterType="com.linayi.entity.procurement.ProcurementTask">
-        update procurement_task
-        <set>
-            <if test="ordersId != null">
-                orders_id = #{ordersId},
-            </if>
-            <if test="supermarketId != null">
-                supermarket_id = #{supermarketId},
-            </if>
-            <if test="goodsSkuId != null">
-                goods_sku_id = #{goodsSkuId},
-            </if>
-            <if test="ordersGoodsId != null">
-                orders_goods_id = #{ordersGoodsId},
-            </if>
-            <if test="userId != null">
-                user_id = #{userId},
-            </if>
-            <if test="price != null">
-                price = #{price},
-            </if>
-            <if test="quantity != null">
-                quantity = #{quantity},
-            </if>
-            <if test="actualQuantity != null">
-                actual_quantity = #{actualQuantity},
-            </if>
-            <if test="boxQuantity != null">
-                box_quantity = #{boxQuantity},
-            </if>
-            <if test="procureStatus != null">
-                procure_status = #{procureStatus},
-            </if>
-            <if test="procureQuantity !=null">
-                procure_quantity=#{procureQuantity},
-            </if>
-            <if test="receiveStatus != null">
-                receive_status = #{receiveStatus},
-            </if>
-            <if test="updateTime != null">
-                update_time = #{updateTime},
-            </if>
-            <if test="boxNo != null">
-                box_no=#{boxNo},
-            </if>
-            <if test="createTime != null">
-                create_time = #{createTime},
-            </if>
-            <if test="procureTime != null">
-                procure_time = #{procureTime}
-            </if>
-        </set>
-        where
-            goods_sku_id = #{goodsSkuId}
-        AND
-            procure_time <![CDATA[<=]]> #{accessTime}
-    </update>
-
-    <select id="getProcurementListByGoodsSkuId" resultType="com.linayi.entity.procurement.ProcurementTask">
-        select <include refid="Base_Column_List"/> from procurement_task
-        WHERE
-              goods_sku_id = #{goodsSkuId}
-         AND
-              actual_quantity>0
-         AND
-              procure_time <![CDATA[<=]]> #{accessTime}
-    </select>
 
 </mapper>

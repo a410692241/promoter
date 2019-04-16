@@ -119,7 +119,6 @@ public class ProcurementServiceImpl implements ProcurementService {
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementList(procurementTask);
 		for (ProcurementTask task : procurementTaskList) {
 			task.setGoodsImage(ImageUtil.dealToShow(task.getGoodsImage()));
-			task.setAccessTime(new Date());
 		}
 		return procurementTaskList;
 	}
@@ -522,16 +521,24 @@ public class ProcurementServiceImpl implements ProcurementService {
 	public void updateOrderStatus(ProcurementTask procurementTask) {
 
 				procurementTask.setReceiveStatus("RECEIVED");
-				//将采买任务表改成已收货
-				procurementTaskMapper.updateProcurementTaskByGoodsSkuId(procurementTask);
+				if (procurementTask.getProcurementTaskIdList().contains(",")){
+					String [] str =	procurementTask.getProcurementTaskIdList().split(",");
+					for (String s : str) {
+						procurementTask.setProcurementTaskId(Long .valueOf(s));
+						procurementTaskMapper.updateProcurementTaskById(procurementTask);
+						//根据任务id获取采买任务表信息
+						ProcurementTask procurementTasks = procurementTaskMapper.selectByPrimaryKey(Long .valueOf(s));
+						//修改订单表状态
+						orderService.updateOrderReceivedStatus(procurementTasks.getOrdersId());
+					}
+				}else{
+					procurementTask.setProcurementTaskId(Long .valueOf(procurementTask.getProcurementTaskIdList()));
+					//将采买任务表改成已收货
+					procurementTaskMapper.updateProcurementTaskById(procurementTask);
 
-				ProcurementTask procurementTask1 = new ProcurementTask();
-				procurementTask1.setGoodsSkuId(procurementTask.getGoodsSkuId());
-				procurementTask1.setAccessTime(procurementTask.getAccessTime());
-				List<ProcurementTask> procurementTasks = procurementTaskMapper.getProcurementListByGoodsSkuId(procurementTask1);
-				for (ProcurementTask task : procurementTasks) {
-					//更新订单状态为已完成
-					orderService.updateOrderReceivedStatus(task.getOrdersId());
+					ProcurementTask procurementTasks = procurementTaskMapper.selectByPrimaryKey(Long .valueOf(procurementTask.getProcurementTaskIdList()));
+					//修改订单表状态
+					orderService.updateOrderReceivedStatus(procurementTasks.getOrdersId());
 				}
 
 		}
