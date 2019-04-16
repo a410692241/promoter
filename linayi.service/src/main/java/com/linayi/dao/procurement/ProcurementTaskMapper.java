@@ -115,4 +115,6 @@ public interface ProcurementTaskMapper {
 
 
     List<ProcurementTask> getCommunityProcurementsList(ProcurementTask procurementTask);
+
+    List<ProcurementTask> getProcurementsList(String procurementTaskIdList);
 }

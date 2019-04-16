@@ -193,10 +193,10 @@ public class ProcurementServiceImpl implements ProcurementService {
 	@Override
 	public void updateProcurmentStatus(ProcurementTask procurTask) {
 		Integer quantity = procurTask.getQuantity();
-		procurTask.setCurrentPage(1);
-		procurTask.setPageSize(procurTask.getCounts());
-		procurTask.setProcureStatus("PROCURING");
-		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementLists(procurTask);
+		String procurementTaskIdList = procurTask.getProcurementTaskIdList();
+		List<ProcurementTask> procurementTaskList = null;
+		if (procurementTaskIdList != null)
+		procurementTaskList = procurementTaskMapper.getProcurementsList(procurementTaskIdList);
 		Date procureTime = new Date();
 		if (quantity == null){
 			//价高
@@ -295,8 +295,10 @@ public class ProcurementServiceImpl implements ProcurementService {
 
 	@Override
 	public void updateProcurReceiveStatus(ProcurementTask procurementTask) {
-		procurementTask.setProcureStatus("FINISHED");
-		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementLists(procurementTask);
+		String procurementTaskIdList = procurementTask.getProcurementTaskIdList();
+		List<ProcurementTask> procurementTaskList = null;
+		if (procurementTaskIdList != null)
+		procurementTaskList = procurementTaskMapper.getProcurementLists(procurementTask);
 		Date date = new Date();
 		if (procurementTaskList != null && procurementTaskList.size() > 0){
 			for (ProcurementTask task : procurementTaskList) {
