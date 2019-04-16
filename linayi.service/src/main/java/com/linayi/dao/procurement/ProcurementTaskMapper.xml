@@ -699,6 +699,8 @@
         WHERE
               goods_sku_id = #{goodsSkuId}
          AND
+              actual_quantity>0
+         AND
               procure_time <![CDATA[<=]]> #{accessTime}
     </select>
 
