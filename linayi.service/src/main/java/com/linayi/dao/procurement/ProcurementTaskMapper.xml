@@ -508,8 +508,8 @@
     </select>
 
     <select id="getCommunityProcurementsList" resultType="com.linayi.entity.procurement.ProcurementTask">
-        SELECT SUM(pt.price * pt.quantity) totalPrice, SUM(pt.quantity) totalQuantity,SUM(pt.procure_quantity) totalProcureQuantity,MIN(pt.price) * SUM(pt.procure_quantity) totalProcurePrice,MIN(pt.price) price, pt.procure_time procureTime,pt.goods_sku_id goodsSkuId, gs.name goodsSkuName,COUNT(pt.procurement_task_id) counts
-        FROM supermarket s join procurement_task pt on s.procurer_id = #{userId} and pt.supermarket_id = s.supermarket_id join goods_sku gs on gs.goods_sku_id = pt.goods_sku_id
+        SELECT SUM(pt.price * pt.quantity) totalPrice, SUM(pt.quantity) totalQuantity,SUM(pt.procure_quantity) totalProcureQuantity,MIN(pt.price) * SUM(pt.procure_quantity) totalProcurePrice,MIN(pt.price) price, pt.procure_time procureTime,pt.goods_sku_id goodsSkuId, gs.name goodsSkuName,GROUP_CONCAT(pt.procurement_task_id) procurementTaskIdList
+        FROM supermarket s left join procurement_task pt on s.procurer_id = #{userId} and pt.supermarket_id = s.supermarket_id left join goods_sku gs on gs.goods_sku_id = pt.goods_sku_id
         <where>
             <if test="procureStatus != null and procureStatus == 'PROCURING'">
                 pt.procure_status = #{procureStatus}
@@ -531,14 +531,48 @@
         <if test="procureStatus != null and procureStatus != 'PROCURING'">
             pt.procure_time,
         </if>
+        <if test="procureStatus != null and procureStatus == 'WAIT_OUT'">
+            pt. receive_status,
+        </if>
         pt.goods_sku_id, gs.name
         ORDER BY
         <if test="procureStatus != null and procureStatus != 'PROCURING'">
             pt.procure_time ASC,
         </if>
+        <if test="procureStatus != null and procureStatus == 'WAIT_OUT'">
+            pt. receive_status ASC,
+        </if>
         SUM(pt.quantity) DESC
     </select>
 
+    <select id="getProcurementsList" resultType="com.linayi.entity.procurement.ProcurementTask">
+      SELECT
+  		procurement_task_id,
+  		orders_id,
+  		supermarket_id,
+  		goods_sku_id,
+  		price,
+  		quantity,
+  		actual_quantity,
+  		receive_status,
+  		procure_status,
+  		community_id,
+  		user_id,
+  		update_time,
+  		create_time,
+  		procure_time,
+  		receive_time,
+  		procure_quantity,
+		receive_quantity,
+		box_quantity,
+    	box_status,
+    	delivery_box_id
+  	FROM
+  		procurement_task
+  	WHERE
+  	    procurement_task_id in (${procurementTaskIdList})
+  	    order by create_time asc
+    </select>
 
     <select id="getProcurementTaskByOrdersId" resultType="com.linayi.entity.procurement.ProcurementTask">
     SELECT
@@ -598,7 +632,7 @@
     <select id="getNotDeliverGoods" resultType="com.linayi.entity.procurement.ProcurementTask">
      SELECT
         SUM(pt.actual_quantity) totalProcureQuantity,gs.goods_sku_id,gs.full_name ,c.community_id communityId,c.name communityName,
-        gs.image,pt.price,SUM(pt.price*pt.actual_quantity) totalPrice
+        gs.image,pt.price,SUM(pt.price*pt.actual_quantity) totalPrice,GROUP_CONCAT(procurement_task_id) procurementTaskIdList
      FROM
         procurement_task pt JOIN goods_sku gs ON pt.goods_sku_id=gs.goods_sku_id
                             join community c on c.community_id=pt.community_id
