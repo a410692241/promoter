@@ -220,7 +220,8 @@ public class ProcurementServiceImpl implements ProcurementService {
 					if (procurementTask.getQuantity() <= quantity){
 						procurementTask.setProcureStatus("BOUGHT");
                         procurementTask.setActualQuantity(procurementTask.getQuantity());
-					}else if(quantity >0 ){
+						procurementTask.setProcureQuantity(quantity);
+					}else if(quantity >0 && quantity < procurementTask.getQuantity()){
                         procurementTask.setProcureStatus("LACK");
                         procurementTask.setActualQuantity(quantity);
                         procurementTask.setProcureQuantity(quantity);
