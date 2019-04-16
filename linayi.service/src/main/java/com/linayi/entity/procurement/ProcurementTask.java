@@ -2,11 +2,11 @@ package com.linayi.entity.procurement;
 
 import com.linayi.entity.BaseEntity;
 import com.linayi.util.DateUtil;
+import io.swagger.models.auth.In;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
-
-
+import java.util.List;
 
 
 public class ProcurementTask extends BaseEntity{
@@ -25,6 +25,16 @@ public class ProcurementTask extends BaseEntity{
                 + ", goodsSkuName=" + goodsSkuName + ", communityName=" + communityName + ", buyUserName=" + buyUserName
                 + ", supermarketName=" + supermarketName + ", image=" + image + ", serviceFeeString=" + serviceFeeString
                 + "]";
+    }
+
+    private List<Integer> procurementTaskIdList;
+
+    public List<Integer> getProcurementTaskIdList() {
+        return procurementTaskIdList;
+    }
+
+    public void setProcurementTaskIdList(List<Integer> procurementTaskIdList) {
+        this.procurementTaskIdList = procurementTaskIdList;
     }
 
     private Long procurementTaskId;
