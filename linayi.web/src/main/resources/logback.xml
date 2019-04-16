@@ -3,7 +3,7 @@
 	<contextName>RestAPI</contextName>
 	<property name="LOG_PATH" value="D:/data/logs"/>
 	<!--设置系统日志目录-->
-	<property name="APPDIR" value="app"/>
+	<property name="APPDIR" value="web"/>
 
 	<property scope="system" name="SYSTEM_NAME" value="linayi" />
 	<!-- %m输出的信息,%p日志级别,%t线程名,%d日期,%c类的全名,,,, -->
