@@ -517,8 +517,8 @@
             <if test="procureStatus != null and procureStatus == 'FINISHED'">
                 and pt.procure_status != 'PROCURING' and pt.receive_status != 'WAIT_OUT'
             </if>
-            <if test="procureStatus != null and procureStatus == 'OUTED'">
-                and pt.receive_status != 'WAIT_OUT' and pt.procure_status != 'PROCURING'
+            <if test="procureStatus != null and procureStatus == 'WAIT_OUT'">
+                and pt.receive_status = 'WAIT_OUT' and pt.procure_status != 'PROCURING'
             </if>
             <if test="procureTimeStr != null and procureTimeStr != ''">
                 and pt.procure_time = #{procureTimeStr}
@@ -531,16 +531,16 @@
         <if test="procureStatus != null and procureStatus != 'PROCURING'">
             pt.procure_time,
         </if>
-        <if test="procureStatus != null and procureStatus == 'OUTED'">
-            pt. receive_status,
+        <if test="procureStatus != null and procureStatus == 'WAIT_OUT'">
+            pt.procure_out_time,
         </if>
         pt.goods_sku_id, gs.name
         ORDER BY
         <if test="procureStatus != null and procureStatus != 'PROCURING'">
             pt.procure_time ASC,
         </if>
-        <if test="procureStatus != null and procureStatus == 'OUTED'">
-            pt. procure_out_time ASC,
+        <if test="procureStatus != null and procureStatus == 'WAIT_OUT'">
+            pt.procure_out_time ASC,
         </if>
         SUM(pt.quantity) DESC
     </select>
