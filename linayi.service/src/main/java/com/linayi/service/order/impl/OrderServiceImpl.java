@@ -458,13 +458,17 @@ public class OrderServiceImpl implements OrderService {
             orders2.setShoppingCarList(cars);
             String userStatus = orders1.getUserStatus();
             orders2.setUserStatus(orders1.getUserStatus());
-            orders2.setCommunityStatus(orders1.getCommunityStatus());
+            String communityStatus = orders1.getCommunityStatus();
+            orders2.setCommunityStatus(communityStatus);
 
             //已取消：CANCELED
             if("CANCELED".equals(userStatus)){
                 orders2.setStatus("CANCELED");
             }else {
-                orders2.setStatus(orders1.getCommunityStatus());
+                if("RECEIVED".equals(communityStatus) || "PACKED".equals(communityStatus)){
+                    communityStatus = "DELIVERING";
+                }
+                orders2.setStatus(communityStatus);
             }
 
             orders3.add(orders2);
