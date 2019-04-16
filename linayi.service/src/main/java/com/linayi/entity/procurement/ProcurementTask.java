@@ -27,13 +27,13 @@ public class ProcurementTask extends BaseEntity{
                 + "]";
     }
 
-    private List<Integer> procurementTaskIdList;
+    private String procurementTaskIdList;
 
-    public List<Integer> getProcurementTaskIdList() {
+    public String getProcurementTaskIdList() {
         return procurementTaskIdList;
     }
 
-    public void setProcurementTaskIdList(List<Integer> procurementTaskIdList) {
+    public void setProcurementTaskIdList(String procurementTaskIdList) {
         this.procurementTaskIdList = procurementTaskIdList;
     }
 
