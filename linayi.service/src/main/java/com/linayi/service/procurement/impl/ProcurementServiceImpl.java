@@ -531,6 +531,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 						//修改订单表状态
 						orderService.updateOrderReceivedStatus(procurementTasks.getOrdersId());
 					}
+
 				}else{
 					procurementTask.setProcurementTaskId(Long .valueOf(procurementTask.getProcurementTaskIdList()));
 					//将采买任务表改成已收货
