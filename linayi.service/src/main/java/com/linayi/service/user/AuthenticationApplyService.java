@@ -45,11 +45,13 @@ public interface AuthenticationApplyService {
 	public Object applyProcurer(AuthenticationApply apply, MultipartFile[] file);
 
 	/**
-	 * 
+	 *
 	 * @param	apply	apply对象
 	 * @param	file	图片数组(正面在前，反面在后)
 	 * @return	ResponseData对象json字符串
 	 */
 	public Object applyDeliverer(AuthenticationApply apply, MultipartFile[] file);
+
+	public Object applySpokesman(AuthenticationApply apply, MultipartFile file);
 
 }

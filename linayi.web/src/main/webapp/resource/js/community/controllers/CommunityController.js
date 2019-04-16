@@ -9,6 +9,7 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
 		$scope.list = list;
 		$scope.selectArea = selectArea;
 		$scope.showCommunityLocation = showCommunityLocation;
+		$scope.updateCommunityPrice = updateCommunityPrice;
 		$scope.search={
 				communityId:"",
 				name:"",
@@ -175,7 +176,8 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
 					opts = opts + "<a href='javascript:void(0);' ng-click='showCommunityLocation( "+rowObject.communityId+" )' class='btn btn-primary fa fa-edit btn-sm td-compile'>绑定小区</a> ";
 					opts = opts + "<a href='javascript:void(0);' ng-click='openBindSupermarket( "+rowObject.communityId+")' class='btn btn-primary fa fa-edit btn-sm td-compile'>绑定超市</a> ";
 					opts = opts + "<a href='javascript:void(0);' ng-click='communityInfo( "+rowObject.communityId+")' class='btn btn-primary fa fa-edit btn-sm td-compile'>查看</a> ";
-					return opts;
+					opts = opts + "<a href='javascript:void(0);' ng-click='updateCommunityPrice( "+rowObject.communityId+")' class='btn btn-primary fa fa-edit btn-sm td-compile'>更新价格</a> ";
+						 return opts;
 	             }}
 			]
 		});
@@ -347,6 +349,40 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
 			backdrop: true,
 			keyboard: true,
 			url:url
+		});
+	}
+
+	var isTrue = true;
+	/**更新社区价格*/
+	function updateCommunityPrice( communityId ){
+		messager.confirm("确认更新该社区所有商品价格？",function( $modalInstance ){
+			if(isTrue){
+				isTrue =false;
+			}else {
+				return;
+			}
+			communityService.updateCommunityPrice({
+				"data":{communityId:communityId},
+				"success":function( data ){
+					isTrue == true;
+					if( data.respCode =="S" ){
+						$("#communityList").trigger("reloadGrid");
+						// list();
+						$scope.$apply(function(){
+							toaster.error( "",typeof e == "string" ? //
+								e : e.msg ? //
+									e.msg : "出错了",3000 );
+						});
+						$modalInstance.close();
+					}else{
+						$scope.$apply(function(){
+							toaster.error( "",typeof e == "string" ? //
+								e : e.msg ? //
+									e.msg : "出错了",3000 );
+						});
+					}
+				}
+			});
 		});
 	}
 

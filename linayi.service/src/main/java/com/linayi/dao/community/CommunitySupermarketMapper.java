@@ -3,6 +3,7 @@ package com.linayi.dao.community;
 import java.util.List;
 
 import com.linayi.entity.community.CommunitySupermarket;
+import org.apache.ibatis.annotations.Param;
 
 public interface CommunitySupermarketMapper {
     int insert(CommunitySupermarket record);
@@ -29,4 +30,13 @@ public interface CommunitySupermarketMapper {
      * @return
      */
     List<Integer> getCommunityIdBysupermarketId(Integer supermarketId);
+
+    /**
+     * 通过社区ID和超市ID查找超市排序
+     * @param communityId
+     * @param supermarketId
+     * @return
+     */
+    Integer getRankByCommunityIdAndSupermarketId(@Param("communityId")Integer communityId,
+                                                 @Param("supermarketId")Integer supermarketId);
 }

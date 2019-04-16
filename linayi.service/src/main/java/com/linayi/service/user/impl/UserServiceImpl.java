@@ -1,31 +1,32 @@
 package com.linayi.service.user.impl;
 
+import com.github.binarywang.java.emoji.EmojiConverter;
 import com.linayi.dao.account.AccountMapper;
 import com.linayi.dao.account.AdminAccountMapper;
 import com.linayi.dao.account.EmployeeMapper;
+import com.linayi.dao.area.AreaMapper;
 import com.linayi.dao.area.SmallCommunityMapper;
-import com.linayi.dao.user.AuthenticationApplyMapper;
 import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.account.Account;
 import com.linayi.entity.account.AdminAccount;
 import com.linayi.entity.account.Employee;
+import com.linayi.entity.area.Area;
 import com.linayi.entity.area.SmallCommunity;
-import com.linayi.entity.user.AuthenticationApply;
 import com.linayi.entity.user.User;
 import com.linayi.enums.EnabledDisabled;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.redis.RedisService;
 import com.linayi.service.user.UserService;
 import com.linayi.util.*;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
-
-import javax.annotation.Resource;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -41,6 +42,9 @@ public class UserServiceImpl implements UserService {
     private EmployeeMapper employeeMapper;
     @Resource
     private SmallCommunityMapper smallCommunityMapper;
+    @Resource
+    private AreaMapper areaMapper;
+
 
 
     @Override
@@ -211,6 +215,7 @@ public class UserServiceImpl implements UserService {
             if (userInfo.getMobile() == null && accountDB.getMobile() != null) {
                 userInfo.setMobile(accountDB.getMobile());
             }
+            userInfo.setIsShop(isShop(accountDB.getAccountId()));
         }else {
             userInfo.setWeixinOpenId("");
         }
@@ -248,7 +253,23 @@ public class UserServiceImpl implements UserService {
         }else {
             userInfo.setIsDeliverer("FALSE");
         }
+
         return userInfo;
+    }
+
+    public String isShop(int accountId){
+        try {
+            String result = HttpClientUtil.sendGetRequest("http://www.laykj.cn/linsheng.app/user/isShop.do?userId="+accountId,null);
+            if(StringUtils.isBlank(result)){
+                return "FALSE";
+            }else{
+                return result.contains("true") ? "TRUE" : "FALSE";
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return "FALSE";
+        }
+
     }
 
     @Override
@@ -272,7 +293,7 @@ public class UserServiceImpl implements UserService {
         Account account = adminAccountMapper.selectAccountByaccountId(accountId);
         return account.getUserId();
     }
-    
+
     @Override
     public Account getUserIdByToken(String accessToken) {
     	// 通过token获取accountId
@@ -282,5 +303,30 @@ public class UserServiceImpl implements UserService {
             return account;
     	}
         return null;
+    }
+
+    @Override
+    public User getUserForSpokesMan(Integer userId) {
+        User user = userMapper.getUserForSpokesMan(userId);
+        if (user.getNickname() != null) {
+            user.setNickname(EmojiConverter.getInstance().toUnicode(user.getNickname()));
+        }
+        //获取省市区街道和小区
+        String areaCode = user.getCode();
+        String addressTwo = user.getName();
+
+        Area area = new Area();
+        String areaName = "";
+        while (true) {
+            area.setCode(areaCode);
+            Area areaInfo = areaMapper.getAreaInfo(area);
+            areaName = areaInfo.getName() + areaName;
+            if (areaInfo.getParent().equals("1000")) {
+                break;
+            }
+            areaCode = areaInfo.getParent();
+        }
+        user.setReceiverAddress(areaName + addressTwo);
+        return user;
     }
 }

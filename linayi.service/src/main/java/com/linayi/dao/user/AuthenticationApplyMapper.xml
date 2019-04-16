@@ -19,7 +19,12 @@
 		area_code,
 		address,
 		supermarket_id,
-		small_community_id
+		small_community_id,
+		nickname,
+		specialty,
+		hobby,
+		motto,
+		image
 		)
 		values (
 		#{applyId,jdbcType=INTEGER},
@@ -35,7 +40,12 @@
 		#{areaCode,jdbcType=VARCHAR},
 		#{address,jdbcType=VARCHAR},
 		#{supermarketId,jdbcType=INTEGER},
-		#{smallCommunityId,jdbcType=INTEGER}
+		#{smallCommunityId,jdbcType=INTEGER},
+		#{nickname,jdbcType=VARCHAR},
+		#{specialty,jdbcType=VARCHAR},
+		#{hobby,jdbcType=VARCHAR},
+		#{motto,jdbcType=VARCHAR},
+		#{image,jdbcType=VARCHAR}
 		)
 	</insert>
 
@@ -97,7 +107,15 @@
 			id_card_back idCardBack, 
 			status,
 			update_time updateTime,
-			create_time createTime
+			create_time createTime,
+			nickname,
+			specialty,
+			hobby,
+			motto,
+			image,
+			area_code,
+			small_community_id,
+			address
 		from
 			authentication_apply
 		WHERE

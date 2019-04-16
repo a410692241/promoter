@@ -128,13 +128,13 @@ public interface OrderService {
     OrdersGoods getOrderGoods(OrdersSku ordersSku);
 
     List<ProcurementTask> procurementTaskList(OrdersSku ordersSku);
-    
+
     /**
      * 查询装箱列表
      */
     List<Orders> getBoxingList(Orders order);
-    
-    
+
+
     /**
      * 根据订单Id查询采买任务然后修改为已收货状态（通用）
      */
@@ -146,4 +146,13 @@ public interface OrderService {
      * @return
      */
     PageResult<Orders> getOrdersList(Orders orders);
+
+    /**
+     * 采买任务订单列表
+     * @param orders
+     * @return
+     */
+    PageResult<Orders> getProcureOrderList(Orders orders);
+
+    OrdersGoods generateOrdersGoods(Orders order, List<SupermarketGoods> supermarketGoodsList, Integer num, Integer goodsSkuId);
 }

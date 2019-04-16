@@ -65,6 +65,27 @@ public class OrderController extends BaseController {
     }
 
     /**
+     * 采买任务订单列表
+     * @param param
+     * @return
+     */
+    @RequestMapping("/getProcureOrderList.do")
+    public Object getProcureOrderList(@RequestBody Map<String, Object> param){
+        ParamValidUtil<Orders> pvu = new ParamValidUtil<>(param);
+        try {
+            Orders orders = pvu.transObj(Orders.class);
+            orders.setUserId(getUserId());
+            Object orderList = orderService.getProcureOrderList(orders);
+
+            return new ResponseData(orderList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseData("F",ErrorType.SYSTEM_ERROR.getErrorMsg());
+    }
+
+    /**
      * 查看订单详情
      * @param param
      * @param request

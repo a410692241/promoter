@@ -118,7 +118,7 @@
     <if test="amount != null">
       AND amount = #{amount}
     </if>
-    <if test="communityStatus != null and communityStatus == 'PROCURING'">
+    <if test="communityStatus != null and communityStatus != 'DELIVERING'">
       AND community_status = #{communityStatus}
     </if>
     <if test="communityStatus != null and communityStatus == 'DELIVERING'">
@@ -513,7 +513,7 @@
       SELECT
         o.orders_id,o.user_id,o.receiver_name,o.mobile,o.address_one,o.address_two,o.address_three,o.pay_way,o.save_amount,o.service_fee,o.arrive_time,
         o.actual_arrive_time,o.remark,o.quantity,o.amount,o.user_status,o.community_status,o.community_id,o.deliverer_id,o.delivery_finish_time,
-        o.update_time,o.create_time
+        o.update_time,o.create_time, (select u.real_name from user u where u.user_id = o.user_id) buyUserName
       FROM
         orders o JOIN order_box ob ON o.orders_id=ob.orders_id
       WHERE
@@ -536,15 +536,23 @@
   SELECT
     o.orders_id,o.user_id,o.receiver_name,o.mobile,o.address_one,o.address_two,o.address_three,o.pay_way,o.save_amount,o.service_fee,o.arrive_time,
     o.actual_arrive_time,o.remark,o.quantity,o.amount,o.user_status,o.community_status,o.community_id,o.deliverer_id,o.delivery_finish_time,
-    o.update_time,o.create_time
+    o.update_time,o.create_time, (select u.real_name from user u where u.user_id = o.user_id) buyUserName
   FROM
     orders o JOIN order_box ob ON o.orders_id=ob.orders_id
   WHERE
     o.community_status=#{communityStatus}
-  <if test="delivererId != null">
-  AND
-    o.deliverer_id = #{delivererId}
-  </if>
+    <if test="smallCommunityIdList!= null and smallCommunityIdList.size() > 0">
+        AND
+        o.small_community_id IN
+        <foreach collection="smallCommunityIdList" item="item" index="index"
+                 open="(" separator="," close=")">
+            ${item}
+        </foreach>
+    </if>
+    <if test="delivererId != null">
+        AND
+        o.deliverer_id = #{delivererId}
+    </if>
   ORDER BY
     ob.box_time DESC
 </select>
@@ -553,6 +561,7 @@
   UPDATE
     orders
   SET
+    deliverer_id = #{delivererId},
     community_status = #{communityStatus},
     delivery_finish_time = #{deliveryFinishTime}
   WHERE

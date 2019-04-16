@@ -41,6 +41,8 @@
     	community_supermarket
  	WHERE
     	community_id = #{communityId}
+    ORDER BY
+        rank
  
   </select>
   
@@ -73,5 +75,17 @@ FROM
 WHERE
 	supermarket_id=#{supermarketId,jdbcType=INTEGER}
   </select>
-  
+  <!-- 通过社区ID和超市ID查找超市排序
+    Integer getRankByCommunityIdAndSupermarketId(@Param("communityId")Integer communityId,
+                                                 @Param("supermarketId")Integer supermarketId);-->
+  <select id="getRankByCommunityIdAndSupermarketId" resultType="java.lang.Integer">
+      select
+          rank
+      from
+          community_supermarket
+      WHERE
+	      supermarket_id=#{supermarketId}
+	  and
+	      community_id=#{communityId}
+  </select>
 </mapper>

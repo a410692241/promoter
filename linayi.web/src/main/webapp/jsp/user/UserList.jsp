@@ -46,6 +46,12 @@
 		                        </div>
 		                    </div>
 							<div class="form-group form-group-margin">
+								<div class="input-group">
+									<span class="input-group-addon">用户编号</span>
+									<input ng-model="search.userId" type="text" class="form-control">
+								</div>
+							</div>
+							<div class="form-group form-group-margin">
 		                        <div class="input-group">
 		                           <%-- <span class="input-group-addon">用户类型</span>
 		                             <ui-select

@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.linayi.dao.promoter.PromoterMapper">
-  <insert id="insert" parameterType="com.linayi.entity.promoter.Promoter">
-    insert into promoter (promoter_id, name, mobile, 
-      qq, email, promoter_level, 
-      update_time, create_time)
-    values (#{promoterId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
-      #{qq,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{promoterLevel,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
-  </insert>
-  <sql id="Base_Column">promoter_id, name, mobile, qq, email, promoter_level,  update_time, create_time</sql>
+    <resultMap id="BaseResultMap" type="com.linayi.dto.PromoterSettleDTO">
+        <id column="promoter_id" property="promoterId" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="promoter_level" property="promoterLevel" jdbcType="VARCHAR"/>
+        <result column="order_man_id" property="orderManId" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column">promoter_id, name, promoter_level</sql>
+
+    <!--获取所有的推广商-->
+    <select id="getAllPromoter" resultMap="BaseResultMap">
+        SELECT p.`promoter_id`,p.`name`,p.`promoter_level`,pom.`order_man_id`
+          FROM promoter p,promoter_order_man pom
+         WHERE  p.`promoter_id` = pom.`promoter_id`
+           AND pom.`identity`='LEGAL_MAN'
+           GROUP BY p.`promoter_id`
+    </select>
 </mapper>

@@ -58,18 +58,42 @@ public class GoodsSku extends BaseEntity {
     private String categoryName;
     /*所有规格的值*/
     private String attrValues;
-    
+
     private String minSupermarket;
-    
+
     private Integer minPrice;
-    
+
     private String maxSupermarket;
-    
+
     private Integer maxPrice;
-    
+
     private Integer maxSupermarketId; //最高价超市id
-    
+
     private Integer minSupermarketId; //最低价超市id
+
+    private Integer minSupermarketIdNormal; //普通会员最低价超市id
+
+    private Integer minPriceNormal; //普通会员最低价
+
+    private Integer maxSupermarketIdNormal; //普通会员最高价超市id
+
+    private Integer maxPriceNormal; //普通会员最高价
+
+    private Integer minSupermarketIdSenior; //高级会员最低价超市id
+
+    private Integer minPriceSenior; //高级会员最低价
+
+    private Integer maxSupermarketIdSenior; //高级会员最高价超市id
+
+    private Integer maxPriceSenior; //高级会员最高价
+
+    private Integer minSupermarketIdSuper; //超级vip最低价超市id
+
+    private Integer minPriceSuper; //超级vip最低价
+
+    private Integer maxSupermarketIdSuper; //超级vip最高价超市id
+
+    private Integer maxPriceSuper; //超级vip最高价
 
     private Double spreadRate;        //差价率
 
@@ -80,15 +104,24 @@ public class GoodsSku extends BaseEntity {
     private List<SupermarketGoods> supermarketGoodsList;//所有有该商品的超市
 
     private String spreadRateString; // 差价率0.12%
-    
+
     private Integer userId; //用户id
-    
+
     private Integer communityId; //社区id
-    
+
     private String  valueName; //规格名
 
     private String  createName; //新增商品用户名
 
+    private String memberLevel;
+
+    public String getMemberLevel() {
+        return memberLevel;
+    }
+
+    public void setMemberLevel(String memberLevel) {
+        this.memberLevel = memberLevel;
+    }
 
     public String getEstablishName() {
         return establishName;
@@ -99,7 +132,7 @@ public class GoodsSku extends BaseEntity {
     }
 
     private String establishName;
-    
+
 	public String getValueName() {
 		return valueName;
 	}
@@ -454,5 +487,101 @@ public class GoodsSku extends BaseEntity {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public Integer getMinSupermarketIdNormal() {
+        return minSupermarketIdNormal;
+    }
+
+    public void setMinSupermarketIdNormal(Integer minSupermarketIdNormal) {
+        this.minSupermarketIdNormal = minSupermarketIdNormal;
+    }
+
+    public Integer getMinPriceNormal() {
+        return minPriceNormal;
+    }
+
+    public void setMinPriceNormal(Integer minPriceNormal) {
+        this.minPriceNormal = minPriceNormal;
+    }
+
+    public Integer getMaxSupermarketIdNormal() {
+        return maxSupermarketIdNormal;
+    }
+
+    public void setMaxSupermarketIdNormal(Integer maxSupermarketIdNormal) {
+        this.maxSupermarketIdNormal = maxSupermarketIdNormal;
+    }
+
+    public Integer getMaxPriceNormal() {
+        return maxPriceNormal;
+    }
+
+    public void setMaxPriceNormal(Integer maxPriceNormal) {
+        this.maxPriceNormal = maxPriceNormal;
+    }
+
+    public Integer getMinSupermarketIdSenior() {
+        return minSupermarketIdSenior;
+    }
+
+    public void setMinSupermarketIdSenior(Integer minSupermarketIdSenior) {
+        this.minSupermarketIdSenior = minSupermarketIdSenior;
+    }
+
+    public Integer getMinPriceSenior() {
+        return minPriceSenior;
+    }
+
+    public void setMinPriceSenior(Integer minPriceSenior) {
+        this.minPriceSenior = minPriceSenior;
+    }
+
+    public Integer getMaxSupermarketIdSenior() {
+        return maxSupermarketIdSenior;
+    }
+
+    public void setMaxSupermarketIdSenior(Integer maxSupermarketIdSenior) {
+        this.maxSupermarketIdSenior = maxSupermarketIdSenior;
+    }
+
+    public Integer getMaxPriceSenior() {
+        return maxPriceSenior;
+    }
+
+    public void setMaxPriceSenior(Integer maxPriceSenior) {
+        this.maxPriceSenior = maxPriceSenior;
+    }
+
+    public Integer getMinSupermarketIdSuper() {
+        return minSupermarketIdSuper;
+    }
+
+    public void setMinSupermarketIdSuper(Integer minSupermarketIdSuper) {
+        this.minSupermarketIdSuper = minSupermarketIdSuper;
+    }
+
+    public Integer getMinPriceSuper() {
+        return minPriceSuper;
+    }
+
+    public void setMinPriceSuper(Integer minPriceSuper) {
+        this.minPriceSuper = minPriceSuper;
+    }
+
+    public Integer getMaxSupermarketIdSuper() {
+        return maxSupermarketIdSuper;
+    }
+
+    public void setMaxSupermarketIdSuper(Integer maxSupermarketIdSuper) {
+        this.maxSupermarketIdSuper = maxSupermarketIdSuper;
+    }
+
+    public Integer getMaxPriceSuper() {
+        return maxPriceSuper;
+    }
+
+    public void setMaxPriceSuper(Integer maxPriceSuper) {
+        this.maxPriceSuper = maxPriceSuper;
     }
 }

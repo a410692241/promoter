@@ -15,8 +15,8 @@ public enum OrderStatus {
     RECEIVED("全部已收货（社区端）"),
     PACKED("已装箱"),
     DELIVERING("配送中"),
-    DELIVER_FINISHED("配送完成"),
-    CANCELED("取消");
+    DELIVER_FINISHED("配送完成");
+    //CANCELED("取消");
 
     private String orderTypeName;
 
