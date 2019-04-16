@@ -36,7 +36,7 @@ public class ProcurementController extends BaseController {
         try {
             pvu.Exist("procureStatus");
             ProcurementTask procurementTask = pvu.transObj(ProcurementTask.class);
-            procurementTask.setCommunityId(getUserId());
+            procurementTask.setUserId(getUserId());
             Object procurementTaskList = procurementService.getProcurementList(procurementTask);
             return new ResponseData(procurementTaskList);
         } catch (Exception e) {
