@@ -138,7 +138,7 @@ public interface OrderService {
     /**
      * 根据订单Id查询采买任务然后修改为已收货状态（通用）
      */
-    Integer updateOrderReceivedStatus(Long ordersId);
+    void updateOrderReceivedStatus(Long ordersId);
 
     /**
      * 根据用户id或者收货地址id查询所有订单列表

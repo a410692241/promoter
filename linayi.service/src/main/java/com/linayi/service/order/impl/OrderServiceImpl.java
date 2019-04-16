@@ -848,7 +848,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
 	@Override
-	public Integer updateOrderReceivedStatus(Long ordersId) {
+	public void updateOrderReceivedStatus(Long ordersId) {
 		//通过订单ordersId查询订单信息
 		Orders order =ordersMapper.getOrderById(ordersId);
 		int cou = 0;
@@ -858,17 +858,22 @@ public class OrderServiceImpl implements OrderService {
 
 		if(seceiveStatusList.size()>0) {
 
-			if(!seceiveStatusList.contains("WAIT_RECEIVE")){ //不包含等待收货
+            for (String s : seceiveStatusList) {
+                if (s.contains("RECEIVED")){
+                    cou++;
+                }
+            }
+
+			if(seceiveStatusList.size()==cou){ //全部为已收货
 
 				Orders orders = new Orders();
 				orders.setCommunityStatus("RECEIVED");
 				orders.setOrdersId(ordersId);
 				//修改订单社区状态为全部已收货
-				cou = ordersMapper.updateOrderById(orders);
-
+				 ordersMapper.updateOrderById(orders);
 				}
 			}
 		}
-		return cou; //1为修改成功，0为修改失败
+
 	}
 }
