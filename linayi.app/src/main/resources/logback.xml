@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true"  scanPeriod="60 seconds">
 	<contextName>RestAPI</contextName>
-	<property name="LOG_PATH" value=".logs"/>
+	<property name="LOG_PATH" value="/data/logs"/>
 	<!--设置系统日志目录-->
 	<property name="APPDIR" value="app"/>
 
