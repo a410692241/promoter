@@ -105,8 +105,10 @@ public class ProcurementServiceImpl implements ProcurementService {
         List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementsList(procurementTask);
         if (procurementTaskList != null && procurementTaskList.size() > 0){
             for (ProcurementTask task : procurementTaskList) {
-                GoodsSku goods = goodsSkuMapper.getGoodsById(task.getGoodsSkuId());
-                task.setGoodsImage(ImageUtil.dealToShow(goods.getImage()));
+            	if(task != null){
+					GoodsSku goods = goodsSkuMapper.getGoodsById(task.getGoodsSkuId());
+					task.setGoodsImage(ImageUtil.dealToShow(goods.getImage()));
+				}
             }
         }
 
@@ -163,7 +165,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		cl.setTime(now);
 		int hour = cl.get(Calendar.HOUR_OF_DAY);
 		if(to == 32){
-			if(hour >= from && hour <= to % 24){
+			if(hour >= from || hour <= to % 24){
 					return true;
 			}
 		}else {
@@ -218,7 +220,8 @@ public class ProcurementServiceImpl implements ProcurementService {
 					if (procurementTask.getQuantity() <= quantity){
 						procurementTask.setProcureStatus("BOUGHT");
                         procurementTask.setActualQuantity(procurementTask.getQuantity());
-					}else if(quantity >0 ){
+						procurementTask.setProcureQuantity(quantity);
+					}else if(quantity >0 && quantity < procurementTask.getQuantity()){
                         procurementTask.setProcureStatus("LACK");
                         procurementTask.setActualQuantity(quantity);
                         procurementTask.setProcureQuantity(quantity);

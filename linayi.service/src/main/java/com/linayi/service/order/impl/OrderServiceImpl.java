@@ -506,7 +506,7 @@ public class OrderServiceImpl implements OrderService {
                 areaCode = areaInfo.getParent();
             }
             orders2.setAddress(areaName + addressTwo + addressThree);
-            orders2.setStatus(orders1.getCommunityStatus());
+//            orders2.setStatus(orders1.getCommunityStatus());
             return orders2;
         }
         return null;

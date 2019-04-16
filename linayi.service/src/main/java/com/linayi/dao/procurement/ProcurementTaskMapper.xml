@@ -532,7 +532,7 @@
             pt.procure_time,
         </if>
         <if test="procureStatus != null and procureStatus == 'WAIT_OUT'">
-            pt. receive_status,
+            pt.procure_out_time,
         </if>
         pt.goods_sku_id, gs.name
         ORDER BY
@@ -540,7 +540,7 @@
             pt.procure_time ASC,
         </if>
         <if test="procureStatus != null and procureStatus == 'WAIT_OUT'">
-            pt. receive_status ASC,
+            pt.procure_out_time ASC,
         </if>
         SUM(pt.quantity) DESC
     </select>
@@ -664,9 +664,12 @@
         procurement_task pt JOIN goods_sku gs ON pt.goods_sku_id=gs.goods_sku_id
                             join community c on c.community_id=pt.community_id
      WHERE
-        pt.receive_status=#{receiveStatus}
+        (pt.receive_status=#{receiveStatus}
+      or
+        pt.receive_status='RECEIVED')
      AND
-        pt.actual_quantity > 0 GROUP BY gs.goods_sku_id,c.community_id
+        pt.actual_quantity > 0
+      GROUP BY gs.goods_sku_id,c.community_id
       order by pt.flow_out_time desc
   </select>
 
