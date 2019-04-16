@@ -167,19 +167,6 @@ public class GoodsSkuController extends BaseController {
     @RequestMapping("/vagueGoodsSku.do")
     public Object showVagueGoodsSku(@RequestBody GoodsSku goodsSku) {
     	try {
-//    		String goodsName=null;
-//    		if(param.get("goodsName")!=null) {
-//    			goodsName =param.get("goodsName").toString();
-//    		}
-//    		GoodsSku goodsSku = new GoodsSku();
-//    		goodsSku.setName(goodsName);
-//    		goodsSku.setCurrentPage(Integer.valueOf((String) param.get("currentPage")));
-//    		if(param.get("pageSize") !=null){
-//    			goodsSku.setPageSize(Integer.valueOf((String) param.get("pageSize")));
-//    		}else{
-//    			goodsSku.setPageSize(10);
-//    		}
-
     		if(goodsSku.getPageSize() == null){
     			goodsSku.setPageSize(8);
     		}
