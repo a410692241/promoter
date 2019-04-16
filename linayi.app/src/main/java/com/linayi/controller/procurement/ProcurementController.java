@@ -117,7 +117,7 @@ public class ProcurementController extends BaseController {
 	public Object updateProcurmentStatus(@RequestBody Map<String, Object> param){
 		try {
 			ParamValidUtil<ProcurementTask> pvu = new ParamValidUtil<>(param);
-			pvu.Exist("counts","goodsSkuId");
+			pvu.Exist("goodsSkuId");
 			//实际采买数量
 			ProcurementTask procurementTask = pvu.transObj(ProcurementTask.class);
 			Integer userId = getUserId();

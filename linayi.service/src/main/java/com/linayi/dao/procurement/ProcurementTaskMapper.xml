@@ -509,7 +509,7 @@
 
     <select id="getCommunityProcurementsList" resultType="com.linayi.entity.procurement.ProcurementTask">
         SELECT SUM(pt.price * pt.quantity) totalPrice, SUM(pt.quantity) totalQuantity,SUM(pt.procure_quantity) totalProcureQuantity,MIN(pt.price) * SUM(pt.procure_quantity) totalProcurePrice,MIN(pt.price) price, pt.procure_time procureTime,pt.goods_sku_id goodsSkuId, gs.name goodsSkuName,GROUP_CONCAT(pt.procurement_task_id) procurementTaskIdList
-        FROM supermarket s join procurement_task pt on s.procurer_id = #{userId} and pt.supermarket_id = s.supermarket_id join goods_sku gs on gs.goods_sku_id = pt.goods_sku_id
+        FROM supermarket s left join procurement_task pt on s.procurer_id = #{userId} and pt.supermarket_id = s.supermarket_id left join goods_sku gs on gs.goods_sku_id = pt.goods_sku_id
         <where>
             <if test="procureStatus != null and procureStatus == 'PROCURING'">
                 pt.procure_status = #{procureStatus}
@@ -528,7 +528,7 @@
             </if>
         </where>
         GROUP BY
-        <if test="procureStatus != null and procureStatus == 'PROCURING'">
+        <if test="procureStatus != null and procureStatus != 'PROCURING'">
             pt.procure_time,
         </if>
         <if test="procureStatus != null and procureStatus == 'WAIT_OUT'">
@@ -536,7 +536,7 @@
         </if>
         pt.goods_sku_id, gs.name
         ORDER BY
-        <if test="procureStatus != null and procureStatus == 'PROCURING'">
+        <if test="procureStatus != null and procureStatus != 'PROCURING'">
             pt.procure_time ASC,
         </if>
         <if test="procureStatus != null and procureStatus == 'WAIT_OUT'">
