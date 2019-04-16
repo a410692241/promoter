@@ -195,8 +195,9 @@ public class ProcurementServiceImpl implements ProcurementService {
 		Integer quantity = procurTask.getQuantity();
 		String procurementTaskIdList = procurTask.getProcurementTaskIdList();
 		List<ProcurementTask> procurementTaskList = null;
-		if (procurementTaskIdList != null)
-		procurementTaskList = procurementTaskMapper.getProcurementsList(procurementTaskIdList);
+		if (procurementTaskIdList != null){
+			procurementTaskList = procurementTaskMapper.getProcurementsList(procurementTaskIdList);
+		}
 		Date procureTime = new Date();
 		if (quantity == null){
 			//价高
@@ -256,7 +257,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		ordersGoods.setGoodsSkuId(procurementTask.getGoodsSkuId());
 		List<OrdersGoods> ordersGoodsList = ordersGoodsMapper.query(ordersGoods);
 		ordersGoods = ordersGoodsList.get(0);
-
+		ordersGoods.setUpdateTime(new Date());
 		ordersGoods.setProcureStatus("FINISHED");
 		ordersGoodsMapper.updateOrdersGoodsById(ordersGoods);
 
@@ -275,6 +276,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		if (isFinish){
 			//订单采买完成
 			orders.setCommunityStatus("PROCURE_FINISHED");
+			orders.setUpdateTime(new Date());
 			ordersMapper.updateOrderById(orders);
 		}
 		orderService.updateOrderReceivedStatus(ordersGoods.getOrdersId());
@@ -297,8 +299,9 @@ public class ProcurementServiceImpl implements ProcurementService {
 	public void updateProcurReceiveStatus(ProcurementTask procurementTask) {
 		String procurementTaskIdList = procurementTask.getProcurementTaskIdList();
 		List<ProcurementTask> procurementTaskList = null;
-		if (procurementTaskIdList != null)
-		procurementTaskList = procurementTaskMapper.getProcurementLists(procurementTask);
+		if (procurementTaskIdList != null){
+			procurementTaskList = procurementTaskMapper.getProcurementsList(procurementTaskIdList);
+		}
 		Date date = new Date();
 		if (procurementTaskList != null && procurementTaskList.size() > 0){
 			for (ProcurementTask task : procurementTaskList) {

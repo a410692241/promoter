@@ -571,6 +571,7 @@
   		procurement_task
   	WHERE
   	    procurement_task_id in (${procurementTaskIdList})
+  	    order by create_time asc
     </select>
 
     <select id="getProcurementTaskByOrdersId" resultType="com.linayi.entity.procurement.ProcurementTask">
