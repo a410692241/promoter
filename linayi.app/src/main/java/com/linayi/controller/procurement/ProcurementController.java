@@ -256,9 +256,8 @@ public class ProcurementController extends BaseController {
             ParamValidUtil<ProcurementTask> pvu = new ParamValidUtil<>(param);
             ProcurementTask procurementTask = pvu.transObj(ProcurementTask.class);
 
-            Date date = procurementTask.getAccessTime();
-            Integer goodsSkuId = procurementTask.getGoodsSkuId();
-            procurementService.confirmGoods(date,goodsSkuId);
+            String procurementTaskIdList = procurementTask.getProcurementTaskIdList();
+            procurementService.confirmGoods(procurementTaskIdList);
 		    return new ResponseData("success");
         } catch (Exception e) {
             return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
@@ -293,9 +292,8 @@ public class ProcurementController extends BaseController {
             ParamValidUtil<ProcurementTask> pvu = new ParamValidUtil<>(param);
             ProcurementTask procurementTask = pvu.transObj(ProcurementTask.class);
 
-            Integer goodsSkuId = procurementTask.getGoodsSkuId();
-            Integer communityId = procurementTask.getCommunityId();
-            procurementService.confirmDeliverGoods(communityId,goodsSkuId);
+			String procurementTaskIdList = procurementTask.getProcurementTaskIdList();
+            procurementService.confirmDeliverGoods(procurementTaskIdList);
             return new ResponseData("success");
         } catch (Exception e) {
             return new ResponseData(ErrorType.SYSTEM_ERROR).toString();

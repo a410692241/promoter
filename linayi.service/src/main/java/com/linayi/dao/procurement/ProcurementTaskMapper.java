@@ -88,10 +88,10 @@ public interface ProcurementTaskMapper {
     List<ProcurementTask> getNotReceivingGoods(ProcurementTask procurTask);
     /**
      * 流转中心任务 对未收货的商品进行收货操作
-     * @param procurTask
+     * @param procurementTaskIdList
      * @return
      */
-    void confirmGoods(ProcurementTask procurTask);
+    void confirmGoods(@Param("procurementTaskIdList") List<Long> procurementTaskIdList,@Param("flowReceiveTime") Date flowReceiveTime);
     /**
      * 流转中心任务 查询出未发货的商品列表
      * @param procurTask
@@ -100,12 +100,12 @@ public interface ProcurementTaskMapper {
     List<ProcurementTask> getNotDeliverGoods(ProcurementTask procurTask);
     /**
      * 流转中心任务 对收货的商品进行发货操作
-     * @param procurTask
+     * @param procurementTaskIdList
      * @return
      */
-    void confirmDeliverGoods(ProcurementTask procurTask);
+    void confirmDeliverGoods(@Param("procurementTaskIdList") List<Long> procurementTaskIdList,@Param("flowOutTime") Date flowOutTime);
     /**
-     * 流转中心任务 查询出未发货的商品列表
+     * 流转中心任务 查询出发货的商品列表
      * @param procurTask
      * @return
      */

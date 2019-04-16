@@ -95,11 +95,10 @@ public interface ProcurementService {
     List<ProcurementTask> getNotReceivingGoods(ProcurementTask procurTask);
     /**
      * 流转中心任务 对未收货的商品进行收货操作
-     * @param accessTime
-     * @param goodsSkuId
+     * @param procurementTaskIdList
      * @return
      */
-    void confirmGoods(Date accessTime,Integer goodsSkuId);
+    void confirmGoods(String procurementTaskIdList);
     /**
      * 流转中心任务 查询出未发货的商品列表
      * @param procurTask
@@ -108,11 +107,10 @@ public interface ProcurementService {
     List<ProcurementTask> getNotDeliverGoods(ProcurementTask procurTask);
     /**
      * 流转中心任务 对收货的商品进行发货操作
-     * @param communityId
-     * @param goodsSkuId
+     * @param procurementTaskIdList
      * @return
      */
-    void confirmDeliverGoods(Integer communityId,Integer goodsSkuId);
+    void confirmDeliverGoods(String procurementTaskIdList);
 
     List<ProcurementTask> getCommunityProcurements(ProcurementTask procurementTask);
     /**

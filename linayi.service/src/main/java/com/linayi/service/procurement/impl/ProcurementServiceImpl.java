@@ -551,12 +551,14 @@ public class ProcurementServiceImpl implements ProcurementService {
 	}
 	@Override
 	@Transactional
-	public void confirmGoods(Date accessTime,Integer goodsSkuId) {
-		ProcurementTask procurTask = new ProcurementTask();
-		procurTask.setAccessTime(accessTime);
-		procurTask.setGoodsSkuId(goodsSkuId);
-		procurTask.setFlowReceiveTime(new Date());
-		procurementTaskMapper.confirmGoods(procurTask);
+	public void confirmGoods(String procurementTaskIdList) {
+		List<Long> list = new ArrayList<>();
+		List<String> gameids = Arrays.asList(procurementTaskIdList.split(","));
+		for(int i=0;i<gameids.size();i++){
+			list.add(Long.valueOf(gameids.get(i)));
+		}
+		Date flowReceiveTime = new Date();
+		procurementTaskMapper.confirmGoods(list,flowReceiveTime);
 	}
 	@Override
 	public List<ProcurementTask> getNotDeliverGoods(ProcurementTask procurTask) {
@@ -570,12 +572,14 @@ public class ProcurementServiceImpl implements ProcurementService {
 	}
 	@Override
 	@Transactional
-	public void confirmDeliverGoods(Integer communityId,Integer goodsSkuId) {
-		ProcurementTask procurTask = new ProcurementTask();
-		procurTask.setCommunityId(communityId);
-		procurTask.setGoodsSkuId(goodsSkuId);
-		procurTask.setFlowOutTime(new Date());
-		procurementTaskMapper.confirmDeliverGoods(procurTask);
+	public void confirmDeliverGoods(String procurementTaskIdList) {
+		List<Long> list = new ArrayList<>();
+		List<String> gameids = Arrays.asList(procurementTaskIdList.split(","));
+		for(int i=0;i<gameids.size();i++){
+			list.add(Long.valueOf(gameids.get(i)));
+		}
+		Date flowOutTime = new Date();
+		procurementTaskMapper.confirmDeliverGoods(list,flowOutTime);
 	}
 	@Override
 	public List<ProcurementTask> getDeliverGoodsList(ProcurementTask procurTask) {
