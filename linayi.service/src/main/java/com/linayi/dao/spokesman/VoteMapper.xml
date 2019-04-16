@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.spokesman.VoteMapper">
+  <insert id="insert" parameterType="com.linayi.entity.spokesman.Vote">
+    insert into vote (vote_id, user_id, spokesman_id, 
+      update_time, create_time)
+    values (#{voteId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{spokesmanId,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+</mapper>

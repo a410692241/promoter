@@ -236,7 +236,7 @@
 
 
 
-  <!-- 根据用户的uid的默认收货地址找到绑定的5家超市 -->
+  <!-- 根据用户的uid的默认收货地址找到绑定的超市 -->
   <!--List<Supermarket> getSupermarketByAddress(); -->
   <select id="getSupermarketByAddress" parameterType="java.lang.Integer"
   resultType="com.linayi.entity.supermarket.Supermarket">
@@ -260,6 +260,8 @@
 		  <if test="userId != null">
 			  AND ra.user_id = #{userId}
 		  </if>
+	ORDER BY
+	  	cs.rank
 
   </select>
 
@@ -286,8 +288,23 @@
 
   	</select>
 
-	<select id="getSupermarketCommunityId" resultType="java.lang.Integer">
-		select cs.community_id from supermarket s join community_supermarket cs on s.user_id = #{userId} and cs.supermarket_id = s.supermarket_id
-	</select>
+	<!-- 根据社区id和超市集合获取超市名字集合 -->
+	<select id="getSupermarketBycommunityIdAndSupermarketIdList" resultType="java.lang.String">
+  		SELECT
+  			s.name
+  		FROM
+  			supermarket s,community_supermarket cs
+  		<where>
+			s.supermarket_id = cs.supermarket_id
+		AND
+  			s.supermarket_id IN
+			<foreach collection="supermarketIdList" item="item" index="index"
+					 open="(" separator="," close=")">
+				${item}
+			</foreach>
+  		AND
+  			cs.community_id=#{communityId}
+		</where>
+  	</select>
 
 </mapper>

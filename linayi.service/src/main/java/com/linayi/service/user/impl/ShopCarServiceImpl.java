@@ -3,22 +3,26 @@ package com.linayi.service.user.impl;
 import com.linayi.dao.address.ReceiveAddressMapper;
 import com.linayi.dao.area.SmallCommunityMapper;
 import com.linayi.dao.goods.AttributeMapper;
+import com.linayi.dao.goods.CommunityGoodsMapper;
 import com.linayi.dao.goods.GoodsSkuMapper;
 import com.linayi.dao.user.ShoppingCarMapper;
 import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.area.SmallCommunity;
+import com.linayi.entity.goods.CommunityGoods;
 import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.goods.SupermarketGoods;
+import com.linayi.entity.promoter.OpenMemberInfo;
 import com.linayi.entity.user.ReceiveAddress;
 import com.linayi.entity.user.ShoppingCar;
 import com.linayi.entity.user.User;
+import com.linayi.enums.MemberLevel;
 import com.linayi.service.goods.BrandService;
+import com.linayi.service.goods.CommunityGoodsService;
 import com.linayi.service.goods.SupermarketGoodsService;
+import com.linayi.service.promoter.OpenMemberInfoService;
+import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.service.user.ShopCarService;
-import com.linayi.util.CheckUtil;
-import com.linayi.util.ConstantUtil;
-import com.linayi.util.ImageUtil;
-import com.linayi.util.NumberUtil;
+import com.linayi.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,15 +39,17 @@ public class ShopCarServiceImpl implements ShopCarService {
     @Autowired
     private SupermarketGoodsService supermarketGoodsService;
     @Autowired
-    private BrandService brandService;
-    @Autowired
     private ReceiveAddressMapper receiveAddressMapper;
     @Autowired
     private SmallCommunityMapper smallCommunityMapper;
     @Autowired
-    private AttributeMapper attributeMapper;
+    private OpenMemberInfoService openMemberInfoService;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private CommunityGoodsService communityGoodsService;
+    @Autowired
+    private SupermarketService supermarketService;
 
     @Override
     public void addShopCar(ShoppingCar shoppingCar) {
@@ -67,30 +73,23 @@ public class ShopCarServiceImpl implements ShopCarService {
         List<ShoppingCar> ShoppingCars = shoppingCarMapper.getAllCarByReceiveAddressId(shoppingCar);
         Map<String, Object> map = new HashMap<>();
         Integer totalPrice = 0;//合计总价格
-        ReceiveAddress receiveAddress = new ReceiveAddress();
-        receiveAddress.setReceiveAddressId(receiveAddressId);
-        ReceiveAddress receiveAddress1 = receiveAddressMapper.selectAddbyacGdAdId(receiveAddress);
-        SmallCommunity smallCommunity = new SmallCommunity();
-        smallCommunity.setSmallCommunityId(receiveAddress1.getAddressOne());
-        smallCommunity = smallCommunityMapper.getSmallCommunity(smallCommunity);
+        MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(shoppingCar.getUserId());
         for (ShoppingCar car : ShoppingCars) {
             //查出商品的最高价格最低价格
-            List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getSupermarketGoodsList(car.getGoodsSkuId(), smallCommunity.getCommunityId());
-            Integer minPrice = 0;
-            if (supermarketGoodsList != null && supermarketGoodsList.size() > 0){
-                minPrice = supermarketGoodsList.get(supermarketGoodsList.size() - 1).getPrice();
-            }
+            CommunityGoods communityGoods = communityGoodsService.getCommunityGoodsByGoodsId(car.getGoodsSkuId());
+            Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketIdAndPriceByLevel(currentMemberLevel, communityGoods);
+            Integer minPrice = idAndPriceByLevel[0];
             car.setMinPrice(getpriceString(minPrice));
-            car.setMinSupermarketName(supermarketGoodsList.get(supermarketGoodsList.size() - 1).getSupermarketName());
+            car.setMinSupermarketName(supermarketService.getSupermarketById(idAndPriceByLevel[1]).getName());
             GoodsSku goodsSku = goodsSkuMapper.getGoodsById(car.getGoodsSkuId());
 
             //图片信息处理
             car.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
             car.setGoodsName(goodsSku.getFullName());
             if ("SELECTED".equals(car.getSelectStatus())){
-                List<SupermarketGoods> supermarketGoodss = getSupermarketGoodsByGoodsSkuId(car);
+                //List<SupermarketGoods> supermarketGoodss = getSupermarketGoodsByGoodsSkuId(car);
 //                car.setHeJiPrice(getpriceString(car.getQuantity() * supermarketGoods.getPrice()));
-                totalPrice += car.getQuantity() *  supermarketGoodss.get(0).getPrice();
+                totalPrice += car.getQuantity() *  minPrice;
             }
 
         }
@@ -160,12 +159,6 @@ public class ShopCarServiceImpl implements ShopCarService {
         shoppingCar.setSelectStatus("SELECTED");
         //所有购物车
         List<ShoppingCar> shoppingCars = shoppingCarMapper.getAllCarByReceiveAddressId(shoppingCar);
-        ReceiveAddress receiveAddress = new ReceiveAddress();
-        receiveAddress.setReceiveAddressId(shoppingCar.getReceiveAddressId());
-        ReceiveAddress receiveAddress1 = receiveAddressMapper.selectAddbyacGdAdId(receiveAddress);
-        SmallCommunity smallCommunity = new SmallCommunity();
-        smallCommunity.setSmallCommunityId(receiveAddress1.getAddressOne());
-        smallCommunity = smallCommunityMapper.getSmallCommunity(smallCommunity);
 
         // 总价
         Integer totalPrice = 0;
@@ -184,31 +177,28 @@ public class ShopCarServiceImpl implements ShopCarService {
         result.put("deliveryTime",deliveryTime);
         // 共多少件
         Integer totalPipce = 0;
+        MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(shoppingCar.getUserId());
 
         for (ShoppingCar car : shoppingCars) {
             totalPipce += car.getQuantity();
             GoodsSku goodsSku = goodsSkuMapper.getGoodsById(car.getGoodsSkuId());
             car.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
             car.setGoodsName(goodsSku.getFullName());
-            //通过商品ID和网点ID查找对应的商品价格表从高到底排列
-            List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getSupermarketGoodsList(car.getGoodsSkuId(), smallCommunity.getCommunityId());
-            Integer minPrice = 0;
-            Integer maxPrice = 0;
-            if (supermarketGoodsList != null && supermarketGoodsList.size() > 0){
-                minPrice = supermarketGoodsList.get(supermarketGoodsList.size() - 1).getPrice();
-                maxPrice = supermarketGoodsList.get(0).getPrice();
-            }
+            CommunityGoods communityGoods = communityGoodsService.getCommunityGoodsByGoodsId(car.getGoodsSkuId());
+            Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketIdAndPriceByLevel(currentMemberLevel, communityGoods);
+            Integer minPrice = idAndPriceByLevel[0];
+            Integer maxPrice = idAndPriceByLevel[2];
 
             car.setMinPrice(getpriceString(minPrice));
             car.setMaxPrice(getpriceString(maxPrice));
-            car.setMaxSupermarketName(supermarketGoodsList.get(0).getSupermarketName());
-            car.setMinSupermarketName(supermarketGoodsList.get(supermarketGoodsList.size() - 1).getSupermarketName());
+            car.setMaxSupermarketName(supermarketService.getSupermarketById(idAndPriceByLevel[3]).getName());
+            car.setMinSupermarketName(supermarketService.getSupermarketById(idAndPriceByLevel[1]).getName());
             car.setSpreadRate(NumberUtil.formatDouble((maxPrice - minPrice) * 100 / Double.parseDouble(minPrice + "")) + "%");
             offerPrice += (maxPrice - minPrice) * car.getQuantity();
             if ("SELECTED".equals(car.getSelectStatus())){
-                List<SupermarketGoods> supermarketGoodss = getSupermarketGoodsByGoodsSkuId(car);
-                car.setHeJiPrice(getpriceString(car.getQuantity() * supermarketGoodss.get(0).getPrice()));
-                totalPrice += car.getQuantity() * supermarketGoodss.get(0).getPrice();
+//                List<SupermarketGoods> supermarketGoodss = getSupermarketGoodsByGoodsSkuId(car);
+                car.setHeJiPrice(getpriceString(car.getQuantity() * minPrice));
+                totalPrice += car.getQuantity() * minPrice;
             }
         }
         result.put("shopCars",shoppingCars);

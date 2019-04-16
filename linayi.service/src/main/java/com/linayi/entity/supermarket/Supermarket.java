@@ -9,6 +9,8 @@ import java.util.List;
 public class Supermarket extends BaseEntity {
     private Integer supermarketId;
 
+    private Integer rank;//[超市排序]
+
     private String name;
 
     private String areaCode;
@@ -54,6 +56,10 @@ public class Supermarket extends BaseEntity {
 	@DateTimeFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
 	private Date createTimeEnd;
 
+    /**
+     * 商品id
+     */
+	private Long goodsSkuId;
 
     public Date getCreateTimeStart() {
 		return createTimeStart;
@@ -204,7 +210,15 @@ public class Supermarket extends BaseEntity {
 		this.correctId = correctId;
 	}
 
-	@Override
+    public Long getGoodsSkuId() {
+        return goodsSkuId;
+    }
+
+    public void setGoodsSkuId(Long goodsSkuId) {
+        this.goodsSkuId = goodsSkuId;
+    }
+
+    @Override
 	public String toString() {
 		return "Supermarket [supermarketId=" + supermarketId + ", name=" + name + ", areaCode=" + areaCode
 				+ ", areaName=" + areaName + ", address=" + address + ", status=" + status + ", logo=" + logo
@@ -220,5 +234,13 @@ public class Supermarket extends BaseEntity {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Integer getRank() {
+        return rank;
+    }
+
+    public void setRank(Integer rank) {
+        this.rank = rank;
     }
 }

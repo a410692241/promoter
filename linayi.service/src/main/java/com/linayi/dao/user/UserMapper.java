@@ -81,4 +81,11 @@ public interface UserMapper {
      * @return
      */
     Integer getOpenOrderManInfoIdByUserId(Integer userId);
+
+    /**
+     * 获取用户信息(代言人参选页面:昵称,电话,区域)
+     * @param userId
+     * @return
+     */
+    User getUserForSpokesMan(Integer userId);
 }

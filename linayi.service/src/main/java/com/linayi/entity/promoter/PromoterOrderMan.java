@@ -1,15 +1,13 @@
 package com.linayi.entity.promoter;
 
-import java.util.Date;
-
+import com.linayi.entity.BaseEntity;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.linayi.entity.BaseEntity;
+import java.util.Date;
 
-import io.swagger.annotations.ApiModelProperty;
-
-public class PromoterOrderMan extends BaseEntity{
-	private Integer promoterOrderManId;
+public class PromoterOrderMan extends BaseEntity {
+    private Integer promoterOrderManId;
 
     private Integer promoterId;
 
@@ -23,51 +21,57 @@ public class PromoterOrderMan extends BaseEntity{
 
     @ApiModelProperty(name = "createTime", value = "创建时间")
     private Date createTime;
-    
+
+    @ApiModelProperty(name = "parentType", value = "上级类型")
+    private String parentType;
+
     @ApiModelProperty(name = "headImage", value = "头像")
-    private String headImage;	//头像(首页)
-    
+    private String headImage;            //头像(首页)
+
     @ApiModelProperty(name = "homePageIncome", value = "首页总成交额")
-    private Integer homePageIncome;	//总成交额(首页)
-    
+    private Integer homePageIncome;            //总成交额(首页)
+
     @ApiModelProperty(name = "numberOfOrders", value = "订单数")
-    private Integer numberOfOrders;	//订单数(通用)
-    
+    private Integer numberOfOrders;            //订单数(通用)
+
     @ApiModelProperty(name = "totalSum", value = "订单合计金额")
-    private Integer totalSum;	//订单合计金额(通用)
-    
+    private Integer totalSum;            //订单合计金额(通用)
+
+    @ApiModelProperty(name = "totalHundredSum", value = "订单合计大于或等于100金额")
+    private Integer totalHundredSum;            //订单合计大于或等于100金额(通用)
+
     @ApiModelProperty(name = "numberOfMembers", value = "会员数量")
-    private Integer numberOfMembers;	//会员数量(通用)
-    
+    private Integer numberOfMembers;            //会员数量(通用)
+
     @ApiModelProperty(name = "numberOfOrderMan", value = "下单员数量")
-    private Integer numberOfOrderMan;	//下单员数量(通用)
-    
+    private Integer numberOfOrderMan;            //下单员数量(通用)
+
     @ApiModelProperty(name = "numberOfUser", value = "客户数量")
-    private Integer numberOfUser;	//客户数量(合计客户)
-    
+    private Integer numberOfUser;            //客户数量(合计客户)
+
     @ApiModelProperty(name = "orderProfit", value = "订单额返利")
-    private Integer orderProfit;	//订单额返利
-    
+    private Integer orderProfit;            //订单额返利
+
     @ApiModelProperty(name = "orderStatisticsData3", value = "订单统计接口第三个显示数据")
-    private Integer orderStatisticsData3;	//订单统计接口第三个显示数据（适应前端框架，将每个订单统计页面第三个数据存到属性返回给前端）
-   
+    private Integer orderStatisticsData3;            //订单统计接口第三个显示数据（适应前端框架，将每个订单统计页面第三个数据存到属性返回给前端）
+
     @ApiModelProperty(name = "nickname", value = "昵称")
-    private String nickname;	//昵称
-   
-   @ApiModelProperty(name = "openMemberTime", value = "会员开通时间")
-   @DateTimeFormat( pattern = "yyyy-MM-dd HH:mm" )
-   private Date openMemberTime;	//会员开通时间
-   
-   @ApiModelProperty(name = "mobile", value = "电话号码")
-   private String mobile;	//电话号码
-   
-   @ApiModelProperty(name = "address", value = "地址")
-   private String address;	//地址
-   
-   private Integer userId;
-   
-   private String date;	//用于查询订单统计时时查询本月还是全部	本月MONTH 	全部:ALL
-   
+    private String nickname;            //昵称
+
+    @ApiModelProperty(name = "openMemberTime", value = "会员开通时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private Date openMemberTime;            //会员开通时间
+
+    @ApiModelProperty(name = "mobile", value = "电话号码")
+    private String mobile;            //电话号码
+
+    @ApiModelProperty(name = "address", value = "地址")
+    private String address;            //地址
+
+    private Integer userId;
+
+    private String date;            //用于查询订单统计时时查询本月还是全部	本月MONTH 	全部:ALL
+
 
     public Integer getPromoterOrderManId() {
         return promoterOrderManId;
@@ -117,127 +121,141 @@ public class PromoterOrderMan extends BaseEntity{
         this.createTime = createTime;
     }
 
-	public String getHeadImage() {
-		return headImage;
-	}
+    public String getHeadImage() {
+        return headImage;
+    }
 
-	public void setHeadImage(String headImage) {
-		this.headImage = headImage;
-	}
+    public void setHeadImage(String headImage) {
+        this.headImage = headImage;
+    }
 
-	
 
-	public Integer getHomePageIncome() {
-		return homePageIncome;
-	}
+    public Integer getHomePageIncome() {
+        return homePageIncome;
+    }
 
-	public void setHomePageIncome(Integer homePageIncome) {
-		this.homePageIncome = homePageIncome;
-	}
+    public void setHomePageIncome(Integer homePageIncome) {
+        this.homePageIncome = homePageIncome;
+    }
 
-	public Integer getNumberOfOrders() {
-		return numberOfOrders;
-	}
+    public Integer getNumberOfOrders() {
+        return numberOfOrders;
+    }
 
-	public void setNumberOfOrders(Integer numberOfOrders) {
-		this.numberOfOrders = numberOfOrders;
-	}
+    public void setNumberOfOrders(Integer numberOfOrders) {
+        this.numberOfOrders = numberOfOrders;
+    }
 
-	public Integer getTotalSum() {
-		return totalSum;
-	}
+    public Integer getTotalSum() {
+        return totalSum;
+    }
 
-	public void setTotalSum(Integer totalSum) {
-		this.totalSum = totalSum;
-	}
+    public void setTotalSum(Integer totalSum) {
+        this.totalSum = totalSum;
+    }
 
-	public Integer getNumberOfMembers() {
-		return numberOfMembers;
-	}
+    public Integer getNumberOfMembers() {
+        return numberOfMembers;
+    }
 
-	public void setNumberOfMembers(Integer numberOfMembers) {
-		this.numberOfMembers = numberOfMembers;
-	}
+    public void setNumberOfMembers(Integer numberOfMembers) {
+        this.numberOfMembers = numberOfMembers;
+    }
 
-	public Integer getNumberOfOrderMan() {
-		return numberOfOrderMan;
-	}
+    public Integer getNumberOfOrderMan() {
+        return numberOfOrderMan;
+    }
 
-	public void setNumberOfOrderMan(Integer numberOfOrderMan) {
-		this.numberOfOrderMan = numberOfOrderMan;
-	}
+    public void setNumberOfOrderMan(Integer numberOfOrderMan) {
+        this.numberOfOrderMan = numberOfOrderMan;
+    }
 
-	public Integer getNumberOfUser() {
-		return numberOfUser;
-	}
+    public Integer getNumberOfUser() {
+        return numberOfUser;
+    }
 
-	public void setNumberOfUser(Integer numberOfUser) {
-		this.numberOfUser = numberOfUser;
-	}
+    public void setNumberOfUser(Integer numberOfUser) {
+        this.numberOfUser = numberOfUser;
+    }
 
-	public Integer getOrderProfit() {
-		return orderProfit;
-	}
+    public Integer getOrderProfit() {
+        return orderProfit;
+    }
 
-	public void setOrderProfit(Integer orderProfit) {
-		this.orderProfit = orderProfit;
-	}
+    public void setOrderProfit(Integer orderProfit) {
+        this.orderProfit = orderProfit;
+    }
 
-	public Integer getOrderStatisticsData3() {
-		return orderStatisticsData3;
-	}
+    public Integer getOrderStatisticsData3() {
+        return orderStatisticsData3;
+    }
 
-	public void setOrderStatisticsData3(Integer orderStatisticsData3) {
-		this.orderStatisticsData3 = orderStatisticsData3;
-	}
+    public void setOrderStatisticsData3(Integer orderStatisticsData3) {
+        this.orderStatisticsData3 = orderStatisticsData3;
+    }
 
-	public String getNickname() {
-		return nickname;
-	}
+    public String getNickname() {
+        return nickname;
+    }
 
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
 
-	public Date getOpenMemberTime() {
-		return openMemberTime;
-	}
+    public Date getOpenMemberTime() {
+        return openMemberTime;
+    }
 
-	public void setOpenMemberTime(Date openMemberTime) {
-		this.openMemberTime = openMemberTime;
-	}
+    public void setOpenMemberTime(Date openMemberTime) {
+        this.openMemberTime = openMemberTime;
+    }
 
-	public String getMobile() {
-		return mobile;
-	}
+    public String getMobile() {
+        return mobile;
+    }
 
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
 
-	public String getAddress() {
-		return address;
-	}
+    public String getAddress() {
+        return address;
+    }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-	public Integer getUserId() {
-		return userId;
-	}
+    public Integer getUserId() {
+        return userId;
+    }
 
-	public void setUserId(Integer userId) {
-		this.userId = userId;
-	}
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
-	public String getDate() {
-		return date;
-	}
+    public String getDate() {
+        return date;
+    }
 
-	public void setDate(String date) {
-		this.date = date;
-	}
-    
-    
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+
+    public Integer getTotalHundredSum() {
+        return totalHundredSum;
+    }
+
+    public void setTotalHundredSum(Integer totalHundredSum) {
+        this.totalHundredSum = totalHundredSum;
+    }
+
+    public String getParentType() {
+        return parentType;
+    }
+
+    public void setParentType(String parentType) {
+        this.parentType = parentType;
+    }
 }

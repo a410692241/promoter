@@ -76,7 +76,10 @@ public class SmallCommunityController {
 	public ResponseData saveOrders(Orders orders){
 		ResponseData rr = null;
 		if(orders.getCommunityStatus()!=null&&orders.getCommunityStatus()!=""){
-			orderService.updateOrderById(orders);
+			Integer integer = orderService.updateOrderById(orders);
+			if (integer==0){
+				new ResponseData(ErrorType.NOT_MODIFY);
+			}
 			rr = new ResponseData(orders);
 			return rr;
 		}else{

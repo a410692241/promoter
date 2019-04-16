@@ -253,7 +253,7 @@ public class PromoterController extends BaseController {
 		ResponseData rr = null;
 		try {
 			String range = param.getDate();
-			PromoterOrderMan promoterOrderMan = promoterOrderManService.getStatisALL(getUserId(), range,"CUSTOMER");
+			PromoterOrderMan promoterOrderMan = promoterOrderManService.getStatisALL(getUserId(), range,"CUSTOMER",null);
 			promoterOrderMan.setOrderStatisticsData3(promoterOrderMan.getNumberOfMembers());
 			if(promoterOrderMan.getNumberOfMembers() == null){
 				promoterOrderMan.setOrderStatisticsData3(0);

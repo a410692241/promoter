@@ -5,7 +5,10 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import com.linayi.entity.account.Account;
+import com.linayi.exception.BusinessException;
 import com.linayi.service.account.AccountService;
+import com.linayi.service.community.CommunitySupermarketService;
+import com.linayi.service.community.impl.CommunitySupermarketServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,6 +30,9 @@ public class CommunityController {
 
 	@Resource
 	private AccountService accountService;
+	@Resource
+	private CommunitySupermarketService communitySupermarketService;
+
 	/**
 	 * 展示社区列表
 	 * @param community
@@ -92,5 +98,18 @@ public class CommunityController {
 			mv.addObject("account", account);
 		}
 		return mv;
+	}
+
+	@RequestMapping("/updateCommunityPrice.do")
+	@ResponseBody
+	public Object updateCommunityPrice(Integer communityId) {
+		try {
+			communitySupermarketService.toUpdateCommunityPrice(communityId);
+			return new ResponseData("社区商品价格更新成功！");
+		}catch (BusinessException e) {
+			return new ResponseData(e.getErrorType()).toString();
+		} catch (Exception e) {
+			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+		}
 	}
 }

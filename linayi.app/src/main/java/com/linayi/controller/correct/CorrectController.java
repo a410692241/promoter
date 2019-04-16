@@ -1,24 +1,9 @@
 package com.linayi.controller.correct;
 
 
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.linayi.controller.BaseController;
 import com.linayi.entity.correct.Correct;
 import com.linayi.entity.correct.SupermarketGoodsVersion;
-import com.linayi.entity.order.SelfOrderMessage;
 import com.linayi.enums.OperatorType;
 import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
@@ -26,6 +11,18 @@ import com.linayi.service.correct.CorrectService;
 import com.linayi.service.correct.SupermarketGoodsVersionService;
 import com.linayi.util.ParamValidUtil;
 import com.linayi.util.ResponseData;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/correct/correct")
@@ -33,7 +30,7 @@ public class CorrectController extends BaseController {
 
 	@Autowired
 	private CorrectService correctService;
-	
+
 	@Resource
 	private SupermarketGoodsVersionService supermarketGoodsVersionService;
 
@@ -51,14 +48,14 @@ public class CorrectController extends BaseController {
 		return "share";
 	}
 
-	
-	
+
+
 	@RequestMapping("/correct.do")
 	@ResponseBody
 	public Object correct(Correct correct,MultipartFile file){
 		try {
 			if(	(correct.getPrice() == null || correct.getPrice() <= 0) ||
-				(file == null) ||
+//				(file == null) ||
 				(correct.getPriceType() == null || "".equals(correct.getPriceType())) ||
 				(correct.getStartTime() == null) ||
 				(correct.getEndTime() == null) ||
@@ -68,12 +65,12 @@ public class CorrectController extends BaseController {
 				){
 				throw new BusinessException(ErrorType.INCOMPLETE_INFO);
 			}
-		
+
 			Integer userId = getUserId();
 			correct.setUserId(userId);
 			String userType=OperatorType.USER.toString();
 			correctService.correct(correct, file, userType);
-			
+
 			return new ResponseData("您的纠错申请提交成功!").toString();
 		} catch (BusinessException e) {
 			return new ResponseData(e.getErrorType()).toString();
@@ -81,13 +78,13 @@ public class CorrectController extends BaseController {
 			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
 		}
 	}
-	
-	
+
+
 	@RequestMapping("/share.do")
 	@ResponseBody
 	public Object share(Correct correct,MultipartFile file){
 		try {
-			if(	
+			if(
 				(correct.getPrice() == null || correct.getPrice() <= 0) ||
 //				(file == null) ||
 				(correct.getPriceType() == null || "".equals(correct.getPriceType())) ||
@@ -98,7 +95,7 @@ public class CorrectController extends BaseController {
 			){
 				throw new BusinessException(ErrorType.INCOMPLETE_INFO);
 			}
-			
+
 			// 线程安全并发处理
 			initVersion(correct);
 
@@ -113,7 +110,7 @@ public class CorrectController extends BaseController {
 			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
 		}
 	}
-	
+
 	public void initVersion(Correct correct){
 		try {
 			SupermarketGoodsVersion version = new SupermarketGoodsVersion();
@@ -123,7 +120,7 @@ public class CorrectController extends BaseController {
 		} catch (Exception e) {}
 	}
 
-	
+
 	@RequestMapping("/view.do")
 	@ResponseBody
 	public Object view(@RequestBody Map<String, Object> param){
@@ -134,18 +131,18 @@ public class CorrectController extends BaseController {
 				throw new BusinessException(ErrorType.INCOMPLETE_INFO);
 			}
 			Correct correct1=correctService.showView(correct.getCorrectId());
-			
+
 			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			correct1.setStrStartTime(sdf.format(correct1.getStartTime()));
 			correct1.setStrEndTime(sdf.format(correct1.getEndTime()));
-			
+
 			return new ResponseData(correct1);
 		} catch (BusinessException e) {
 			return new ResponseData(e.getErrorType()).toString();
 		} catch (Exception e) {
 			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
 		}
-	} 
+	}
 
 	@RequestMapping("/recall.do")
 	@ResponseBody
@@ -155,7 +152,7 @@ public class CorrectController extends BaseController {
 		try {
 			Integer userId = getUserId();
 			correct.setUserId(userId);
-			
+
 			String userType=OperatorType.USER.toString();
 			correctService.recall(correct,userType);
 			return new ResponseData("撤回成功!");
@@ -172,15 +169,15 @@ public class CorrectController extends BaseController {
 		try{
 			Integer userId = getUserId();
 			List<Correct> correctList = correctService.selectCorrectListByUserId(userId);
-			
+
 			return new ResponseData(correctList);
 		}catch(Exception e){
 			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
 		}
-		
+
 	}
-	
-	
+
+
 	@RequestMapping("/historyView.do")
 	@ResponseBody
 	public Object historyView(@RequestBody Map<String,Object> param){
@@ -190,9 +187,9 @@ public class CorrectController extends BaseController {
 			if(param.get("correctId") == null || ((Integer)param.get("correctId") <= 0)){
 				throw new BusinessException(ErrorType.INCOMPLETE_INFO);
 			}
-			
+
 			Correct correct1=correctService.historyView(correct);
-			
+
 			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			correct1.setStrStartTime(sdf.format(correct1.getStartTime()));
 			correct1.setStrEndTime(sdf.format(correct1.getEndTime()));
@@ -201,8 +198,8 @@ public class CorrectController extends BaseController {
 			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
 		}
 	}
-	
-	
+
+
 	@RequestMapping("/searchgoodsname.do")
 	@ResponseBody
 	public Object searchHistory(@RequestBody Correct correct){
@@ -211,11 +208,11 @@ public class CorrectController extends BaseController {
 			if(correct.getPageSize() == null){
 				correct.setPageSize(8);
     		}
-			
+
 			Integer userId = getUserId();
 			correct.setUserId(userId);
 			List<Correct> correctList = correctService.selectCorrectListByGoodsName(correct);
-			
+
 			 Integer totalPage = (int) Math.ceil(Double.valueOf(correct.getTotal())/Double.valueOf(correct.getPageSize()));
 				if(totalPage <= 0){
 					totalPage++;
@@ -223,13 +220,13 @@ public class CorrectController extends BaseController {
 				Map<String , Object> map = new HashMap<>();
 				map.put("data", correctList);
 				map.put("totalPage", totalPage);
-				map.put("currentPage",correct.getCurrentPage() ); 
-					
+				map.put("currentPage",correct.getCurrentPage() );
+
 			return new ResponseData(map);
 		} catch (Exception e) {
 			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
 		}
-		
+
 	}
-	
+
 }

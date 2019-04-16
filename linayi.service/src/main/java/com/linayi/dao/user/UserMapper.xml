@@ -335,4 +335,23 @@ userId); -->
     	where
     		user_id=#{userId}
     </select>
+
+    <!--获取用户信息(代言人参选页面:昵称,电话,区域)-->
+    <!--  User getUserForSpokesMan(Integer userId)-->
+    <select id="getUserForSpokesMan" resultType="com.linayi.entity.user.User">
+       SELECT
+        u.nickname,
+        ra.mobile,
+        sc.small_community_id,
+        sc.NAME,
+        a.CODE
+      FROM
+        user u
+        JOIN receive_address ra ON u.default_receive_address_id = ra.receive_address_id
+        JOIN small_community sc on ra.address_one = sc.small_community_id
+        JOIN area a ON sc.area_code = a.code
+      WHERE
+	    u.user_id = #{userId}
+
+    </select>
 </mapper>

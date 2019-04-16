@@ -41,6 +41,20 @@ public class AuthenticationApply extends BaseEntity implements Serializable{
     
     private Integer smallCommunityId;
 
+
+    //代言人部分属性
+    private String nickname;
+
+    private String specialty;
+
+    private String hobby;
+
+    private String motto;
+
+    private String image;
+
+
+
 	public Integer getSmallCommunityId() {
 		return smallCommunityId;
 	}
@@ -185,7 +199,49 @@ public class AuthenticationApply extends BaseEntity implements Serializable{
         this.updateTime = updateTime;
     }
 
-	@Override
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getSpecialty() {
+        return specialty;
+    }
+
+    public void setSpecialty(String specialty) {
+        this.specialty = specialty;
+    }
+
+    public String getHobby() {
+        return hobby;
+    }
+
+    public void setHobby(String hobby) {
+        this.hobby = hobby;
+    }
+
+    public String getMotto() {
+        return motto;
+    }
+
+    public void setMotto(String motto) {
+        this.motto = motto;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+
+
+    @Override
 	public String toString() {
 		return "AuthenticationApply [applyId=" + applyId + ", userId=" + userId + ", authenticationType="
 				+ authenticationType + ", realName=" + realName + ", mobile=" + mobile + ", idCardFront=" + idCardFront

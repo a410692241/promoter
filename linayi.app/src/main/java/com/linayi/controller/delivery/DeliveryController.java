@@ -75,6 +75,7 @@ public class DeliveryController extends BaseController {
         try {
             ParamValidUtil<Orders> pa = new ParamValidUtil<>(param);
             Orders orders = pa.transObj(Orders.class);
+            orders.setDelivererId(getUserId());
             int num = deliveryTaskService.updateFinishedStatus(orders);
             return new ResponseData(num);
         } catch (Exception e) {

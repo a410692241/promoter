@@ -71,8 +71,8 @@ public class ResponseInterceptor {
                 requestBody = (Map<String, Object>) arg;
             }
         }
-        ApiLogs apiLogs = new ApiLogs();
-        apiLogs.setRequestUrl(request.getRequestURI());
+//        ApiLogs apiLogs = new ApiLogs();
+//        apiLogs.setRequestUrl(request.getRequestURI());
         String accessToken = request.getHeader("accessToken");
         if(accessToken != null && !("null".equals(accessToken))){
             Account userByToken = userService.getUserIdByToken(accessToken);
@@ -85,22 +85,22 @@ public class ResponseInterceptor {
                 Map<String, Object> map = new HashMap<>();
                 map.put("userId", userId);
                 map.put("accountId", accountId);
-                apiLogs.setRequestHead(JSON.toJSONString(map));
+//                apiLogs.setRequestHead(JSON.toJSONString(map));
             }
 
         }
         Object result = joinPoint.proceed();
 
-        apiLogs.setRequestTime(new Date());
-        apiLogs.setRequestBody(JSONObject.toJSONString( requestBody ));
-        if (result instanceof ResponseData) {
-            ResponseData responseData = (ResponseData) result;
-            apiLogs.setResponseBody((JSON.toJSONString(result)));
-            if ("F".equals(responseData.getRespCode())) {
-                apiLogs.setErrorMsg((String) responseData.getData());
-            }
-        }
-        apiLogsService.insertLog(apiLogs);
+//        apiLogs.setRequestTime(new Date());
+//        apiLogs.setRequestBody(JSONObject.toJSONString( requestBody ));
+//        if (result instanceof ResponseData) {
+//            ResponseData responseData = (ResponseData) result;
+//            apiLogs.setResponseBody((JSON.toJSONString(result)));
+//            if ("F".equals(responseData.getRespCode())) {
+//                apiLogs.setErrorMsg((String) responseData.getData());
+//            }
+//        }
+//        apiLogsService.insertLog(apiLogs);
         return result;
     }
 }

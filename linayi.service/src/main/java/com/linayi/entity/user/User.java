@@ -67,6 +67,8 @@ public class User extends BaseEntity implements Serializable {
     
     private String isOrderMan;
 
+    private String isShop;
+
     /**
      * [真实姓名]
      */
@@ -115,6 +117,14 @@ public class User extends BaseEntity implements Serializable {
     private String isProcurer;
 
     private String isDeliverer;
+
+    private  Integer small_community_id;
+
+    private String name;
+
+    private String code;
+
+    private String receiverAddress;
 
     private static final long serialVersionUID = 1L;
     
@@ -410,5 +420,45 @@ public class User extends BaseEntity implements Serializable {
 
     public void setIsRegist(String isRegist) {
         this.isRegist = isRegist;
+    }
+
+    public Integer getSmall_community_id() {
+        return small_community_id;
+    }
+
+    public void setSmall_community_id(Integer small_community_id) {
+        this.small_community_id = small_community_id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getReceiverAddress() {
+        return receiverAddress;
+    }
+
+    public void setReceiverAddress(String receiverAddress) {
+        this.receiverAddress = receiverAddress;
+    }
+
+    public String getIsShop() {
+        return isShop;
+    }
+
+    public void setIsShop(String isShop) {
+        this.isShop = isShop;
     }
 }

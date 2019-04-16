@@ -54,7 +54,20 @@ public class WeixinController {
     @Transactional
     public Object getCode(String code, HttpServletResponse response) {
         try {
-            return weixinService.getCode(code,response);
+            return weixinService.getCode(code,response,false);
+        } catch (BusinessException e) {
+            return new ResponseData(e.getErrorType()).toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+        }
+    }
+
+    @RequestMapping("getLinShengCode.do")
+    @Transactional
+    public Object getLinShengCode(String code, HttpServletResponse response) {
+        try {
+            return weixinService.getCode(code,response,true);
         } catch (BusinessException e) {
             return new ResponseData(e.getErrorType()).toString();
         } catch (Exception e) {

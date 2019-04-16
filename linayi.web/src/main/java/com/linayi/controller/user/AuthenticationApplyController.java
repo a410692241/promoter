@@ -46,6 +46,7 @@ public class AuthenticationApplyController {
 		AuthenticationApply apply1 = this.authenticationApplyService.getAuthenticationApplyByapplyId(apply.getApplyId());
 		apply1.setIdCardFront(ImageUtil.dealToShow(apply1.getIdCardFront()));
 		apply1.setIdCardBack(ImageUtil.dealToShow(apply1.getIdCardBack()));
+		apply1.setImage(ImageUtil.dealToShow(apply1.getImage()));
 		mv.addObject("apply1", apply1);
 		return mv; 
 	}

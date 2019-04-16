@@ -1,5 +1,6 @@
 package com.linayi.service.weixin.Impl;
 
+import com.github.binarywang.java.emoji.EmojiConverter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.linayi.config.WeixinConfig;
@@ -34,9 +35,9 @@ public class WeixinServiceImpl implements WeixinService {
     private RedisService redisService;
     @Autowired
     private UserService userService;
-
+    private static EmojiConverter emojiConverter = EmojiConverter.getInstance();
     @Override
-    public Object getCode(String code, HttpServletResponse response) {
+    public Object getCode(String code, HttpServletResponse response,boolean linsheng) {
         //获取access_token
         String getTokenUrl = WeixinConfig.GET_TOKEN_URL + "appid=" + Configuration.getConfig().getValue(WeixinConfig.APPID) + "&secret=" + Configuration.getConfig().getValue(WeixinConfig.APPSECRET) + "&code=" + code + "&grant_type=authorization_code";
         String responseStr = HttpClientUtil.sendGetRequest(getTokenUrl, "utf-8");
@@ -67,7 +68,9 @@ public class WeixinServiceImpl implements WeixinService {
             if (accountDB == null) {
                 //新用户
                 User user = new User();
-                user.setNickname(userInfoMap.get("nickname") + "");
+                String nickname = userInfoMap.get("nickname") + "";
+                nickname = emojiConverter.toAlias(nickname);
+                user.setNickname(nickname);
                 user.setSex((Double) userInfoMap.get("sex") > 1.0 ? Sex.FEMALE.name() : Sex.MALE.name());
                 //下载微信头像图片
                 String headimgurl = userInfoMap.get("headimgurl") + "";
@@ -86,7 +89,7 @@ public class WeixinServiceImpl implements WeixinService {
                 userId = user.getUserId();
                 accountPM.setUserId(userId);
                 accountPM.setUserType(UserType.USER.name());
-                accountPM.setUserName(userInfoMap.get("nickname") + "");
+                accountPM.setUserName(nickname);
                 accountService.insertAccount(accountPM);
                 accountId = accountPM.getAccountId();
             } else {
@@ -97,7 +100,11 @@ public class WeixinServiceImpl implements WeixinService {
             String sysetemAccessToken = redisService.GenerationToken(accountId);
             //用openId进入数据库进行查找
             try {
-                response.sendRedirect(Configuration.getConfig().getValue(WeixinConfig.REDICT_INDEX_URL) + "?accessToken=" + sysetemAccessToken+ "&accountId=" + accountId+"&userId="+userId+"&loginType="+1);
+                //如果是邻生客户端,需要跳转的是邻生的商户端首页
+                if (!linsheng) {
+                    response.sendRedirect(Configuration.getConfig().getValue(WeixinConfig.REDICT_INDEX_URL) + "?accessToken=" + sysetemAccessToken+ "&accountId=" + accountId+"&userId="+userId+"&loginType="+1);
+                }
+                response.sendRedirect(Configuration.getConfig().getValue(WeixinConfig.LINSHENG_REDICT_INDEX_URL) + "?accessToken=" + sysetemAccessToken);
             } catch (IOException e) {
                 e.printStackTrace();
 
@@ -105,6 +112,7 @@ public class WeixinServiceImpl implements WeixinService {
         }
         return new ResponseData(ErrorType.WECHAT_CALL_ERROR);
     }
+
 
     private String uploadImg(String headimgurl) {
         String datePath = DateUtil.date2String(new Date(), "yyyy/MM/dd/HH");
@@ -173,5 +181,4 @@ public class WeixinServiceImpl implements WeixinService {
             e.printStackTrace();
         }
     }
-
 }
