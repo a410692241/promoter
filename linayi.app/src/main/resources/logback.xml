@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true"  scanPeriod="60 seconds">
 	<contextName>RestAPI</contextName>
-	<property name="LOG_PATH" value="/data/logs"/>
+	<property name="LOG_PATH" value="D:/data/logs"/>
 	<!--设置系统日志目录-->
 	<property name="APPDIR" value="app"/>
 
@@ -84,15 +84,18 @@
 			<onMismatch>DENY</onMismatch>
 		</filter>
 	</appender>
-
+	<!--dev-->
 	<root level="DEBUG">
-			<!--production-->
+		<appender-ref ref="STDOUT"/>
+	</root>
+
+	<!--production-->
+	<!--<root level="INFO">-->
+		<!--&lt;!&ndash;production&ndash;&gt;-->
 		<!--<appender-ref ref="FILEERROR"/>-->
 		<!--<appender-ref ref="FILEWARN"/>-->
 		<!--<appender-ref ref="FILEINFO"/>-->
 		<!--<appender-ref ref="DBAPPENDER"/>-->
 		<!--<appender-ref ref="STDOUT"/>-->
-			<!--dev-->
-		<appender-ref ref="STDOUT"/>
-	</root>
+	<!--</root>-->
 </configuration>
