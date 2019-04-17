@@ -105,7 +105,7 @@
         <div>
             <div class="form-header">
                 <div class="form-category">
-                    <input  name="category" type="text" id="makeInput" class="ww" onfocus="setDemo(this,event)" onkeyup="setContent(this,event);" placeholder="请选择或输入分类"><span style="color: red">*</span>
+                    <span style="color: red">*</span><input  name="category" type="text" id="makeInput" class="ww" onfocus="setDemo(this,event)" onkeyup="setContent(this,event);" placeholder="请选择或输入分类">
                     <select id="hh" class="form-selectName" onclick="choose(this)" onkeyup="getfocus(this,event)" size="10" style="display:none;">
                         <c:forEach items="${categorys}" var="category">
                             <option value="${category.name}">${category.name}</option>
@@ -113,7 +113,7 @@
                     </select>
                 </div>
                 <div class="form-category">
-                    <input name="brand" type="text" id="makeInput1" class="ww" onfocus="setDemo1(this,event)" onkeyup="setContent1(this,event);" placeholder="请选择或输入品牌"><span style="color: red">*</span>
+                    <span style="color: red">*</span><input name="brand" type="text" id="makeInput1" class="ww" onfocus="setDemo1(this,event)" onkeyup="setContent1(this,event);" placeholder="请选择或输入品牌">
                     <select  id="hh1" class="form-selectName" onclick="choose1(this)" onkeyup="getfocus1(this,event)" size="10" style="display:none;">
                         <c:forEach items="${brands }" var="brand">
                             <option value="${brand.name }">${brand.name}</option>
@@ -127,7 +127,7 @@
             </div>
             <table class="form-center">
                 <tr>
-                    <td style="width: 60px">商品名:</td><span style="color: red">*</span>
+                    <td style="width: 60px"><span style="color: red">*</span>商品名:</td>
                     <%--<td>
                         <input  name="name" type="text" id="goodsName" class="ww" onfocus="setDemo(this,event)" onkeyup="setContent(this,event);" placeholder="请选择或输入商品名称">
                         <select id="hh" class="form-selectName" onclick="choose(this)" onkeyup="getfocus(this,event)" size="10" style="display:none;">
@@ -183,8 +183,8 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td>条形码:</td>
-                    <td><input type="text" id="barcode" name="barcode"></td><span style="color: red">*</span>
+                    <td><span style="color: red">*</span>条形码:</td>
+                    <td><input type="text" id="barcode" name="barcode"></td>
                     <td></td>
                 </tr>
                 <tr>
