@@ -550,9 +550,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void updateOrderStatus(Orders orders) {
-        if ("FINISHED".equals(orders.getUserStatus())){
-            orders.setCommunityStatus("DELIVER_FINISHED");
-        }
         ordersMapper.updateOrderById(orders);
     }
 
