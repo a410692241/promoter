@@ -224,7 +224,7 @@ public class DeliveryTaskServiceImpl implements DeliveryTaskService {
             }
             orders.setSmallCommunityIdList(smallCommunityList);
         }
-        if (UserStatusType.IN_PROGRESS.toString().equals(orders.getCommunityStatus())) {
+        if (DeliveryStatus.DELIVERING.toString().equals(orders.getCommunityStatus())) {
             List<Orders> ordersList = ordersMapper.getOrdersBySmallCommunityIdAndStatus(orders);
             return this.getOrderTotalPriceByOrdersList(ordersList);
         } else {
