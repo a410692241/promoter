@@ -524,7 +524,7 @@
                 and pt.procure_status != 'PROCURING' and pt.receive_status != 'WAIT_OUT'
             </if>
             <if test="procureStatus != null and procureStatus == 'WAIT_OUT'">
-                and pt.receive_status = 'WAIT_OUT' and pt.procure_status != 'PROCURING'
+                and pt.receive_status = 'WAIT_OUT' and pt.procure_status != 'PROCURING' and pt.actual_quantity > 0
             </if>
             <if test="procureTimeStr != null and procureTimeStr != ''">
                 and pt.procure_time = #{procureTimeStr}
