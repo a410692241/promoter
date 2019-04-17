@@ -308,9 +308,12 @@ public class ProcurementServiceImpl implements ProcurementService {
 		Date date = new Date();
 		if (procurementTaskList != null && procurementTaskList.size() > 0){
 			for (ProcurementTask task : procurementTaskList) {
-				task.setReceiveStatus("OUTED");
-				task.setProcureOutTime(date);
-				procurementTaskMapper.updateProcurementTaskById(task);
+                Integer procureQuantity = task.getProcureQuantity();
+                if (procureQuantity != null && procureQuantity > 0){
+                    task.setReceiveStatus("OUTED");
+                    task.setProcureOutTime(date);
+                    procurementTaskMapper.updateProcurementTaskById(task);
+                }
 			}
 		}
 
