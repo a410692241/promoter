@@ -34,15 +34,8 @@
 			</c:if>
 		</c:forEach>
 	</c:if>
-	<%-- 容量:<input class="qqq" type=text name="capacity" id="capacity" readonly="readonly"  size="3">
-     重量:<input class="qqq" type=text name="weight" id="weight" readonly="readonly" size="3">
-     规格:<input class="qqq" type=text name="specification" id="specification" readonly="readonly" size="3">
-     大小:<input class="qqq" type=text name="size" id="size" readonly="readonly" size="3">
-     颜色:<input class="qqq" type=text name="color" id="color" readonly="readonly" size="3">
-     克重:<input class="qqq" type=text name="gram" id="gram" readonly="readonly" size="3">
-     袋装:<input class="qqq" type=text name="Bagged" id="Bagged" readonly="readonly" size="3"><br><br>
-     瓶装:<input class="qqq" type=text name="bottled" id="bottled" readonly="readonly" size="3">
-     --%>
+
+
 	<input type="button" id="bu" value="确定" onclick="foo();" class="showSpecifications"><br><br>
 	<c:if test="${!empty map}">
 		<c:forEach items="${map}" var="attr" varStatus="statu">
@@ -58,23 +51,6 @@
 	</c:if>
 
 </div>
-<%--<div class="specificationsClass">
-	<form action="${pageContext.request.contextPath}/goods/goods/showSpecifications.do" method="post" onsubmit="return check();">
-		<span style="color: red">没有的规格先在此添加规格</span><br>
-		<select name="attributeId" id="attributeId">
-			<option value="0">请选择规格</option>
-			<c:forEach items="${attributes}" var="attribute">
-				<option value="${attribute.attributeId}">${attribute.name}</option>
-			</c:forEach>
-		</select>
-		<input type="text" id="value" placeholder="输入规格" name="value" size="6">
-		<div>
-			<span style="color: red">${error}</span>
-			<span style="color: green">${pass}</span>
-		</div>
-		<input type="submit" value="确认添加">&nbsp;&nbsp;
-	</form>
-</div>--%>
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 <script type="text/javascript">
@@ -101,26 +77,6 @@
 		window .close();
 		var categoryName = window .opener.document.getElementById("makeInput").value;
 		var brandName = window .opener.document.getElementById("makeInput1").value;
-		/*var packing = document.getElementById("packing").value;
-		var color = document.getElementById("color").value;
-		var capacity = document.getElementById("capacity").value;
-		var weight = document.getElementById("weight").value;
-		var taste = document.getElementById("taste").value;
-		var material = document.getElementById("material").value;
-		var pumpingNum = document.getElementById("pumpingNum").value;
-		var alcoholicStrength = document.getElementById("alcoholicStrength").value;
-		var salesAttributes = document.getElementById("salesAttributes").value;
-		var productAttributes = document.getElementById("productAttributes").value;
-
-		window .opener.document.getElementById("color").value=color;
-		window .opener.document.getElementById("capacity").value=capacity;
-		window .opener.document.getElementById("weight").value=weight;
-		window .opener.document.getElementById("taste").value=taste;
-		window .opener.document.getElementById("material").value=material;
-		window .opener.document.getElementById("pumpingNum").value=pumpingNum;
-		window .opener.document.getElementById("alcoholicStrength").value=alcoholicStrength;
-		window .opener.document.getElementById("salesAttributes").value=salesAttributes;
-		window .opener.document.getElementById("productAttributes").value=productAttributes;*/
 
 		$.ajax({
 			type: "POST",//方法
@@ -143,18 +99,31 @@
 			alert("请填写规格值！");
 			return false;
 		}
-		/*$.ajax({
-			type:"POST",
-			url:"showSpecifications.do",
-			data:{attributeId: attributeId,value: value},
-			dataType:"json",
-			success:function () {
-				alert("刷新");
-				window.location.reload();
-			}
-		})*/
 
 	}
+	$(function(){
+		$('input:radio').click(function(){
+			//alert(this.checked);
+			//
+
+
+			var $radio = $(this);
+			debugger;
+			// if this was previously checked
+			if ($radio.data('waschecked') == true){
+				$radio.prop('checked', false);
+				// $("input:radio[name='" + domName + "']").data('waschecked',false);
+				var name = $radio.attr("name");
+				var replace = name.replace("attributes","");
+				$("#attr"+ replace).val("")
+				//$radio.data('waschecked', false);
+			} else {
+				$radio.prop('checked', true);
+				// $("input:radio[name='" + domName + "']").data('waschecked',false);
+				$radio.data('waschecked', true);
+			}
+		});
+	});
 
 
 </script>
