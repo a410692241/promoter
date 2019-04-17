@@ -518,7 +518,7 @@
         FROM supermarket s left join procurement_task pt on s.procurer_id = #{userId} and pt.supermarket_id = s.supermarket_id left join goods_sku gs on gs.goods_sku_id = pt.goods_sku_id
         <where>
             <if test="procureStatus != null and procureStatus == 'PROCURING'">
-                pt.procure_status = #{procureStatus}
+                pt.procure_status = #{procureStatus} and pt.receive_status = 'WAIT_OUT'
             </if>
             <if test="procureStatus != null and procureStatus == 'FINISHED'">
                 and pt.procure_status != 'PROCURING' and pt.receive_status != 'WAIT_OUT'
