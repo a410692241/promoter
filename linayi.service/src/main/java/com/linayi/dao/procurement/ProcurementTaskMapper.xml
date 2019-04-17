@@ -446,26 +446,8 @@
 			box_no =#{boxNo}
 	</select>
 
-    <select id="getCommunityProcurementList" resultType="com.linayi.entity.procurement.ProcurementTask">
-        SELECT
-              GROUP_CONCAT(procurement_task_id) procurementTaskIdList,
-              p.goods_sku_id goodsSkuId,
-              sum(p.quantity)  quantity,
-              sum(p.actual_quantity) actualQuantity,
-              p.price,
-              (sum(p.actual_quantity) * p.price) totalPrice,
-              g.full_name fullName,
-              g.image goodsImage
-         FROM
-              procurement_task p JOIN goods_sku g ON p.goods_sku_id=g.goods_sku_id
-         WHERE
-              p.community_id=#{communityId}
-         AND
-              p.actual_quantity>0
-         AND
-              p.receive_status='WAIT_RECEIVE'
-         GROUP BY p.goods_sku_id
-    </select>
+
+
 
     <select id="getProcurements" resultType="com.linayi.entity.procurement.ProcurementTask">
         select  <include refid="Base_Column_List"/> from procurement_task where community_id = #{communityId} and procure_status = 'PROCURING' and goods_sku_id = #{goodsSkuId}
