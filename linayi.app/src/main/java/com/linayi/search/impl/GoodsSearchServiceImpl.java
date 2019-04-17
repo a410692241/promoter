@@ -1,8 +1,10 @@
 package com.linayi.search.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.linayi.entity.BaseEntity;
 import com.linayi.entity.goods.GoodsSku;
 import com.linayi.search.GoodsSearchService;
+import com.linayi.util.PageResult;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -11,6 +13,7 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.aggregations.metrics.valuecount.InternalValueCount;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
@@ -30,6 +33,7 @@ public class GoodsSearchServiceImpl implements GoodsSearchService {
     @Autowired
     private RestHighLevelClient client;
 
+
     /**
      *
      * @param text  查询条件
@@ -43,7 +47,7 @@ public class GoodsSearchServiceImpl implements GoodsSearchService {
      * @throws Exception
      */
     @Override
-    public List<GoodsSku>  search(Object text,boolean isHighlight,Integer pageNum,Integer pageSize,String sortField,boolean order, String... fieldNames) throws Exception {
+    public PageResult<GoodsSku> search(Object text, boolean isHighlight, Integer pageNum, Integer pageSize, String sortField, boolean order, String... fieldNames) throws Exception {
         String preTag = "<font color='#dd4b39'>";//google的色值
         String postTag = "</font>";
 
@@ -86,28 +90,35 @@ public class GoodsSearchServiceImpl implements GoodsSearchService {
         request.source(sourceBuilder);
         //5解析反馈结果
         SearchResponse response = client.search(request);
+
+        InternalValueCount valueCount = response.getAggregations().get("count");
         SearchHits hits = response.getHits();
+        BaseEntity baseEntity = new BaseEntity();
+        baseEntity.setPageSize(pageSize);
+        baseEntity.setTotal(Integer.valueOf(valueCount + ""));
         List<GoodsSku> list = new ArrayList<>();
-        for (SearchHit hit : hits) {
-            Map tempSource = hit.getSourceAsMap();
-            System.out.println(tempSource);
-            GoodsSku goodsSku = JSON.parseObject(JSON.toJSONString(tempSource), GoodsSku.class);
-            //获取对应的高亮域
-            Map<String, HighlightField> highlightFields = hit.getHighlightFields();
-            if (isHighlight) {
-                Class<? extends GoodsSku> aClass = goodsSku.getClass();
-                if (fieldNames != null && fieldNames.length > 0) {
-                    for (String fieldName : fieldNames) {
-                        String field = highlightFields.get(fieldName).getFragments()[0].toString();
-                        String setName = parSetName(fieldName);
-                        Method method = aClass.getMethod(setName, String.class);
-                        method.invoke(goodsSku, field);
+        if (hits.getHits() != null && hits.getHits().length > 0){
+            for (SearchHit hit : hits) {
+                Map tempSource = hit.getSourceAsMap();
+                System.out.println(tempSource);
+                GoodsSku goodsSku = JSON.parseObject(JSON.toJSONString(tempSource), GoodsSku.class);
+                //获取对应的高亮域
+                Map<String, HighlightField> highlightFields = hit.getHighlightFields();
+                if (isHighlight) {
+                    if (fieldNames != null && fieldNames.length > 0) {
+                        for (String fieldName : fieldNames) {
+                            String field = highlightFields.get(fieldName).getFragments()[0].toString();
+                            String setName = parSetName(fieldName);
+                            Method method = GoodsSku.class.getMethod(setName, String.class);
+                            method.invoke(goodsSku, field);
+                        }
                     }
                 }
+                list.add(goodsSku);
             }
-            list.add(goodsSku);
         }
-        return list;
+        PageResult<GoodsSku> pageResult = new PageResult<>(list,baseEntity);
+        return pageResult;
     }
 
     /**
@@ -118,16 +129,16 @@ public class GoodsSearchServiceImpl implements GoodsSearchService {
      * @throws Exception
      */
     @Override
-    public List<GoodsSku> search(Object text,String... fieldNames) throws Exception {
+    public PageResult<GoodsSku> search(Object text,String... fieldNames) throws Exception {
         return search(text,false,null,null,null,false,fieldNames);
     }
     @Override
-    public List<GoodsSku> search(Object text,Integer pageNum, Integer pageSize,String... fieldNames) throws Exception {
+    public PageResult<GoodsSku> search(Object text,Integer pageNum, Integer pageSize,String... fieldNames) throws Exception {
         return search(text,false,pageNum,pageSize,null,false,fieldNames);
     }
 
     @Override
-    public List<GoodsSku> search(Object text,Integer pageNum, Integer pageSize,String sortField,boolean order,String... fieldNames) throws Exception {
+    public PageResult<GoodsSku> search(Object text,Integer pageNum, Integer pageSize,String sortField,boolean order,String... fieldNames) throws Exception {
         return search(text,false,pageNum,pageSize,sortField,order,fieldNames);
     }
 

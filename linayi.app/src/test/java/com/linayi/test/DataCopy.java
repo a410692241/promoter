@@ -3,6 +3,7 @@ package com.linayi.test;
 
 import com.linayi.entity.goods.GoodsSku;
 import com.linayi.search.GoodsSearchService;
+import com.linayi.util.PageResult;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -42,8 +43,8 @@ public class DataCopy {
     public void test(){
 
         try {
-            List<GoodsSku> search = goodsSearchService.search("奶", true, 1, 10, "goods_sku_id", false, "full_name","name");
-            for (GoodsSku goodsSku : search) {
+            PageResult<GoodsSku> search = goodsSearchService.search("奶", true, 1, 10, "goods_sku_id", false,"full_name","name");
+            for (GoodsSku goodsSku : search.getData()) {
                 System.out.println(goodsSku.getFullName());
             }
         } catch (Exception e) {

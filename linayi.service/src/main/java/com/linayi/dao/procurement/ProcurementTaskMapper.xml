@@ -411,7 +411,10 @@
                 create_time = #{createTime},
             </if>
             <if test="procureTime != null">
-                procure_time = #{procureTime}
+                procure_time = #{procureTime},
+            </if>
+             <if test="procureOutTime != null">
+                 procure_out_time = #{procureOutTime}
             </if>
         </set>
         where procurement_task_id = #{procurementTaskId}
@@ -509,6 +512,9 @@
 
     <select id="getCommunityProcurementsList" resultType="com.linayi.entity.procurement.ProcurementTask">
         SELECT SUM(pt.price * pt.quantity) totalPrice, SUM(pt.quantity) totalQuantity,SUM(pt.procure_quantity) totalProcureQuantity,MIN(pt.price) * SUM(pt.procure_quantity) totalProcurePrice,MIN(pt.price) price, pt.procure_time procureTime,pt.goods_sku_id goodsSkuId, gs.name goodsSkuName,GROUP_CONCAT(pt.procurement_task_id) procurementTaskIdList
+        <if test="procureStatus != null and procureStatus == 'FINISHED'">
+            ,pt.procure_out_time procureOutTime
+        </if>
         FROM supermarket s left join procurement_task pt on s.procurer_id = #{userId} and pt.supermarket_id = s.supermarket_id left join goods_sku gs on gs.goods_sku_id = pt.goods_sku_id
         <where>
             <if test="procureStatus != null and procureStatus == 'PROCURING'">
@@ -528,19 +534,19 @@
             </if>
         </where>
         GROUP BY
-        <if test="procureStatus != null and procureStatus != 'PROCURING'">
+        <if test="procureStatus != null and procureStatus == 'WAIT_OUT'">
             pt.procure_time,
         </if>
-        <if test="procureStatus != null and procureStatus == 'WAIT_OUT'">
+        <if test="procureStatus != null and procureStatus == 'FINISHED'">
             pt.procure_out_time,
         </if>
         pt.goods_sku_id, gs.name
         ORDER BY
-        <if test="procureStatus != null and procureStatus != 'PROCURING'">
-            pt.procure_time ASC,
-        </if>
         <if test="procureStatus != null and procureStatus == 'WAIT_OUT'">
-            pt.procure_out_time ASC,
+            pt.procure_time DESC,
+        </if>
+        <if test="procureStatus != null and procureStatus == 'FINISHED'">
+            pt.procure_out_time DESC,
         </if>
         SUM(pt.quantity) DESC
     </select>
