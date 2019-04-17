@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import com.linayi.entity.spokesman.Spokesman;
+import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.enums.SpokesmanStatus;
 import com.linayi.service.spokesman.SpokesmanService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.linayi.dao.area.SmallCommunityMapper;
+import com.linayi.dao.supermarket.SupermarketMapper;
 import com.linayi.dao.user.AuthenticationApplyMapper;
 import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.area.SmallCommunity;
@@ -28,16 +30,19 @@ import com.linayi.util.ResponseData;
 public class AuthenticationApplyServiceImpl implements AuthenticationApplyService {
 
 	@Resource
-	AuthenticationApplyMapper authenticationApplyMapper;
+	private AuthenticationApplyMapper authenticationApplyMapper;
 
 	@Resource
-	UserMapper userMapper;
+	private UserMapper userMapper;
 	
 	@Resource
-	SmallCommunityMapper smallCommunityMapper;
+	private SmallCommunityMapper smallCommunityMapper;
 
 	@Resource
 	private SpokesmanService spokesmanService;
+	
+	@Resource
+	private SupermarketMapper supermarketMapper;
 	
 	@Override
 	public Object applySharer(AuthenticationApply apply, MultipartFile[] file) {
@@ -146,6 +151,10 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				user.setIsProcurer("TRUE");
 				user.setRealName(apply.getRealName());
 				userMapper.updateUserByuserId(user);
+				Supermarket supermarket = new Supermarket();
+				supermarket.setSupermarketId(apply.getSupermarketId());
+				supermarket.setUserId(apply.getUserId());
+				supermarketMapper.updateSupermarketBysupermarketId(supermarket);
 			}else if("配送员".equals(apply.getAuthenticationType())){
 				AuthenticationApply authenticationApply = new AuthenticationApply();
 				authenticationApply.setApplyId(apply.getApplyId());
