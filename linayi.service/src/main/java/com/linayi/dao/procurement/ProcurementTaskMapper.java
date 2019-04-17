@@ -110,9 +110,6 @@ public interface ProcurementTaskMapper {
      * @return
      */
     List<ProcurementTask> getDeliverGoodsList(ProcurementTask procurTask);
-    void confirmDeliverGoods(@Param("communityId") Integer communityId,@Param("goodsSkuId")Integer goodsSkuId);
-
-
 
     List<ProcurementTask> getCommunityProcurementsList(ProcurementTask procurementTask);
 
