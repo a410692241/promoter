@@ -541,27 +541,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 	@Override
 	public void updateOrderStatus(ProcurementTask procurementTask) {
 
-				procurementTask.setReceiveStatus("RECEIVED");
-				if (procurementTask.getProcurementTaskIdList().contains(",")){
-					String [] str =	procurementTask.getProcurementTaskIdList().split(",");
-					for (String s : str) {
-						procurementTask.setProcurementTaskId(Long .valueOf(s));
-						procurementTaskMapper.updateProcurementTaskById(procurementTask);
-						//根据任务id获取采买任务表信息
-						ProcurementTask procurementTasks = procurementTaskMapper.selectByPrimaryKey(Long .valueOf(s));
-						//修改订单表状态
-						orderService.updateOrderReceivedStatus(procurementTasks.getOrdersId());
-					}
 
-				}else{
-					procurementTask.setProcurementTaskId(Long .valueOf(procurementTask.getProcurementTaskIdList()));
-					//将采买任务表改成已收货
-					procurementTaskMapper.updateProcurementTaskById(procurementTask);
-
-					ProcurementTask procurementTasks = procurementTaskMapper.selectByPrimaryKey(Long .valueOf(procurementTask.getProcurementTaskIdList()));
-					//修改订单表状态
-					orderService.updateOrderReceivedStatus(procurementTasks.getOrdersId());
-				}
 
 		}
 
