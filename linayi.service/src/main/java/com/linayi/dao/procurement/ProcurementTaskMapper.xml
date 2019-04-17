@@ -524,7 +524,7 @@
                 and pt.procure_status != 'PROCURING' and pt.receive_status != 'WAIT_OUT'
             </if>
             <if test="procureStatus != null and procureStatus == 'WAIT_OUT'">
-                and pt.receive_status = 'WAIT_OUT' and pt.procure_status != 'PROCURING' and pt.actual_quantity > 0
+                and pt.receive_status = 'WAIT_OUT' or pt.receive_status = 'WAIT_RECEIVE' and pt.procure_status != 'PROCURING' and pt.actual_quantity > 0 and pt.actual_quantity is not null
             </if>
             <if test="procureTimeStr != null and procureTimeStr != ''">
                 and pt.procure_time = #{procureTimeStr}
@@ -541,6 +541,10 @@
             pt.procure_out_time,
         </if>
         pt.goods_sku_id, gs.name
+
+        <if test="procureStatus != null and procureStatus != 'PROCURING'">
+            HAVING totalProcureQuantity > 0
+        </if>
         ORDER BY
         <if test="procureStatus != null and procureStatus == 'WAIT_OUT'">
             pt.procure_time DESC,
