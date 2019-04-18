@@ -110,6 +110,5 @@
 		<property name="redisTemplate" ref="redisTemplate"></property>
 	</bean >
     <import resource="elasticseach.xml"/>
-    <elasticsearch:rest-client id="esClient" esNodes="http://192.168.0.7:9200"/>
 
 </beans>
