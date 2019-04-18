@@ -1,32 +1,20 @@
 package com.linayi.service.correct.impl;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-
-import com.linayi.entity.account.AdminAccount;
-import com.linayi.enums.*;
-import com.linayi.util.Configuration;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.linayi.dao.correct.CorrectLogMapper;
 import com.linayi.dao.correct.CorrectMapper;
 import com.linayi.dao.goods.SupermarketGoodsMapper;
 import com.linayi.dao.supermarket.SupermarketMapper;
+import com.linayi.entity.account.AdminAccount;
 import com.linayi.entity.correct.Correct;
 import com.linayi.entity.correct.CorrectLog;
 import com.linayi.entity.correct.SupermarketGoodsVersion;
 import com.linayi.entity.goods.SupermarketGoods;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.entity.user.User;
+import com.linayi.enums.CorrectStatus;
+import com.linayi.enums.CorrectType;
+import com.linayi.enums.OperatorType;
+import com.linayi.enums.PriceType;
 import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.community.CommunitySupermarketService;
@@ -35,8 +23,20 @@ import com.linayi.service.correct.SupermarketGoodsVersionService;
 import com.linayi.service.goods.GoodsSkuService;
 import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.service.user.UserService;
-import com.linayi.util.ImageUtil;
+import com.linayi.util.Configuration;
+import com.linayi.util.OSSManageUtil;
 import com.linayi.util.PageResult;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class CorrectServiceImpl implements CorrectService {
@@ -98,7 +98,7 @@ public class CorrectServiceImpl implements CorrectService {
 
         String path = null;
         try {
-            path = ImageUtil.handleUpload(file);
+            path = OSSManageUtil.uploadFile(file);
             correct.setImage(path);
         } catch (Exception e) {
             e.printStackTrace();
@@ -175,7 +175,7 @@ public class CorrectServiceImpl implements CorrectService {
         if(OperatorType.USER.toString().equals(userType)){
             String path = null;
             try {
-                path = ImageUtil.handleUpload(file);
+                path = OSSManageUtil.uploadFile(file);
                 correct.setImage(path);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -593,7 +593,7 @@ public class CorrectServiceImpl implements CorrectService {
             //根据状态set历史按钮类型
             for (Correct cc : correctList) {
 
-                cc.setImage(ImageUtil.dealToShow(cc.getImage()));
+                cc.setImage(cc.getImage());
                 if (CorrectStatus.WAIT_AUDIT.toString().equals(cc.getStatus()) || CorrectStatus.AUDIT_SUCCESS.toString().equals(cc.getStatus())) {
                     cc.setHistoryButtonType("RECALL");
                 } else if (CorrectStatus.AFFECTED.toString().equals(cc.getStatus())) {
@@ -634,7 +634,7 @@ public class CorrectServiceImpl implements CorrectService {
             // 根据状态set历史按钮类型
             for (Correct cc : correctList) {
 
-                cc.setGoodsImage(ImageUtil.dealToShow(cc.getGoodsImage()));
+                cc.setGoodsImage(cc.getGoodsImage());
                 if (CorrectStatus.WAIT_AUDIT.toString().equals(cc.getStatus())
                         || CorrectStatus.AUDIT_SUCCESS.toString().equals(cc.getStatus())) {
                     cc.setHistoryButtonType("RECALL");

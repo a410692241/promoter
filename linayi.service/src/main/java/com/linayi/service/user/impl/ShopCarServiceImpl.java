@@ -24,6 +24,7 @@ import com.linayi.service.promoter.OpenMemberInfoService;
 import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.service.user.ShopCarService;
 import com.linayi.util.*;
+import com.sun.imageio.plugins.common.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,7 +95,7 @@ public class ShopCarServiceImpl implements ShopCarService {
             GoodsSku goodsSku = goodsSkuMapper.getGoodsById(car.getGoodsSkuId());
 
             //图片信息处理
-            car.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
+            car.setGoodsSkuImage(goodsSku.getImage());
             car.setGoodsName(goodsSku.getFullName());
             if ("SELECTED".equals(car.getSelectStatus())){
                 //List<SupermarketGoods> supermarketGoodss = getSupermarketGoodsByGoodsSkuId(car);
@@ -198,7 +199,7 @@ public class ShopCarServiceImpl implements ShopCarService {
         for (ShoppingCar car : shoppingCars) {
             totalPipce += car.getQuantity();
             GoodsSku goodsSku = goodsSkuMapper.getGoodsById(car.getGoodsSkuId());
-            car.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
+            car.setGoodsSkuImage(goodsSku.getImage());
             car.setGoodsName(goodsSku.getFullName());
             CommunityGoods communityGoods = new CommunityGoods();
             communityGoods.setCommunityId(communityId);

@@ -23,7 +23,6 @@ import com.linayi.entity.order.Orders;
 import com.linayi.entity.order.OrdersGoods;
 import com.linayi.entity.order.OrdersSku;
 import com.linayi.entity.procurement.ProcurementTask;
-import com.linayi.entity.promoter.MemberOrder;
 import com.linayi.entity.promoter.OpenMemberInfo;
 import com.linayi.entity.promoter.PromoterOrderMan;
 import com.linayi.entity.supermarket.Supermarket;
@@ -32,8 +31,6 @@ import com.linayi.entity.user.ShoppingCar;
 import com.linayi.entity.user.User;
 import com.linayi.enums.MemberLevel;
 import com.linayi.enums.OrderStatus;
-import com.linayi.exception.BusinessException;
-import com.linayi.exception.ErrorType;
 import com.linayi.service.goods.BrandService;
 import com.linayi.service.goods.CommunityGoodsService;
 import com.linayi.service.goods.SupermarketGoodsService;
@@ -183,7 +180,7 @@ public class OrderServiceImpl implements OrderService {
 
             OrdersGoods ordersGoods = generateOrdersGoods(order,supermarketGoods, car.getQuantity(), car.getGoodsSkuId());
             ordersGoodsMapper.insert(ordersGoods);
-            Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(supermarketGoods.get(0).getSupermarketId());
+            Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(supermarketGoods.get(supermarketGoods.size() - 1).getSupermarketId());
             //待采买任务
             ProcurementTask procurementTask = generateProcurementTask(smallCommunity, ordersGoods, supermarket);
             procurementTaskMapper.insert(procurementTask);
@@ -193,6 +190,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public  OrdersGoods generateOrdersGoods(Orders order, List<SupermarketGoods> supermarketGoodsList, Integer quantity, Integer goodsSkuId) {
+        Collections.reverse(supermarketGoodsList);
         OrdersGoods ordersGoods = new OrdersGoods();
         ordersGoods.setOrdersId(order.getOrdersId());
         String jsonStr = dealSupermarket(supermarketGoodsList);
@@ -306,7 +304,7 @@ public class OrderServiceImpl implements OrderService {
             }
             Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(p.getSupermarketId());
             p.setSupermarketName(supermarket.getName());
-            p.setImage(ImageUtil.dealToShow(goodsSkuMapper.selectNamebyId(p.getGoodsSkuId()).getImage()));
+            p.setImage(goodsSkuMapper.selectNamebyId(p.getGoodsSkuId()).getImage());
             p.setGoodsSkuName(goodsSkuMapper.selectNamebyId(p.getGoodsSkuId()).getName());
         }
         return procurementTask1;
@@ -421,7 +419,7 @@ public class OrderServiceImpl implements OrderService {
                 String goodsName = getGoodsName(goodsSku);
                 shoppingCar.setGoodsName(goodsName);
                 shoppingCar.setGoodsSkuId(Integer.parseInt(goodsSku.getGoodsSkuId() + ""));
-                shoppingCar.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
+                shoppingCar.setGoodsSkuImage(goodsSku.getImage());
                 ProcurementTask procurement = new ProcurementTask();
                 procurement.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
                 List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurement);
@@ -445,6 +443,7 @@ public class OrderServiceImpl implements OrderService {
                 shoppingCar.setSpreadRate(NumberUtil.formatDouble((maxPrice - minPrice) * 100 / Double.parseDouble("" + minPrice)) + "%");
                 shoppingCar.setHeJiPrice(getpriceString(ordersGoods.getQuantity() * ordersGoods.getPrice()));
                 cars.add(shoppingCar);
+
                 goodsPayPrice += ordersGoods.getQuantity() * ordersGoods.getPrice();
                 goodsTotalPrice += ordersGoods.getQuantity() * minPrice;
 
@@ -641,7 +640,7 @@ public class OrderServiceImpl implements OrderService {
     public List<OrdersSku> getGoodsOrderSku(OrdersSku ordersSku) {
         List<OrdersSku> ordersSkuList = ordersMapper.getGoodsOrderSku(ordersSku);
         for (OrdersSku o : ordersSkuList) {
-            o.setImage(ImageUtil.dealToShow(o.getImage()));
+            o.setImage(o.getImage());
             ProcurementTask procurementTask = new ProcurementTask();
             procurementTask.setOrdersGoodsId(o.getOrdersGoodsId());
             List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskListAsc(procurementTask);
@@ -713,7 +712,7 @@ public class OrderServiceImpl implements OrderService {
 
         Integer goodsSkuId = ordersGoods.getGoodsSkuId();
         GoodsSku goodsSku = goodsSkuMapper.getGoodsById(goodsSkuId);
-        ordersGoods.setImage(ImageUtil.dealToShow(goodsSku.getImage()));
+        ordersGoods.setImage(goodsSku.getImage());
         ordersGoods.setGoodsSkuName(goodsSku.getFullName());
         int totalPrice = ordersGoods.getPrice() * ordersGoods.getQuantity();
         String getpriceString = getpriceString(totalPrice);

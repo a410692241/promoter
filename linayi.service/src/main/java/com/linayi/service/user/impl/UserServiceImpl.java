@@ -18,6 +18,7 @@ import com.linayi.exception.ErrorType;
 import com.linayi.service.redis.RedisService;
 import com.linayi.service.user.UserService;
 import com.linayi.util.*;
+import com.sun.imageio.plugins.common.ImageUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -222,9 +223,9 @@ public class UserServiceImpl implements UserService {
 
         if (userInfo.getHeadImage() == null){
             //设置默认头像
-            userInfo.setHeadImage(ImageUtil.dealToShow(PropertiesUtil.getValueByKey(ConstantUtil.DEFAULT_AVATAR)));
+            userInfo.setHeadImage(PropertiesUtil.getValueByKey(ConstantUtil.DEFAULT_AVATAR));
         }else {
-            userInfo.setHeadImage(ImageUtil.dealToShow(userInfo.getHeadImage()));
+            userInfo.setHeadImage(userInfo.getHeadImage());
         }
         if (userInfo.getNickname() == null){
             userInfo.setNickname(" ");
@@ -278,7 +279,7 @@ public class UserServiceImpl implements UserService {
         if(headFile != null){
             //上传用户头像
             try {
-                realPath = ImageUtil.handleUpload(headFile);
+                realPath = OSSManageUtil.uploadFile(headFile);
                 user.setHeadImage(realPath);
             } catch (Exception e) {
                 e.printStackTrace();

@@ -4,8 +4,6 @@ import com.linayi.dao.goods.BrandMapper;
 import com.linayi.entity.goods.Brand;
 import com.linayi.service.goods.BrandService;
 import com.linayi.util.CheckUtil;
-import com.linayi.util.ImageUtil;
-
 import jxl.Sheet;
 import jxl.Workbook;
 import org.springframework.stereotype.Service;
@@ -46,14 +44,14 @@ public class BrandServiceImpl implements BrandService {
         return brandMapper.getBrandById(brandId);
     }
 
-    
+
     //根据品牌名模糊查找品牌
 	@Override
 	public List<Brand> getBrandByName(Brand brand) {
 		List<Brand> brandList = brandMapper.getBrandByName(brand);
 		for(int i=0;i<brandList.size();i++){
 			String image = brandList.get(i).getLogo();
-			String logo = ImageUtil.dealToShow(image);
+			String logo = image;
 			brandList.get(i).setLogo(logo);
 		}
 		return brandList;

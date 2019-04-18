@@ -22,9 +22,7 @@ import com.linayi.service.community.CommunitySupermarketService;
 import com.linayi.service.order.OrderService;
 import com.linayi.service.procurement.ProcurementService;
 import com.linayi.service.supermarket.SupermarketService;
-import com.linayi.util.ImageUtil;
 import com.linayi.util.PageResult;
-import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -107,7 +105,7 @@ public class ProcurementServiceImpl implements ProcurementService {
             for (ProcurementTask task : procurementTaskList) {
             	if(task != null){
 					GoodsSku goods = goodsSkuMapper.getGoodsById(task.getGoodsSkuId());
-					task.setGoodsImage(ImageUtil.dealToShow(goods.getImage()));
+					task.setGoodsImage(goods.getImage());
 				}
             }
         }
@@ -120,7 +118,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 	public List<ProcurementTask> getCommunityProcurement(ProcurementTask procurementTask) {
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementList(procurementTask);
 		for (ProcurementTask task : procurementTaskList) {
-			task.setGoodsImage(ImageUtil.dealToShow(task.getGoodsImage()));
+			task.setGoodsImage(task.getGoodsImage());
 		}
 		return procurementTaskList;
 	}
@@ -293,7 +291,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 	@Override
 	public ProcurementTask getprocurementDeatil(ProcurementTask procurementTask) {
 		GoodsSku goodsSku = goodsSkuMapper.getGoodsById(procurementTask.getGoodsSkuId());
-		procurementTask.setImage(ImageUtil.dealToShow(goodsSku.getImage()));
+		procurementTask.setImage(goodsSku.getImage());
 		procurementTask.setGoodsSkuName(goodsSku.getFullName());
 		return procurementTask;
 	}
@@ -325,7 +323,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 
 		procurementTask.setGoodsSkuName(goodsSkuMapper.getGoodsById(procurementTask.getGoodsSkuId()).getName());
 
-		procurementTask.setImage(ImageUtil.dealToShow(goodsSkuMapper.getGoodsById(procurementTask.getGoodsSkuId()).getImage()));
+		procurementTask.setImage(goodsSkuMapper.getGoodsById(procurementTask.getGoodsSkuId()).getImage());
 
 		procurementTask.setServiceFeeString(10);
 
@@ -391,7 +389,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		Community community1 = communityMapper.getCommunity(community);
 		procurementTask1.setGoodsSkuName(goodsSku.getFullName());
 		procurementTask1.setCommunityName(community1.getName());
-		procurementTask1.setImage(ImageUtil.dealToShow(goodsSku.getImage()));
+		procurementTask1.setImage(goodsSku.getImage());
 		procurementTask1.setTotalPrice(getpriceString(procurementTask1.getQuantity() * procurementTask1.getPrice()));
 		return procurementTask1;
 	}
@@ -487,7 +485,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 
 		//图片处理
 		for(ProcurementTask pp:currentProcurementTask){
-			String image = ImageUtil.dealToShow(pp.getGoodsImage());
+			String image = pp.getGoodsImage();
 			pp.setGoodsImage(image);
 		}
 
@@ -576,7 +574,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		List<ProcurementTask> list = procurementTaskMapper.getNotReceivingGoods(procurTask);
 		for(int i=0;i<list.size();i++){
 			String image = list.get(i).getImage();
-			list.get(i).setImage(ImageUtil.dealToShow(image));
+			list.get(i).setImage(image);
 			list.get(i).setAccessTime(new Date());
 		}
 		return list;
@@ -598,7 +596,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		List<ProcurementTask> list = procurementTaskMapper.getNotDeliverGoods(procurTask);
 		for(int i=0;i<list.size();i++){
 			String image = list.get(i).getImage();
-			list.get(i).setImage(ImageUtil.dealToShow(image));
+			list.get(i).setImage(image);
 		}
 		return list;
 	}
@@ -619,7 +617,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		List<ProcurementTask> list = procurementTaskMapper.getDeliverGoodsList(procurTask);
 		for(int i=0;i<list.size();i++){
 			String image = list.get(i).getImage();
-			list.get(i).setImage(ImageUtil.dealToShow(image));
+			list.get(i).setImage(image);
 		}
 		return list;
 	}

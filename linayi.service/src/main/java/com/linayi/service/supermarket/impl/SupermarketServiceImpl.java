@@ -4,19 +4,17 @@ import com.linayi.dao.area.AreaMapper;
 import com.linayi.dao.community.CommunitySupermarketMapper;
 import com.linayi.dao.supermarket.SupermarketMapper;
 import com.linayi.entity.area.Area;
-import com.linayi.entity.promoter.OpenMemberInfo;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.enums.MemberLevel;
 import com.linayi.service.promoter.OpenMemberInfoService;
 import com.linayi.service.supermarket.SupermarketService;
-import com.linayi.util.ImageUtil;
 import com.linayi.util.MemberPriceUtil;
+import com.linayi.util.OSSManageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
@@ -113,7 +111,7 @@ public class SupermarketServiceImpl implements SupermarketService {
 		if(logoFile != null){
 			//需要上传logo图片
 			try {
-				realPath = ImageUtil.handleUpload(logoFile);
+				realPath = OSSManageUtil.uploadFile(logoFile);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -130,7 +128,7 @@ public class SupermarketServiceImpl implements SupermarketService {
 		Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(supermarketId);
 
 		try {
-			supermarket.setLogo(ImageUtil.dealToShow(supermarket.getLogo()));
+			supermarket.setLogo(supermarket.getLogo());
 			//通过areacode设置地区名
 			Area area =getAreaNameByCode(supermarket.getAreaCode());
 			StringBuilder sb = new StringBuilder();
@@ -181,7 +179,7 @@ public class SupermarketServiceImpl implements SupermarketService {
 		if(logoFile != null){
 			//需要上传logo图片
 			try {
-				realPath = ImageUtil.handleUpload(logoFile);
+				realPath = OSSManageUtil.uploadFile(logoFile);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -216,7 +214,7 @@ public class SupermarketServiceImpl implements SupermarketService {
 
 		 System.out.println(supermarketList.size());
 		 for(Supermarket i:supermarketList) {
-			 i.setLogo(ImageUtil.dealToShow(i.getLogo()));
+			 i.setLogo(i.getLogo());
 		 }
 			return supermarketList;
 		}
