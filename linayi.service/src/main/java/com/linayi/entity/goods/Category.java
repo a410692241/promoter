@@ -1,13 +1,11 @@
 package com.linayi.entity.goods;
 
+import com.linayi.entity.BaseEntity;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import com.linayi.util.ImageUtil;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.linayi.entity.BaseEntity;
 
 public class Category extends BaseEntity {
     private Integer categoryId;
@@ -23,18 +21,18 @@ public class Category extends BaseEntity {
     private Short level;
 
     private String status;
-    
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date updateTime;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createTime;
-    
+
     private String parentName;
-    
+
     private List<Category> child = new ArrayList<Category>();
-    
+
     private List<Integer> categoryIdList = new ArrayList<>();
-    
+
     public Integer getCategoryId() {
         return categoryId;
     }
