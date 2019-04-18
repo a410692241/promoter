@@ -190,17 +190,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public  OrdersGoods generateOrdersGoods(Orders order, List<SupermarketGoods> supermarketGoodsList, Integer quantity, Integer goodsSkuId) {
-        Collections.reverse(supermarketGoodsList);
         OrdersGoods ordersGoods = new OrdersGoods();
         ordersGoods.setOrdersId(order.getOrdersId());
         String jsonStr = dealSupermarket(supermarketGoodsList);
         ordersGoods.setSupermarketList(jsonStr);
-        ordersGoods.setMaxPrice(supermarketGoodsList.get(supermarketGoodsList.size() - 1).getPrice());
-        ordersGoods.setPrice(supermarketGoodsList.get(0).getPrice());
+        ordersGoods.setMaxPrice(supermarketGoodsList.get(0).getPrice());
+        ordersGoods.setPrice(supermarketGoodsList.get(supermarketGoodsList.size() - 1).getPrice());
         ordersGoods.setQuantity(quantity);
         ordersGoods.setGoodsSkuId(goodsSkuId);
-        ordersGoods.setSupermarketId(supermarketGoodsList.get(0).getSupermarketId());
-        ordersGoods.setMaxSupermarketId(supermarketGoodsList.get(supermarketGoodsList.size() - 1).getSupermarketId());
+        ordersGoods.setSupermarketId(supermarketGoodsList.get(supermarketGoodsList.size() - 1).getSupermarketId());
+        ordersGoods.setMaxSupermarketId(supermarketGoodsList.get(0).getSupermarketId());
         ordersGoods.setCreateTime(new Date());
         //待采买状态
         ordersGoods.setProcureStatus("PROCURING");
@@ -282,7 +281,7 @@ public class OrderServiceImpl implements OrderService {
     private static String dealSupermarket(List<SupermarketGoods> supermarketGoodsList) {
         if (supermarketGoodsList != null && supermarketGoodsList.size() > 0) {
             List<Map> list = new ArrayList<>();
-            for (int i = supermarketGoodsList.size() - 1; i >= 0; i--) {
+            for (int i = supermarketGoodsList.size() - 1 ; i >= 0; i--) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("supermarket_id", supermarketGoodsList.get(i).getSupermarketId());
                 map.put("price", supermarketGoodsList.get(i).getPrice());
