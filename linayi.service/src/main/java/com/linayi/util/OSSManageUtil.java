@@ -40,6 +40,10 @@ public  class OSSManageUtil {
      * 返回类型 @throws
      */
     public static String uploadFile(MultipartFile file) throws Exception {
+        long size = file.getSize();
+        if (size <= 0){
+            return "";
+        }
         String fileName = file.getOriginalFilename();
         InputStream fileContent = file.getInputStream();
         //随机名处理
@@ -65,7 +69,19 @@ public  class OSSManageUtil {
         ossClient.shutdown();
         // 关闭io流
         fileContent.close();
-        return accessUrl+ "/" + remoteFilePath + fileName;
+        return remoteFilePath + fileName;
+    }
+
+    /**
+     * 处理展示
+     * @param fileUrl
+     * @return
+     */
+    public static String toShow(String fileUrl){
+        if(fileUrl == null && "".equals(fileUrl)){
+            return "";
+        }
+        return accessUrl+ "/" + fileUrl;
     }
 
     // 下载文件
