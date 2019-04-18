@@ -92,7 +92,7 @@ public  class OSSManageUtil {
         OSSClient ossClient = new OSSClient(endpoint, accessKeyId,
                 accessKeySecret);
         OSSObject object = ossClient.getObject(bucketName, source);
-//        // 获取ObjectMeta
+//      获取ObjectMeta
         ObjectMetadata meta = object.getObjectMetadata();
 
         // 获取Object的输入流
