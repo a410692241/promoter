@@ -84,6 +84,8 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 			            }},
 						{name:'idCardFront',label:'身份证正面',sortable:false,hidden:true},
 						{name:'idCardBack',label:'身份证反面',sortable:false,hidden:true},
+						{name:'address',label:'详细地址',sortable:false,hidden:true},
+						{name:'supermarketName',label:'超市名称',sortable:false,hidden:true},
 						{name:'smallCommunityId',label:'小区id',sortable:false,hidden:true},
 			            {label:"操作",name:"opt",width:300,sortable:false,formatter:function(cellvalue, options, rowObject){
 			            	var status = rowObject.status;
@@ -260,6 +262,8 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
     	var applyId = rowData.applyId;
     	var authenticationType = rowData.authenticationType;
     	var smallCommunityId = rowData.smallCommunityId;
+    	var address = rowData.address;
+    	var supermarketName = rowData.supermarketName;
     	var url = urls.ms + "/jsp/user/AuthenticationApplyAudit.jsp";
     	templateform.open({
 			title:"分享审核",
