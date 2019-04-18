@@ -14,29 +14,35 @@ import com.linayi.dao.supermarket.SupermarketMapper;
 import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.area.Area;
 import com.linayi.entity.area.SmallCommunity;
+import com.linayi.entity.delivery.DeliveryBox;
 import com.linayi.entity.delivery.DeliveryBoxGoods;
 import com.linayi.entity.delivery.DeliveryTask;
 import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.order.OrderBox;
 import com.linayi.entity.order.Orders;
+
+import com.linayi.entity.procurement.ProcurementTask;
 import com.linayi.entity.procurement.ProcurementTask;
 import com.linayi.entity.user.ShoppingCar;
 import com.linayi.entity.user.User;
 import com.linayi.enums.DeliveryStatus;
 import com.linayi.enums.OrderStatus;
+import com.linayi.enums.UserStatusType;
 import com.linayi.service.delivery.DeliveryTaskService;
 import com.linayi.util.ConstantUtil;
-import com.linayi.util.OSSManageUtil;
+import com.linayi.util.ImageUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.Resource;
+
 import com.linayi.util.PropertiesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class DeliveryTaskServiceImpl implements DeliveryTaskService {
@@ -143,7 +149,7 @@ public class DeliveryTaskServiceImpl implements DeliveryTaskService {
             Integer goodsSkuId = listProcurementTask.get(i).getGoodsSkuId();
             Integer actualQuantity = listProcurementTask.get(i).getActualQuantity();
             GoodsSku goodsSku = goodsSkuMapper.getGoodsById(goodsSkuId);
-            newGoodsSku.setImage(goodsSku.getImage());
+            newGoodsSku.setImage(ImageUtil.dealToShow(goodsSku.getImage()));
             newGoodsSku.setFullName(goodsSku.getFullName());
             newGoodsSku.setQuantity(actualQuantity);
             listGoodsSku.add(newGoodsSku);
@@ -162,7 +168,7 @@ public class DeliveryTaskServiceImpl implements DeliveryTaskService {
         String path = null;
         ordersMapper.updateStatusByOrdersId(ordersId);
         try {
-            path = OSSManageUtil.uploadFile(file);
+            path = ImageUtil.handleUpload(file);
             OrderBox orderBox = new OrderBox();
             orderBox.setBoxNo(boxNo);
             orderBox.setOrdersId(ordersId);
@@ -175,7 +181,7 @@ public class DeliveryTaskServiceImpl implements DeliveryTaskService {
 //		ordersMapper.updateStatusByOrdersId(ordersId);
 //		String path = null;
 //		try {
-//			path = OSSManageUtil.uploadFile(file);
+//			path = ImageUtil.handleUpload(file);
 //			DeliveryBox deliveryBox = new DeliveryBox();
 //			deliveryBox.setImage(path);
 //			deliveryBox.setDeliveryBoxId(deliveryBoxId);
@@ -292,7 +298,7 @@ public class DeliveryTaskServiceImpl implements DeliveryTaskService {
                 shoppingCar.setMinSupermarketName(name);
                 GoodsSku goodsSku = goodsSkuMapper.getGoodsById(procurementTask.getGoodsSkuId());
                 shoppingCar.setGoodsName(goodsSku.getName());
-                shoppingCar.setGoodsSkuImage(goodsSku.getImage());
+                shoppingCar.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
                 shoppingCar.setMinPrice(procurementTask.getPrice() + "");
                 shoppingCar.setQuantity(procurementTask.getActualQuantity());
                 shoppingCar.setHeJiPrice(procurementTask.getPrice() * procurementTask.getActualQuantity() + "");

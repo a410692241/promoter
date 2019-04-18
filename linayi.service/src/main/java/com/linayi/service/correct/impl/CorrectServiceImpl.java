@@ -24,7 +24,7 @@ import com.linayi.service.goods.GoodsSkuService;
 import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.service.user.UserService;
 import com.linayi.util.Configuration;
-import com.linayi.util.OSSManageUtil;
+import com.linayi.util.ImageUtil;
 import com.linayi.util.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -98,7 +98,7 @@ public class CorrectServiceImpl implements CorrectService {
 
         String path = null;
         try {
-            path = OSSManageUtil.uploadFile(file);
+            path = ImageUtil.handleUpload(file);
             correct.setImage(path);
         } catch (Exception e) {
             e.printStackTrace();
@@ -175,7 +175,7 @@ public class CorrectServiceImpl implements CorrectService {
         if(OperatorType.USER.toString().equals(userType)){
             String path = null;
             try {
-                path = OSSManageUtil.uploadFile(file);
+                path = ImageUtil.handleUpload(file);
                 correct.setImage(path);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -593,7 +593,7 @@ public class CorrectServiceImpl implements CorrectService {
             //根据状态set历史按钮类型
             for (Correct cc : correctList) {
 
-                cc.setImage(cc.getImage());
+                cc.setImage(ImageUtil.dealToShow(cc.getImage()));
                 if (CorrectStatus.WAIT_AUDIT.toString().equals(cc.getStatus()) || CorrectStatus.AUDIT_SUCCESS.toString().equals(cc.getStatus())) {
                     cc.setHistoryButtonType("RECALL");
                 } else if (CorrectStatus.AFFECTED.toString().equals(cc.getStatus())) {
@@ -634,7 +634,7 @@ public class CorrectServiceImpl implements CorrectService {
             // 根据状态set历史按钮类型
             for (Correct cc : correctList) {
 
-                cc.setGoodsImage(cc.getGoodsImage());
+                cc.setGoodsImage(ImageUtil.dealToShow(cc.getGoodsImage()));
                 if (CorrectStatus.WAIT_AUDIT.toString().equals(cc.getStatus())
                         || CorrectStatus.AUDIT_SUCCESS.toString().equals(cc.getStatus())) {
                     cc.setHistoryButtonType("RECALL");
