@@ -434,9 +434,8 @@
         cg.min_supermarket_id_normal,cg.min_price_normal,cg.max_supermarket_id_normal,cg.max_price_normal,cg.min_supermarket_id_senior,cg.min_price_senior,
         cg.max_supermarket_id_senior,cg.max_price_senior,cg.min_supermarket_id_super,cg.min_price_super,cg.max_supermarket_id_super,cg.max_price_super
         FROM
-        goods_sku gs,community_goods cg
+        goods_sku gs JOIN  community_goods cg ON gs.goods_sku_id=cg.goods_sku_id
         <where>
-            gs.goods_sku_id=cg.goods_sku_id
             <if test="communityId!=null and communityId!=''">
                 AND	cg.community_id=#{communityId}
             </if>
@@ -625,7 +624,7 @@
             <if test="memberLevel!=null and memberLevel=='SUPER'">
                 and cg.min_price_super IS NOT NULL
             </if>
-            ORDER BY sold_num DESC
+            ORDER BY gs.sold_num DESC
         </where>
     </select>
 </mapper>
