@@ -420,7 +420,7 @@ public class OrderServiceImpl implements OrderService {
                 String goodsName = getGoodsName(goodsSku);
                 shoppingCar.setGoodsName(goodsName);
                 shoppingCar.setGoodsSkuId(Integer.parseInt(goodsSku.getGoodsSkuId() + ""));
-                shoppingCar.setGoodsSkuImage(goodsSku.getImage());
+                shoppingCar.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
                 ProcurementTask procurement = new ProcurementTask();
                 procurement.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
                 List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurement);
