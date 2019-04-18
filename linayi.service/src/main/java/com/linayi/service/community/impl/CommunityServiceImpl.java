@@ -76,18 +76,18 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
-    public List<Community> getCommunityByAreaCode(Community community) throws Exception {
+    public List<Community> getCommunityByAreaCode(Community community) {
         String code = community.getAreaCode();
         List<SmallCommunity> smallCommunities = smallCommunityService.getSmallCommunityByAreaCode(code);
-        List<Integer> communityIdList = smallCommunities.stream().collect(Collectors.mapping(SmallCommunity::getCommunityId, Collectors.toList()));
-        List<Community> communityLists = communityMapper.getCommunityByCommunityIdList(communityIdList);
+        List<Integer> smallCommunityIdList = smallCommunities.stream().collect(Collectors.mapping(SmallCommunity::getSmallCommunityId, Collectors.toList()));
+        List<Community> communityLists = communityMapper.getCommunityBySmallCommunityIdList(smallCommunityIdList);
         //对communityId去重
         List<Community> uniqueCommunityList = communityLists.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(o -> o.getCommunityId() + ";" + o.getCommunityId()))), ArrayList::new));
         return uniqueCommunityList;
     }
     
     /** 通过areaCode获取完整的省市区街道名
-     * @param areaCode
+     * @param community
      * @return
      */
     private String getAreaNameByAreaCode(String areaCode){
