@@ -440,7 +440,7 @@ public class OrderServiceImpl implements OrderService {
                 shoppingCar.setMaxSupermarketName(maxPriceSupermarketName);
                 shoppingCar.setMinSupermarketName(minPriceSupermarketName);
                 shoppingCar.setSpreadRate(NumberUtil.formatDouble((maxPrice - minPrice) * 100 / Double.parseDouble("" + minPrice)) + "%");
-                shoppingCar.setHeJiPrice(getpriceString(ordersGoods.getQuantity() * ordersGoods.getPrice()));
+                shoppingCar.setHeJiPrice(getpriceString(ordersGoods.getQuantity() * minPrice));
                 cars.add(shoppingCar);
 
                 goodsPayPrice += ordersGoods.getQuantity() * minPrice;
