@@ -18,10 +18,7 @@ import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.area.Area;
 import com.linayi.entity.area.SmallCommunity;
 import com.linayi.entity.community.Community;
-import com.linayi.entity.goods.Attribute;
-import com.linayi.entity.goods.Brand;
-import com.linayi.entity.goods.GoodsSku;
-import com.linayi.entity.goods.SupermarketGoods;
+import com.linayi.entity.goods.*;
 import com.linayi.entity.order.Orders;
 import com.linayi.entity.order.OrdersGoods;
 import com.linayi.entity.order.OrdersSku;
@@ -38,6 +35,7 @@ import com.linayi.enums.OrderStatus;
 import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.goods.BrandService;
+import com.linayi.service.goods.CommunityGoodsService;
 import com.linayi.service.goods.SupermarketGoodsService;
 import com.linayi.service.order.OrderService;
 import com.linayi.service.promoter.OpenMemberInfoService;
@@ -90,6 +88,8 @@ public class OrderServiceImpl implements OrderService {
     private OpenMemberInfoService openMemberInfoService;
     @Autowired
     private SupermarketService supermarketService;
+    @Autowired
+    private CommunityGoodsService communityGoodsService;
 
     @Transactional
     @Override
@@ -363,6 +363,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public List<Orders> getOrdersList(Collection<Orders> ordersList, String type) {
+
         List<Orders> orders3 = new ArrayList<>();
         for (Orders orders1 : ordersList) {
             List<OrdersGoods> ordersGoodsList = ordersGoodsMapper.getOrdersGoodsByOrdersId(orders1.getOrdersId());
@@ -411,7 +412,7 @@ public class OrderServiceImpl implements OrderService {
             orders2.setCommunityId(communityId);
             orders2.setServiceMobile(community1.getMobile());
             orders2.setCommunityName(community1.getName());
-
+            MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(orders1.getUserId());
             orders2.setCreateDateStr(DateUtil.date2String(orders1.getCreateTime(), DateUtil.Y_M_D_H_M_PATTERN));
             List<ShoppingCar> cars = new ArrayList<>();
             for (OrdersGoods ordersGoods : ordersGoodsList) {
@@ -425,24 +426,16 @@ public class OrderServiceImpl implements OrderService {
                 procurement.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
                 List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurement);
                 shoppingCar.setStatus(procurementTaskList.get(0).getProcureStatus());
-                Integer minPrice = 0;
-                Integer maxPrice = 0;
-                String supermarketList = ordersGoods.getSupermarketList();
+                CommunityGoods communityGoods = new CommunityGoods();
+                communityGoods.setCommunityId(communityId);
+                communityGoods.setGoodsSkuId(ordersGoods.getGoodsSkuId());
+                communityGoods = communityGoodsService.getCommunityGoods(communityGoods);
+                Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketIdAndPriceByLevel(currentMemberLevel, communityGoods);
+                Integer minPrice = idAndPriceByLevel[0];
+                Integer maxPrice = idAndPriceByLevel[2];
 
-                List<Map> list = null;
-                String minPriceSupermarketName = "";
-                String maxPriceSupermarketName = "";
-                if (supermarketList != null && !"".equals(supermarketList)) {
-                    list = JSON.parseArray(supermarketList, Map.class);
-                    if (list.get(0).get("price") != null) {
-                        minPrice = Integer.parseInt(list.get(0).get("price") + "");
-                        minPriceSupermarketName = supermarketService.getSupermarketById(Integer.parseInt(list.get(0).get("supermarket_id") + "")).getName();
-                    }
-                    if (list.get(list.size() - 1).get("price") != null) {
-                        maxPrice = Integer.parseInt(list.get(list.size() - 1).get("price") + "");
-                        maxPriceSupermarketName = supermarketService.getSupermarketById(Integer.parseInt(list.get(list.size() - 1).get("supermarket_id") + "")).getName();
-                    }
-                }
+                String minPriceSupermarketName = supermarketService.getSupermarketById(idAndPriceByLevel[1]).getName();
+                String maxPriceSupermarketName = supermarketService.getSupermarketById(idAndPriceByLevel[3]).getName();
 
                 shoppingCar.setQuantity(ordersGoods.getQuantity());
                 shoppingCar.setMinPrice(getpriceString(minPrice));
