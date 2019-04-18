@@ -164,9 +164,22 @@ public class OrderServiceImpl implements OrderService {
         for (ShoppingCar car : shoppingCars) {
             List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getSupermarketGoodsList(car.getGoodsSkuId(), smallCommunity.getCommunityId());
             List<SupermarketGoods> supermarketGoods = supermarketGoodsList.stream().sorted((o1, o2) -> {
+                if(o1.getPrice() == null){
+                    return 1;
+                }
+                if(o2.getPrice() == null){
+                    return -1;
+                }
                 return o2.getPrice() - o1.getPrice();
             }).collect(Collectors.toList());
+            final int[] sum = {0};
 
+            supermarketGoods.stream().forEach(p->{
+                if(p.getPrice() == null)
+                    sum[0]++;
+            });
+
+            supermarketGoods = supermarketGoods.subList(0,supermarketGoods.size() - sum[0]);
 
             OrdersGoods ordersGoods = generateOrdersGoods(order,supermarketGoods, car.getQuantity(), car.getGoodsSkuId());
             ordersGoodsMapper.insert(ordersGoods);
