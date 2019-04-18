@@ -105,12 +105,22 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 			apply.setAuthenticationType("SPOKESMAN");
 		}
 		List<AuthenticationApply> list = authenticationApplyMapper.selectAuthenticationApplyList(apply);
+		for (AuthenticationApply authenticationApply : list) {
+			if(authenticationApply.getSupermarketId()!=null){
+				Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(authenticationApply.getSupermarketId());
+				authenticationApply.setSupermarketName(supermarket.getName());
+			}
+		}
 		return list;
 	}
 
 	@Override
 	public AuthenticationApply getAuthenticationApplyByapplyId(Integer applyId) {
 		AuthenticationApply apply = authenticationApplyMapper.getAuthenticationApplyByapplyId(applyId);
+		if(apply.getSupermarketId()!=null){
+			Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(apply.getSupermarketId());
+			apply.setSupermarketName(supermarket.getName());
+		}
 		return apply;
 	}
 
