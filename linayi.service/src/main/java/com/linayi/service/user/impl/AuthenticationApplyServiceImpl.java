@@ -108,7 +108,7 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 		for (AuthenticationApply authenticationApply : list) {
 			if(authenticationApply.getSupermarketId()!=null){
 				Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(authenticationApply.getSupermarketId());
-				authenticationApply.setSupermarketName(supermarket.getName());
+//				authenticationApply.setSupermarketName(supermarket.getName());
 			}
 		}
 		return list;
@@ -119,7 +119,7 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 		AuthenticationApply apply = authenticationApplyMapper.getAuthenticationApplyByapplyId(applyId);
 		if(apply.getSupermarketId()!=null){
 			Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(apply.getSupermarketId());
-			apply.setSupermarketName(supermarket.getName());
+//			apply.setSupermarketName(supermarket.getName());
 		}
 		return apply;
 	}

@@ -181,11 +181,16 @@ public class SmallCommunityServiceImpl implements SmallCommunityService {
 	}
 
 	@Override
-	public List<SmallCommunity> getSmallCommunityByAreaCode(String areaCode) {
+	public List<SmallCommunity> getSmallCommunityByAreaCode(String areaCode) throws Exception {
+		//通过获取配送区域的服务点id再在小区表获取具有这些id的小区
+		List<Community> communities = communityMapper.getCommunityByAreaCode(areaCode);
+		if (communities.size() == 0) {
+			throw new Exception("该小区暂无服务点!");
+		}
+		Set<Integer> communityIdList = communities.stream().collect(Collectors.mapping(Community::getCommunityId, Collectors.toSet()));
 		SmallCommunity smallCommunity = new SmallCommunity();
-		smallCommunity.setAreaCode(areaCode);
-		List<SmallCommunity> smallCommunityList = smallCommunityMapper.query(smallCommunity);
-
+		smallCommunity.setCommunityIdList(new ArrayList<>(communityIdList));
+		List<SmallCommunity> smallCommunityList = smallCommunityMapper.getSmallCommunityList(smallCommunity);
 		return smallCommunityList;
 	}
 	 /** 通过areaCode获取完整的省市区街道名
