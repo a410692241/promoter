@@ -115,6 +115,16 @@ public class GoodsSku extends BaseEntity {
 
     private String memberLevel;
 
+    private Integer soldNum; //销售数量
+
+    public Integer getSoldNum() {
+        return soldNum;
+    }
+
+    public void setSoldNum(Integer soldNum) {
+        this.soldNum = soldNum;
+    }
+
     public String getMemberLevel() {
         return memberLevel;
     }

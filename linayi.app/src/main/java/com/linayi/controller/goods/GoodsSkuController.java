@@ -76,8 +76,7 @@ public class GoodsSkuController extends BaseController {
     		if(goodsSku.getPageSize() == null){
     			goodsSku.setPageSize(8);
     		}
-    		Integer userId = getUserId();
-			goodsSku.setUserId(userId);
+
     		List<GoodsSku> goodsList =
     	    		goodsSkuService.getGoodsListBybrandIdcategoryIdGoodsName(goodsSku);
     		Integer totalPage = (int) Math.ceil(Double.valueOf(goodsSku.getTotal())/Double.valueOf(goodsSku.getPageSize()));
@@ -217,8 +216,6 @@ public class GoodsSkuController extends BaseController {
     		if(goodsSku.getPageSize() == null){
     			goodsSku.setPageSize(8);
     		}
-			Integer userId = getUserId();
-			goodsSku.setUserId(userId);
     		List<GoodsSku> goodsSkuList = goodsSkuService.customSearch(goodsSku);
     		Integer totalPage = (int) Math.ceil(Double.valueOf(goodsSku.getTotal())/Double.valueOf(goodsSku.getPageSize()));
     		if(totalPage <= 0){
@@ -251,4 +248,34 @@ public class GoodsSkuController extends BaseController {
 			return new ResponseData(e);
 		}
 	}
+
+	//首页推荐商品
+	@RequestMapping("/recommend.do")
+	public Object getRecommendGoodsSku(@RequestBody GoodsSku goodsSku){
+
+
+		try {
+			goodsSku.setUserId(getUserId());
+			if(goodsSku.getPageSize() == null){
+				goodsSku.setPageSize(4);
+			}
+			List<GoodsSku> goodsSkuList = goodsSkuService.getRecommendGoodsSku(goodsSku);
+			Integer totalPage = (int) Math.ceil(Double.valueOf(goodsSku.getTotal())/Double.valueOf(goodsSku.getPageSize()));
+			if(totalPage <= 0){
+				totalPage++;
+			}
+			Map<String , Object> map = new HashMap<>();
+			map.put("data", goodsSkuList);
+			map.put("totalPage", totalPage);
+			map.put("currentPage",goodsSku.getCurrentPage() );
+			return new ResponseData(map);
+
+		} catch (Exception e) {
+			return new ResponseData(ErrorType.SYSTEM_ERROR);
+
+		}
+
+
+	}
+
 }
