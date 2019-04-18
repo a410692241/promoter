@@ -443,7 +443,7 @@ public class OrderServiceImpl implements OrderService {
                 shoppingCar.setHeJiPrice(getpriceString(ordersGoods.getQuantity() * ordersGoods.getPrice()));
                 cars.add(shoppingCar);
 
-                goodsPayPrice += ordersGoods.getQuantity() * ordersGoods.getPrice();
+                goodsPayPrice += ordersGoods.getQuantity() * minPrice;
                 goodsTotalPrice += ordersGoods.getQuantity() * minPrice;
 
             }
@@ -463,6 +463,8 @@ public class OrderServiceImpl implements OrderService {
             //已取消：CANCELED
             if("CANCELED".equals(userStatus)){
                 orders2.setStatus("CANCELED");
+            }if("FINISHED".equals(userStatus)){
+                orders2.setStatus("FINISHED");
             }else {
                 if("RECEIVED".equals(communityStatus) || "PACKED".equals(communityStatus)){
                     communityStatus = "DELIVERING";
