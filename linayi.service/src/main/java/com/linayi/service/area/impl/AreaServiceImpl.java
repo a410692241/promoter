@@ -2,9 +2,11 @@ package com.linayi.service.area.impl;
 
 import com.linayi.dao.area.AreaMapper;
 import com.linayi.dao.area.SmallCommunityMapper;
+import com.linayi.dao.community.CommunityMapper;
 import com.linayi.dao.goods.GoodsSkuMapper;
 import com.linayi.entity.area.Area;
 import com.linayi.entity.area.SmallCommunity;
+import com.linayi.entity.community.Community;
 import com.linayi.service.area.AreaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,8 @@ public class AreaServiceImpl implements AreaService {
     private AreaMapper areaMapper;
     @Autowired
     private SmallCommunityMapper smallCommunityMapper;
-
+    @Autowired
+    private CommunityMapper communityMapper;
 
     @Override
     public Map<String, List<Area>> getArea() {
@@ -86,7 +89,10 @@ public class AreaServiceImpl implements AreaService {
 
         //查询小区,转化为areaCode集合
         List<SmallCommunity> allSmallCommunity = smallCommunityMapper.queryAllCommunity(new SmallCommunity());
-        Set<String> areaCodeList = allSmallCommunity.stream().map(item -> item.getAreaCode()).collect(Collectors.toSet());
+        Set<Integer> communityIdList = allSmallCommunity.stream().map(item -> item.getCommunityId()).collect(Collectors.toSet());
+        List<Community> communityList = communityMapper.getCommunityByCommunityIdList(new ArrayList<>(communityIdList));
+        Set<String> areaCodeList = communityList.stream().map(item -> item.getAreaCode()).collect(Collectors.toSet());
+
 
         //分离出拥有小区的街道
         List<Area> StreetCodeList = streetList.stream().filter(item -> areaCodeList.contains(item.getCode())).collect(Collectors.toList());
@@ -136,7 +142,9 @@ public class AreaServiceImpl implements AreaService {
 
         //查询小区,转化为areaCode集合
         List<SmallCommunity> allSmallCommunity = smallCommunityMapper.queryAllCommunity(new SmallCommunity());
-        Set<String> areaCodeList = allSmallCommunity.stream().map(item -> item.getAreaCode()).collect(Collectors.toSet());
+        Set<Integer> communityIdList = allSmallCommunity.stream().map(item -> item.getCommunityId()).collect(Collectors.toSet());
+        List<Community> communityList = communityMapper.getCommunityByCommunityIdList(new ArrayList<>(communityIdList));
+        Set<String> areaCodeList = communityList.stream().map(item -> item.getAreaCode()).collect(Collectors.toSet());
 
         //分离出拥有小区的街道
         List<Area> StreetCodeList = streetList.stream().filter(item -> areaCodeList.contains(item.getCode())).collect(Collectors.toList());

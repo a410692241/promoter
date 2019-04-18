@@ -34,7 +34,7 @@ public class SmallCommunityController {
             return new ResponseData(e.getErrorType()).toString();
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+            return new ResponseData(e).toString();
         }
     }
 }
