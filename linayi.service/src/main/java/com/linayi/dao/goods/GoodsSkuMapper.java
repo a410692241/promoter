@@ -101,4 +101,10 @@ public interface GoodsSkuMapper {
 	 * @return
 	 */
 	List<GoodsSku> getGoodsLists(GoodsSku goodsSku);
+	/**
+	 * 首页推荐商品
+	 * @param goodsSku
+	 * @return
+	 */
+	List<GoodsSku> getRecommendGoodsSku(GoodsSku goodsSku);
 }

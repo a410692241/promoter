@@ -142,5 +142,17 @@ public interface GoodsSkuService {
 	 */
     void exportGoodsData(GoodsSku goodsSku, HttpServletRequest request, HttpServletResponse response) throws Exception;
 
+	/**
+	 * 首页推荐商品
+	 * @param goodsSku
+	 * @return
+	 */
+	List<GoodsSku> getRecommendGoodsSku(GoodsSku goodsSku);
+
+	/**通过关键字搜索商品列表
+	 * @param esConfig
+	 * @return
+	 * @throws Exception
+	 */
 	List<GoodsSku> searchByKey(PromoterVo.EsConfig esConfig) throws Exception;
 }
