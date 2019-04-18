@@ -1,6 +1,8 @@
 package com.linayi.vo.promoter;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.linayi.entity.BaseEntity;
 import com.linayi.vo.PageVo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -207,5 +209,14 @@ public class PromoterVo {
             return mobile;
         }
     }
+
+	@Setter
+	@Getter
+	public static class EsConfig extends BaseEntity {
+		@ApiModelProperty("搜索框查询的关键字")
+		public String key;
+		@JsonIgnoreProperties()
+		public Integer userId;
+	}
 
 }

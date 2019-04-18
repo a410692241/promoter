@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
@@ -25,6 +26,7 @@ import com.linayi.entity.user.User;
 import com.linayi.enums.MemberLevel;
 import com.linayi.service.promoter.OpenMemberInfoService;
 import com.linayi.util.*;
+import com.linayi.vo.promoter.PromoterVo;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
@@ -32,6 +34,17 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.text.Text;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -908,5 +921,95 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		return supermarketMapper.selectAll(supermarket);
 	}
 
+	@Override
+	public List<GoodsSku> searchByKey(PromoterVo.EsConfig esConfig) throws Exception {
+		String key = esConfig.getKey();
+		RestHighLevelClient highLevelClient = ESClientFactory.getHighLevelClient();
+		SearchRequest searchRequest = new SearchRequest();
+		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+		String fieldName = "full_name";
+		String fieldName2 = "category";
+		String fieldName3 = "brand";
+		//设置查询的条件为商品名存在特定关键字符
+		//对指定字段设置ik分词器
+		searchSourceBuilder.query(QueryBuilders.multiMatchQuery(key,fieldName,fieldName2,fieldName3 ).analyzer("ik_max_word"));
+		searchSourceBuilder.size(esConfig.getPageSize());
+//		searchSourceBuilder.sort("full_name");
+		searchSourceBuilder.from((esConfig.getCurrentPage() - 1) * esConfig.getPageSize());
+		//指定高亮字段
+		HighlightBuilder highlightBuilder = new HighlightBuilder();
+		HighlightBuilder.Field highlightTitle = new HighlightBuilder.Field(fieldName);
+		//修改高亮前缀（默认http标签）
+		highlightBuilder.preTags("<p style='red'>");
+		//修改高亮后缀（默认http标签）
+		highlightBuilder.postTags("</p>");
+		highlightBuilder.field(highlightTitle);
+		searchSourceBuilder.highlighter(highlightBuilder);
+		searchRequest.source(searchSourceBuilder);
+		searchRequest.indices("goods_sku_index");
+		SearchResponse response = highLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+		SearchHits hits = response.getHits();
+		List<GoodsSku> goodsSkus = new ArrayList<>();
+		Integer userId = esConfig.getUserId();
+		Integer communityId = communityMapper.getcommunityIdByuserId(userId);
+		//获取当前数据
+		List<CommunityGoods> allCommunityGood = communityGoodsMapper.getAllCommunityGood();
+		Map<String, List<CommunityGoods>> map = allCommunityGood.stream().filter(item -> item != null).collect(Collectors.groupingBy(o -> o.getGoodsSkuId() + "_" + o.getCommunityId()));
+		for (SearchHit hit : hits) {
+			GoodsSku esGoodsSkuByHit = getEsGoodsSkuByHit(hit, communityId);
+			System.out.println(esGoodsSkuByHit.getGoodsSkuId() + "_" + esGoodsSkuByHit.getCommunityId());
+			List<CommunityGoods> communityGoodList = map.get(esGoodsSkuByHit.getGoodsSkuId() + "_" + esGoodsSkuByHit.getCommunityId());
+			if(communityGoodList == null){
+				continue;
+			}
+			CommunityGoods communityGoods = communityGoodList.stream().findFirst().orElse(null);
+			esGoodsSkuByHit.setMinSupermarketIdNormal(communityGoods.getMinSupermarketIdNormal());
+			esGoodsSkuByHit.setMinSupermarketIdSenior(communityGoods.getMinSupermarketIdSenior());
+			esGoodsSkuByHit.setMinSupermarketIdSuper(communityGoods.getMinSupermarketIdSuper());
+			esGoodsSkuByHit.setMinPriceNormal(communityGoods.getMinPriceNormal());
+			esGoodsSkuByHit.setMinPriceSenior(communityGoods.getMinPriceSenior());
+			esGoodsSkuByHit.setMinPriceSuper(communityGoods.getMinPriceSuper());
 
+			esGoodsSkuByHit.setMaxSupermarketIdNormal(communityGoods.getMaxSupermarketIdNormal());
+			esGoodsSkuByHit.setMaxSupermarketIdSenior(communityGoods.getMaxSupermarketIdSenior());
+			esGoodsSkuByHit.setMaxSupermarketIdSuper(communityGoods.getMaxSupermarketIdSuper());
+			esGoodsSkuByHit.setMaxPriceNormal(communityGoods.getMaxPriceNormal());
+			esGoodsSkuByHit.setMaxPriceSenior(communityGoods.getMaxPriceSenior());
+			esGoodsSkuByHit.setMaxPriceSuper(communityGoods.getMaxPriceSuper());
+			goodsSkus.add(esGoodsSkuByHit);
+		}
+		MemberLevel memberLevel = openMemberInfoService.getCurrentMemberLevel(userId);
+		List<GoodsSku> goodsSkuListResult = setMemberPrice(memberLevel, goodsSkus);
+		goodsSkus.stream().filter(item -> item != null);
+		return goodsSkuListResult;
+
+
+	}
+
+	private GoodsSku getEsGoodsSkuByHit(SearchHit hit, Integer communityId) {
+		GoodsSku goodsSku = new GoodsSku();
+		Map<String, Object> resultMap = hit.getSourceAsMap();
+
+		//设置商品图片
+		String image_name = resultMap.get("image") + "";
+		goodsSku.setImage(image_name);
+
+		//获取商品所在当前服务点的最低价与价差
+		long goodsSkuId = Long.parseLong(resultMap.get("goods_sku_id") + "");
+		goodsSku.setGoodsSkuId(goodsSkuId);
+		goodsSku.setCommunityId(communityId);
+		//获取商铺名字(关键字高亮)
+		Map<String, HighlightField> highlightFields = hit.getHighlightFields();
+		HighlightField descHightField = highlightFields.get("full_name");
+		Text[] fragments = descHightField.getFragments();
+		StringBuilder sb = new StringBuilder();
+		for (Text fragment : fragments) {
+			sb.append(fragment);
+		}
+		goodsSku.setFullName(sb.toString());
+
+		//设置规格属性名
+		goodsSku.setAttrValues(resultMap.get("attribute") + "");
+		return goodsSku;
+	}
 }

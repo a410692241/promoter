@@ -7,6 +7,7 @@ import com.linayi.entity.goods.SupermarketGoods;
 
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.entity.user.User;
+import com.linayi.vo.promoter.PromoterVo;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.multipart.MultipartFile;
@@ -140,4 +141,6 @@ public interface GoodsSkuService {
 	 * @param goodsSku
 	 */
     void exportGoodsData(GoodsSku goodsSku, HttpServletRequest request, HttpServletResponse response) throws Exception;
+
+	List<GoodsSku> searchByKey(PromoterVo.EsConfig esConfig);
 }

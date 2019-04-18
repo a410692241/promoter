@@ -11,6 +11,7 @@ import com.linayi.service.goods.SupermarketGoodsService;
 import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.util.ParamValidUtil;
 import com.linayi.util.ResponseData;
+import com.linayi.vo.promoter.PromoterVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -235,5 +236,19 @@ public class GoodsSkuController extends BaseController {
 		}
     }
 
-
+	/**通过ES关键字索引检索商品信息
+	 * @throws Exception
+	 */
+	@RequestMapping("searchByKey.do")
+	@ResponseBody
+	public Object searchByKey(@RequestBody PromoterVo.EsConfig esConfig) throws Exception {
+		try {
+			esConfig.setUserId(getUserId());
+			List<GoodsSku> goodsSkus = goodsSkuService.searchByKey(esConfig);
+			return new ResponseData(goodsSkus);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseData(e);
+		}
+	}
 }
