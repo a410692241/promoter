@@ -142,5 +142,5 @@ public interface GoodsSkuService {
 	 */
     void exportGoodsData(GoodsSku goodsSku, HttpServletRequest request, HttpServletResponse response) throws Exception;
 
-	List<GoodsSku> searchByKey(PromoterVo.EsConfig esConfig);
+	List<GoodsSku> searchByKey(PromoterVo.EsConfig esConfig) throws Exception;
 }

@@ -4,6 +4,8 @@ import org.apache.ibatis.annotations.Param;
 
 import com.linayi.entity.goods.CommunityGoods;
 
+import java.util.List;
+
 public interface CommunityGoodsMapper {
     int insert(CommunityGoods record);
 
@@ -21,4 +23,6 @@ public interface CommunityGoodsMapper {
     Integer delectCommunityGoods(@Param("communityId")Integer communityId ,@Param("goodsSkuId")Integer goodsSkuId);
 
     CommunityGoods getCommunityGoodsByGoodsId(Integer goodsSkuId);
+
+    List<CommunityGoods> getAllCommunityGood();
 }

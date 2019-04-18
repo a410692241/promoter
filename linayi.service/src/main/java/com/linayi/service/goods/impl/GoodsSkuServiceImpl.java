@@ -121,6 +121,8 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 	private CommunityMapper communityMapper;
 	@Resource
 	private OpenMemberInfoService openMemberInfoService;
+	@Autowired
+	private RestHighLevelClient esClient;
 
 	@Override
 	public List<GoodsSku> getGoodsList(GoodsSku goods) {
@@ -757,6 +759,52 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		return goodsSkuList;
 	}
 
+	private List<GoodsSku> setMemberPrice(MemberLevel memberLevel,List<GoodsSku> goodsSkuList){
+		DecimalFormat df = new DecimalFormat("#.00");
+		//普通用户和普通会员
+		if(MemberLevel.NOT_MEMBER.toString().equals(memberLevel.toString()) || MemberLevel.NORMAL.toString().equals(memberLevel.toString())){
+			for(GoodsSku i:goodsSkuList) {
+				Supermarket minSupermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdNormal());
+				Supermarket maxSupermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMaxSupermarketIdNormal());
+				i.setMinPrice(i.getMinPriceNormal());
+				i.setMaxPrice(i.getMaxPriceNormal());
+				i.setMinSupermarket(minSupermarket.getName());
+				i.setMaxSupermarket(maxSupermarket.getName());
+				i.setImage(ImageUtil.dealToShow(i.getImage()));
+				i.setSpreadRate(Double.valueOf((df.format(Double.valueOf((i.getMaxPrice()-i.getMinPrice()))/i.getMinPrice()*100))));
+			}
+		}
+		//高级会员
+		else if(MemberLevel.SENIOR.toString().equals(memberLevel.toString())){
+			for(GoodsSku i:goodsSkuList) {
+				Supermarket minSupermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdSenior());
+				Supermarket maxSupermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMaxSupermarketIdSenior());
+				i.setMinPrice(i.getMinPriceSenior());
+				i.setMaxPrice(i.getMaxPriceSenior());
+				i.setMinSupermarket(minSupermarket.getName());
+				i.setMaxSupermarket(maxSupermarket.getName());
+				i.setImage(ImageUtil.dealToShow(i.getImage()));
+				i.setSpreadRate(Double.valueOf((df.format(Double.valueOf((i.getMaxPrice()-i.getMinPrice()))/i.getMinPrice()*100))));
+			}
+		}
+		//超级vip
+		else if(MemberLevel.SUPER.toString().equals(memberLevel.toString())){
+			for(GoodsSku i:goodsSkuList) {
+				Supermarket minSupermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdSuper());
+				Supermarket maxSupermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMaxSupermarketIdSuper());
+				i.setMinPrice(i.getMinPriceSuper());
+				i.setMaxPrice(i.getMaxPriceSuper());
+				i.setMinSupermarket(minSupermarket.getName());
+				i.setMaxSupermarket(maxSupermarket.getName());
+				i.setImage(ImageUtil.dealToShow(i.getImage()));
+				i.setSpreadRate(Double.valueOf((df.format(Double.valueOf((i.getMaxPrice()-i.getMinPrice()))/i.getMinPrice()*100))));
+			}
+		}
+
+		return goodsSkuList;
+	}
+
+
 	//自定义下单
 	@Override
 	public List<GoodsSku> customSearch(GoodsSku goodsSku) {
@@ -924,7 +972,6 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 	@Override
 	public List<GoodsSku> searchByKey(PromoterVo.EsConfig esConfig) throws Exception {
 		String key = esConfig.getKey();
-		RestHighLevelClient highLevelClient = ESClientFactory.getHighLevelClient();
 		SearchRequest searchRequest = new SearchRequest();
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 		String fieldName = "full_name";
@@ -947,7 +994,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		searchSourceBuilder.highlighter(highlightBuilder);
 		searchRequest.source(searchSourceBuilder);
 		searchRequest.indices("goods_sku_index");
-		SearchResponse response = highLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+		SearchResponse response = esClient.search(searchRequest, RequestOptions.DEFAULT);
 		SearchHits hits = response.getHits();
 		List<GoodsSku> goodsSkus = new ArrayList<>();
 		Integer userId = esConfig.getUserId();
