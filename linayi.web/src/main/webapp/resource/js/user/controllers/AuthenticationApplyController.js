@@ -310,7 +310,9 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 				    	idCardFront:rowData.idCardFront,
 				    	idCardBack:rowData.idCardBack,
 						validStart:rowData.validStart,
-						userId:rowData.userId
+						userId:rowData.userId,
+						address:rowData.address,
+						supermarketName:rowData.supermarketName
 				}
 			}
 		},function( $modalInstance,data, $scope ){
