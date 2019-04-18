@@ -641,7 +641,7 @@ public class OrderServiceImpl implements OrderService {
     public List<OrdersSku> getGoodsOrderSku(OrdersSku ordersSku) {
         List<OrdersSku> ordersSkuList = ordersMapper.getGoodsOrderSku(ordersSku);
         for (OrdersSku o : ordersSkuList) {
-            o.setImage(o.getImage());
+            o.setImage(ImageUtil.dealToShow(o.getImage()));
             ProcurementTask procurementTask = new ProcurementTask();
             procurementTask.setOrdersGoodsId(o.getOrdersGoodsId());
             List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskListAsc(procurementTask);
