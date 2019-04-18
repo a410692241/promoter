@@ -15,13 +15,13 @@
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
     </resultMap>
     <insert id="insert" parameterType="com.linayi.entity.user.ReceiveAddress">
-    insert into receive_address (receive_address_id, user_id, receiver_name, 
-      sex, mobile, address_one, 
-      address_two, status, update_time, 
+    insert into receive_address (receive_address_id, user_id, receiver_name,
+      sex, mobile, address_one,
+      address_two, status, update_time,
       create_time,address_type)
-    values (#{receiveAddressId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{receiverName,jdbcType=VARCHAR}, 
-      #{sex,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{addressOne,jdbcType=VARCHAR}, 
-      #{addressTwo,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+    values (#{receiveAddressId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{receiverName,jdbcType=VARCHAR},
+      #{sex,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{addressOne,jdbcType=VARCHAR},
+      #{addressTwo,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
       #{createTime,jdbcType=TIMESTAMP},#{addressType,jdbcType=TIMESTAMP})
   </insert>
     <insert id="insertSelective" parameterType="com.linayi.entity.user.ReceiveAddress">
@@ -467,7 +467,7 @@
         <include refid="Base_Column_List"/>
         from receive_address
         <where>
-        	and status = 'NORMAL' 
+        	and status = 'NORMAL'
             <include refid="Base_Query_Where"></include>
         </where>
     </select>
@@ -479,7 +479,7 @@
         <where>
         and status = 'NORMAL' and
             <include refid="Base_Select_User"></include>
-           
+
         </where>
     </select>
 
@@ -613,13 +613,13 @@ select `code` from `area` where name=#{name}
 	<!-- 通过用户ID和地址类型获取收货地址列表
 	List<ReceiveAddress> getListReceiveAddressByUserIdAndAdderssType(ReceiveAddress receiveAddress);  -->
 	<select id="getListReceiveAddressByUserIdAndAdderssType" resultType="com.linayi.entity.user.ReceiveAddress">
-		select 
+		select
 			receive_address_id,receiver_name,address_one,address_two,mobile
 		from
 			receive_address
 		where
 			user_id=#{userId}
-		and 
+		and
 			status='NORMAL'
 		and
 			address_type='CUSTOMER'
@@ -632,6 +632,14 @@ select `code` from `area` where name=#{name}
 			receive_address
 		where
 			user_id=#{userId}
+    </select>
+    <select id="getReceiveAddressByReceiveAddressId" resultType="com.linayi.entity.user.ReceiveAddress">
+        select
+			receive_address_id,receiver_name,address_one,address_two
+		from
+			receive_address
+		where
+			receive_address_id=#{ReceiveAddressId}
     </select>
 	<select id="getAddressListByPromoter" resultType="com.linayi.entity.user.ReceiveAddress">
         select ra.receive_address_id receiveAddressId  from  receive_address ra

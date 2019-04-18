@@ -16,6 +16,7 @@ import com.linayi.entity.user.ReceiveAddress;
 import com.linayi.entity.user.ShoppingCar;
 import com.linayi.entity.user.User;
 import com.linayi.enums.MemberLevel;
+import com.linayi.service.community.CommunityService;
 import com.linayi.service.goods.BrandService;
 import com.linayi.service.goods.CommunityGoodsService;
 import com.linayi.service.goods.SupermarketGoodsService;
@@ -69,6 +70,12 @@ public class ShopCarServiceImpl implements ShopCarService {
     public Map<String, Object> shopCarlistAdd(ShoppingCar shoppingCar, HttpServletRequest request) {
         User user = userMapper.selectUserByuserId(shoppingCar.getUserId());
         Integer receiveAddressId = user.getDefaultReceiveAddressId();
+        ReceiveAddress receiveAddress = receiveAddressMapper.getReceiveAddressByReceiveAddressId(receiveAddressId);
+        Integer smallComunityId = receiveAddress.getAddressOne();
+        SmallCommunity smallCommunity = new SmallCommunity();
+        smallCommunity.setSmallCommunityId(smallComunityId);
+        smallCommunity = smallCommunityMapper.getSmallCommunity(smallCommunity);
+        Integer communityId = smallCommunity.getCommunityId();
         shoppingCar.setReceiveAddressId(receiveAddressId);
         List<ShoppingCar> ShoppingCars = shoppingCarMapper.getAllCarByReceiveAddressId(shoppingCar);
         Map<String, Object> map = new HashMap<>();
@@ -76,7 +83,10 @@ public class ShopCarServiceImpl implements ShopCarService {
         MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(shoppingCar.getUserId());
         for (ShoppingCar car : ShoppingCars) {
             //查出商品的最高价格最低价格
-            CommunityGoods communityGoods = communityGoodsService.getCommunityGoodsByGoodsId(car.getGoodsSkuId());
+            CommunityGoods communityGoods = new CommunityGoods();
+            communityGoods.setCommunityId(communityId);
+            communityGoods.setGoodsSkuId(car.getGoodsSkuId());
+            communityGoods = communityGoodsService.getCommunityGoods(communityGoods);
             Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketIdAndPriceByLevel(currentMemberLevel, communityGoods);
             Integer minPrice = idAndPriceByLevel[0];
             car.setMinPrice(getpriceString(minPrice));
@@ -155,6 +165,12 @@ public class ShopCarServiceImpl implements ShopCarService {
         Map<String, Object> result = new HashMap<>();
         User user = userMapper.selectUserByuserId(shoppingCar.getUserId());
         Integer receiveAddressId = user.getDefaultReceiveAddressId();
+        ReceiveAddress receiveAddress = receiveAddressMapper.getReceiveAddressByReceiveAddressId(receiveAddressId);
+        Integer smallComunityId = receiveAddress.getAddressOne();
+        SmallCommunity smallCommunity = new SmallCommunity();
+        smallCommunity.setSmallCommunityId(smallComunityId);
+        smallCommunity = smallCommunityMapper.getSmallCommunity(smallCommunity);
+        Integer communityId = smallCommunity.getCommunityId();
         shoppingCar.setReceiveAddressId(receiveAddressId);
         shoppingCar.setSelectStatus("SELECTED");
         //所有购物车
@@ -184,7 +200,10 @@ public class ShopCarServiceImpl implements ShopCarService {
             GoodsSku goodsSku = goodsSkuMapper.getGoodsById(car.getGoodsSkuId());
             car.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
             car.setGoodsName(goodsSku.getFullName());
-            CommunityGoods communityGoods = communityGoodsService.getCommunityGoodsByGoodsId(car.getGoodsSkuId());
+            CommunityGoods communityGoods = new CommunityGoods();
+            communityGoods.setCommunityId(communityId);
+            communityGoods.setGoodsSkuId(car.getGoodsSkuId());
+            communityGoods = communityGoodsService.getCommunityGoods(communityGoods);
             Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketIdAndPriceByLevel(currentMemberLevel, communityGoods);
             Integer minPrice = idAndPriceByLevel[0];
             Integer maxPrice = idAndPriceByLevel[2];

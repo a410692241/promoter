@@ -15,4 +15,9 @@ public class CommunityGoodsServiceImpl implements CommunityGoodsService {
     public CommunityGoods getCommunityGoodsByGoodsId(Integer goodsSkuId) {
         return communityGoodsMapper.getCommunityGoodsByGoodsId(goodsSkuId);
     }
+
+    @Override
+    public CommunityGoods getCommunityGoods(CommunityGoods communityGoods) {
+        return communityGoodsMapper.getCommunityGoods(communityGoods);
+    }
 }
