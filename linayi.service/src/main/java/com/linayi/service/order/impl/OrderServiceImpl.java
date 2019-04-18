@@ -1,6 +1,7 @@
 package com.linayi.service.order.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.linayi.dao.address.ReceiveAddressMapper;
 import com.linayi.dao.area.AreaMapper;
 import com.linayi.dao.area.SmallCommunityMapper;
@@ -38,6 +39,7 @@ import com.linayi.service.order.OrderService;
 import com.linayi.service.promoter.OpenMemberInfoService;
 import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.util.*;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -423,11 +425,21 @@ public class OrderServiceImpl implements OrderService {
                 procurement.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
                 List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurement);
                 shoppingCar.setStatus(procurementTaskList.get(0).getProcureStatus());
-                CommunityGoods communityGoods = new CommunityGoods();
-                communityGoods.setCommunityId(communityId);
-                communityGoods.setGoodsSkuId(ordersGoods.getGoodsSkuId());
-                communityGoods = communityGoodsService.getCommunityGoods(communityGoods);
-                Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketIdAndPriceByLevel(currentMemberLevel, communityGoods);
+//                CommunityGoods communityGoods = new CommunityGoods();
+//                communityGoods.setCommunityId(communityId);
+//                communityGoods.setGoodsSkuId(ordersGoods.getGoodsSkuId());
+//                communityGoods = communityGoodsService.getCommunityGoods(communityGoods);
+                String supermarketList = ordersGoods.getSupermarketList();
+                List<Map> list = JSON.parseArray(supermarketList, Map.class);
+                List<SupermarketGoods> supermarketGoods = new ArrayList<>();
+                for (Map map : list) {
+                    SupermarketGoods supermarketGoods1 = new SupermarketGoods();
+                    supermarketGoods1.setPrice(Integer.parseInt(map.get("price") + ""));
+                    supermarketGoods1.setSupermarketId(Integer.parseInt(map.get("supermarket_id") + ""));
+                    supermarketGoods.add(supermarketGoods1);
+                }
+
+                Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketPriceByLevel(currentMemberLevel, supermarketGoods);
                 Integer minPrice = idAndPriceByLevel[0];
                 Integer maxPrice = idAndPriceByLevel[2];
 
