@@ -1,30 +1,27 @@
 package com.linayi.service.user.impl;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import com.linayi.entity.spokesman.Spokesman;
-import com.linayi.entity.supermarket.Supermarket;
-import com.linayi.enums.SpokesmanStatus;
-import com.linayi.service.spokesman.SpokesmanService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.linayi.dao.area.SmallCommunityMapper;
 import com.linayi.dao.supermarket.SupermarketMapper;
 import com.linayi.dao.user.AuthenticationApplyMapper;
 import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.area.SmallCommunity;
+import com.linayi.entity.spokesman.Spokesman;
+import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.entity.user.AuthenticationApply;
 import com.linayi.entity.user.User;
+import com.linayi.enums.SpokesmanStatus;
 import com.linayi.exception.ErrorType;
+import com.linayi.service.spokesman.SpokesmanService;
 import com.linayi.service.user.AuthenticationApplyService;
-import com.linayi.util.ImageUtil;
+import com.linayi.util.OSSManageUtil;
 import com.linayi.util.ResponseData;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.Resource;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class AuthenticationApplyServiceImpl implements AuthenticationApplyService {
@@ -34,16 +31,16 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 
 	@Resource
 	private UserMapper userMapper;
-	
+
 	@Resource
 	private SmallCommunityMapper smallCommunityMapper;
 
 	@Resource
 	private SpokesmanService spokesmanService;
-	
+
 	@Resource
 	private SupermarketMapper supermarketMapper;
-	
+
 	@Override
 	public Object applySharer(AuthenticationApply apply, MultipartFile[] file) {
 /*		apply.setAuthenticationType("SHARER");
@@ -54,10 +51,10 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				authenticationApply.setRealName(apply.getRealName());
 				authenticationApply.setMobile(apply.getMobile());
 				authenticationApply.setUserId(apply.getUserId());
-				authenticationApply.setIdCardFront(ImageUtil.handleUpload(file[0]));
-				authenticationApply.setIdCardBack(ImageUtil.handleUpload(file[1]));
+				authenticationApply.setIdCardFront(OSSManageUtil.uploadFile(file[0]));
+				authenticationApply.setIdCardBack(OSSManageUtil.uploadFile(file[1]));
 				authenticationApply.setCreateTime(new Date());
-				authenticationApply.setUpdateTime(new Date()); 
+				authenticationApply.setUpdateTime(new Date());
 				authenticationApply.setStatus("WAIT_AUDIT");
 				authenticationApply.setAuthenticationType("SHARER");
 				int rows = authenticationApplyMapper.insert(authenticationApply);
@@ -77,10 +74,10 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 					authenticationApply.setRealName(apply.getRealName());
 					authenticationApply.setMobile(apply.getMobile());
 					authenticationApply.setUserId(apply.getUserId());
-					authenticationApply.setIdCardFront(ImageUtil.handleUpload(file[0]));
-					authenticationApply.setIdCardBack(ImageUtil.handleUpload(file[1]));
+					authenticationApply.setIdCardFront(OSSManageUtil.uploadFile(file[0]));
+					authenticationApply.setIdCardBack(OSSManageUtil.uploadFile(file[1]));
 					authenticationApply.setCreateTime(new Date());
-					authenticationApply.setUpdateTime(new Date()); 
+					authenticationApply.setUpdateTime(new Date());
 					authenticationApply.setStatus("WAIT_AUDIT");
 					authenticationApply.setAuthenticationType("SHARER");
 					int rows = authenticationApplyMapper.insert(authenticationApply);
@@ -248,10 +245,10 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				authenticationApply.setRealName(apply.getRealName());
 				authenticationApply.setMobile(apply.getMobile());
 				authenticationApply.setUserId(apply.getUserId());
-				authenticationApply.setIdCardFront(ImageUtil.handleUpload(file[0]));
-				authenticationApply.setIdCardBack(ImageUtil.handleUpload(file[1]));
+				authenticationApply.setIdCardFront(OSSManageUtil.uploadFile(file[0]));
+				authenticationApply.setIdCardBack(OSSManageUtil.uploadFile(file[1]));
 				authenticationApply.setCreateTime(new Date());
-				authenticationApply.setUpdateTime(new Date()); 
+				authenticationApply.setUpdateTime(new Date());
 				authenticationApply.setStatus("WAIT_AUDIT");
 				authenticationApply.setAuthenticationType("PROCURER");
 				int rows = authenticationApplyMapper.insert(authenticationApply);
@@ -274,10 +271,10 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 					authenticationApply.setRealName(apply.getRealName());
 					authenticationApply.setMobile(apply.getMobile());
 					authenticationApply.setUserId(apply.getUserId());
-					authenticationApply.setIdCardFront(ImageUtil.handleUpload(file[0]));
-					authenticationApply.setIdCardBack(ImageUtil.handleUpload(file[1]));
+					authenticationApply.setIdCardFront(OSSManageUtil.uploadFile(file[0]));
+					authenticationApply.setIdCardBack(OSSManageUtil.uploadFile(file[1]));
 					authenticationApply.setCreateTime(new Date());
-					authenticationApply.setUpdateTime(new Date()); 
+					authenticationApply.setUpdateTime(new Date());
 					authenticationApply.setStatus("WAIT_AUDIT");
 					authenticationApply.setAuthenticationType("PROCURER");
 					int rows = authenticationApplyMapper.insert(authenticationApply);
@@ -304,10 +301,10 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				authenticationApply.setRealName(apply.getRealName());
 				authenticationApply.setMobile(apply.getMobile());
 				authenticationApply.setUserId(apply.getUserId());
-				authenticationApply.setIdCardFront(ImageUtil.handleUpload(file[0]));
-				authenticationApply.setIdCardBack(ImageUtil.handleUpload(file[1]));
+				authenticationApply.setIdCardFront(OSSManageUtil.uploadFile(file[0]));
+				authenticationApply.setIdCardBack(OSSManageUtil.uploadFile(file[1]));
 				authenticationApply.setCreateTime(new Date());
-				authenticationApply.setUpdateTime(new Date()); 
+				authenticationApply.setUpdateTime(new Date());
 				authenticationApply.setStatus("WAIT_AUDIT");
 				authenticationApply.setAuthenticationType("DELIVERER");
 				int rows = authenticationApplyMapper.insert(authenticationApply);
@@ -329,10 +326,10 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 					authenticationApply.setRealName(apply.getRealName());
 					authenticationApply.setMobile(apply.getMobile());
 					authenticationApply.setUserId(apply.getUserId());
-					authenticationApply.setIdCardFront(ImageUtil.handleUpload(file[0]));
-					authenticationApply.setIdCardBack(ImageUtil.handleUpload(file[1]));
+					authenticationApply.setIdCardFront(OSSManageUtil.uploadFile(file[0]));
+					authenticationApply.setIdCardBack(OSSManageUtil.uploadFile(file[1]));
 					authenticationApply.setCreateTime(new Date());
-					authenticationApply.setUpdateTime(new Date()); 
+					authenticationApply.setUpdateTime(new Date());
 					authenticationApply.setStatus("WAIT_AUDIT");
 					authenticationApply.setAuthenticationType("DELIVERER");
 					int rows = authenticationApplyMapper.insert(authenticationApply);
@@ -360,7 +357,7 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				apply.setAuthenticationType("SPOKESMAN");
 				apply.setCreateTime(now);
 				apply.setUpdateTime(now);
-				apply.setImage(ImageUtil.handleUpload(file));
+				apply.setImage(OSSManageUtil.uploadFile(file));
 				authenticationApplyMapper.insert(apply);
 				return new ResponseData("操作成功！").toString();
 			} catch (Exception e) {

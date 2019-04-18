@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ImageUtil {
+public class ImageUtil1 {
 
     /**
      * post请求（用于请求file传输）
