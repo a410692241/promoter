@@ -15,12 +15,12 @@ import javax.annotation.Resource;
 @Controller
 @RequestMapping("/user/authentication")
 public class ApplyAuthenticationController extends BaseController{
- 
+
 	@Resource
 	private AuthenticationApplyService authenticationApplyService;
 
 	/**
-	 *	插入数据
+	 *	插入数据show.do
 	 * @param realName	真实姓名
 	 * @param mobile	联系电话
 	 * @param file		身份证正反面
@@ -40,7 +40,7 @@ public class ApplyAuthenticationController extends BaseController{
 		}
 		return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
 	}
-	
+
 	@RequestMapping("/applyProcurer.do")
 	@ResponseBody
 	public Object applyProcurer(String realName, String mobile, String address, Integer supermarketId, String areaCode, MultipartFile[] file) {
@@ -58,7 +58,7 @@ public class ApplyAuthenticationController extends BaseController{
 		}
 		return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
 	}
-	
+
 	@RequestMapping("/applyDeliverer.do")
 	@ResponseBody
 	public Object applyDeliverer(String realName, String mobile, String address, Integer smallCommunityId, MultipartFile[] file) {
@@ -83,6 +83,6 @@ public class ApplyAuthenticationController extends BaseController{
 		Object responseData = authenticationApplyService.applySpokesman(authenticationApply,file);
 		return responseData;
 	}
-	
+
 
 }

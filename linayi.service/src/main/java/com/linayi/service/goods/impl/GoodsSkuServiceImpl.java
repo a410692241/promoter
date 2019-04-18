@@ -193,7 +193,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 			}
 			if (file != null) {
 				String image = null;
-				image = OSSManageUtil.uploadFile(file);
+				image = ImageUtil.handleUpload(file);
 				goods.setImage(image);
 			}
 			goods.setFullName(fullName);
@@ -462,7 +462,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 
 			if (image != null && !"".equals(image)){
 				try {
-					goodsSku.setImage(image);
+					goodsSku.setImage(ImageUtil.dealToShow(image));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -519,7 +519,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 					Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdNormal());
 					i.setMinPrice(i.getMinPriceNormal());
 					i.setMinSupermarket(supermarket.getName());
-					i.setImage(i.getImage());
+					i.setImage(ImageUtil.dealToShow(i.getImage()));
 				}
 			}
 			//高级会员
@@ -530,7 +530,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 					supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdSenior());
 					i.setMinPrice(i.getMinPriceSenior());
 					i.setMinSupermarket(supermarket.getName());
-					i.setImage(i.getImage());
+					i.setImage(ImageUtil.dealToShow(i.getImage()));
 				}
 			}
 			//超级vip
@@ -540,7 +540,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 					Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdSuper());
 					i.setMinPrice(i.getMinPriceSuper());
 					i.setMinSupermarket(supermarket.getName());
-					i.setImage(i.getImage());
+					i.setImage(ImageUtil.dealToShow(i.getImage()));
 				}
 			}
 
@@ -570,7 +570,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 //                  i.setMaxSupermarket(supermarketMapper.selectSupermarketBysupermarketId(i.getMaxSupermarketId()).getName());
                     i.setMinPrice(i.getMinPriceNormal());
                     i.setMinSupermarket(supermarket.getName());
-                    i.setImage(i.getImage());
+                    i.setImage(ImageUtil.dealToShow(i.getImage()));
                     i.setSpreadRate(Double.valueOf((df.format(Double.valueOf((i.getMaxPrice()-i.getMinPrice()))/i.getMinPrice()*100))));
                 }
             }
@@ -581,7 +581,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 //                  i.setMaxSupermarket(supermarketMapper.selectSupermarketBysupermarketId(i.getMaxSupermarketId()).getName());
                     i.setMinPrice(i.getMinPriceSenior());
                     i.setMinSupermarket(supermarket.getName());
-                    i.setImage(i.getImage());
+                    i.setImage(ImageUtil.dealToShow(i.getImage()));
                     i.setSpreadRate(Double.valueOf((df.format(Double.valueOf((i.getMaxPrice()-i.getMinPrice()))/i.getMinPrice()*100))));
                 }
             }
@@ -592,7 +592,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 //                  i.setMaxSupermarket(supermarketMapper.selectSupermarketBysupermarketId(i.getMaxSupermarketId()).getName());
                     i.setMinPrice(i.getMinPriceSuper());
                     i.setMinSupermarket(supermarket.getName());
-                    i.setImage(i.getImage());
+                    i.setImage(ImageUtil.dealToShow(i.getImage()));
                     i.setSpreadRate(Double.valueOf((df.format(Double.valueOf((i.getMaxPrice()-i.getMinPrice()))/i.getMinPrice()*100))));
                 }
             }
@@ -697,7 +697,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		if(goodsSkuList.size()>0) {
 
 			for(GoodsSku i:goodsSkuList ) {
-				i.setImage(i.getImage());
+				i.setImage(ImageUtil.dealToShow(i.getImage()));
 			}
 		}
 		return goodsSkuList;
@@ -721,7 +721,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 					Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdNormal());
 					i.setMinPrice(i.getMinPriceNormal());
 					i.setMinSupermarket(supermarket.getName());
-					i.setImage(i.getImage());
+					i.setImage(ImageUtil.dealToShow(i.getImage()));
 				}
 			}
 			//高级会员
@@ -730,7 +730,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 					Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdSenior());
 					i.setMinPrice(i.getMinPriceSenior());
 					i.setMinSupermarket(supermarket.getName());
-					i.setImage(i.getImage());
+					i.setImage(ImageUtil.dealToShow(i.getImage()));
 				}
 			}
 			//超级vip
@@ -739,7 +739,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 					Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdSuper());
 					i.setMinPrice(i.getMinPriceSuper());
 					i.setMinSupermarket(supermarket.getName());
-					i.setImage(i.getImage());
+					i.setImage(ImageUtil.dealToShow(i.getImage()));
 				}
 			}
 
@@ -831,7 +831,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 				}
 			}
 			goods.setBarcode(null);
-			String s = OSSManageUtil.uploadFile(goodsImage);
+			String s = ImageUtil.handleUpload(goodsImage);
 			String createTimeStart = goodsSku.getCreateTimeStart();
 			if(createTimeStart != null && !"".equals(createTimeStart)){
                 Date produceDate = DateUtil.string2Date(createTimeStart, "yyyy-MM-dd HH:mm:ss");

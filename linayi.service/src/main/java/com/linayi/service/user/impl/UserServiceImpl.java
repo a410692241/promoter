@@ -18,7 +18,6 @@ import com.linayi.exception.ErrorType;
 import com.linayi.service.redis.RedisService;
 import com.linayi.service.user.UserService;
 import com.linayi.util.*;
-import com.sun.imageio.plugins.common.ImageUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -279,7 +278,7 @@ public class UserServiceImpl implements UserService {
         if(headFile != null){
             //上传用户头像
             try {
-                realPath = OSSManageUtil.uploadFile(headFile);
+                realPath = ImageUtil.handleUpload(headFile);
                 user.setHeadImage(realPath);
             } catch (Exception e) {
                 e.printStackTrace();
