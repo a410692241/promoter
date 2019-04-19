@@ -56,6 +56,9 @@ public class MemberPriceUtil {
                     if(o2.getPrice() == null){
                         return -1;
                     }
+                    if((o2.getPrice()+"").equals(o1.getPrice() + "")){
+                        return o2.getRank() - o1.getRank();
+                    }
                     return o2.getPrice() - o1.getPrice();
                 }).collect(Collectors.toList());
 
