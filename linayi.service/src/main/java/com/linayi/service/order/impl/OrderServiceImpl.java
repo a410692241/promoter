@@ -128,9 +128,9 @@ public class OrderServiceImpl implements OrderService {
                     if (freeTimes != null && freeTimes > 0){
                         freeTimes --;
                         serviceFee = 0;
+                        openMemberInfo.setFreeTimes(freeTimes);
+                        openMemberInfoMapper.updateById(openMemberInfo);
                     }
-                    openMemberInfo.setFreeTimes(freeTimes);
-                    openMemberInfoMapper.updateById(openMemberInfo);
                 }
             }
         }
@@ -158,31 +158,15 @@ public class OrderServiceImpl implements OrderService {
         Orders order = generateOrders(userId, payWay, remark, amount, saveAmount, extraFee, serviceFee, num, receiveAddress, smallCommunity,receiveAddressId,addressType);
         // 插入订单
         ordersMapper.insert(order);
-
+        MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(userId);
         //新增订单商品
         for (ShoppingCar car : shoppingCars) {
             List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getSupermarketGoodsList(car.getGoodsSkuId(), smallCommunity.getCommunityId());
-            List<SupermarketGoods> supermarketGoods = supermarketGoodsList.stream().sorted((o1, o2) -> {
-                if(o1.getPrice() == null){
-                    return 1;
-                }
-                if(o2.getPrice() == null){
-                    return -1;
-                }
-                return o2.getPrice() - o1.getPrice();
-            }).collect(Collectors.toList());
-            final int[] sum = {0};
+            MemberPriceUtil.supermarketPriceByLevel(currentMemberLevel,supermarketGoodsList);
 
-            supermarketGoods.stream().forEach(p->{
-                if(p.getPrice() == null)
-                    sum[0]++;
-            });
-
-            supermarketGoods = supermarketGoods.subList(0,supermarketGoods.size() - sum[0]);
-
-            OrdersGoods ordersGoods = generateOrdersGoods(order,supermarketGoods, car.getQuantity(), car.getGoodsSkuId());
+            OrdersGoods ordersGoods = generateOrdersGoods(order,MemberPriceUtil.supermarketGoods, car.getQuantity(), car.getGoodsSkuId());
             ordersGoodsMapper.insert(ordersGoods);
-            Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(supermarketGoods.get(supermarketGoods.size() - 1).getSupermarketId());
+            Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(MemberPriceUtil.allSpermarketGoodsList.get(MemberPriceUtil.allSpermarketGoodsList.size() - 1).getSupermarketId());
             //待采买任务
             ProcurementTask procurementTask = generateProcurementTask(smallCommunity, ordersGoods, supermarket);
             procurementTaskMapper.insert(procurementTask);
@@ -411,7 +395,6 @@ public class OrderServiceImpl implements OrderService {
             orders2.setCommunityId(communityId);
             orders2.setServiceMobile(community1.getMobile());
             orders2.setCommunityName(community1.getName());
-            MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(orders1.getUserId());
             orders2.setCreateDateStr(DateUtil.date2String(orders1.getCreateTime(), DateUtil.Y_M_D_H_M_PATTERN));
             List<ShoppingCar> cars = new ArrayList<>();
             for (OrdersGoods ordersGoods : ordersGoodsList) {
@@ -425,26 +408,12 @@ public class OrderServiceImpl implements OrderService {
                 procurement.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
                 List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurement);
                 shoppingCar.setStatus(procurementTaskList.get(0).getProcureStatus());
-//                CommunityGoods communityGoods = new CommunityGoods();
-//                communityGoods.setCommunityId(communityId);
-//                communityGoods.setGoodsSkuId(ordersGoods.getGoodsSkuId());
-//                communityGoods = communityGoodsService.getCommunityGoods(communityGoods);
-                String supermarketList = ordersGoods.getSupermarketList();
-                List<Map> list = JSON.parseArray(supermarketList, Map.class);
-                List<SupermarketGoods> supermarketGoods = new ArrayList<>();
-                for (Map map : list) {
-                    SupermarketGoods supermarketGoods1 = new SupermarketGoods();
-                    supermarketGoods1.setPrice(Integer.parseInt(map.get("price") + ""));
-                    supermarketGoods1.setSupermarketId(Integer.parseInt(map.get("supermarket_id") + ""));
-                    supermarketGoods.add(supermarketGoods1);
-                }
 
-                Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketPriceByLevel(currentMemberLevel, supermarketGoods);
-                Integer minPrice = idAndPriceByLevel[0];
-                Integer maxPrice = idAndPriceByLevel[2];
+                Integer minPrice = ordersGoods.getPrice();
+                Integer maxPrice = ordersGoods.getMaxPrice();
 
-                String minPriceSupermarketName = supermarketService.getSupermarketById(idAndPriceByLevel[1]).getName();
-                String maxPriceSupermarketName = supermarketService.getSupermarketById(idAndPriceByLevel[3]).getName();
+                String minPriceSupermarketName = supermarketService.getSupermarketById(ordersGoods.getSupermarketId()).getName();
+                String maxPriceSupermarketName = supermarketService.getSupermarketById(ordersGoods.getMaxSupermarketId()).getName();
 
                 shoppingCar.setQuantity(ordersGoods.getQuantity());
                 shoppingCar.setMinPrice(getpriceString(minPrice));
