@@ -651,4 +651,8 @@
                 ORDER BY gs.sold_num DESC
         </where>
     </select>
+
+    <select id="getSoldNumByGoodsSkuId" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        select sold_num from goods_sku where goods_sku_id = #{goodsSkuId}
+    </select>
 </mapper>

@@ -7,6 +7,7 @@ import com.linayi.entity.goods.*;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.enums.CategoryLevel;
 import com.linayi.enums.MemberLevel;
+import com.linayi.enums.PriceOrderType;
 import com.linayi.service.goods.*;
 import com.linayi.service.promoter.OpenMemberInfoService;
 import com.linayi.util.*;
@@ -857,10 +858,10 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		String fieldName3 = "brand";
 		//设置查询的条件为商品名存在特定关键字符
 		//对指定字段设置ik分词器
-		searchSourceBuilder.query(QueryBuilders.multiMatchQuery(key,fieldName,fieldName2,fieldName3 ).analyzer("ik_max_word"));
-		searchSourceBuilder.size(esConfig.getPageSize());
+		searchSourceBuilder.query(QueryBuilders.multiMatchQuery(key, fieldName, fieldName2, fieldName3));
+		searchSourceBuilder.size(100);
 //		searchSourceBuilder.sort("full_name");
-		searchSourceBuilder.from((esConfig.getCurrentPage() - 1) * esConfig.getPageSize());
+//		searchSourceBuilder.from((esConfig.getCurrentPage() - 1) * esConfig.getPageSize());
 		//指定高亮字段
 		HighlightBuilder highlightBuilder = new HighlightBuilder();
 		HighlightBuilder.Field highlightTitle = new HighlightBuilder.Field(fieldName);
@@ -882,8 +883,9 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		Map<String, List<CommunityGoods>> map = allCommunityGood.stream().filter(item -> item != null).collect(Collectors.groupingBy(o -> o.getGoodsSkuId() + "_" + o.getCommunityId()));
 		for (SearchHit hit : hits) {
 			GoodsSku esGoodsSkuByHit = getEsGoodsSkuByHit(hit, communityId);
-			System.out.println(esGoodsSkuByHit.getGoodsSkuId() + "_" + esGoodsSkuByHit.getCommunityId());
-			List<CommunityGoods> communityGoodList = map.get(esGoodsSkuByHit.getGoodsSkuId() + "_" + esGoodsSkuByHit.getCommunityId());
+			Long goodsSkuId = esGoodsSkuByHit.getGoodsSkuId();
+			esGoodsSkuByHit.setSoldNum(goodsSkuMapper.getSoldNumByGoodsSkuId(goodsSkuId));
+			List<CommunityGoods> communityGoodList = map.get(goodsSkuId + "_" + esGoodsSkuByHit.getCommunityId());
 			if(communityGoodList == null){
 				continue;
 			}
@@ -904,9 +906,23 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 			goodsSkus.add(esGoodsSkuByHit);
 		}
 		MemberLevel memberLevel = openMemberInfoService.getCurrentMemberLevel(userId);
-		List<GoodsSku> goodsSkuListResult = setMemberPrice(memberLevel, goodsSkus);
-		goodsSkus.stream().filter(item -> item != null);
-		return goodsSkuListResult;
+		List<GoodsSku> collect = setMemberPrice(memberLevel, goodsSkus);
+		//过滤null元素并排序
+		collect.stream().filter(item -> item != null);
+		String orderType = esConfig.getOrderType();
+		List<GoodsSku> goodsSkuListResult = new ArrayList<>();
+		if (PriceOrderType.SOLD_NUM.name().equals(orderType)) {
+			//销量为null的,给予默认值为0
+			collect.stream().forEach(item -> item.setSoldNum(item.getSoldNum() == null ? 0 : item.getSoldNum()));
+			goodsSkuListResult = collect.stream().sorted(Comparator.comparing(GoodsSku::getSoldNum).reversed()).collect(Collectors.toList());
+		}
+		if (PriceOrderType.PRICE_UP.name().equals(orderType)) {
+			goodsSkuListResult = collect.stream().sorted(Comparator.comparing(GoodsSku::getMinPrice)).collect(Collectors.toList());
+		}
+		if (PriceOrderType.PRICE_DOWN.name().equals(orderType)) {
+			goodsSkuListResult = collect.stream().sorted(Comparator.comparing(GoodsSku::getMinPrice).reversed()).collect(Collectors.toList());
+		}
+		return goodsSkuListResult.subList((esConfig.getCurrentPage() - 1) * esConfig.getPageSize(),esConfig.getCurrentPage() * esConfig.getPageSize());
 
 
 	}
