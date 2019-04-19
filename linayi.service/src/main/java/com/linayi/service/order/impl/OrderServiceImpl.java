@@ -164,11 +164,12 @@ public class OrderServiceImpl implements OrderService {
             List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getSupermarketGoodsList(car.getGoodsSkuId(), smallCommunity.getCommunityId());
             MemberPriceUtil.supermarketPriceByLevel(currentMemberLevel,supermarketGoodsList);
 
-            OrdersGoods ordersGoods = generateOrdersGoods(order,MemberPriceUtil.supermarketGoods, car.getQuantity(), car.getGoodsSkuId());
+            OrdersGoods ordersGoods = generateOrdersGoods(order,MemberPriceUtil.supermarketGoods,MemberPriceUtil.allSpermarketGoodsList, car.getQuantity(), car.getGoodsSkuId());
             ordersGoodsMapper.insert(ordersGoods);
             SupermarketGoods supermarketGoods = MemberPriceUtil.allSpermarketGoodsList.get(MemberPriceUtil.allSpermarketGoodsList.size() - 1);
             Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(supermarketGoods.getSupermarketId());
-            ordersGoods.setPrice(supermarketGoods.getPrice());
+            supermarket.setPrice(supermarketGoods.getPrice());
+            supermarket.setSupermarketId(supermarket.getSupermarketId());
             //待采买任务
             ProcurementTask procurementTask = generateProcurementTask(smallCommunity, ordersGoods, supermarket);
             procurementTaskMapper.insert(procurementTask);
@@ -177,10 +178,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public  OrdersGoods generateOrdersGoods(Orders order, List<SupermarketGoods> supermarketGoodsList, Integer quantity, Integer goodsSkuId) {
+    public  OrdersGoods generateOrdersGoods(Orders order, List<SupermarketGoods> supermarketGoodsList,List<SupermarketGoods> supermarketGoodsList1, Integer quantity, Integer goodsSkuId) {
         OrdersGoods ordersGoods = new OrdersGoods();
         ordersGoods.setOrdersId(order.getOrdersId());
-        String jsonStr = dealSupermarket(supermarketGoodsList);
+        String jsonStr = dealSupermarket(supermarketGoodsList1);
         ordersGoods.setSupermarketList(jsonStr);
         ordersGoods.setMaxPrice(supermarketGoodsList.get(0).getPrice());
         ordersGoods.setPrice(supermarketGoodsList.get(supermarketGoodsList.size() - 1).getPrice());
@@ -197,10 +198,10 @@ public class OrderServiceImpl implements OrderService {
     public static ProcurementTask generateProcurementTask(SmallCommunity smallCommunity, OrdersGoods ordersGoods, Supermarket supermarket) {
         ProcurementTask procurementTask = new ProcurementTask();
         procurementTask.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
-        procurementTask.setSupermarketId(ordersGoods.getSupermarketId());
+        procurementTask.setSupermarketId(supermarket.getSupermarketId());
         procurementTask.setOrdersId(ordersGoods.getOrdersId());
         procurementTask.setGoodsSkuId(ordersGoods.getGoodsSkuId());
-        procurementTask.setPrice(ordersGoods.getPrice());
+        procurementTask.setPrice(supermarket.getPrice());
         procurementTask.setQuantity(ordersGoods.getQuantity());
         procurementTask.setActualQuantity(0);
         procurementTask.setProcureQuantity(0);

@@ -154,5 +154,5 @@ public interface OrderService {
      */
     PageResult<Orders> getProcureOrderList(Orders orders);
 
-    OrdersGoods generateOrdersGoods(Orders order, List<SupermarketGoods> supermarketGoodsList, Integer num, Integer goodsSkuId);
+    OrdersGoods generateOrdersGoods(Orders order, List<SupermarketGoods> supermarketGoodsList,List<SupermarketGoods> supermarketGoodsList1, Integer num, Integer goodsSkuId);
 }

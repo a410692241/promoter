@@ -35,6 +35,7 @@ public class Supermarket extends BaseEntity {
     private String type;
 
     private String goodsPrice;//商品价格
+    private Integer price;//商品价格
 
     private Integer userId;
 
@@ -242,5 +243,13 @@ public class Supermarket extends BaseEntity {
 
     public void setRank(Integer rank) {
         this.rank = rank;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 }

@@ -292,7 +292,7 @@ public class SelfOrderServiceImpl implements SelfOrderService {
         order.setOrderType("'SELF_ORDER'");
         ordersMapper.insert(order);
         List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getSupermarketGoodsList(goodsSkuId, smallCommunity.getCommunityId());
-        OrdersGoods ordersGoods = orderService.generateOrdersGoods(order, supermarketGoodsList, num, goodsSkuId);
+        OrdersGoods ordersGoods = orderService.generateOrdersGoods(order, supermarketGoodsList,supermarketGoodsList, num, goodsSkuId);
         ordersGoodsMapper.insert(ordersGoods);
         Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(supermarketGoodsList.get(supermarketGoodsList.size() - 1).getSupermarketId());
         //待采买任务
