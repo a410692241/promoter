@@ -170,8 +170,13 @@ public class OrderController extends BaseController {
             //pvu.Exist("accessToken","ordersId");
             Orders orders = pvu.transObj(Orders.class);
             orders.setUserId(getUserId());
-            orderService.againOrders(orders);
-            return new ResponseData("success");
+            try {
+                String s = orderService.againOrders(orders);
+                return new ResponseData(s);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return new ResponseData("failure");
         } catch (Exception e) {
             e.printStackTrace();
         }

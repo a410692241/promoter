@@ -10,7 +10,7 @@ public interface ShopCarService {
      * 新增购物车
      * @param shoppingCar
      */
-    void addShopCar(ShoppingCar shoppingCar);
+    String addShopCar(ShoppingCar shoppingCar);
 
     /**
      * 购物车列表合计

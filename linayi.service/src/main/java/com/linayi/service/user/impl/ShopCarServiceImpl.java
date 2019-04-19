@@ -24,7 +24,6 @@ import com.linayi.service.promoter.OpenMemberInfoService;
 import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.service.user.ShopCarService;
 import com.linayi.util.*;
-import com.sun.imageio.plugins.common.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,17 +53,31 @@ public class ShopCarServiceImpl implements ShopCarService {
     private SupermarketService supermarketService;
 
     @Override
-    public void addShopCar(ShoppingCar shoppingCar) {
+    public String addShopCar(ShoppingCar shoppingCar) {
         User user = userMapper.selectUserByuserId(shoppingCar.getUserId());
         Integer receiveAddressId = user.getDefaultReceiveAddressId();
         shoppingCar.setReceiveAddressId(receiveAddressId);
         ShoppingCar shopCar = shoppingCarMapper.getShopCar(shoppingCar);
+        ReceiveAddress receiveAddress = receiveAddressMapper.getReceiveAddressByReceiveAddressId(receiveAddressId);
+        Integer smallComunityId = receiveAddress.getAddressOne();
+        SmallCommunity smallCommunity = new SmallCommunity();
+        smallCommunity.setSmallCommunityId(smallComunityId);
+        smallCommunity = smallCommunityMapper.getSmallCommunity(smallCommunity);
+        Integer communityId = smallCommunity.getCommunityId();
+        CommunityGoods communityGoods = new CommunityGoods();
+        communityGoods.setCommunityId(communityId);
+        communityGoods.setGoodsSkuId(shoppingCar.getGoodsSkuId());
+        communityGoods = communityGoodsService.getCommunityGoods(communityGoods);
+        if(communityGoods == null){
+            return "no_price";
+        }
         if (shopCar != null){
             shopCar.setQuantity(shopCar.getQuantity() + shoppingCar.getQuantity());
             shoppingCarMapper.updateShopCar(shopCar);
         }else {
             shoppingCarMapper.insert(shoppingCar);
         }
+        return "success";
     }
 
     @Override
@@ -88,6 +101,9 @@ public class ShopCarServiceImpl implements ShopCarService {
             communityGoods.setCommunityId(communityId);
             communityGoods.setGoodsSkuId(car.getGoodsSkuId());
             communityGoods = communityGoodsService.getCommunityGoods(communityGoods);
+            if(communityGoods == null){
+                continue;
+            }
             Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketIdAndPriceByLevel(currentMemberLevel, communityGoods);
             Integer minPrice = idAndPriceByLevel[0];
             car.setMinPrice(getpriceString(minPrice));
@@ -95,7 +111,7 @@ public class ShopCarServiceImpl implements ShopCarService {
             GoodsSku goodsSku = goodsSkuMapper.getGoodsById(car.getGoodsSkuId());
 
             //图片信息处理
-            car.setGoodsSkuImage(goodsSku.getImage());
+            car.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
             car.setGoodsName(goodsSku.getFullName());
             if ("SELECTED".equals(car.getSelectStatus())){
                 //List<SupermarketGoods> supermarketGoodss = getSupermarketGoodsByGoodsSkuId(car);

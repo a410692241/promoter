@@ -45,7 +45,7 @@ public interface OrderService {
      * 再来一单
      * @param orders
      */
-    void againOrders(Orders orders);
+    String againOrders(Orders orders);
 
     List<Orders> getOrderAll(Orders orders);
 

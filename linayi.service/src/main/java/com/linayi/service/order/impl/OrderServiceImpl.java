@@ -575,12 +575,27 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public void againOrders(Orders orders) {
+    public String againOrders(Orders orders) {
         List<OrdersGoods> ordersGoods = ordersGoodsMapper.getOrdersGoodsByOrdersId(orders.getOrdersId());
         User user = userMapper.selectUserByuserId(orders.getUserId());
         Integer receiveAddressId = user.getDefaultReceiveAddressId();
+        ReceiveAddress receiveAddress = receiveAddressMapper.getReceiveAddressByReceiveAddressId(receiveAddressId);
+        Integer smallComunityId = receiveAddress.getAddressOne();
+        SmallCommunity smallCommunity = new SmallCommunity();
+        smallCommunity.setSmallCommunityId(smallComunityId);
+        smallCommunity = smallCommunityMapper.getSmallCommunity(smallCommunity);
+        Integer communityId = smallCommunity.getCommunityId();
         if (ordersGoods != null && ordersGoods.size() > 0) {
             for (OrdersGoods ordersGood : ordersGoods) {
+                CommunityGoods communityGoods = new CommunityGoods();
+                communityGoods.setCommunityId(communityId);
+                communityGoods.setGoodsSkuId(ordersGood.getGoodsSkuId());
+                communityGoods = communityGoodsService.getCommunityGoods(communityGoods);
+
+                if(communityGoods == null){
+                    return "no_price";
+                }
+
                 ShoppingCar shoppingCar = new ShoppingCar();
                 shoppingCar.setGoodsSkuId(ordersGood.getGoodsSkuId());
                 shoppingCar.setQuantity(ordersGood.getQuantity());
@@ -590,6 +605,7 @@ public class OrderServiceImpl implements OrderService {
                 shoppingCarMapper.insert(shoppingCar);
             }
         }
+        return "success";
     }
 
     @Override
