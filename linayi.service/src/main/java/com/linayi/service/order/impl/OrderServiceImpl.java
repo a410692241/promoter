@@ -395,6 +395,7 @@ public class OrderServiceImpl implements OrderService {
             orders2.setCommunityId(communityId);
             orders2.setServiceMobile(community1.getMobile());
             orders2.setCommunityName(community1.getName());
+            MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(orders1.getUserId());
             orders2.setCreateDateStr(DateUtil.date2String(orders1.getCreateTime(), DateUtil.Y_M_D_H_M_PATTERN));
             List<ShoppingCar> cars = new ArrayList<>();
             for (OrdersGoods ordersGoods : ordersGoodsList) {
@@ -408,12 +409,35 @@ public class OrderServiceImpl implements OrderService {
                 procurement.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
                 List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurement);
                 shoppingCar.setStatus(procurementTaskList.get(0).getProcureStatus());
+                Integer minPrice;
+                Integer maxPrice;
+                String minPriceSupermarketName;
+                String maxPriceSupermarketName;
+                if (ordersGoods.getMaxPrice() == null || ordersGoods.getMaxSupermarketId() == null){
+                    String supermarketList = ordersGoods.getSupermarketList();
+                    List<Map> list = JSON.parseArray(supermarketList, Map.class);
+                    List<SupermarketGoods> supermarketGoods = new ArrayList<>();
+                    for (Map map : list) {
+                        SupermarketGoods supermarketGoods1 = new SupermarketGoods();
+                        supermarketGoods1.setPrice(Integer.parseInt(map.get("price") + ""));
+                        supermarketGoods1.setSupermarketId(Integer.parseInt(map.get("supermarket_id") + ""));
+                        supermarketGoods.add(supermarketGoods1);
+                    }
 
-                Integer minPrice = ordersGoods.getPrice();
-                Integer maxPrice = ordersGoods.getMaxPrice();
+                    Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketPriceByLevel(currentMemberLevel, supermarketGoods);
+                    minPrice = idAndPriceByLevel[0];
+                    maxPrice = idAndPriceByLevel[2];
 
-                String minPriceSupermarketName = supermarketService.getSupermarketById(ordersGoods.getSupermarketId()).getName();
-                String maxPriceSupermarketName = supermarketService.getSupermarketById(ordersGoods.getMaxSupermarketId()).getName();
+                    minPriceSupermarketName = supermarketService.getSupermarketById(idAndPriceByLevel[1]).getName();
+                    maxPriceSupermarketName = supermarketService.getSupermarketById(idAndPriceByLevel[3]).getName();
+
+                }else {
+                    minPrice = ordersGoods.getPrice();
+                    maxPrice = ordersGoods.getMaxPrice();
+
+                    minPriceSupermarketName = supermarketService.getSupermarketById(ordersGoods.getSupermarketId()).getName();
+                    maxPriceSupermarketName = supermarketService.getSupermarketById(ordersGoods.getMaxSupermarketId()).getName();
+                }
 
                 shoppingCar.setQuantity(ordersGoods.getQuantity());
                 shoppingCar.setMinPrice(getpriceString(minPrice));
