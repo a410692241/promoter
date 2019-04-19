@@ -437,18 +437,18 @@
                 AND gs.brand_id=#{brandId}
             </if>
             <if test="memberLevel!=null and memberLevel=='NORMAL'">
-                and cg.min_price_normal IS NOT NULL
+                and cg.min_price_normal IS NOT NULL ORDER BY ((cg.max_price_normal-cg.min_price_normal)/cg.min_price_normal) DESC
             </if>
             <if test="memberLevel!=null and memberLevel=='NOT_MEMBER'">
-                and cg.min_price_normal IS NOT NULL
+                and cg.min_price_normal IS NOT NULL ORDER BY ((cg.max_price_normal-cg.min_price_normal)/cg.min_price_normal) DESC
             </if>
             <if test="memberLevel!=null and memberLevel=='SENIOR'">
-                and cg.min_price_senior IS NOT NULL
+                and cg.min_price_senior IS NOT NULL ORDER BY ((cg.max_price_senior-cg.min_price_senior)/cg.min_price_senior) DESC
             </if>
             <if test="memberLevel!=null and memberLevel=='SUPER'">
-                and cg.min_price_super IS NOT NULL
+                and cg.min_price_super IS NOT NULL  ORDER BY ((cg.max_price_super-cg.min_price_super)/cg.min_price_super) DESC
             </if>
-            ORDER BY (cg.max_price-cg.min_price)/cg.min_price DESC
+
         </where>
     </select>
 
