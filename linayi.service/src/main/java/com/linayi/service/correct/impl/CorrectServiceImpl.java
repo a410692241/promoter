@@ -463,8 +463,17 @@ public class CorrectServiceImpl implements CorrectService {
     }
 
     @Override
+    @Transactional
     public Integer updateCorrect(Correct correct) {
-        return correctMapper.updateCorrect(correct);
+        Correct currentCorrect = correctMapper.selectByPrimaryKey(correct.getCorrectId());
+        Integer result = correctMapper.updateCorrect(correct);
+        if(currentCorrect.getPrice() != correct.getPrice() && CorrectStatus.AFFECTED.toString().equals(currentCorrect.getStatus())){
+            Correct newCorrect = new Correct();
+            newCorrect.setStatus(CorrectStatus.AUDIT_SUCCESS.toString());
+            newCorrect.setCorrectId(correct.getCorrectId());
+            correctMapper.updateCorrect(newCorrect);
+        }
+        return result;
     }
 
     public List<Correct> getCorrect(Correct correct) {
