@@ -110,7 +110,6 @@ public class ProcurementServiceImpl implements ProcurementService {
 				}
             }
         }
-		http://www.laykj.cn/wherebuyAPI/procurement/procurement/boxingDetails.do
         return procurementTaskList;
     }
 
