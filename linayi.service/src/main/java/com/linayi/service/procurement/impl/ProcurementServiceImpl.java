@@ -597,7 +597,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		List<ProcurementTask> list = procurementTaskMapper.getNotDeliverGoods(procurTask);
 		for(int i=0;i<list.size();i++){
 			String image = list.get(i).getImage();
-			list.get(i).setImage(image);
+			list.get(i).setImage(ImageUtil.dealToShow(image));
 		}
 		return list;
 	}
