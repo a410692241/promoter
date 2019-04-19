@@ -541,7 +541,6 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		}
 		goodsSku.setMemberLevel(memberLevel.toString());
 		List<GoodsSku> differenceRankingList = goodsSkuMapper.getDifferenceRanking(goodsSku);
-		DecimalFormat df = new DecimalFormat("#.00");
 		if(differenceRankingList.size()>0) {
 			setMemberPrice(memberLevel,differenceRankingList);
 
