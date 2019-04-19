@@ -28,7 +28,7 @@ where `employee_id` =#{employeeId}
     <select id="selectUserByuserId" resultType="com.linayi.entity.user.User">
  		select
 `user_id`,`nickname`,`is_sharer`,`is_procurer`,`head_image`,`birthday`,`sex`,`mobile`,`qq`,
-`email`,`real_name`,`create_time`,`update_time`,default_receive_address_id from `user`
+`email`,`real_name`,`create_time`,`update_time`,default_receive_address_id,is_flow,is_order_man from `user`
 where user_id=#{userId}
  	</select>
 
@@ -179,6 +179,12 @@ where user_id=#{userId}
             </if>
             <if test="isMember !=null ">
                 `is_member`=#{isMember},
+            </if>
+            <if test="isOrderMan !=null ">
+            `is_order_man`=#{isOrderMan},
+            </if>
+            <if test="openOrderManInfoId !=null ">
+                `open_order_man_info_id`=#{openOrderManInfoId},
             </if>
         </set>
         where user_id=#{userId}

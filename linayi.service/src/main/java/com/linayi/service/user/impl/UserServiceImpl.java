@@ -238,12 +238,6 @@ public class UserServiceImpl implements UserService {
             String[] str = userInfo.getBirthday().split(" ");
             userInfo.setBirthday(str[0]);
         }
-        User newUser = userMapper.getUserByIdAndOrderManLevel(userId);
-        if(newUser != null){
-            userInfo.setIsOrderMan("TRUE");
-        }else{
-            userInfo.setIsOrderMan("FALSE");
-        }
 
         //根据用户Id去查询小区表得到是否是配送员
         Integer delivererId = userId;
