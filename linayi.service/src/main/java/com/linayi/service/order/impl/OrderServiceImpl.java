@@ -424,6 +424,7 @@ public class OrderServiceImpl implements OrderService {
                         SupermarketGoods supermarketGoods1 = new SupermarketGoods();
                         supermarketGoods1.setPrice(Integer.parseInt(map.get("price") + ""));
                         supermarketGoods1.setSupermarketId(Integer.parseInt(map.get("supermarket_id") + ""));
+                        supermarketGoods1.setRank(1);
                         supermarketGoods.add(supermarketGoods1);
                     }
 
