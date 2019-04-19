@@ -365,7 +365,7 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
 			communityService.updateCommunityPrice({
 				"data":{communityId:communityId},
 				"success":function( data ){
-					isTrue == true;
+					isTrue = true;
 					if( data.respCode =="S" ){
 						$("#communityList").trigger("reloadGrid");
 						// list();
