@@ -166,7 +166,9 @@ public class OrderServiceImpl implements OrderService {
 
             OrdersGoods ordersGoods = generateOrdersGoods(order,MemberPriceUtil.supermarketGoods, car.getQuantity(), car.getGoodsSkuId());
             ordersGoodsMapper.insert(ordersGoods);
-            Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(MemberPriceUtil.allSpermarketGoodsList.get(MemberPriceUtil.allSpermarketGoodsList.size() - 1).getSupermarketId());
+            SupermarketGoods supermarketGoods = MemberPriceUtil.allSpermarketGoodsList.get(MemberPriceUtil.allSpermarketGoodsList.size() - 1);
+            Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(supermarketGoods.getSupermarketId());
+            ordersGoods.setPrice(supermarketGoods.getPrice());
             //待采买任务
             ProcurementTask procurementTask = generateProcurementTask(smallCommunity, ordersGoods, supermarket);
             procurementTaskMapper.insert(procurementTask);

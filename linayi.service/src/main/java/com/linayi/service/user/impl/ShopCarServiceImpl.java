@@ -95,6 +95,7 @@ public class ShopCarServiceImpl implements ShopCarService {
         Map<String, Object> map = new HashMap<>();
         Integer totalPrice = 0;//合计总价格
         MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(shoppingCar.getUserId());
+        ArrayList<ShoppingCar> shoppingCars = new ArrayList<>();
         for (ShoppingCar car : ShoppingCars) {
             //查出商品的最高价格最低价格
             CommunityGoods communityGoods = new CommunityGoods();
@@ -102,6 +103,7 @@ public class ShopCarServiceImpl implements ShopCarService {
             communityGoods.setGoodsSkuId(car.getGoodsSkuId());
             communityGoods = communityGoodsService.getCommunityGoods(communityGoods);
             if(communityGoods == null){
+                shoppingCars.add(car);
                 continue;
             }
             Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketIdAndPriceByLevel(currentMemberLevel, communityGoods);
@@ -120,6 +122,7 @@ public class ShopCarServiceImpl implements ShopCarService {
             }
 
         }
+        ShoppingCars.removeAll(shoppingCars);
         map.put("ShoppingCars",ShoppingCars);
         map.put("totalPrice",getpriceString(totalPrice));
         return map;
