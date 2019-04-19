@@ -1,7 +1,7 @@
 'use strict';
 
 app.controller('communityCtrl', function($scope,toaster,communityService,messager,templateform ) {
-	
+
 	function init(){
 		$scope.show = show;
 		$scope.edit = edit;
@@ -43,13 +43,13 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
 				$scope.cityList = [];
 				$scope.regionList = [];
 				$scope.streetList = [];
-				
+
 				var result = '';
 				var provinceName = '';
 				var cityName = '';
 				var regionName = '';
 				var streetName = '';
-		
+
 				$.ajax({
 					url : urls.ms + "/community/supermarket/getProvince.do",
 					async : false,
@@ -61,7 +61,7 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
 						}
 					}
 				})
-				
+
 				$scope.getCity = function( province ){
 					provinceName = '';
 					provinceName = province.name;
@@ -83,7 +83,7 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
 						}
 					})
 				}
-				
+
 				$scope.getRegion = function( city ){
 					cityName = '';
 					cityName = city.name;
@@ -104,7 +104,7 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
 						}
 					})
 				}
-				
+
 				$scope.getStreet = function( region ){
 					regionName = '';
 					regionName = region.name;
@@ -128,7 +128,7 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
 						}
 					})
 				}
-				
+
 				$scope.getResult = function( street ){
 					var areaCode = street.code;
 					streetName = '';
@@ -140,7 +140,7 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
 					$modalInstance.close();
 				}
 			}
-		});	
+		});
 	}
 	/**列表查询*/
 	function list(){
@@ -160,15 +160,15 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
 			subGridRowExpanded: showChildGrid,
 		    subGridOptions : {
 				reloadOnExpand :false,
-				selectOnExpand : true 
+				selectOnExpand : true
 			},
 			colModel : [
-				{name:'communityId',label:'社区ID',sortable:false,width:80}, 
-				{name:'email',label:'email',sortable:false,width:80}, 
-				{name:'name',label:'社区名称',sortable:false,width:160}, 
-				{name:'qq',label:'qq',sortable:false,width:80}, 
-				{name:'mobile',label:'手机号',sortable:false,width:80}, 
-				{name:'address',label:'地址',sortable:false,width:200}, 
+				{name:'communityId',label:'社区ID',sortable:false,width:80},
+				{name:'email',label:'email',sortable:false,width:80},
+				{name:'name',label:'社区名称',sortable:false,width:160},
+				{name:'qq',label:'qq',sortable:false,width:80},
+				{name:'mobile',label:'手机号',sortable:false,width:80},
+				{name:'address',label:'地址',sortable:false,width:200},
 	             {label:"操作",name:"opt",width:300,sortable:false,formatter:function(cellvalue, options, rowObject){
 					var opts = "";
 					opts = opts + "<a href='javascript:void(0);' ng-click='edit( "+rowObject.communityId+" )' class='btn btn-primary fa fa-edit btn-sm td-compile'>修改</a> ";
@@ -182,7 +182,7 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
 			]
 		});
 	}
-	
+
 	/**查询负责超市或者比价超市*/
 	 function showChildGrid(parentRowID, parentRowKey) {
 		 var row = $(this).jqGrid("getRowData",parentRowKey);
@@ -207,9 +207,9 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
 	         rownumbers:false,
 	         height: '100%',
 	     });
-	
+
 	 }
-	
+
 	 /**社区配送地址*/
 	 function showCommunityLocation( communityId ){
 		 var url = urls.ms + "/jsp/community/CommunityLocationList.jsp?";
@@ -224,13 +224,13 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
 			scope:$scope,
 			buttons:[],
 			onOpen:function( $modalInstance, data ,$scope){
-				
+
 			}
 		 },function( $modalInstance,data, $scope ){
 			save( $modalInstance,data, $scope );
 		 });
 	 }
-	 
+
     /**删除*/
     function remove( communityId ){
     	messager.confirm("确认删除？",function( $modalInstance ){
@@ -257,7 +257,7 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
     		});
     	});
     }
-    
+
     /**新增，编辑*/
     function edit( id ){
     	var url = urls.ms + "/community/community/edit.do?";
@@ -269,13 +269,13 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
 			url:url,
 			scope:$scope,
 			onOpen:function( $modalInstance, data ,$scope){
-					
+
 			}
 		},function( $modalInstance,data, $scope ){
 			save( $modalInstance,data, $scope );
 		});
     }
-    
+
 	/**保存*/
     function save( $modalInstance,data, $scope ){
     	try{
@@ -299,7 +299,7 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
 							e.msg : "出错了",3000 );
 		}
     }
-    
+
     /**
      * 绑定负责超市或者比较超市
      * @param type 10:负责超市，20:比价超市
@@ -321,7 +321,7 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
 
 		 });
     }
-    
+
     /**查看*/
     function show( id ){
     	var url = urls.ms + "/community/community/show.do?";
@@ -356,6 +356,7 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
 	/**更新社区价格*/
 	function updateCommunityPrice( communityId ){
 		messager.confirm("确认更新该社区所有商品价格？",function( $modalInstance ){
+			debugger;
 			if(isTrue){
 				isTrue =false;
 			}else {

@@ -176,7 +176,7 @@ public class OrderController extends BaseController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return new ResponseData("failure");
+            return new ResponseData("F",ErrorType.OPERATION_FAIL.getErrorMsg());
         } catch (Exception e) {
             e.printStackTrace();
         }
