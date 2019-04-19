@@ -7,9 +7,9 @@ import java.util.List;
 
 public class SupermarketGoods extends BaseEntity implements Serializable{
     /**
-	 * 
+	 *
 	 */
-	private static final long serialVersionUID = -4988704763900697034L; 
+	private static final long serialVersionUID = -4988704763900697034L;
 
 	private Long supermarketGoodsId;
 
@@ -20,19 +20,22 @@ public class SupermarketGoods extends BaseEntity implements Serializable{
     private Integer price;
 
     private Long correctId;
-    
+
     private String supermarketName; //超市名
-    
+
     private String correctType;//按钮类型
-    
+
     private String name;
 
 	private String fullName;
 
     private String status;
-    
+
     private String priceStr;
-    
+	//距离排序
+    private Integer rank;
+
+
 	public String getName() {
 		return name;
 	}
@@ -51,7 +54,7 @@ public class SupermarketGoods extends BaseEntity implements Serializable{
 
 	private List<Integer> supermarketIdList;
 
-    
+
 
 	public List<Integer> getSupermarketIdList() {
 		return supermarketIdList;
@@ -71,17 +74,25 @@ public class SupermarketGoods extends BaseEntity implements Serializable{
 		return supermarketName;
 	}
 
-	
 
 	@Override
 	public String toString() {
-		return "SupermarketGoods [supermarketGoodsId=" + supermarketGoodsId + ", supermarketId=" + supermarketId
-				+ ", goodsSkuId=" + goodsSkuId + ", price=" + price + ", correctId=" + correctId + ", supermarketName="
-				+ supermarketName + ", correctType=" + correctType + ", name=" + name + ", supermarketIdList="
-				+ supermarketIdList + "]";
+		return "SupermarketGoods{" +
+				"supermarketGoodsId=" + supermarketGoodsId +
+				", supermarketId=" + supermarketId +
+				", goodsSkuId=" + goodsSkuId +
+				", price=" + price +
+				", correctId=" + correctId +
+				", supermarketName='" + supermarketName + '\'' +
+				", correctType='" + correctType + '\'' +
+				", name='" + name + '\'' +
+				", fullName='" + fullName + '\'' +
+				", status='" + status + '\'' +
+				", priceStr='" + priceStr + '\'' +
+				", rank=" + rank +
+				", supermarketIdList=" + supermarketIdList +
+				'}';
 	}
-
-
 
 	public String getCorrectType() {
 		return correctType;
@@ -153,5 +164,13 @@ public class SupermarketGoods extends BaseEntity implements Serializable{
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+
+	public Integer getRank() {
+		return rank;
+	}
+
+	public void setRank(Integer rank) {
+		this.rank = rank;
 	}
 }
