@@ -420,7 +420,7 @@
         gs.update_time  updateTime,
         gs.create_time  createTime,
         gs.model,
-        gs.sold_num,
+        IFNULL(gs.sold_num,0),
         gs.FUNCTION function,
         gs.produce_address produceAddress,
         gs.produce_date  produceDate,
@@ -446,18 +446,17 @@
                 AND gs.brand_id=#{brandId}
             </if>
             <if test="memberLevel!=null and memberLevel=='NORMAL'">
-                and cg.min_price_normal IS NOT NULL
+                and cg.min_price_normal IS NOT NULL ORDER BY ((cg.max_price_normal-cg.min_price_normal)/cg.min_price_normal) DESC
             </if>
             <if test="memberLevel!=null and memberLevel=='NOT_MEMBER'">
-                and cg.min_price_normal IS NOT NULL
+                and cg.min_price_normal IS NOT NULL ORDER BY ((cg.max_price_normal-cg.min_price_normal)/cg.min_price_normal) DESC
             </if>
             <if test="memberLevel!=null and memberLevel=='SENIOR'">
-                and cg.min_price_senior IS NOT NULL
+                and cg.min_price_senior IS NOT NULL ORDER BY ((cg.max_price_senior-cg.min_price_senior)/cg.min_price_senior) DESC
             </if>
             <if test="memberLevel!=null and memberLevel=='SUPER'">
-                and cg.min_price_super IS NOT NULL
+                and cg.min_price_super IS NOT NULL  ORDER BY ((cg.max_price_super-cg.min_price_super)/cg.min_price_super) DESC
             </if>
-            ORDER BY (cg.max_price-cg.min_price)/cg.min_price DESC
         </where>
     </select>
 
@@ -599,7 +598,7 @@
         gs.image,
         gs.create_time  createTime,
         gs.model,
-        gs.sold_num,
+        IFNULL(gs.sold_num,0),
         cg.min_price minPrice,
         cg.max_price maxPrice,
         cg.max_supermarket_id maxSupermarketId,
