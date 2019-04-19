@@ -1,6 +1,7 @@
 package com.linayi.service.order.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.linayi.dao.address.ReceiveAddressMapper;
 import com.linayi.dao.area.AreaMapper;
 import com.linayi.dao.area.SmallCommunityMapper;
@@ -38,6 +39,7 @@ import com.linayi.service.order.OrderService;
 import com.linayi.service.promoter.OpenMemberInfoService;
 import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.util.*;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -190,17 +192,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public  OrdersGoods generateOrdersGoods(Orders order, List<SupermarketGoods> supermarketGoodsList, Integer quantity, Integer goodsSkuId) {
-        Collections.reverse(supermarketGoodsList);
         OrdersGoods ordersGoods = new OrdersGoods();
         ordersGoods.setOrdersId(order.getOrdersId());
         String jsonStr = dealSupermarket(supermarketGoodsList);
         ordersGoods.setSupermarketList(jsonStr);
-        ordersGoods.setMaxPrice(supermarketGoodsList.get(supermarketGoodsList.size() - 1).getPrice());
-        ordersGoods.setPrice(supermarketGoodsList.get(0).getPrice());
+        ordersGoods.setMaxPrice(supermarketGoodsList.get(0).getPrice());
+        ordersGoods.setPrice(supermarketGoodsList.get(supermarketGoodsList.size() - 1).getPrice());
         ordersGoods.setQuantity(quantity);
         ordersGoods.setGoodsSkuId(goodsSkuId);
-        ordersGoods.setSupermarketId(supermarketGoodsList.get(0).getSupermarketId());
-        ordersGoods.setMaxSupermarketId(supermarketGoodsList.get(supermarketGoodsList.size() - 1).getSupermarketId());
+        ordersGoods.setSupermarketId(supermarketGoodsList.get(supermarketGoodsList.size() - 1).getSupermarketId());
+        ordersGoods.setMaxSupermarketId(supermarketGoodsList.get(0).getSupermarketId());
         ordersGoods.setCreateTime(new Date());
         //待采买状态
         ordersGoods.setProcureStatus("PROCURING");
@@ -282,7 +283,7 @@ public class OrderServiceImpl implements OrderService {
     private static String dealSupermarket(List<SupermarketGoods> supermarketGoodsList) {
         if (supermarketGoodsList != null && supermarketGoodsList.size() > 0) {
             List<Map> list = new ArrayList<>();
-            for (int i = supermarketGoodsList.size() - 1; i >= 0; i--) {
+            for (int i = supermarketGoodsList.size() - 1 ; i >= 0; i--) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("supermarket_id", supermarketGoodsList.get(i).getSupermarketId());
                 map.put("price", supermarketGoodsList.get(i).getPrice());
@@ -419,16 +420,26 @@ public class OrderServiceImpl implements OrderService {
                 String goodsName = getGoodsName(goodsSku);
                 shoppingCar.setGoodsName(goodsName);
                 shoppingCar.setGoodsSkuId(Integer.parseInt(goodsSku.getGoodsSkuId() + ""));
-                shoppingCar.setGoodsSkuImage(goodsSku.getImage());
+                shoppingCar.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
                 ProcurementTask procurement = new ProcurementTask();
                 procurement.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
                 List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurement);
                 shoppingCar.setStatus(procurementTaskList.get(0).getProcureStatus());
-                CommunityGoods communityGoods = new CommunityGoods();
-                communityGoods.setCommunityId(communityId);
-                communityGoods.setGoodsSkuId(ordersGoods.getGoodsSkuId());
-                communityGoods = communityGoodsService.getCommunityGoods(communityGoods);
-                Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketIdAndPriceByLevel(currentMemberLevel, communityGoods);
+//                CommunityGoods communityGoods = new CommunityGoods();
+//                communityGoods.setCommunityId(communityId);
+//                communityGoods.setGoodsSkuId(ordersGoods.getGoodsSkuId());
+//                communityGoods = communityGoodsService.getCommunityGoods(communityGoods);
+                String supermarketList = ordersGoods.getSupermarketList();
+                List<Map> list = JSON.parseArray(supermarketList, Map.class);
+                List<SupermarketGoods> supermarketGoods = new ArrayList<>();
+                for (Map map : list) {
+                    SupermarketGoods supermarketGoods1 = new SupermarketGoods();
+                    supermarketGoods1.setPrice(Integer.parseInt(map.get("price") + ""));
+                    supermarketGoods1.setSupermarketId(Integer.parseInt(map.get("supermarket_id") + ""));
+                    supermarketGoods.add(supermarketGoods1);
+                }
+
+                Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketPriceByLevel(currentMemberLevel, supermarketGoods);
                 Integer minPrice = idAndPriceByLevel[0];
                 Integer maxPrice = idAndPriceByLevel[2];
 
@@ -441,10 +452,10 @@ public class OrderServiceImpl implements OrderService {
                 shoppingCar.setMaxSupermarketName(maxPriceSupermarketName);
                 shoppingCar.setMinSupermarketName(minPriceSupermarketName);
                 shoppingCar.setSpreadRate(NumberUtil.formatDouble((maxPrice - minPrice) * 100 / Double.parseDouble("" + minPrice)) + "%");
-                shoppingCar.setHeJiPrice(getpriceString(ordersGoods.getQuantity() * ordersGoods.getPrice()));
+                shoppingCar.setHeJiPrice(getpriceString(ordersGoods.getQuantity() * minPrice));
                 cars.add(shoppingCar);
 
-                goodsPayPrice += ordersGoods.getQuantity() * ordersGoods.getPrice();
+                goodsPayPrice += ordersGoods.getQuantity() * minPrice;
                 goodsTotalPrice += ordersGoods.getQuantity() * minPrice;
 
             }
@@ -464,6 +475,8 @@ public class OrderServiceImpl implements OrderService {
             //已取消：CANCELED
             if("CANCELED".equals(userStatus)){
                 orders2.setStatus("CANCELED");
+            }if("FINISHED".equals(userStatus)){
+                orders2.setStatus("FINISHED");
             }else {
                 if("RECEIVED".equals(communityStatus) || "PACKED".equals(communityStatus)){
                     communityStatus = "DELIVERING";
@@ -640,7 +653,7 @@ public class OrderServiceImpl implements OrderService {
     public List<OrdersSku> getGoodsOrderSku(OrdersSku ordersSku) {
         List<OrdersSku> ordersSkuList = ordersMapper.getGoodsOrderSku(ordersSku);
         for (OrdersSku o : ordersSkuList) {
-            o.setImage(o.getImage());
+            o.setImage(ImageUtil.dealToShow(o.getImage()));
             ProcurementTask procurementTask = new ProcurementTask();
             procurementTask.setOrdersGoodsId(o.getOrdersGoodsId());
             List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskListAsc(procurementTask);

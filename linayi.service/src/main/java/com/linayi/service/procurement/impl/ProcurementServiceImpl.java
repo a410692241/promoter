@@ -22,6 +22,7 @@ import com.linayi.service.community.CommunitySupermarketService;
 import com.linayi.service.order.OrderService;
 import com.linayi.service.procurement.ProcurementService;
 import com.linayi.service.supermarket.SupermarketService;
+import com.linayi.util.ImageUtil;
 import com.linayi.util.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -105,11 +106,11 @@ public class ProcurementServiceImpl implements ProcurementService {
             for (ProcurementTask task : procurementTaskList) {
             	if(task != null){
 					GoodsSku goods = goodsSkuMapper.getGoodsById(task.getGoodsSkuId());
-					task.setGoodsImage(goods.getImage());
+					task.setGoodsImage(ImageUtil.dealToShow(goods.getImage()));
 				}
             }
         }
-
+		http://www.laykj.cn/wherebuyAPI/procurement/procurement/boxingDetails.do
         return procurementTaskList;
     }
 
@@ -486,7 +487,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		//图片处理
 		for(ProcurementTask pp:currentProcurementTask){
 			String image = pp.getGoodsImage();
-			pp.setGoodsImage(image);
+			pp.setGoodsImage(ImageUtil.dealToShow(image));
 		}
 
 		return currentProcurementTask;

@@ -222,9 +222,9 @@ public class UserServiceImpl implements UserService {
 
         if (userInfo.getHeadImage() == null){
             //设置默认头像
-            userInfo.setHeadImage(PropertiesUtil.getValueByKey(ConstantUtil.DEFAULT_AVATAR));
+            userInfo.setHeadImage(ImageUtil.dealToShow(PropertiesUtil.getValueByKey(ConstantUtil.DEFAULT_AVATAR)));
         }else {
-            userInfo.setHeadImage(userInfo.getHeadImage());
+            userInfo.setHeadImage(ImageUtil.dealToShow(userInfo.getHeadImage()));
         }
         if (userInfo.getNickname() == null){
             userInfo.setNickname(" ");
