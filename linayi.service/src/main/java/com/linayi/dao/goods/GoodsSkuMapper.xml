@@ -609,7 +609,7 @@
             gs.image,
             gs.create_time  createTime,
             gs.model,
-            IFNULL(gs.sold_num,0),
+            IFNULL(gs.sold_num,0) soldNum,
             cg.min_price minPrice,
             cg.max_price maxPrice,
             cg.max_supermarket_id maxSupermarketId,
