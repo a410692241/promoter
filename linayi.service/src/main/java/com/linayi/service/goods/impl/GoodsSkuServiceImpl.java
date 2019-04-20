@@ -859,9 +859,9 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		//设置查询的条件为商品名存在特定关键字符
 		//对指定字段设置ik分词器
 		searchSourceBuilder.query(QueryBuilders.multiMatchQuery(key, fieldName, fieldName2, fieldName3));
-		searchSourceBuilder.size(100);
+		searchSourceBuilder.size(esConfig.getPageSize());
 //		searchSourceBuilder.sort("full_name");
-//		searchSourceBuilder.from((esConfig.getCurrentPage() - 1) * esConfig.getPageSize());
+		searchSourceBuilder.from((esConfig.getCurrentPage() - 1) * esConfig.getPageSize());
 		//指定高亮字段
 		HighlightBuilder highlightBuilder = new HighlightBuilder();
 		HighlightBuilder.Field highlightTitle = new HighlightBuilder.Field(fieldName);
@@ -922,7 +922,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		if (PriceOrderType.PRICE_DOWN.name().equals(orderType)) {
 			goodsSkuListResult = collect.stream().sorted(Comparator.comparing(GoodsSku::getMinPrice).reversed()).collect(Collectors.toList());
 		}
-		return goodsSkuListResult.subList((esConfig.getCurrentPage() - 1) * esConfig.getPageSize(),esConfig.getCurrentPage() * esConfig.getPageSize());
+		return goodsSkuListResult;
 
 
 	}
