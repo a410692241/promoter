@@ -218,7 +218,7 @@ public class ShopCarServiceImpl implements ShopCarService {
         for (ShoppingCar car : shoppingCars) {
             totalPipce += car.getQuantity();
             GoodsSku goodsSku = goodsSkuMapper.getGoodsById(car.getGoodsSkuId());
-            car.setGoodsSkuImage(goodsSku.getImage());
+            car.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
             car.setGoodsName(goodsSku.getFullName());
             CommunityGoods communityGoods = new CommunityGoods();
             communityGoods.setCommunityId(communityId);
