@@ -4,7 +4,6 @@ import com.linayi.dao.area.AreaMapper;
 import com.linayi.dao.community.CommunitySupermarketMapper;
 import com.linayi.dao.supermarket.SupermarketMapper;
 import com.linayi.entity.area.Area;
-import com.linayi.entity.promoter.OpenMemberInfo;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.enums.MemberLevel;
 import com.linayi.service.promoter.OpenMemberInfoService;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;

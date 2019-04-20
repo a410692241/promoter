@@ -196,7 +196,7 @@ public class PromoterController extends BaseController {
 	@RequestMapping(value ="openPromoterDuration.do",method=RequestMethod.POST)
 	public ResponseData openPromoterDuration(@RequestBody PromoterVo.openPromoterDuration param){
 		ResponseData rr = null;
-//		try{
+		try{
 			Integer promoterDuration = param.getPromoterDuration();
 			String memberLevel = param.getMemberLevel();
 			Integer userId = getUserId();
@@ -204,9 +204,9 @@ public class PromoterController extends BaseController {
 			orderManMemberService.updateValidTimeById(uid,userId,memberLevel,promoterDuration);
 			rr=new ResponseData("success");
 			return rr;
-//		}catch(Exception e){
-//			return new ResponseData(ErrorType.SYSTEM_ERROR);
-//		}
+		}catch(Exception e){
+			return new ResponseData(ErrorType.SYSTEM_ERROR);
+		}
 	}
 
 	@ApiOperation(value = "新增顾客的地址", notes = "",produces = "application/xml,application/json")

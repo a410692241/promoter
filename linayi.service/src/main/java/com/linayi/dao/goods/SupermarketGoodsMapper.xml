@@ -119,10 +119,10 @@
         communityId,Integer goodsSkuId) -->
     <select id="getPriceSupermarketBycommunityIdAndgoodsSkuId"
             resultType="com.linayi.entity.goods.SupermarketGoods">
-        SELECT sgg.super_id supermarketId,sg.supermarket_goods_id supermarketGoodsId,sg.goods_sku_id goodsSkuId,sg.price price,sg.correct_id correctId,sgg.super_name supermarketName
-        FROM supermarket_goods sg RIGHT JOIN (SELECT s.supermarket_id super_id,s.name super_name FROM community_supermarket cs
+        SELECT sgg.super_id supermarketId,sg.supermarket_goods_id supermarketGoodsId,sg.goods_sku_id goodsSkuId,sg.price price,sg.correct_id correctId,sgg.super_name supermarketName,sgg.rank rank
+        FROM supermarket_goods sg RIGHT JOIN (SELECT s.supermarket_id super_id,s.name super_name, cs.rank rank FROM community_supermarket cs
         LEFT JOIN supermarket s on cs.supermarket_id = s.supermarket_id
-        where cs.community_id = #{communityId} ORDER BY cs.rank) sgg on  sg.supermarket_id = sgg.super_id and sg.goods_sku_id = #{goodsSkuId}
+        where cs.community_id = #{communityId}  ORDER BY cs.rank) sgg on  sg.supermarket_id = sgg.super_id and sg.goods_sku_id = #{goodsSkuId} ORDER BY sgg.rank
 	</select>
 
     <!-- 根据社区网点id,商品id,超市id获取超市和价格信息 -->

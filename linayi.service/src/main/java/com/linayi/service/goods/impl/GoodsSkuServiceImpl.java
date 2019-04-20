@@ -1,75 +1,34 @@
 package com.linayi.service.goods.impl;
 
-import java.io.*;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Resource;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.linayi.entity.BaseEntity;
-import com.linayi.entity.account.Account;
-import com.linayi.entity.promoter.OpenMemberInfo;
+import com.linayi.dao.community.CommunityMapper;
+import com.linayi.dao.goods.*;
+import com.linayi.dao.supermarket.SupermarketMapper;
+import com.linayi.entity.goods.*;
 import com.linayi.entity.supermarket.Supermarket;
-import com.linayi.entity.user.User;
+import com.linayi.enums.CategoryLevel;
 import com.linayi.enums.MemberLevel;
+import com.linayi.service.goods.*;
 import com.linayi.service.promoter.OpenMemberInfoService;
 import com.linayi.util.*;
-import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-
-import com.linayi.dao.account.AdminAccountMapper;
-import com.linayi.dao.community.CommunityMapper;
-import com.linayi.dao.goods.AttributeMapper;
-import com.linayi.dao.goods.AttributeValueMapper;
-import com.linayi.dao.goods.BrandMapper;
-import com.linayi.dao.goods.CategoryMapper;
-import com.linayi.dao.goods.CommunityGoodsMapper;
-import com.linayi.dao.goods.GoodsAttrValueMapper;
-import com.linayi.dao.goods.GoodsSkuMapper;
-import com.linayi.dao.goods.SupermarketGoodsMapper;
-import com.linayi.dao.supermarket.SupermarketMapper;
-import com.linayi.entity.account.AdminAccount;
-import com.linayi.entity.goods.Attribute;
-import com.linayi.entity.goods.AttributeValue;
-import com.linayi.entity.goods.Brand;
-import com.linayi.entity.goods.Category;
-import com.linayi.entity.goods.CommunityGoods;
-import com.linayi.entity.goods.GoodsAttrValue;
-import com.linayi.entity.goods.GoodsSku;
-import com.linayi.entity.goods.SupermarketGoods;
-import com.linayi.enums.CategoryLevel;
-import com.linayi.service.goods.AttributeService;
-import com.linayi.service.goods.AttributeValueService;
-import com.linayi.service.goods.BrandService;
-import com.linayi.service.goods.CateBrandValService;
-import com.linayi.service.goods.CategoryService;
-import com.linayi.service.goods.GoodsAttrValueService;
-import com.linayi.service.goods.GoodsSkuService;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.OutputStream;
+import java.text.DecimalFormat;
+import java.util.*;
 
 @Service
 public class GoodsSkuServiceImpl implements GoodsSkuService {
@@ -655,7 +614,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 				if(brand != null){
 					goodsSku1.setBrandName(brand.getName());
 				}
-				goodsSku1.setImage(ImageUtil.dealToShow(goodsSku.getImage()));
+				goodsSku1.setImage(goodsSku.getImage());
 				CommunityGoods communityGoodss = new CommunityGoods();
 				communityGoodss.setGoodsSkuId(Integer.parseInt("" + goodsSku.getGoodsSkuId()));
 				CommunityGoods communityGoods =communityGoodsMapper.getCommunityGoods(communityGoodss);
@@ -749,7 +708,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 	public List<GoodsSku> customSearch(GoodsSku goodsSku) {
 		//获取用户的会员等级
 		MemberLevel memberLevel = openMemberInfoService.getCurrentMemberLevel(goodsSku.getUserId());
-		//根据uid获取网点id	
+		//根据uid获取网点id
 		Integer communityId = communityMapper.getcommunityIdByuserId(goodsSku.getUserId());
 		goodsSku.setCommunityId(communityId);
 		goodsSku.setMemberLevel(memberLevel.toString());

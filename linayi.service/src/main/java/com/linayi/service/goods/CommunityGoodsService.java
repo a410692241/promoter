@@ -9,4 +9,6 @@ public interface CommunityGoodsService {
      * @return
      */
     CommunityGoods getCommunityGoodsByGoodsId(Integer goodsSkuId);
+
+    CommunityGoods getCommunityGoods(CommunityGoods communityGoods);
 }

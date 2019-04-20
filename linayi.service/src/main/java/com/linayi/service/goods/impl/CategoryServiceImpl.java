@@ -172,14 +172,14 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public List<Category> getCategoryByBrandId(Integer brandId) {
-		
+
 		List<Category>categoryList = categoryMapper.getCategoryByBrandId(brandId);
 		if(categoryList.size()>0) {
 			for(Category i:categoryList) {
 				i.setLogo(ImageUtil.dealToShow(i.getLogo()));
 			}
 		}
-		
+
 		return categoryList;
 	}
 

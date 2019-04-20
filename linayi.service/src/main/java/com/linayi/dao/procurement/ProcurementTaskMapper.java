@@ -2,7 +2,7 @@ package com.linayi.dao.procurement;
 
 
 import java.util.List;
-
+import java.util.Date;
 import org.apache.ibatis.annotations.Param;
 
 import com.linayi.entity.procurement.ProcurementTask;
@@ -10,9 +10,9 @@ import com.linayi.entity.procurement.ProcurementTask;
 public interface ProcurementTaskMapper {
 
     ProcurementTask selectByPrimaryKey(Long primaryKey);
-    
+
     void insert(ProcurementTask procurementTask);
-  
+
 
     List<ProcurementTask> getProcurementTaskList(ProcurementTask procurementTask);
 
@@ -43,15 +43,15 @@ public interface ProcurementTaskMapper {
      * @return
      */
     List<String> getReceiveStatusByOrderId(Long ordersId);
-    
-    
+
+
     /**
      * 获取状态为未收货并且数量大于0的
      * @param procurementTask
      * @return
      */
     List<ProcurementTask> getProcurementTaskStatus(ProcurementTask procurementTask);
-    
+
     List<ProcurementTask> getProcurementTaskByOrdersId(Long ordersId);
     /**
      * 通过订单Id和箱号实际数量大于0获取商品id和数量
@@ -62,17 +62,56 @@ public interface ProcurementTaskMapper {
 
     /**
      * 查采买员所在社区Id为comunityId社区的采买任务,如有同一件商品,合在一起
-     * @param communityId
-     * @param procureStatus
      * @return
      */
-    List<ProcurementTask> getCommunityProcurementList(@Param("communityId") Integer communityId,@Param("procureStatus") String procureStatus);
+    List<ProcurementTask> getCommunityProcurementList(ProcurementTask procurementTask);
 
     /**
-     * 获取在同一个社区商品一样的所有的采买任务
+     * 获取在社区同一个超市商品一样的所有的采买任务
      * @param goodsSkuId
-     * @param communityId
      * @return
      */
-    List<ProcurementTask> getProcurements(@Param("procureStatus")Integer goodsSkuId, @Param("communityId")Integer communityId);
+    List<ProcurementTask> getProcurements(@Param("goodsSkuId")Integer goodsSkuId, @Param("communityId")Integer communityId);
+
+    /**
+     * 查询中此采买员所有的采买任务
+     * @param procurTask
+     * @return
+     */
+    List<ProcurementTask> getProcurementLists(ProcurementTask procurTask);
+
+    /**
+     * 流转中心任务 查询出未收货的商品列表
+     * @param procurTask
+     * @return
+     */
+    List<ProcurementTask> getNotReceivingGoods(ProcurementTask procurTask);
+    /**
+     * 流转中心任务 对未收货的商品进行收货操作
+     * @param procurementTaskIdList
+     * @return
+     */
+    void confirmGoods(@Param("procurementTaskIdList") List<Long> procurementTaskIdList,@Param("flowReceiveTime") Date flowReceiveTime);
+    /**
+     * 流转中心任务 查询出未发货的商品列表
+     * @param procurTask
+     * @return
+     */
+    List<ProcurementTask> getNotDeliverGoods(ProcurementTask procurTask);
+    /**
+     * 流转中心任务 对收货的商品进行发货操作
+     * @param procurementTaskIdList
+     * @return
+     */
+    void confirmDeliverGoods(@Param("procurementTaskIdList") List<Long> procurementTaskIdList,@Param("flowOutTime") Date flowOutTime);
+    /**
+     * 流转中心任务 查询出发货的商品列表
+     * @param procurTask
+     * @return
+     */
+    List<ProcurementTask> getDeliverGoodsList(ProcurementTask procurTask);
+
+    List<ProcurementTask> getCommunityProcurementsList(ProcurementTask procurementTask);
+
+    List<ProcurementTask> getProcurementsList(@Param("procurementTaskIdList") String procurementTaskIdList);
 }

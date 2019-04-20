@@ -69,6 +69,14 @@
 			<label class="col-sm-4 no-padding-right" style="text-align: right;">联系电话：</label>
 			<div class="col-sm-8">{{apply1.mobile}}</div>
 		</div>
+		<div class="form-group col-lg-6 col-xs-6 col-sm-12" ng-show="apply1.address">
+			<label class="col-sm-4 no-padding-right" style="text-align: right;">详细地址：</label>
+			<div class="col-sm-8">{{apply1.address}}</div>
+		</div>
+		<div class="form-group col-lg-6 col-xs-6 col-sm-12" ng-show="apply1.supermarketName">
+			<label class="col-sm-4 no-padding-right" style="text-align: right;">超市名称：</label>
+			<div class="col-sm-8">{{apply1.supermarketName}}</div>
+		</div>
 		<div class="form-group col-lg-6 col-xs-6 col-sm-12">
 			<label class="col-sm-4 no-padding-right" style="text-align: right;">身份证正面：</label>
 			<div class="col-sm-8">

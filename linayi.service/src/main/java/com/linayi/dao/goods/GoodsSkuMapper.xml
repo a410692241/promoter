@@ -218,7 +218,7 @@
     </select>
     <select id="getGoodsLists" resultType="com.linayi.entity.goods.GoodsSku">
         select gs.goods_sku_id goodsSkuId, gs.name NAME, gs.full_name fullName,gs.barcode barcode, gs.category_id categoryId,c.name categoryName, gs.brand_id brandId,b.name brandName, gs.status STATUS, gs.image image, gs.update_time updateTime, gs.create_time createTime, gs.model model, gs.function FUNCTION , gs.produce_address produceAddress, gs.produce_date produceDate, gs.valid_date validDate, gs.manufacturer manufacturer, gs.other_attribute otherAttribute
-        ,e.real_name createName,aa.user_name userName from goods_sku gs left join admin_account aa on aa.account_id = gs.user_id left join employee e on aa.user_id = e.employee_id left join brand b on b.brand_id = gs.brand_id left join category c on c.category_id = gs.category_id
+        ,e.real_name createName,aa.user_name userName from goods_sku gs left join admin_account aa on aa.account_id = gs.user_id left join employee e on aa.user_id = e.employee_id join brand b on b.brand_id = gs.brand_id join category c on c.category_id = gs.category_id
         <where>
             <if test="goodsSkuId != null and goodsSkuId != ''">
                 gs.goods_sku_id like #{goodsSkuId}
@@ -437,18 +437,18 @@
                 AND gs.brand_id=#{brandId}
             </if>
             <if test="memberLevel!=null and memberLevel=='NORMAL'">
-                and cg.min_price_normal IS NOT NULL
+                and cg.min_price_normal IS NOT NULL ORDER BY ((cg.max_price_normal-cg.min_price_normal)/cg.min_price_normal) DESC
             </if>
             <if test="memberLevel!=null and memberLevel=='NOT_MEMBER'">
-                and cg.min_price_normal IS NOT NULL
+                and cg.min_price_normal IS NOT NULL ORDER BY ((cg.max_price_normal-cg.min_price_normal)/cg.min_price_normal) DESC
             </if>
             <if test="memberLevel!=null and memberLevel=='SENIOR'">
-                and cg.min_price_senior IS NOT NULL
+                and cg.min_price_senior IS NOT NULL ORDER BY ((cg.max_price_senior-cg.min_price_senior)/cg.min_price_senior) DESC
             </if>
             <if test="memberLevel!=null and memberLevel=='SUPER'">
-                and cg.min_price_super IS NOT NULL
+                and cg.min_price_super IS NOT NULL  ORDER BY ((cg.max_price_super-cg.min_price_super)/cg.min_price_super) DESC
             </if>
-            ORDER BY (cg.max_price-cg.min_price)/cg.min_price DESC
+
         </where>
     </select>
 

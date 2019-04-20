@@ -72,6 +72,7 @@ public interface ReceiveAddressMapper {
 	List<ReceiveAddress> getListReceiveAddressByUserIdAndAdderssType(ReceiveAddress receiveAddress);
 
     ReceiveAddress getReceiveAddressById(Integer receiveAddressId);
+    ReceiveAddress getReceiveAddressByReceiveAddressId(Integer receiveAddressId);
 
     /**
      * 根据推广商查顾客收货地址

@@ -45,7 +45,7 @@ public interface OrderService {
      * 再来一单
      * @param orders
      */
-    void againOrders(Orders orders);
+    String againOrders(Orders orders);
 
     List<Orders> getOrderAll(Orders orders);
 
@@ -138,7 +138,7 @@ public interface OrderService {
     /**
      * 根据订单Id查询采买任务然后修改为已收货状态（通用）
      */
-    Integer updateOrderReceivedStatus(Long ordersId);
+    void updateOrderReceivedStatus(Long ordersId);
 
     /**
      * 根据用户id或者收货地址id查询所有订单列表
@@ -154,5 +154,5 @@ public interface OrderService {
      */
     PageResult<Orders> getProcureOrderList(Orders orders);
 
-    OrdersGoods generateOrdersGoods(Orders order, List<SupermarketGoods> supermarketGoodsList, Integer num, Integer goodsSkuId);
+    OrdersGoods generateOrdersGoods(Orders order, List<SupermarketGoods> supermarketGoodsList,List<SupermarketGoods> supermarketGoodsList1, Integer num, Integer goodsSkuId);
 }

@@ -1,11 +1,12 @@
 package com.linayi.entity.procurement;
 
 import com.linayi.entity.BaseEntity;
+import com.linayi.util.DateUtil;
+import io.swagger.models.auth.In;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
-
-
+import java.util.List;
 
 
 public class ProcurementTask extends BaseEntity{
@@ -26,6 +27,16 @@ public class ProcurementTask extends BaseEntity{
                 + "]";
     }
 
+    private String procurementTaskIdList;
+
+    public String getProcurementTaskIdList() {
+        return procurementTaskIdList;
+    }
+
+    public void setProcurementTaskIdList(String procurementTaskIdList) {
+        this.procurementTaskIdList = procurementTaskIdList;
+    }
+
     private Long procurementTaskId;
 
     private Long ordersId;
@@ -35,8 +46,18 @@ public class ProcurementTask extends BaseEntity{
     private Integer supermarketId;
 
     private Integer goodsSkuId;
+
+    private Date accessTime;//调用接口的日期
+    public Date getAccessTime() {
+        return accessTime;
+    }
+
+    public void setAccessTime(Date accessTime) {
+        this.accessTime = accessTime;
+    }
+
     //商品全称
-    private Integer fullName;
+    private String fullName;
 
     private Integer price;
 
@@ -66,9 +87,14 @@ public class ProcurementTask extends BaseEntity{
     private Date updateTime;
 
     private Date createTime;
-    
+
     private Date procureTime;
-    
+
+    //采买发货时间
+    private Date procureOutTime;
+
+    private String  procureTimeStr;
+
     private Date receiveTime;
 
     private String goodsSkuName;//商品名
@@ -84,6 +110,10 @@ public class ProcurementTask extends BaseEntity{
     private Integer procureQuantity;
 
     private Integer receiveQuantity;
+    //总采买数量
+    private Integer totalProcureQuantity;
+    //总采买金额
+    private Integer totalProcurePrice;
 
     private Integer boxQuantity;
 
@@ -113,6 +143,28 @@ public class ProcurementTask extends BaseEntity{
     private String image; //商品图片
 
     private Integer serviceFeeString; //服务费
+
+    private Integer counts; //天数
+
+    private Date flowReceiveTime;//[流转中心收货时间]
+
+    private Date flowOutTime;//[流转中心发货时间]
+
+    public Date getFlowOutTime() {
+        return flowOutTime;
+    }
+
+    public void setFlowOutTime(Date flowOutTime) {
+        this.flowOutTime = flowOutTime;
+    }
+
+    public Date getFlowReceiveTime() {
+        return flowReceiveTime;
+    }
+
+    public void setFlowReceiveTime(Date flowReceiveTime) {
+        this.flowReceiveTime = flowReceiveTime;
+    }
 
     public Integer getServiceFeeString() {
         return serviceFeeString;
@@ -315,7 +367,7 @@ public class ProcurementTask extends BaseEntity{
     public void setOrderCreateTime(Date orderCreateTime) {
         this.orderCreateTime = orderCreateTime;
     }
-    
+
     public Date getProcureTime() {
 		return procureTime;
 	}
@@ -413,11 +465,51 @@ public class ProcurementTask extends BaseEntity{
         this.totalQuantity = totalQuantity;
     }
 
-    public Integer getFullName() {
+    public String getFullName() {
         return fullName;
     }
 
-    public void setFullName(Integer fullName) {
+    public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public Integer getTotalProcureQuantity() {
+        return totalProcureQuantity;
+    }
+
+    public void setTotalProcureQuantity(Integer totalProcureQuantity) {
+        this.totalProcureQuantity = totalProcureQuantity;
+    }
+
+    public Integer getTotalProcurePrice() {
+        return totalProcurePrice;
+    }
+
+    public void setTotalProcurePrice(Integer totalProcurePrice) {
+        this.totalProcurePrice = totalProcurePrice;
+    }
+
+    public String getProcureTimeStr() {
+        return procureTimeStr;
+    }
+
+    public void setProcureTimeStr(String procureTimeStr) {
+        this.procureTimeStr = procureTimeStr;
+    }
+
+    public Integer getCounts() {
+        return counts;
+    }
+
+    public void setCounts(Integer counts) {
+        this.counts = counts;
+    }
+
+    public Date getProcureOutTime() {
+        return procureOutTime;
+    }
+
+    public void setProcureOutTime(Date procureOutTime) {
+        this.procureOutTime = procureOutTime;
     }
 }

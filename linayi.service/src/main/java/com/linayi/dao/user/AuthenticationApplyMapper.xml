@@ -51,11 +51,14 @@
 
 	<select id="selectAuthenticationApplyList" resultType="com.linayi.entity.user.AuthenticationApply">
 		select
-		`apply_id`,`user_id`,`authentication_type`,`real_name`,`mobile`,`id_card_front`,`id_card_back`,`status`,`create_time`,`update_time`,`small_community_id`
+		`apply_id`,`user_id`,`authentication_type`,`real_name`,`mobile`,`id_card_front`,`id_card_back`,`status`,`create_time`,`update_time`,`small_community_id`,`supermarket_id`,`address`
 		from `authentication_apply`
 		<where>
 			<if test="applyId!=null and applyId!=''">
 				and apply_id=#{apply_id}
+			</if>
+			<if test="address!=null and address!=''">
+				and address=#{address}
 			</if>
 			<if test="userId!=null and userId!=''">
 				and user_id=#{userId}
@@ -75,6 +78,9 @@
 			<if test="idCardBack!=null and idCardBack!=''">
 				and id_card_back=#{idCardBack}
 			</if>
+			<if test="supermarketId!=null and supermarketId!=''">
+				and supermarket_id=#{supermarketId}
+			</if>
 			<if test="status!=null and status!=''">
 				and status=#{status}
 			</if>
@@ -93,59 +99,57 @@
 		</where>
 		order by apply_id desc
 	</select>
-	
+
 	<!-- 根据applyId查询AuthenticationApply对象集合 -->
-	<select id="getAuthenticationApplyByapplyId" 
-			resultType="com.linayi.entity.user.AuthenticationApply">
+	<select id="getAuthenticationApplyByapplyId" resultType="com.linayi.entity.user.AuthenticationApply">
 		select
-			apply_id applyId,
-			user_id userId,
-			authentication_type authenticationType,
-			real_name realName,
-			mobile,
-			id_card_front idCardFront,
-			id_card_back idCardBack, 
-			status,
-			update_time updateTime,
-			create_time createTime,
-			nickname,
-			specialty,
-			hobby,
-			motto,
-			image,
-			area_code,
-			small_community_id,
-			address
+		apply_id applyId,
+		user_id userId,
+		authentication_type authenticationType,
+		real_name realName,
+		mobile,
+		id_card_front idCardFront,
+		id_card_back idCardBack,
+		status,
+		update_time updateTime,
+		create_time createTime,
+		nickname,
+		specialty,
+		hobby,
+		motto,
+		image,
+		area_code,
+		small_community_id,
+		address
 		from
-			authentication_apply
+		authentication_apply
 		WHERE
-			apply_id = #{applyId}
+		apply_id = #{applyId}
 	</select>
-	
+
 	<!-- 根据applyId查询AuthenticationApply对象集合 -->
-	<select id="getAuthenticationApplyByUserIdAndType" 
-			resultType="com.linayi.entity.user.AuthenticationApply">
+	<select id="getAuthenticationApplyByUserIdAndType" resultType="com.linayi.entity.user.AuthenticationApply">
 		select
-			apply_id applyId,
-			user_id userId,
-			authentication_type authenticationType,
-			real_name realName,
-			mobile,
-			id_card_front idCardFront,
-			id_card_back idCardBack, 
-			status,
-			update_time updateTime,
-			create_time createTime
+		apply_id applyId,
+		user_id userId,
+		authentication_type authenticationType,
+		real_name realName,
+		mobile,
+		id_card_front idCardFront,
+		id_card_back idCardBack,
+		status,
+		update_time updateTime,
+		create_time createTime
 		from
-			authentication_apply
+		authentication_apply
 		WHERE
-			user_id = #{userId} and authentication_type = #{authenticationType}
+		user_id = #{userId} and authentication_type = #{authenticationType}
 	</select>
-	
-		<!-- 根据主键categoryId修改信息 -->
+
+	<!-- 根据主键categoryId修改信息 -->
 	<update id="updateStatusByApplyId">
 		UPDATE
-			authentication_apply
+		authentication_apply
 		SET
 		<if test="status != null">
 			status=#{status},
@@ -160,9 +164,9 @@
 		update_time=update_time
 
 		WHERE
-		
-			apply_id=#{applyId}
+
+		apply_id=#{applyId}
 	</update>
-	
+
 
 </mapper>

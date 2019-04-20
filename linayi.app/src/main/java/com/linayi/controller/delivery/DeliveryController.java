@@ -120,7 +120,7 @@ public class DeliveryController extends BaseController {
     public ResponseData sealBox(String boxNo, Long ordersId, MultipartFile file) {
         try {
             deliveryTaskService.sealBox(boxNo, ordersId, file);
-            return new ResponseData("success");
+            return new ResponseData("提交成功");
         } catch (Exception e) {
             return new ResponseData(ErrorType.SYSTEM_ERROR);
         }

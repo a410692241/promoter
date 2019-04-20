@@ -46,18 +46,18 @@ public class BrandServiceImpl implements BrandService {
         return brandMapper.getBrandById(brandId);
     }
 
-    
+
     //根据品牌名模糊查找品牌
-	@Override
-	public List<Brand> getBrandByName(Brand brand) {
-		List<Brand> brandList = brandMapper.getBrandByName(brand);
-		for(int i=0;i<brandList.size();i++){
-			String image = brandList.get(i).getLogo();
-			String logo = ImageUtil.dealToShow(image);
-			brandList.get(i).setLogo(logo);
-		}
-		return brandList;
-	}
+    @Override
+    public List<Brand> getBrandByName(Brand brand) {
+        List<Brand> brandList = brandMapper.getBrandByName(brand);
+        for(int i=0;i<brandList.size();i++){
+            String image = brandList.get(i).getLogo();
+            String logo = ImageUtil.dealToShow(image);
+            brandList.get(i).setLogo(logo);
+        }
+        return brandList;
+    }
 
     @Override
     public void deleteByBrandId(int brandId) {
@@ -106,12 +106,12 @@ public class BrandServiceImpl implements BrandService {
                         if(j==0) {
                             /* brand.setName(cellinfo);*/ //如果后期要导入多列的话考虑这个
                             System.out.println(cellinfo+"-----------");
-                                Brand br = brandMapper.selectBrandByName(cellinfo);
-                                if(CheckUtil.isNullEmpty(br)){
-                                    brandMapper.insertBrandExcel(cellinfo);
-                                }else if(!CheckUtil.isNullEmpty(br)){
-                                    continue;
-                                }
+                            Brand br = brandMapper.selectBrandByName(cellinfo);
+                            if(CheckUtil.isNullEmpty(br)){
+                                brandMapper.insertBrandExcel(cellinfo);
+                            }else if(!CheckUtil.isNullEmpty(br)){
+                                continue;
+                            }
                         }
 
                     }

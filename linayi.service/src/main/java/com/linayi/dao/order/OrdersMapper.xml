@@ -518,8 +518,6 @@
         orders o JOIN order_box ob ON o.orders_id=ob.orders_id
       WHERE
         o.community_status IN ('PACKED','DELIVERING')
-      AND
-        o.community_id = 1
         <if test="smallCommunityIdList!= null and smallCommunityIdList.size() > 0">
             AND
             o.small_community_id IN
