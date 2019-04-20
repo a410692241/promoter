@@ -12,6 +12,7 @@ import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.util.ParamValidUtil;
 import com.linayi.util.ResponseData;
 import com.linayi.vo.promoter.PromoterVo;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -236,9 +237,10 @@ public class GoodsSkuController extends BaseController {
 	/**通过ES关键字索引检索商品信息
 	 * @throws Exception
 	 */
-	@RequestMapping("searchByKey.do")
+	@ApiOperation(value = "商铺查找")
+	@RequestMapping(value = "searchByKey.do",method=RequestMethod.POST)
 	@ResponseBody
-	public Object searchByKey(@RequestBody PromoterVo.EsConfig esConfig) throws Exception {
+	public Object searchByKey(@RequestBody PromoterVo.EsConfig esConfig) {
 		try {
 			esConfig.setUserId(getUserId());
 			List<GoodsSku> goodsSkus = goodsSkuService.searchByKey(esConfig);
