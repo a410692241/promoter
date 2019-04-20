@@ -24,7 +24,7 @@
 					<form class="form-inline">
 						<div class="form-group form-group-margin">
 							<div class="input-group">
-								<span class="input-group-addon">用戶id</span> <input
+								<span class="input-group-addon">用户id</span> <input
 									ng-model="search.userId" type="text" class="form-control">
 							</div>
 						</div>

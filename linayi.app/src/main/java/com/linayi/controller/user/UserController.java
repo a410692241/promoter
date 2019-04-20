@@ -26,10 +26,9 @@ public class UserController extends BaseController {
 	private AccountService accountService;
     @Resource
 	private UserService userService;
-	
+
 	@RequestMapping(value = "/list.do", method = RequestMethod.POST)
 	@ResponseBody
-
 	public Object userList(User user) {
 		try {
 			Account param = new Account();

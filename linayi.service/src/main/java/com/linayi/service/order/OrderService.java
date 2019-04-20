@@ -45,7 +45,7 @@ public interface OrderService {
      * 再来一单
      * @param orders
      */
-    void againOrders(Orders orders);
+    String againOrders(Orders orders);
 
     List<Orders> getOrderAll(Orders orders);
 
@@ -154,5 +154,5 @@ public interface OrderService {
      */
     PageResult<Orders> getProcureOrderList(Orders orders);
 
-    OrdersGoods generateOrdersGoods(Orders order, List<SupermarketGoods> supermarketGoodsList, Integer num, Integer goodsSkuId);
+    OrdersGoods generateOrdersGoods(Orders order, List<SupermarketGoods> supermarketGoodsList,List<SupermarketGoods> supermarketGoodsList1, Integer num, Integer goodsSkuId);
 }

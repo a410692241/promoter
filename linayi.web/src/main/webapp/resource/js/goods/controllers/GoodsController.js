@@ -699,7 +699,8 @@ app.controller('goodsCtrl'/**
             }
             console.log($scope);
             var correct = $scope.correct;
-            correct.price = ($("#price").val() * 100).toFixed(0);
+            correct.price = ($("#price").val() * 100);
+            // .toFixed(0);
             var priceType = correct.priceType;
             correct.correctType = $("#correctType").val();
             correct.correctId = $("#correctId").val();

@@ -34,8 +34,13 @@ public class ShopCarController extends BaseController {
             ShoppingCar shoppingCar = pvu.transObj(ShoppingCar.class);
             shoppingCar.setUserId(getUserId());
             shoppingCar.setSelectStatus("NOT_SELECTED");
-            shopCarService.addShopCar(shoppingCar);
-            return new ResponseData("success");
+            try {
+                String s = shopCarService.addShopCar(shoppingCar);
+                return new ResponseData(s);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return new ResponseData("F",ErrorType.OPERATION_FAIL.getErrorMsg());
         } catch (Exception e) {
             e.printStackTrace();
         }

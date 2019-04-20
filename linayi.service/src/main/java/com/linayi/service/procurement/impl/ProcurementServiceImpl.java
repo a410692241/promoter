@@ -110,7 +110,6 @@ public class ProcurementServiceImpl implements ProcurementService {
 				}
             }
         }
-		http://www.laykj.cn/wherebuyAPI/procurement/procurement/boxingDetails.do
         return procurementTaskList;
     }
 
@@ -575,7 +574,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		List<ProcurementTask> list = procurementTaskMapper.getNotReceivingGoods(procurTask);
 		for(int i=0;i<list.size();i++){
 			String image = list.get(i).getImage();
-			list.get(i).setImage(image);
+			list.get(i).setImage(ImageUtil.dealToShow(image));
 			list.get(i).setAccessTime(new Date());
 		}
 		return list;
@@ -597,7 +596,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		List<ProcurementTask> list = procurementTaskMapper.getNotDeliverGoods(procurTask);
 		for(int i=0;i<list.size();i++){
 			String image = list.get(i).getImage();
-			list.get(i).setImage(image);
+			list.get(i).setImage(ImageUtil.dealToShow(image));
 		}
 		return list;
 	}
@@ -618,7 +617,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		List<ProcurementTask> list = procurementTaskMapper.getDeliverGoodsList(procurTask);
 		for(int i=0;i<list.size();i++){
 			String image = list.get(i).getImage();
-			list.get(i).setImage(image);
+			list.get(i).setImage(ImageUtil.dealToShow(image));
 		}
 		return list;
 	}

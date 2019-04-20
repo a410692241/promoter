@@ -62,7 +62,7 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 		if(userId == null){
 			 Account accountTB = new Account();
 		        accountTB.setMobile(mobile);
-		        accountTB.setPassword("123456");
+		        accountTB.setPassword("a123456");
 		        accountTB.setUpdateTime(new Date());
 		        //添加用户
 		        user.setNickname(mobile);
@@ -153,13 +153,21 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 		Integer openOrderManInfoId = userMapper.getOpenOrderManInfoIdByUserId(userId);
 
 		OpenMemberInfo openMemberInfo = new OpenMemberInfo();
-		openMemberInfo .setStartTime(new Date());
-		Date date = new Date();
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND,0);
+		Date startTime = cal.getTime();
+		openMemberInfo .setStartTime(startTime);
+
 		cal.add(Calendar.MONTH, promoterDuration);
-		date = cal.getTime();
-		openMemberInfo.setEndTime(date);
+		cal.set(Calendar.HOUR_OF_DAY,23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		cal.set(Calendar.MILLISECOND,0);
+		Date endTime = cal.getTime();
+		openMemberInfo.setEndTime(endTime);
 
 		openMemberInfo.setFreeTimes(getFreeNumberByMemberLevel(memberLevel));
 		openMemberInfo.setUserId(uid);
