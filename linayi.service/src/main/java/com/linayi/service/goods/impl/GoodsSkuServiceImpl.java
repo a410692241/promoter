@@ -21,6 +21,7 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.document.DocumentField;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -861,17 +862,19 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		//对指定字段设置ik分词器
 		searchSourceBuilder.query(QueryBuilders.multiMatchQuery(key, fieldName, fieldName2, fieldName3));
 		searchSourceBuilder.size(esConfig.getPageSize());
+		String orderType = esConfig.getOrderType();
+		//排序规则
+		if (PriceOrderType.SOLD_NUM.name().equalsIgnoreCase(orderType)) {
+			searchSourceBuilder.sort("soldNum", SortOrder.DESC);
+		}
+		if (PriceOrderType.PRICE_UP.name().equalsIgnoreCase(orderType)) {
+//			goodsSkuListResult = collect.stream().sorted(Comparator.comparing(GoodsSku::getMinPrice)).collect(Collectors.toList());
+		}
+		if (PriceOrderType.PRICE_DOWN.name().equalsIgnoreCase(orderType)) {
+//			goodsSkuListResult = collect.stream().sorted(Comparator.comparing(GoodsSku::getMinPrice).reversed()).collect(Collectors.toList());
+		}
 		searchSourceBuilder.sort("soldNum", SortOrder.DESC);
 		searchSourceBuilder.from((esConfig.getCurrentPage() - 1) * esConfig.getPageSize());
-		//指定高亮字段
-		HighlightBuilder highlightBuilder = new HighlightBuilder();
-		HighlightBuilder.Field highlightTitle = new HighlightBuilder.Field(fieldName);
-		//修改高亮前缀（默认http标签）
-		highlightBuilder.preTags("<p style='red'>");
-		//修改高亮后缀（默认http标签）
-		highlightBuilder.postTags("</p>");
-		highlightBuilder.field(highlightTitle);
-		searchSourceBuilder.highlighter(highlightBuilder);
 		searchRequest.source(searchSourceBuilder);
 		searchRequest.indices("goods_sku_index");
 		SearchResponse response = esClient.search(searchRequest, RequestOptions.DEFAULT);
@@ -909,21 +912,9 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		MemberLevel memberLevel = openMemberInfoService.getCurrentMemberLevel(userId);
 		List<GoodsSku> collect = setMemberPrice(memberLevel, goodsSkus);
 		//过滤null元素并排序
-		collect.stream().filter(item -> item != null);
-		String orderType = esConfig.getOrderType();
-		List<GoodsSku> goodsSkuListResult = new ArrayList<>();
-		if (PriceOrderType.SOLD_NUM.name().equalsIgnoreCase(orderType)) {
-			//销量为null的,给予默认值为0
-			collect.stream().forEach(item -> item.setSoldNum(item.getSoldNum() == null ? 0 : item.getSoldNum()));
-			goodsSkuListResult = collect.stream().sorted(Comparator.comparing(GoodsSku::getSoldNum).reversed()).collect(Collectors.toList());
-		}
-		if (PriceOrderType.PRICE_UP.name().equalsIgnoreCase(orderType)) {
-			goodsSkuListResult = collect.stream().sorted(Comparator.comparing(GoodsSku::getMinPrice)).collect(Collectors.toList());
-		}
-		if (PriceOrderType.PRICE_DOWN.name().equalsIgnoreCase(orderType)) {
-			goodsSkuListResult = collect.stream().sorted(Comparator.comparing(GoodsSku::getMinPrice).reversed()).collect(Collectors.toList());
-		}
-		return goodsSkuListResult;
+
+
+		return collect;
 
 
 	}
@@ -941,14 +932,9 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		goodsSku.setGoodsSkuId(goodsSkuId);
 		goodsSku.setCommunityId(communityId);
 		//获取商铺名字(关键字高亮)
-		Map<String, HighlightField> highlightFields = hit.getHighlightFields();
-		HighlightField descHightField = highlightFields.get("fullName");
-		Text[] fragments = descHightField.getFragments();
-		StringBuilder sb = new StringBuilder();
-		for (Text fragment : fragments) {
-			sb.append(fragment);
-		}
-		goodsSku.setFullName(sb.toString());
+		Map<String, Object> fields = hit.getSourceAsMap();
+		String fullName = fields.get("fullName") + "";
+		goodsSku.setFullName(fullName);
 
 		//设置规格属性名
 		goodsSku.setAttrValues(resultMap.get("attribute") + "");
