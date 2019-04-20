@@ -160,7 +160,7 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				userMapper.updateUserByuserId(user);
 				Supermarket supermarket = new Supermarket();
 				supermarket.setSupermarketId(apply.getSupermarketId());
-				supermarket.setUserId(apply.getUserId());
+				supermarket.setProcurerId(apply.getUserId());
 				supermarketMapper.updateSupermarketBysupermarketId(supermarket);
 			}else if("配送员".equals(apply.getAuthenticationType())){
 				AuthenticationApply authenticationApply = new AuthenticationApply();
