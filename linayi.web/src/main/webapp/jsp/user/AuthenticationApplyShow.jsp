@@ -32,14 +32,14 @@
 				</div>
 
 				<div class="col-sm-6">
-					<div class="form-group">
+					<div class="form-group" ng-show="apply1.specialty">
 						<label>特长</label> <span class="input-icon icon-right"> <input
 							type="text" disabled ng-model="apply1.specialty"
 							class="form-control">
 						</span>
 					</div>
 				</div>
-				<div class="col-sm-6">
+				<div class="col-sm-6" ng-show="apply1.hobby">
 					<div class="form-group">
 						<label>兴趣爱好</label> <span class="input-icon icon-right"> <input
 							type="text" disabled ng-model="apply1.hobby"
@@ -48,7 +48,7 @@
 					</div>
 				</div>
 				<div class="col-sm-6">
-					<div class="form-group">
+					<div class="form-group" ng-show="apply1.motto">
 						<label>格言</label> <span class="input-icon icon-right"> <input
 							type="text" disabled ng-model="apply1.motto"
 							class="form-control">
@@ -56,7 +56,7 @@
 					</div>
 				</div>
 				<div class="col-sm-6">
-					<div class="form-group">
+					<div class="form-group" ng-show="apply1.image">
 						<label>代言人图片</label> <span class="input-icon icon-right"> <img
 							style="width: 100%; height: 350px"
 							ng-src="{{apply1.image}}">

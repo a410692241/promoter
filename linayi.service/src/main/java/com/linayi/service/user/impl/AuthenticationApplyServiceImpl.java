@@ -178,6 +178,15 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				authenticationApply.setStatus(apply.getStatus());
 				authenticationApply.setUpdateTime(new Date());
 				authenticationApplyMapper.updateStatusByApplyId(authenticationApply);
+/*				SmallCommunity smallCommunity1 = new SmallCommunity();
+				smallCommunity1.setSmallCommunityId(apply.getUserId());
+				SmallCommunity smallCommunity2 = smallCommunityMapper.getSmallCommunity(smallCommunity1);
+				if(smallCommunity2!=null){
+					SmallCommunity smallCommunity3 = new SmallCommunity();
+					smallCommunity3.setDelivererId(null);
+					smallCommunity3.setSmallCommunityId(smallCommunity2.getSmallCommunityId());
+					smallCommunityMapper.updateSmallCommunity(smallCommunity3);
+				}*/
 				SmallCommunity smallCommunity = new SmallCommunity();
 				smallCommunity.setDelivererId(apply.getUserId());
 				smallCommunity.setSmallCommunityId(apply.getSmallCommunityId());
