@@ -86,6 +86,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 						{name:'idCardBack',label:'身份证反面',sortable:false,hidden:true},
 						{name:'address',label:'详细地址',sortable:false,hidden:true},
 						{name:'supermarketName',label:'超市名称',sortable:false,hidden:true},
+						{name:'supermarketId',label:'超市Id',sortable:false,hidden:true},
 						{name:'smallCommunityId',label:'小区id',sortable:false,hidden:true},
 			            {label:"操作",name:"opt",width:300,sortable:false,formatter:function(cellvalue, options, rowObject){
 			            	var status = rowObject.status;
@@ -264,6 +265,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
     	var smallCommunityId = rowData.smallCommunityId;
     	var address = rowData.address;
     	var supermarketName = rowData.supermarketName;
+    	var supermarketId = rowData.supermarketId;
     	var url = urls.ms + "/jsp/user/AuthenticationApplyAudit.jsp";
     	templateform.open({
 			title:"分享审核",
@@ -277,7 +279,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 						url : urls.ms + "/user/authentication/authenticationAudit.do",
 						async : false,
 						type : "post",
-						data : {"userId":userId,"realName":realName,"mobile":mobile,"idCardFront":idCardFront,"idCardBack":idCardBack,"status":'AUDIT_SUCCESS',"applyId":applyId,"authenticationType":authenticationType,"smallCommunityId":smallCommunityId},
+						data : {"userId":userId,"realName":realName,"mobile":mobile,"idCardFront":idCardFront,"idCardBack":idCardBack,"status":'AUDIT_SUCCESS',"applyId":applyId,"authenticationType":authenticationType,"smallCommunityId":smallCommunityId,"supermarketId":supermarketId},
 						dataType : "JSON",
 						success:function(data){
 							list();
