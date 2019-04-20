@@ -208,7 +208,7 @@
 			<if test="createTime!=null">
 				 create_time=#{createTime},
 			</if>
-			<if test="procurerId!=null and procurerId!=''">
+			<if test="procurerId!=''">
 				 procurer_id=#{procurerId}
 			</if>
 		</set>

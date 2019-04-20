@@ -158,6 +158,16 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				user.setIsProcurer("TRUE");
 				user.setRealName(apply.getRealName());
 				userMapper.updateUserByuserId(user);
+				Supermarket supermarket1 = new Supermarket();
+				supermarket1.setProcurerId(apply.getUserId());
+				List<Supermarket> selectAll = supermarketMapper.selectAll(supermarket1);
+				if(selectAll.size() == 1){
+					Supermarket supermarket3 = selectAll.stream().findFirst().orElse(null);
+					Supermarket supermarket2 = new Supermarket();
+					supermarket2.setSupermarketId(supermarket3.getSupermarketId());
+					supermarket2.setProcurerId(null);
+					supermarketMapper.updateSupermarketBysupermarketId(supermarket2);
+				}
 				Supermarket supermarket = new Supermarket();
 				supermarket.setSupermarketId(apply.getSupermarketId());
 				supermarket.setProcurerId(apply.getUserId());
