@@ -28,6 +28,7 @@ import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -853,14 +854,14 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		String key = esConfig.getKey();
 		SearchRequest searchRequest = new SearchRequest();
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-		String fieldName = "full_name";
+		String fieldName = "fullName";
 		String fieldName2 = "category";
 		String fieldName3 = "brand";
 		//设置查询的条件为商品名存在特定关键字符
 		//对指定字段设置ik分词器
 		searchSourceBuilder.query(QueryBuilders.multiMatchQuery(key, fieldName, fieldName2, fieldName3));
 		searchSourceBuilder.size(esConfig.getPageSize());
-//		searchSourceBuilder.sort("full_name");
+		searchSourceBuilder.sort("soldNum", SortOrder.DESC);
 		searchSourceBuilder.from((esConfig.getCurrentPage() - 1) * esConfig.getPageSize());
 		//指定高亮字段
 		HighlightBuilder highlightBuilder = new HighlightBuilder();
@@ -911,15 +912,15 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		collect.stream().filter(item -> item != null);
 		String orderType = esConfig.getOrderType();
 		List<GoodsSku> goodsSkuListResult = new ArrayList<>();
-		if (PriceOrderType.SOLD_NUM.name().equals(orderType)) {
+		if (PriceOrderType.SOLD_NUM.name().equalsIgnoreCase(orderType)) {
 			//销量为null的,给予默认值为0
 			collect.stream().forEach(item -> item.setSoldNum(item.getSoldNum() == null ? 0 : item.getSoldNum()));
 			goodsSkuListResult = collect.stream().sorted(Comparator.comparing(GoodsSku::getSoldNum).reversed()).collect(Collectors.toList());
 		}
-		if (PriceOrderType.PRICE_UP.name().equals(orderType)) {
+		if (PriceOrderType.PRICE_UP.name().equalsIgnoreCase(orderType)) {
 			goodsSkuListResult = collect.stream().sorted(Comparator.comparing(GoodsSku::getMinPrice)).collect(Collectors.toList());
 		}
-		if (PriceOrderType.PRICE_DOWN.name().equals(orderType)) {
+		if (PriceOrderType.PRICE_DOWN.name().equalsIgnoreCase(orderType)) {
 			goodsSkuListResult = collect.stream().sorted(Comparator.comparing(GoodsSku::getMinPrice).reversed()).collect(Collectors.toList());
 		}
 		return goodsSkuListResult;
@@ -936,12 +937,12 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		goodsSku.setImage(image_name);
 
 		//获取商品所在当前服务点的最低价与价差
-		long goodsSkuId = Long.parseLong(resultMap.get("goods_sku_id") + "");
+		long goodsSkuId = Long.parseLong(resultMap.get("goodsSkuId") + "");
 		goodsSku.setGoodsSkuId(goodsSkuId);
 		goodsSku.setCommunityId(communityId);
 		//获取商铺名字(关键字高亮)
 		Map<String, HighlightField> highlightFields = hit.getHighlightFields();
-		HighlightField descHightField = highlightFields.get("full_name");
+		HighlightField descHightField = highlightFields.get("fullName");
 		Text[] fragments = descHightField.getFragments();
 		StringBuilder sb = new StringBuilder();
 		for (Text fragment : fragments) {

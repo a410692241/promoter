@@ -237,7 +237,7 @@ public class GoodsSkuController extends BaseController {
 	/**通过ES关键字索引检索商品信息
 	 * @throws Exception
 	 */
-	@ApiOperation(value = "商铺查找")
+	@ApiOperation(value = "商品查找")
 	@RequestMapping(value = "searchByKey.do",method=RequestMethod.POST)
 	@ResponseBody
 	public Object searchByKey(@RequestBody PromoterVo.EsConfig esConfig) {
