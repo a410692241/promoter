@@ -8,6 +8,7 @@ import com.linayi.entity.promoter.OrderManMember;
 import com.linayi.entity.user.ReceiveAddress;
 import com.linayi.entity.user.User;
 import com.linayi.enums.RemoveType;
+import com.linayi.enums.Sex;
 import com.linayi.service.address.ReceiveAddressService;
 import com.linayi.service.promoter.OrderManMemberService;
 import com.linayi.service.user.UserService;
@@ -51,7 +52,9 @@ public class receiveAddressServiceImpl implements ReceiveAddressService {
         Integer userId = receiveAddress.getUserId();
         User user = userService.selectUserByuserId(userId);
 //      receiveAddress.setMobile(user.getMobile());
-        receiveAddress.setSex("1".equals(user.getSex()) ? "男" : "女");
+        if (user.getSex() != null) {
+            receiveAddress.setSex("1".equals(user.getSex()) ? Sex.MALE.name() : Sex.FEMALE.name());
+        }
         receiveAddress.setCreateTime(new Date());
         receiveAddress.setUpdateTime(new Date());
         receiveAddress.setStatus(RemoveType.NORMAL.name());
