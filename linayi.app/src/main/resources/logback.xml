@@ -85,17 +85,17 @@
 		</filter>
 	</appender>
 	<!--dev-->
-	<root level="DEBUG">
-		<appender-ref ref="STDOUT"/>
-	</root>
-
-	<!--production-->
-	<!--<root level="INFO">-->
-		<!--&lt;!&ndash;production&ndash;&gt;-->
-		<!--<appender-ref ref="FILEERROR"/>-->
-		<!--<appender-ref ref="FILEWARN"/>-->
-		<!--<appender-ref ref="FILEINFO"/>-->
-		<!--<appender-ref ref="DBAPPENDER"/>-->
+	<!--<root level="DEBUG">-->
 		<!--<appender-ref ref="STDOUT"/>-->
 	<!--</root>-->
+
+	<!--production-->
+	<root level="INFO">
+		<!--production-->
+		<appender-ref ref="FILEERROR"/>
+		<appender-ref ref="FILEWARN"/>
+		<appender-ref ref="FILEINFO"/>
+		<appender-ref ref="DBAPPENDER"/>
+		<appender-ref ref="STDOUT"/>
+	</root>
 </configuration>
