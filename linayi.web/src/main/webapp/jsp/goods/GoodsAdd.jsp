@@ -555,7 +555,7 @@
         success:function (data) {
             if (data) {
                 for (var i = 0; i < data.length; i++) {
-                    var $input = $("<tr><td class='form-addgoodsRightTd'>" +data[i].name + "<td><td>" + "<input class='qqq" + (i + 1) + "' type='text' style='width: 100px' name='attribute' id='attribute" + (i + 1) + "'  readonly=readonly size='6'></td></tr>");
+                    var $input = $("<tr><td class='form-addgoodsRightTd'>" +data[i].name + "<td><td>" + "<input class='qqq" + (i + 1) + "' type='text' style='width: 200px' name='attribute' id='attribute" + (i + 1) + "'  readonly=readonly size='6'></td></tr>");
                     $input.appendTo("#form-addgoodsRight");
                 }
             }
