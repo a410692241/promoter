@@ -17,7 +17,7 @@
 
 	<appender name="FILEERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<!-- 正在记录的日志文件的路径及文件名 -->
-		<file>${LOG_PATH}/${APPDIR}/log_error.log</file>
+		<file>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/log_error.log</file>
 		<!-- 日志记录器的滚动策略，按日期，按大小记录 -->
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/error/log-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
@@ -41,7 +41,7 @@
 	</appender>
 
 	<appender name="FILEWARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${LOG_PATH}/${APPDIR}/log_warn.log</file>
+		<file>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/log_warn.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/warn/log-warn-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
 			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
@@ -65,7 +65,7 @@
 
 	<appender name="FILEINFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<!-- 正在记录的日志文件的路径及文件名 -->
-		<file>${LOG_PATH}/${APPDIR}/log_info.log</file>
+		<file>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/log_info.log</file>
 		<!-- 日志记录器的滚动策略，按日期，按大小记录 -->
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/info/log-info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
