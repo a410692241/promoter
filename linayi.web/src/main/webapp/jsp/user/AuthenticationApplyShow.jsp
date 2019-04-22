@@ -38,7 +38,7 @@
 						</span>
 					</div>
 				</div>
-				<div class="col-sm-6">
+				<div class="col-sm-6" ng-show="apply1.supermarketName">
 					<div class="form-group">
 						<label>超市名称</label> <span class="input-icon icon-right"> <input
 							type="text" disabled ng-model="apply1.supermarketName"
