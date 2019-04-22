@@ -4,6 +4,8 @@ import com.linayi.entity.community.Community;
 import com.linayi.entity.procurement.ProcurementTask;
 import org.apache.ibatis.annotations.Param;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
 
@@ -119,4 +121,26 @@ public interface ProcurementService {
      * @return
      */
     List<ProcurementTask> getDeliverGoodsList(ProcurementTask procurTask);
+
+    /**
+     *  后台管理系统 流转中心查询出已发货信息
+     * @param procurementTask
+     * @return
+     */
+    List<ProcurementTask> getProcurementsByRECEIVEDFLOW(ProcurementTask procurementTask);
+    /**
+     *  后台管理系统 流转中心批量发货
+     * @param procurementTaskIdList
+     * @return
+     */
+    void batchDelivery(List<Long> procurementTaskIdList);
+
+    /**
+     * 后台管理系统 流转中心导出数据
+     * @param procurementTask
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    void exportData(ProcurementTask procurementTask, HttpServletRequest request, HttpServletResponse response) throws Exception;
 }
