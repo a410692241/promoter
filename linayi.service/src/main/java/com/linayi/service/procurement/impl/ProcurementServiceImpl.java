@@ -297,6 +297,12 @@ public class ProcurementServiceImpl implements ProcurementService {
 	}
 
 	@Override
+	public List<ProcurementTask> getProcurementsByRECEIVEDFLOW(ProcurementTask procurTask) {
+		List<ProcurementTask> list = getProcurementTaskListByprocurTask(procurTask);
+		return list;
+	}
+
+	@Override
 	public void updateProcurReceiveStatus(ProcurementTask procurementTask) {
 		String procurementTaskIdList = procurementTask.getProcurementTaskIdList();
 		List<ProcurementTask> procurementTaskList = null;
