@@ -454,7 +454,7 @@
 		update
 			orders
 		set
-			community_status='DELIVERING'
+			community_status='DELIVERING',delivery_time=SYSDATE()
 		where
 			orders_id = #{ordersId}
 	</update>
