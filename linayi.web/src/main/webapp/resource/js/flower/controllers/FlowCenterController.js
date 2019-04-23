@@ -164,7 +164,6 @@ app.controller('flowCenterCtrl', function($scope,toaster,flowCenterService,messa
 		var endTime = $scope.search.endTime;
 		var receiveStatus = $scope.search.receiveStatus;
 		var sum = 0;
-		var total = 0;
 		var data = '';
 		if (deliveryWaveTime === undefined || deliveryWaveTime == '' || deliveryWaveTime=='showAll') {
 			deliveryWaveTime = null;
@@ -184,7 +183,7 @@ app.controller('flowCenterCtrl', function($scope,toaster,flowCenterService,messa
 		} else {
 			data += '&endTime=' + endTime;
 		}
-		if ( receiveStatus='showAll' || deliveryWaveTime === undefined || deliveryWaveTime == '') {
+		if ( receiveStatus=='showAll' || deliveryWaveTime === undefined || deliveryWaveTime == '') {
 			receiveStatus = null;
 			sum++;
 		} else {
