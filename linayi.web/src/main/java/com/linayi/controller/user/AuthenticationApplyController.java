@@ -2,7 +2,7 @@ package com.linayi.controller.user;
 
 import com.linayi.entity.user.AuthenticationApply;
 import com.linayi.service.user.AuthenticationApplyService;
-import com.linayi.util.OSSManageUtil;
+import com.linayi.util.ImageUtil;
 import com.linayi.util.PageResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
