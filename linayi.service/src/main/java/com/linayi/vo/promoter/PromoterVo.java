@@ -217,6 +217,8 @@ public class PromoterVo {
 	public static class EsConfig  {
 		@ApiModelProperty(value = "搜索框查询的关键字",required = true,example = "乐事薯片")
 		public String key;
+		@ApiModelProperty(value = "条形码",example = "123456789")
+		public String barcode;
 		@ApiModelProperty(value = "排序方式:(NORMAL:综合;PRICE_UP:价格升序;PRICE_DOWN:价格降序;SOLD_NUM:销量)",example = "SOLD_NUM")
 		public String orderType;
 		@ApiModelProperty(hidden = true)

@@ -655,4 +655,7 @@
     <select id="getSoldNumByGoodsSkuId" parameterType="java.lang.Long" resultType="java.lang.Integer">
         select sold_num from goods_sku where goods_sku_id = #{goodsSkuId}
     </select>
+    <select id="getGoodsSkuByBarcode" parameterType="java.lang.String" resultType="com.linayi.entity.goods.GoodsSku">
+        select  <include refid="columnList"/> from goods_sku where barcode = #{barcode}
+    </select>
 </mapper>

@@ -111,4 +111,6 @@ public interface GoodsSkuMapper {
 	List<GoodsSku> getRecommendGoodsSku(GoodsSku goodsSku);
 
 	Integer getSoldNumByGoodsSkuId(@Param("goodsSkuId") Long goodsSkuId);
+
+	GoodsSku getGoodsSkuByBarcode(@Param("barcode") String barcode);
 }
