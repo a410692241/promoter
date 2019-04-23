@@ -146,7 +146,7 @@ app.controller('flowCenterCtrl', function($scope,toaster,flowCenterService,messa
 				list();
 				item_selected = new Array();
 				$('#correctList').jqGrid('setGridParam', {
-					url: urls.ms + "/procurement/procurement/batchDelivery.do",
+					url: urls.ms + "/procurement/procurement/list.do",
 					postData: $scope.search,
 					datatype: 'json',
 					page: page,
