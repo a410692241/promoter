@@ -632,24 +632,6 @@ public class ProcurementServiceImpl implements ProcurementService {
 	@Override
 	public List<ProcurementTask> getProcurementsByRECEIVEDFLOW(ProcurementTask procurTask) {
 		List<ProcurementTask> list = getProcurementTaskListByprocurTask(procurTask);
-		Calendar cal = Calendar.getInstance();
-		for(int i=0;i<list.size();i++){
-			if("RECEIVED_FLOW".equals(list.get(i).getReceiveStatus())){
-				list.get(i).setReceiveStatus("待发货");
-			}else if("WAIT_RECEIVE".equals(list.get(i).getReceiveStatus())){
-				list.get(i).setReceiveStatus("已发货");
-			}
-			Date date = list.get(i).getCreateTime();
-			cal.setTime(date);
-			Integer hour = cal.get(Calendar.HOUR_OF_DAY);
-			if(8<=hour && hour<13){
-				list.get(i).setDeliveryWaveTime("第一波次");
-			}else if(13<=hour && hour<18){
-				list.get(i).setDeliveryWaveTime("第二波次");
-			}else{
-				list.get(i).setDeliveryWaveTime("第三波次");
-			}
-		}
 		return list;
 	}
 
@@ -728,8 +710,18 @@ public class ProcurementServiceImpl implements ProcurementService {
 		for(int i=0;i<list.size();i++){
 			if("RECEIVED_FLOW".equals(list.get(i).getReceiveStatus())){
 				list.get(i).setReceiveStatus("待发货");
-			}else{
+			}else if("WAIT_RECEIVE".equals(list.get(i).getReceiveStatus())){
 				list.get(i).setReceiveStatus("已发货");
+			}
+			Date date = list.get(i).getCreateTime();
+			cal.setTime(date);
+			Integer hour = cal.get(Calendar.HOUR_OF_DAY);
+			if(8<=hour && hour<13){
+				list.get(i).setDeliveryWaveTime("第一波次");
+			}else if(13<=hour && hour<18){
+				list.get(i).setDeliveryWaveTime("第二波次");
+			}else{
+				list.get(i).setDeliveryWaveTime("第三波次");
 			}
 		}
 		return list;
@@ -765,7 +757,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		row.createCell(5).setCellValue("商品名称");
 		row.createCell(6).setCellValue("商品条码");
 		row.createCell(7).setCellValue("数量");
-		row.createCell(8).setCellValue("商品单价");
+		row.createCell(8).setCellValue("商品单价(元)");
 		row.createCell(9).setCellValue("采买超市");
 		row.createCell(10).setCellValue("下单时间");
 		// 定义样式
@@ -785,7 +777,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 			row.createCell(5).setCellValue(procurTask.getFullName());
 			row.createCell(6).setCellValue(procurTask.getBarcode());
 			row.createCell(7).setCellValue(procurTask.getActualQuantity());
-			row.createCell(8).setCellValue(procurTask.getPrice());
+			row.createCell(8).setCellValue(procurTask.getPrice()/100.00);
 			row.createCell(9).setCellValue(procurTask.getSupermarketName());
 			row.createCell(10).setCellValue(DateUtil.date2String(procurTask.getCreateTime(),pattern));
 		}
