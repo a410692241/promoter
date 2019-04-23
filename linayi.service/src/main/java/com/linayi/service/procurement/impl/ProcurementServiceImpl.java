@@ -302,6 +302,13 @@ public class ProcurementServiceImpl implements ProcurementService {
 		return list;
 	}
 
+	@Override
+	@Transactional
+	public void batchDelivery(List<Long> procurementTaskIdList) {
+		Date flowOutTime = new Date();
+		procurementTaskMapper.confirmDeliverGoods(procurementTaskIdList,flowOutTime);
+	}
+
 	/**
 	 * 后台管理系统 流转中心
 	 * @param procurTask
