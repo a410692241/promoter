@@ -300,7 +300,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 	@Override
 	public ProcurementTask getprocurementDeatil(ProcurementTask procurementTask) {
 		GoodsSku goodsSku = goodsSkuMapper.getGoodsById(procurementTask.getGoodsSkuId());
-		procurementTask.setImage(goodsSku.getImage());
+		procurementTask.setImage(ImageUtil.dealToShow(goodsSku.getImage()));
 		procurementTask.setGoodsSkuName(goodsSku.getFullName());
 		return procurementTask;
 	}
