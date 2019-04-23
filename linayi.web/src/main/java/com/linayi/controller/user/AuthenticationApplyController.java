@@ -2,7 +2,7 @@ package com.linayi.controller.user;
 
 import com.linayi.entity.user.AuthenticationApply;
 import com.linayi.service.user.AuthenticationApplyService;
-import com.linayi.util.OSSManageUtil;
+import com.linayi.util.ImageUtil;
 import com.linayi.util.PageResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,8 +30,8 @@ public class AuthenticationApplyController {
     	List<AuthenticationApply> list = authenticationApplyService.selectAuthenticationApplyList(apply);
     	if (list != null && list.size() > 0) {
 			for (AuthenticationApply authenticationApply : list) {
-				authenticationApply.setIdCardBack(OSSManageUtil.toShow(authenticationApply.getIdCardBack()));
-				authenticationApply.setIdCardFront(OSSManageUtil.toShow(authenticationApply.getIdCardFront()));
+				authenticationApply.setIdCardBack(ImageUtil.dealToShow(authenticationApply.getIdCardBack()));
+				authenticationApply.setIdCardFront(ImageUtil.dealToShow(authenticationApply.getIdCardFront()));
 			}
 		}
     	PageResult<AuthenticationApply> pageResult = new PageResult<AuthenticationApply>(list, apply.getTotal());
@@ -42,9 +42,9 @@ public class AuthenticationApplyController {
 	public ModelAndView showAuthenticationApply(AuthenticationApply apply) {
 		ModelAndView mv = new ModelAndView("jsp/user/AuthenticationApplyShow");
 		AuthenticationApply apply1 = this.authenticationApplyService.getAuthenticationApplyByapplyId(apply.getApplyId());
-		apply1.setIdCardFront(OSSManageUtil.toShow(apply1.getIdCardFront()));
-		apply1.setIdCardBack(OSSManageUtil.toShow(apply1.getIdCardBack()));
-		apply1.setImage(OSSManageUtil.toShow(apply1.getImage()));
+		apply1.setIdCardFront(ImageUtil.dealToShow(apply1.getIdCardFront()));
+		apply1.setIdCardBack(ImageUtil.dealToShow(apply1.getIdCardBack()));
+		apply1.setImage(ImageUtil.dealToShow(apply1.getImage()));
 		mv.addObject("apply1", apply1);
 		return mv;
 	}

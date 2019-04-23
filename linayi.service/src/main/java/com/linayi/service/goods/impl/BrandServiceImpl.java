@@ -4,6 +4,7 @@ import com.linayi.dao.goods.BrandMapper;
 import com.linayi.entity.goods.Brand;
 import com.linayi.service.goods.BrandService;
 import com.linayi.util.CheckUtil;
+import com.linayi.util.ImageUtil;
 import com.linayi.util.OSSManageUtil;
 import jxl.Sheet;
 import jxl.Workbook;
@@ -52,7 +53,7 @@ public class BrandServiceImpl implements BrandService {
         List<Brand> brandList = brandMapper.getBrandByName(brand);
         for(int i=0;i<brandList.size();i++){
             String image = brandList.get(i).getLogo();
-            String logo = OSSManageUtil.toShow(image);
+            String logo = ImageUtil.dealToShow(image);
             brandList.get(i).setLogo(logo);
         }
         return brandList;

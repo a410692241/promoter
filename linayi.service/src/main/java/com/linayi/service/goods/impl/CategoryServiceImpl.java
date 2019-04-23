@@ -4,6 +4,7 @@ import com.linayi.dao.goods.CategoryMapper;
 import com.linayi.entity.goods.Category;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.goods.CategoryService;
+import com.linayi.util.ImageUtil;
 import com.linayi.util.OSSManageUtil;
 import com.linayi.util.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
 			category = categoryMapper.getCategoryById(categoryId);
 		}
 		if(category != null){
-			category.setLogo(OSSManageUtil.toShow(category.getLogo()));
+			category.setLogo(ImageUtil.dealToShow(category.getLogo()));
 		}
 		return category;
 	}
@@ -94,7 +95,7 @@ public class CategoryServiceImpl implements CategoryService {
 			Category category1 = new Category();
 			category1.setLevel(level);
 			if (!file.isEmpty()) {
-				category1.setLogo(OSSManageUtil.uploadFile(file));
+				category1.setLogo(ImageUtil.handleUpload(file));
 			}
 			category1.setCreateTime(createTime);
 			category1.setName(name);
@@ -115,7 +116,7 @@ public class CategoryServiceImpl implements CategoryService {
 			Date updateTime = new Date();
 			Category category1 = new Category();
 			if (!file.isEmpty()) {
-				category1.setLogo(OSSManageUtil.uploadFile(file));
+				category1.setLogo(ImageUtil.handleUpload(file));
 			}
 			category1.setCategoryId(categoryId);
 			category1.setName(name);
@@ -144,7 +145,7 @@ public class CategoryServiceImpl implements CategoryService {
 	public List<Category> findAllCategory(Integer parentId) {
 		List<Category> categoryList = categoryMapper.findAllCategory(parentId);
 		for (Category c : categoryList){
-			c.setLogo(OSSManageUtil.toShow(c.getLogo()));
+			c.setLogo(ImageUtil.dealToShow(c.getLogo()));
 		}
 		return categoryList;
 	}
@@ -172,7 +173,7 @@ public class CategoryServiceImpl implements CategoryService {
 		List<Category>categoryList = categoryMapper.getCategoryByBrandId(brandId);
 		if(categoryList.size()>0) {
 			for(Category i:categoryList) {
-				i.setLogo(OSSManageUtil.toShow(i.getLogo()));
+				i.setLogo(ImageUtil.dealToShow(i.getLogo()));
 			}
 		}
 

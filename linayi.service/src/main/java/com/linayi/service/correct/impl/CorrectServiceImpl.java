@@ -23,6 +23,7 @@ import com.linayi.service.correct.SupermarketGoodsVersionService;
 import com.linayi.service.goods.GoodsSkuService;
 import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.service.user.UserService;
+import com.linayi.util.ImageUtil;
 import com.linayi.util.OSSManageUtil;
 import com.linayi.util.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +98,7 @@ public class CorrectServiceImpl implements CorrectService {
 
         String path = null;
         try {
-            path = OSSManageUtil.uploadFile(file);
+            path = ImageUtil.handleUpload(file);
             correct.setImage(path);
         } catch (Exception e) {
             e.printStackTrace();
@@ -174,7 +175,7 @@ public class CorrectServiceImpl implements CorrectService {
         if(OperatorType.USER.toString().equals(userType)){
             String path = null;
             try {
-                path = OSSManageUtil.uploadFile(file);
+                path = ImageUtil.handleUpload(file);
                 correct.setImage(path);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -443,13 +444,13 @@ public class CorrectServiceImpl implements CorrectService {
             } else {*/
             Correct correctPare = correctMapper.selectByPrimaryKey(correct.getParentId());
             if (correctPare != null) {
-                correct.setImage(OSSManageUtil.toShow(correct.getImage()));
-                correct.setParentImage(OSSManageUtil.toShow(correctPare.getImage()));
+                correct.setImage(ImageUtil.dealToShow(correct.getImage()));
+                correct.setParentImage(ImageUtil.dealToShow(correctPare.getImage()));
             }
             /*}*/
 
         } else if (correct.getParentId() == null) {
-            correct.setParentImage(OSSManageUtil.toShow(correct.getImage()));
+            correct.setParentImage(ImageUtil.dealToShow(correct.getImage()));
         }
         return correct;
     }
@@ -601,7 +602,7 @@ public class CorrectServiceImpl implements CorrectService {
             //根据状态set历史按钮类型
             for (Correct cc : correctList) {
 
-                cc.setImage(OSSManageUtil.toShow(cc.getImage()));
+                cc.setImage(ImageUtil.dealToShow(cc.getImage()));
                 if (CorrectStatus.WAIT_AUDIT.toString().equals(cc.getStatus()) || CorrectStatus.AUDIT_SUCCESS.toString().equals(cc.getStatus())) {
                     cc.setHistoryButtonType("RECALL");
                 } else if (CorrectStatus.AFFECTED.toString().equals(cc.getStatus())) {
@@ -642,7 +643,7 @@ public class CorrectServiceImpl implements CorrectService {
             // 根据状态set历史按钮类型
             for (Correct cc : correctList) {
 
-                cc.setGoodsImage(OSSManageUtil.toShow(cc.getGoodsImage()));
+                cc.setGoodsImage(ImageUtil.dealToShow(cc.getGoodsImage()));
                 if (CorrectStatus.WAIT_AUDIT.toString().equals(cc.getStatus())
                         || CorrectStatus.AUDIT_SUCCESS.toString().equals(cc.getStatus())) {
                     cc.setHistoryButtonType("RECALL");
