@@ -188,7 +188,7 @@ app.controller('flowCenterCtrl', function($scope,toaster,flowCenterService,messa
 			data += '&receiveStatus=' + receiveStatus;
 		}
 		if(sum==4){
-			toaster.error("", "请输入搜索条件后导出!", 3000);
+			toaster.error("", "请先输入搜索条件后再导出!", 3000);
 			return;
 		}
 
