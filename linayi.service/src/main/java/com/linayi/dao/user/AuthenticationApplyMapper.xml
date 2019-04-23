@@ -120,6 +120,7 @@
 		image,
 		area_code,
 		small_community_id,
+		supermarket_id supermarketId,
 		address
 		from
 		authentication_apply

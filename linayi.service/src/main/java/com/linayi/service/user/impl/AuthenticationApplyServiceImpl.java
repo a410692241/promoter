@@ -13,7 +13,7 @@ import com.linayi.enums.SpokesmanStatus;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.spokesman.SpokesmanService;
 import com.linayi.service.user.AuthenticationApplyService;
-import com.linayi.util.ImageUtil;
+import com.linayi.util.OSSManageUtil;
 import com.linayi.util.ResponseData;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,8 +51,8 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				authenticationApply.setRealName(apply.getRealName());
 				authenticationApply.setMobile(apply.getMobile());
 				authenticationApply.setUserId(apply.getUserId());
-				authenticationApply.setIdCardFront(ImageUtil.handleUpload(file[0]));
-				authenticationApply.setIdCardBack(ImageUtil.handleUpload(file[1]));
+				authenticationApply.setIdCardFront(OSSManageUtil.uploadFile(file[0]));
+				authenticationApply.setIdCardBack(OSSManageUtil.uploadFile(file[1]));
 				authenticationApply.setCreateTime(new Date());
 				authenticationApply.setUpdateTime(new Date());
 				authenticationApply.setStatus("WAIT_AUDIT");
@@ -158,6 +158,16 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				user.setIsProcurer("TRUE");
 				user.setRealName(apply.getRealName());
 				userMapper.updateUserByuserId(user);
+				Supermarket supermarket1 = new Supermarket();
+				supermarket1.setProcurerId(apply.getUserId());
+				List<Supermarket> selectAll = supermarketMapper.selectAll(supermarket1);
+				if(selectAll.size() == 1){
+					Supermarket supermarket3 = selectAll.stream().findFirst().orElse(null);
+					Supermarket supermarket2 = new Supermarket();
+					supermarket2.setSupermarketId(supermarket3.getSupermarketId());
+					supermarket2.setProcurerId(null);
+					supermarketMapper.updateSupermarketBysupermarketId(supermarket2);
+				}
 				Supermarket supermarket = new Supermarket();
 				supermarket.setSupermarketId(apply.getSupermarketId());
 				supermarket.setProcurerId(apply.getUserId());
@@ -168,6 +178,15 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				authenticationApply.setStatus(apply.getStatus());
 				authenticationApply.setUpdateTime(new Date());
 				authenticationApplyMapper.updateStatusByApplyId(authenticationApply);
+/*				SmallCommunity smallCommunity1 = new SmallCommunity();
+				smallCommunity1.setSmallCommunityId(apply.getUserId());
+				SmallCommunity smallCommunity2 = smallCommunityMapper.getSmallCommunity(smallCommunity1);
+				if(smallCommunity2!=null){
+					SmallCommunity smallCommunity3 = new SmallCommunity();
+					smallCommunity3.setDelivererId(null);
+					smallCommunity3.setSmallCommunityId(smallCommunity2.getSmallCommunityId());
+					smallCommunityMapper.updateSmallCommunity(smallCommunity3);
+				}*/
 				SmallCommunity smallCommunity = new SmallCommunity();
 				smallCommunity.setDelivererId(apply.getUserId());
 				smallCommunity.setSmallCommunityId(apply.getSmallCommunityId());
@@ -255,8 +274,8 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				authenticationApply.setRealName(apply.getRealName());
 				authenticationApply.setMobile(apply.getMobile());
 				authenticationApply.setUserId(apply.getUserId());
-				authenticationApply.setIdCardFront(ImageUtil.handleUpload(file[0]));
-				authenticationApply.setIdCardBack(ImageUtil.handleUpload(file[1]));
+				authenticationApply.setIdCardFront(OSSManageUtil.uploadFile(file[0]));
+				authenticationApply.setIdCardBack(OSSManageUtil.uploadFile(file[1]));
 				authenticationApply.setCreateTime(new Date());
 				authenticationApply.setUpdateTime(new Date());
 				authenticationApply.setStatus("WAIT_AUDIT");
@@ -311,8 +330,8 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				authenticationApply.setRealName(apply.getRealName());
 				authenticationApply.setMobile(apply.getMobile());
 				authenticationApply.setUserId(apply.getUserId());
-				authenticationApply.setIdCardFront(ImageUtil.handleUpload(file[0]));
-				authenticationApply.setIdCardBack(ImageUtil.handleUpload(file[1]));
+				authenticationApply.setIdCardFront(OSSManageUtil.uploadFile(file[0]));
+				authenticationApply.setIdCardBack(OSSManageUtil.uploadFile(file[1]));
 				authenticationApply.setCreateTime(new Date());
 				authenticationApply.setUpdateTime(new Date());
 				authenticationApply.setStatus("WAIT_AUDIT");
@@ -367,7 +386,7 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				apply.setAuthenticationType("SPOKESMAN");
 				apply.setCreateTime(now);
 				apply.setUpdateTime(now);
-				apply.setImage(ImageUtil.handleUpload(file));
+				apply.setImage(OSSManageUtil.uploadFile(file));
 				authenticationApplyMapper.insert(apply);
 				return new ResponseData("操作成功！").toString();
 			} catch (Exception e) {

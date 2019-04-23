@@ -69,7 +69,7 @@ public  class OSSManageUtil {
         ossClient.shutdown();
         // 关闭io流
         fileContent.close();
-        return remoteFilePath + fileName;
+        return fileName;
     }
 
     /**
@@ -78,8 +78,8 @@ public  class OSSManageUtil {
      * @return
      */
     public static String toShow(String fileUrl){
-        if(fileUrl == null && "".equals(fileUrl)){
-            return "";
+        if (fileUrl == null || "".equals(fileUrl.trim())) {
+            return null;
         }
         return accessUrl+ "/" + fileUrl;
     }
