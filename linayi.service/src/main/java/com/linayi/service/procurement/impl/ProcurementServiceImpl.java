@@ -22,12 +22,21 @@ import com.linayi.service.community.CommunitySupermarketService;
 import com.linayi.service.order.OrderService;
 import com.linayi.service.procurement.ProcurementService;
 import com.linayi.service.supermarket.SupermarketService;
+import com.linayi.util.DateUtil;
 import com.linayi.util.OSSManageUtil;
 import com.linayi.util.PageResult;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.OutputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -725,5 +734,60 @@ public class ProcurementServiceImpl implements ProcurementService {
 			list.get(i).setImage(OSSManageUtil.toShow(image));
 		}
 		return list;
+	}
+
+	@Override
+	public void exportData(ProcurementTask procurementTask, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		// 只是让浏览器知道要保存为什么文件而已，真正的文件还是在流里面的数据，你设定一个下载类型并不会去改变流里的内容。
+		//而实际上只要你的内容正确，文件后缀名之类可以随便改，就算你指定是下载excel文件，下载时我也可以把他改成pdf等。
+		response.setContentType("application/vnd.ms-excel");
+		// 传递中文参数编码
+		String codedFileName = java.net.URLEncoder.encode("分拣商品信息","UTF-8");
+		response.setHeader("content-disposition", "attachment;filename=" + codedFileName + ".xls");
+		List<ProcurementTask> list = getProcurementTaskListByprocurTask(procurementTask);
+		// 定义一个工作薄
+		Workbook workbook = new HSSFWorkbook();
+		// 创建一个sheet页
+		Sheet sheet = workbook.createSheet("分拣商品信息");
+		// 创建一行
+		Row row = sheet.createRow(0);
+		// 在本行赋值 以0开始
+
+		row.createCell(0).setCellValue("采买任务ID");
+		row.createCell(1).setCellValue("网点名称");
+		row.createCell(2).setCellValue("配送波次");
+		row.createCell(3).setCellValue("顾客订单号");
+		row.createCell(4).setCellValue("订单状态");
+		row.createCell(5).setCellValue("商品名称");
+		row.createCell(6).setCellValue("商品条码");
+		row.createCell(7).setCellValue("数量");
+		row.createCell(8).setCellValue("商品单价(元)");
+		row.createCell(9).setCellValue("采买超市");
+		row.createCell(10).setCellValue("下单时间");
+		// 定义样式
+		CellStyle cellStyle = workbook.createCellStyle();
+		// 格式化日期
+		//cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("yyyy-MM-dd"));
+		String pattern = "yyyy-MM-dd HH:mm:ss";
+		// 遍历输出
+		for (int i = 1; i <= list.size(); i++) {
+			ProcurementTask procurTask = list.get(i - 1);
+			row = sheet.createRow(i);
+			row.createCell(0).setCellValue(procurTask.getProcurementTaskId());
+			row.createCell(1).setCellValue(procurTask.getCommunityName());
+			row.createCell(2).setCellValue(procurTask.getDeliveryWaveTime());
+			row.createCell(3).setCellValue(procurTask.getOrdersId());
+			row.createCell(4).setCellValue(procurTask.getReceiveStatus());
+			row.createCell(5).setCellValue(procurTask.getFullName());
+			row.createCell(6).setCellValue(procurTask.getBarcode());
+			row.createCell(7).setCellValue(procurTask.getActualQuantity());
+			row.createCell(8).setCellValue(procurTask.getPrice()/100.00);
+			row.createCell(9).setCellValue(procurTask.getSupermarketName());
+			row.createCell(10).setCellValue(DateUtil.date2String(procurTask.getCreateTime(),pattern));
+		}
+		OutputStream fOut = response.getOutputStream();
+		workbook.write(fOut);
+		fOut.flush();
+		fOut.close();
 	}
 }
