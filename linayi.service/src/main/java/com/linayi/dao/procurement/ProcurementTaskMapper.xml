@@ -664,6 +664,8 @@
         <foreach collection="procurementTaskIdList" index="index" item="item1" open="(" separator="," close=")">
             ${item1}
         </foreach>
+       and
+          receive_status='RECEIVED_FLOW'
   </update>
     <!--流转中心任务 查询出已收货的商品列表 List<ProcurementTask> getDeliverGoodsList(ProcurementTask procurTask)-->
     <select id="getDeliverGoodsList" resultType="com.linayi.entity.procurement.ProcurementTask">
