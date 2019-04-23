@@ -275,7 +275,7 @@
 	            and supermarket_id = #{supermarketId,jdbcType=INTEGER}
 	        </if>
 	        <if test="goodsSkuId != null">
-	            and goods_sku_id = #{goodsSkuId,jdbcType=INTEGER}
+                and goods_sku_id = #{goodsSkuId,jdbcType=INTEGER}
 	        </if>
 	        <if test="price != null">
 	            and price = #{price,jdbcType=INTEGER}
