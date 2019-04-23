@@ -158,9 +158,10 @@ app.controller('flowCenterCtrl', function($scope,toaster,flowCenterService,messa
 		var deliveryWaveTime = $scope.search.deliveryWaveTime;
 		var startTime = $scope.search.startTime;
 		var endTime = $scope.search.endTime;
+		var receiveStatus = $scope.search.receiveStatus;
 		var sum = 0;
 		var data = '';
-		if (deliveryWaveTime === undefined || deliveryWaveTime == '') {
+		if (deliveryWaveTime === undefined || deliveryWaveTime == '' || deliveryWaveTime=='showAll') {
 			deliveryWaveTime = null;
 			sum++;
 		} else {
@@ -178,7 +179,16 @@ app.controller('flowCenterCtrl', function($scope,toaster,flowCenterService,messa
 		} else {
 			data += '&endTime=' + endTime;
 		}
-
+		if ( receiveStatus='showAll' || deliveryWaveTime === undefined || deliveryWaveTime == '') {
+			receiveStatus = null;
+			sum++;
+		} else {
+			data += '&receiveStatus=' + receiveStatus;
+		}
+		if(sum==4){
+			toaster.error("", "请输入搜索条件后导出!", 3000);
+			return;
+		}
 		//window.location.href = urls.ms + "/goods/goods/exportGoodsData.do?" + data.replace("&", "");
 		location.href = urls.ms + "/procurement/procurement/exportData.do?" + data.replace("&", "");
 		toaster.success("", "导出成功!", 1000);

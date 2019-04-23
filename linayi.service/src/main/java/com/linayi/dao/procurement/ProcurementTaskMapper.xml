@@ -698,11 +698,11 @@
                               join supermarket s on pt.supermarket_id=s.supermarket_id
       where
           pt.actual_quantity>0
-      <if test="startTime != null">
+      <if test="startTime != null and startTime !='' ">
           and
             #{startTime} &lt;= o.create_time
       </if>
-      <if test="endTime != null">
+      <if test="endTime != null and endTime != '' ">
           and
             o.create_time &lt;= #{endTime}
       </if>
