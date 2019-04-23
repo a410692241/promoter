@@ -302,6 +302,98 @@ public class ProcurementServiceImpl implements ProcurementService {
 		return list;
 	}
 
+	/**
+	 * 后台管理系统 流转中心
+	 * @param procurTask
+	 * @return
+	 */
+	private List<ProcurementTask> getProcurementTaskListByprocurTask(ProcurementTask procurTask){
+		Calendar cal = Calendar.getInstance();
+		if("showAll".equals(procurTask.getReceiveStatus()) || procurTask.getReceiveStatus() == null){
+			procurTask.setReceiveStatus("");
+		}
+		if("1".equals(procurTask.getDeliveryWaveTime())){
+			cal.set(Calendar.YEAR,2019);
+			cal.set(Calendar.MONTH,0);
+			cal.set(Calendar.DAY_OF_MONTH,1);
+			cal.set(Calendar.HOUR_OF_DAY, 8);
+			cal.set(Calendar.SECOND, 00);
+			cal.set(Calendar.MINUTE, 01);
+			cal.set(Calendar.MILLISECOND,0);
+
+			Date StartTime = cal.getTime();
+			procurTask.setWavePickingStartTime(StartTime);
+
+			cal.set(Calendar.HOUR_OF_DAY, 13);
+			cal.set(Calendar.SECOND, 00);
+			cal.set(Calendar.MINUTE, 00);
+			cal.set(Calendar.MILLISECOND,0);
+
+			Date endTime = cal.getTime();
+			procurTask.setWavePickingEndTime(endTime);
+		}
+		if("2".equals(procurTask.getDeliveryWaveTime())){
+			cal.set(Calendar.YEAR,2019);
+			cal.set(Calendar.MONTH,0);
+			cal.set(Calendar.DAY_OF_MONTH,1);
+			cal.set(Calendar.HOUR_OF_DAY, 13);
+			cal.set(Calendar.SECOND, 00);
+			cal.set(Calendar.MINUTE, 01);
+			cal.set(Calendar.MILLISECOND,0);
+
+			Date StartTime = cal.getTime();
+			procurTask.setWavePickingStartTime(StartTime);
+
+			cal.set(Calendar.HOUR_OF_DAY, 18);
+			cal.set(Calendar.SECOND, 00);
+			cal.set(Calendar.MINUTE, 00);
+			cal.set(Calendar.MILLISECOND,0);
+
+			Date endTime = cal.getTime();
+			procurTask.setWavePickingEndTime(endTime);
+		}
+		if("3".equals(procurTask.getDeliveryWaveTime())){
+			cal.set(Calendar.YEAR,2019);
+			cal.set(Calendar.MONTH,0);
+			cal.set(Calendar.DAY_OF_MONTH,1);
+			cal.set(Calendar.HOUR_OF_DAY, 18);
+			cal.set(Calendar.SECOND, 00);
+			cal.set(Calendar.MINUTE, 01);
+			cal.set(Calendar.MILLISECOND,0);
+
+			Date StartTime = cal.getTime();
+			procurTask.setWavePickingStartTime(StartTime);
+
+			cal.set(Calendar.HOUR_OF_DAY, 8);
+			cal.set(Calendar.SECOND, 00);
+			cal.set(Calendar.MINUTE, 00);
+			cal.set(Calendar.MILLISECOND,0);
+
+			Date endTime = cal.getTime();
+			procurTask.setWavePickingEndTime(endTime);
+		}
+
+		List<ProcurementTask> list = procurementTaskMapper.getProcurementsByRECEIVEDFLOW(procurTask);
+		for(int i=0;i<list.size();i++){
+			if("RECEIVED_FLOW".equals(list.get(i).getReceiveStatus())){
+				list.get(i).setReceiveStatus("待发货");
+			}else if("WAIT_RECEIVE".equals(list.get(i).getReceiveStatus())){
+				list.get(i).setReceiveStatus("已发货");
+			}
+			Date date = list.get(i).getCreateTime();
+			cal.setTime(date);
+			Integer hour = cal.get(Calendar.HOUR_OF_DAY);
+			if(8<=hour && hour<13){
+				list.get(i).setDeliveryWaveTime("第一波次");
+			}else if(13<=hour && hour<18){
+				list.get(i).setDeliveryWaveTime("第二波次");
+			}else{
+				list.get(i).setDeliveryWaveTime("第三波次");
+			}
+		}
+		return list;
+	}
+
 	@Override
 	public void updateProcurReceiveStatus(ProcurementTask procurementTask) {
 		String procurementTaskIdList = procurementTask.getProcurementTaskIdList();
