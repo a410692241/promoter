@@ -715,7 +715,7 @@
       <if test="receiveStatus != null and receiveStatus != '' ">
          and pt.receive_status = #{receiveStatus}
       </if>
-      <if test="receiveStatus == null ">
+      <if test="receiveStatus == '' ">
           and pt.receive_status in('RECEIVED_FLOW','WAIT_RECEIVE')
       </if>
   </select>

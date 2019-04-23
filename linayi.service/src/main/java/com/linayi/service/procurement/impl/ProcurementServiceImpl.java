@@ -642,7 +642,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 	 */
 	private List<ProcurementTask> getProcurementTaskListByprocurTask(ProcurementTask procurTask){
 		Calendar cal = Calendar.getInstance();
-		if("showAll".equals(procurTask.getReceiveStatus())){
+		if("showAll".equals(procurTask.getReceiveStatus()) || procurTask.getReceiveStatus() == null){
 			procurTask.setReceiveStatus("");
 		}
 		if("1".equals(procurTask.getDeliveryWaveTime())){

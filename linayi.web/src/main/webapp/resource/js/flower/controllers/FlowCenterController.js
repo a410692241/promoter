@@ -35,7 +35,7 @@ app.controller('flowCenterCtrl', function($scope,toaster,flowCenterService,messa
 				{name: 'actualQuantity', label: '数量', sortable: false},
 				{
 					name: 'price',
-					label: '商品单价',
+					label: '商品单价(元)',
 					width: 100,
 					sortable: false,
 					formatter: function (cellvalue, options, rowObject) {
