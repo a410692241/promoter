@@ -2,8 +2,6 @@ package com.linayi.service.user.impl;
 
 import com.linayi.dao.address.ReceiveAddressMapper;
 import com.linayi.dao.area.SmallCommunityMapper;
-import com.linayi.dao.goods.AttributeMapper;
-import com.linayi.dao.goods.CommunityGoodsMapper;
 import com.linayi.dao.goods.GoodsSkuMapper;
 import com.linayi.dao.user.ShoppingCarMapper;
 import com.linayi.dao.user.UserMapper;
@@ -11,20 +9,16 @@ import com.linayi.entity.area.SmallCommunity;
 import com.linayi.entity.goods.CommunityGoods;
 import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.goods.SupermarketGoods;
-import com.linayi.entity.promoter.OpenMemberInfo;
 import com.linayi.entity.user.ReceiveAddress;
 import com.linayi.entity.user.ShoppingCar;
 import com.linayi.entity.user.User;
 import com.linayi.enums.MemberLevel;
-import com.linayi.service.community.CommunityService;
-import com.linayi.service.goods.BrandService;
 import com.linayi.service.goods.CommunityGoodsService;
 import com.linayi.service.goods.SupermarketGoodsService;
 import com.linayi.service.promoter.OpenMemberInfoService;
 import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.service.user.ShopCarService;
 import com.linayi.util.*;
-import com.sun.imageio.plugins.common.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -114,7 +108,7 @@ public class ShopCarServiceImpl implements ShopCarService {
             GoodsSku goodsSku = goodsSkuMapper.getGoodsById(car.getGoodsSkuId());
 
             //图片信息处理
-            car.setGoodsSkuImage(OSSManageUtil.toShow(goodsSku.getImage()));
+            car.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
             car.setGoodsName(goodsSku.getFullName());
             if ("SELECTED".equals(car.getSelectStatus())){
                 //List<SupermarketGoods> supermarketGoodss = getSupermarketGoodsByGoodsSkuId(car);
@@ -219,7 +213,7 @@ public class ShopCarServiceImpl implements ShopCarService {
         for (ShoppingCar car : shoppingCars) {
             totalPipce += car.getQuantity();
             GoodsSku goodsSku = goodsSkuMapper.getGoodsById(car.getGoodsSkuId());
-            car.setGoodsSkuImage(OSSManageUtil.toShow(goodsSku.getImage()));
+            car.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
             car.setGoodsName(goodsSku.getFullName());
             CommunityGoods communityGoods = new CommunityGoods();
             communityGoods.setCommunityId(communityId);

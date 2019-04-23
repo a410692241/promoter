@@ -222,9 +222,9 @@ public class UserServiceImpl implements UserService {
 
         if (userInfo.getHeadImage() == null){
             //设置默认头像
-            userInfo.setHeadImage(OSSManageUtil.toShow(PropertiesUtil.getValueByKey(ConstantUtil.DEFAULT_AVATAR)));
+            userInfo.setHeadImage(ImageUtil.dealToShow(PropertiesUtil.getValueByKey(ConstantUtil.DEFAULT_AVATAR)));
         }else {
-            userInfo.setHeadImage(OSSManageUtil.toShow(userInfo.getHeadImage()));
+            userInfo.setHeadImage(ImageUtil.dealToShow(userInfo.getHeadImage()));
         }
         if (userInfo.getNickname() == null){
             userInfo.setNickname(" ");
@@ -272,7 +272,7 @@ public class UserServiceImpl implements UserService {
         if(headFile != null){
             //上传用户头像
             try {
-                realPath = OSSManageUtil.uploadFile(headFile);
+                realPath = ImageUtil.handleUpload(headFile);
                 user.setHeadImage(realPath);
             } catch (Exception e) {
                 e.printStackTrace();

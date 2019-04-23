@@ -26,6 +26,7 @@ import com.linayi.enums.DeliveryStatus;
 import com.linayi.enums.OrderStatus;
 import com.linayi.service.delivery.DeliveryTaskService;
 import com.linayi.util.ConstantUtil;
+import com.linayi.util.ImageUtil;
 import com.linayi.util.OSSManageUtil;
 import com.linayi.util.PropertiesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,7 +144,7 @@ public class DeliveryTaskServiceImpl implements DeliveryTaskService {
             Integer goodsSkuId = listProcurementTask.get(i).getGoodsSkuId();
             Integer actualQuantity = listProcurementTask.get(i).getActualQuantity();
             GoodsSku goodsSku = goodsSkuMapper.getGoodsById(goodsSkuId);
-            newGoodsSku.setImage(OSSManageUtil.toShow(goodsSku.getImage()));
+            newGoodsSku.setImage(ImageUtil.dealToShow(goodsSku.getImage()));
             newGoodsSku.setFullName(goodsSku.getFullName());
             newGoodsSku.setQuantity(actualQuantity);
             listGoodsSku.add(newGoodsSku);
@@ -162,7 +163,7 @@ public class DeliveryTaskServiceImpl implements DeliveryTaskService {
         String path = null;
         ordersMapper.updateStatusByOrdersId(ordersId);
         try {
-            path = OSSManageUtil.uploadFile(file);
+            path = ImageUtil.handleUpload(file);
             OrderBox orderBox = new OrderBox();
             orderBox.setBoxNo(boxNo);
             orderBox.setOrdersId(ordersId);
@@ -175,7 +176,7 @@ public class DeliveryTaskServiceImpl implements DeliveryTaskService {
 //		ordersMapper.updateStatusByOrdersId(ordersId);
 //		String path = null;
 //		try {
-//			path = OSSManageUtil.uploadFile(file);
+//			path = ImageUtil.handleUpload(file);
 //			DeliveryBox deliveryBox = new DeliveryBox();
 //			deliveryBox.setImage(path);
 //			deliveryBox.setDeliveryBoxId(deliveryBoxId);
@@ -292,7 +293,7 @@ public class DeliveryTaskServiceImpl implements DeliveryTaskService {
                 shoppingCar.setMinSupermarketName(name);
                 GoodsSku goodsSku = goodsSkuMapper.getGoodsById(procurementTask.getGoodsSkuId());
                 shoppingCar.setGoodsName(goodsSku.getName());
-                shoppingCar.setGoodsSkuImage(OSSManageUtil.toShow(goodsSku.getImage()));
+                shoppingCar.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
                 shoppingCar.setMinPrice(procurementTask.getPrice() + "");
                 shoppingCar.setQuantity(procurementTask.getActualQuantity());
                 shoppingCar.setHeJiPrice(procurementTask.getPrice() * procurementTask.getActualQuantity() + "");

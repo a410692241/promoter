@@ -13,6 +13,7 @@ import com.linayi.enums.SpokesmanStatus;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.spokesman.SpokesmanService;
 import com.linayi.service.user.AuthenticationApplyService;
+import com.linayi.util.ImageUtil;
 import com.linayi.util.OSSManageUtil;
 import com.linayi.util.ResponseData;
 import org.springframework.stereotype.Service;
@@ -51,8 +52,8 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				authenticationApply.setRealName(apply.getRealName());
 				authenticationApply.setMobile(apply.getMobile());
 				authenticationApply.setUserId(apply.getUserId());
-				authenticationApply.setIdCardFront(OSSManageUtil.uploadFile(file[0]));
-				authenticationApply.setIdCardBack(OSSManageUtil.uploadFile(file[1]));
+				authenticationApply.setIdCardFront(ImageUtil.handleUpload(file[0]));
+				authenticationApply.setIdCardBack(ImageUtil.handleUpload(file[1]));
 				authenticationApply.setCreateTime(new Date());
 				authenticationApply.setUpdateTime(new Date());
 				authenticationApply.setStatus("WAIT_AUDIT");
@@ -74,8 +75,8 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 					authenticationApply.setRealName(apply.getRealName());
 					authenticationApply.setMobile(apply.getMobile());
 					authenticationApply.setUserId(apply.getUserId());
-					authenticationApply.setIdCardFront(OSSManageUtil.uploadFile(file[0]));
-					authenticationApply.setIdCardBack(OSSManageUtil.uploadFile(file[1]));
+					authenticationApply.setIdCardFront(ImageUtil.handleUpload(file[0]));
+					authenticationApply.setIdCardBack(ImageUtil.handleUpload(file[1]));
 					authenticationApply.setCreateTime(new Date());
 					authenticationApply.setUpdateTime(new Date());
 					authenticationApply.setStatus("WAIT_AUDIT");
@@ -274,8 +275,8 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				authenticationApply.setRealName(apply.getRealName());
 				authenticationApply.setMobile(apply.getMobile());
 				authenticationApply.setUserId(apply.getUserId());
-				authenticationApply.setIdCardFront(OSSManageUtil.uploadFile(file[0]));
-				authenticationApply.setIdCardBack(OSSManageUtil.uploadFile(file[1]));
+				authenticationApply.setIdCardFront(ImageUtil.handleUpload(file[0]));
+				authenticationApply.setIdCardBack(ImageUtil.handleUpload(file[1]));
 				authenticationApply.setCreateTime(new Date());
 				authenticationApply.setUpdateTime(new Date());
 				authenticationApply.setStatus("WAIT_AUDIT");
@@ -300,8 +301,8 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 					authenticationApply.setRealName(apply.getRealName());
 					authenticationApply.setMobile(apply.getMobile());
 					authenticationApply.setUserId(apply.getUserId());
-					authenticationApply.setIdCardFront(OSSManageUtil.uploadFile(file[0]));
-					authenticationApply.setIdCardBack(OSSManageUtil.uploadFile(file[1]));
+					authenticationApply.setIdCardFront(ImageUtil.handleUpload(file[0]));
+					authenticationApply.setIdCardBack(ImageUtil.handleUpload(file[1]));
 					authenticationApply.setCreateTime(new Date());
 					authenticationApply.setUpdateTime(new Date());
 					authenticationApply.setStatus("WAIT_AUDIT");
@@ -330,8 +331,8 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				authenticationApply.setRealName(apply.getRealName());
 				authenticationApply.setMobile(apply.getMobile());
 				authenticationApply.setUserId(apply.getUserId());
-				authenticationApply.setIdCardFront(OSSManageUtil.uploadFile(file[0]));
-				authenticationApply.setIdCardBack(OSSManageUtil.uploadFile(file[1]));
+				authenticationApply.setIdCardFront(ImageUtil.handleUpload(file[0]));
+				authenticationApply.setIdCardBack(ImageUtil.handleUpload(file[1]));
 				authenticationApply.setCreateTime(new Date());
 				authenticationApply.setUpdateTime(new Date());
 				authenticationApply.setStatus("WAIT_AUDIT");
@@ -355,8 +356,8 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 					authenticationApply.setRealName(apply.getRealName());
 					authenticationApply.setMobile(apply.getMobile());
 					authenticationApply.setUserId(apply.getUserId());
-					authenticationApply.setIdCardFront(OSSManageUtil.uploadFile(file[0]));
-					authenticationApply.setIdCardBack(OSSManageUtil.uploadFile(file[1]));
+					authenticationApply.setIdCardFront(ImageUtil.handleUpload(file[0]));
+					authenticationApply.setIdCardBack(ImageUtil.handleUpload(file[1]));
 					authenticationApply.setCreateTime(new Date());
 					authenticationApply.setUpdateTime(new Date());
 					authenticationApply.setStatus("WAIT_AUDIT");
@@ -386,7 +387,7 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				apply.setAuthenticationType("SPOKESMAN");
 				apply.setCreateTime(now);
 				apply.setUpdateTime(now);
-				apply.setImage(OSSManageUtil.uploadFile(file));
+				apply.setImage(ImageUtil.handleUpload(file));
 				authenticationApplyMapper.insert(apply);
 				return new ResponseData("操作成功！").toString();
 			} catch (Exception e) {

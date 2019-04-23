@@ -23,6 +23,7 @@ import com.linayi.service.order.OrderService;
 import com.linayi.service.procurement.ProcurementService;
 import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.util.DateUtil;
+import com.linayi.util.ImageUtil;
 import com.linayi.util.OSSManageUtil;
 import com.linayi.util.PageResult;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -115,7 +116,7 @@ public class ProcurementServiceImpl implements ProcurementService {
             for (ProcurementTask task : procurementTaskList) {
             	if(task != null){
 					GoodsSku goods = goodsSkuMapper.getGoodsById(task.getGoodsSkuId());
-					task.setGoodsImage(OSSManageUtil.toShow(goods.getImage()));
+					task.setGoodsImage(ImageUtil.dealToShow(goods.getImage()));
 				}
             }
         }
@@ -127,7 +128,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 	public List<ProcurementTask> getCommunityProcurement(ProcurementTask procurementTask) {
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementList(procurementTask);
 		for (ProcurementTask task : procurementTaskList) {
-			task.setGoodsImage(OSSManageUtil.toShow(task.getGoodsImage()));
+			task.setGoodsImage(ImageUtil.dealToShow(task.getGoodsImage()));
 		}
 		return procurementTaskList;
 	}
@@ -600,7 +601,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		//图片处理
 		for(ProcurementTask pp:currentProcurementTask){
 			String image = pp.getGoodsImage();
-			pp.setGoodsImage(OSSManageUtil.toShow(image));
+			pp.setGoodsImage(ImageUtil.dealToShow(image));
 		}
 
 		return currentProcurementTask;
@@ -688,7 +689,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		List<ProcurementTask> list = procurementTaskMapper.getNotReceivingGoods(procurTask);
 		for(int i=0;i<list.size();i++){
 			String image = list.get(i).getImage();
-			list.get(i).setImage(OSSManageUtil.toShow(image));
+			list.get(i).setImage(ImageUtil.dealToShow(image));
 			list.get(i).setAccessTime(new Date());
 		}
 		return list;
@@ -710,7 +711,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		List<ProcurementTask> list = procurementTaskMapper.getNotDeliverGoods(procurTask);
 		for(int i=0;i<list.size();i++){
 			String image = list.get(i).getImage();
-			list.get(i).setImage(OSSManageUtil.toShow(image));
+			list.get(i).setImage(ImageUtil.dealToShow(image));
 		}
 		return list;
 	}
@@ -731,7 +732,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		List<ProcurementTask> list = procurementTaskMapper.getDeliverGoodsList(procurTask);
 		for(int i=0;i<list.size();i++){
 			String image = list.get(i).getImage();
-			list.get(i).setImage(OSSManageUtil.toShow(image));
+			list.get(i).setImage(ImageUtil.dealToShow(image));
 		}
 		return list;
 	}
