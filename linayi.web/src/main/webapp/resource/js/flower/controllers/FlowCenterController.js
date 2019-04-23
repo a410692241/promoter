@@ -12,6 +12,7 @@ app.controller('flowCenterCtrl', function($scope,toaster,flowCenterService,messa
 	/**列表查询*/
 	function list() {
 		var $grid = $("#correctList");
+		item_selected = new Array();
 		if ($grid[0].grid) {
 			$grid.jqGrid('setGridParam', {
 				page: 1,
@@ -145,7 +146,7 @@ app.controller('flowCenterCtrl', function($scope,toaster,flowCenterService,messa
 				list();
 				item_selected = new Array();
 				$('#correctList').jqGrid('setGridParam', {
-					url: urls.ms + "/procurement/procurement/batchDelivery.do",
+					url: urls.ms + "/procurement/procurement/list.do",
 					postData: $scope.search,
 					datatype: 'json',
 					page: page,
@@ -160,6 +161,7 @@ app.controller('flowCenterCtrl', function($scope,toaster,flowCenterService,messa
 		var endTime = $scope.search.endTime;
 		var receiveStatus = $scope.search.receiveStatus;
 		var sum = 0;
+		var total = 0;
 		var data = '';
 		if (deliveryWaveTime === undefined || deliveryWaveTime == '' || deliveryWaveTime=='showAll') {
 			deliveryWaveTime = null;
@@ -189,6 +191,7 @@ app.controller('flowCenterCtrl', function($scope,toaster,flowCenterService,messa
 			toaster.error("", "请输入搜索条件后导出!", 3000);
 			return;
 		}
+
 		//window.location.href = urls.ms + "/goods/goods/exportGoodsData.do?" + data.replace("&", "");
 		location.href = urls.ms + "/procurement/procurement/exportData.do?" + data.replace("&", "");
 		toaster.success("", "导出成功!", 1000);
