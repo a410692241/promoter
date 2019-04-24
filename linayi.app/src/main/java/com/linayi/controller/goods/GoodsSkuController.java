@@ -10,6 +10,7 @@ import com.linayi.exception.ErrorType;
 import com.linayi.service.goods.GoodsSkuService;
 import com.linayi.service.goods.SupermarketGoodsService;
 import com.linayi.service.supermarket.SupermarketService;
+import com.linayi.util.PageResult;
 import com.linayi.util.ParamValidUtil;
 import com.linayi.util.ResponseData;
 import com.linayi.vo.promoter.PromoterVo;
@@ -253,7 +254,7 @@ public class GoodsSkuController extends BaseController {
                 return new ResponseData(goodsSku);
             }
             List<GoodsSku> goodsSkus = goodsSkuService.searchByKey(esConfig);
-            return new ResponseData(goodsSkus);
+            return new PageResult<>(goodsSkus,esConfig);
         } catch (BusinessException e) {
             return new ResponseData(e.getErrorType());
         } catch (Exception e) {

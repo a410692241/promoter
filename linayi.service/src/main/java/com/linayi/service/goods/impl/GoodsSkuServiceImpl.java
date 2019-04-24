@@ -902,11 +902,13 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
         searchRequest.indices("community_goods_index");
         SearchResponse response = esClient.search(searchRequest, RequestOptions.DEFAULT);
         SearchHits hits = response.getHits();
+        long totalHits = hits.getTotalHits();
         List<GoodsSku> goodsSkus = new ArrayList<>();
         //获取当前数据
         //获取的带有价格的数据,额外添加规格属性,商品图
         for (SearchHit hit : hits) {
             GoodsSku esGoodsSkuByHit = getEsGoodsSkuByHit(hit, keyword);
+
             Long goodsSkuId = esGoodsSkuByHit.getGoodsSkuId();
             GetRequest goods_index = new GetRequest("goods_sku_index", "goods_sku", goodsSkuId + "");
             GetResponse goods_index_resp = esClient.get(goods_index, RequestOptions.DEFAULT);
@@ -918,6 +920,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 
             goodsSkus.add(esGoodsSkuByHit);
         }
+        esConfig.setTotal( Integer.parseInt(totalHits + ""));
         return goodsSkus;
 
 
