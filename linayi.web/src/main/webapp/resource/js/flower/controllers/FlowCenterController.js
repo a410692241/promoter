@@ -125,36 +125,40 @@ app.controller('flowCenterCtrl', function($scope,toaster,flowCenterService,messa
 		});
 	}
 	function batchDelivery() {
-		var procurementTaskIdList = [];
-		for (var i = 0; i < item_selected.length; i++) {
-			procurementTaskIdList[i] = parseInt(item_selected[i]);
-		}
-		if(procurementTaskIdList.length==0){
-			toaster.error("", "请先选择要发货的商品", 3000);
-			return;
-		}
-		var params = {procurementTaskIdList: procurementTaskIdList};
-		$.ajax({
-			url: urls.ms + "/procurement/procurement/batchDelivery.do",
-			data: params,
-			dataType: 'json',
-			type: "POST",
-			success: function (data) {
-				if (data.respCode === "S") {
-					var page = $('#correctList').getGridParam('page')
-					toaster.success("", "操作成功", 3000);
-				} else {
-					toaster.error("", "操作失败", 3000);
-				}
-				list();
-				item_selected = new Array();
-				$('#correctList').jqGrid('setGridParam', {
-					url: urls.ms + "/procurement/procurement/list.do",
-					postData: $scope.search,
-					datatype: 'json',
-					page: page,
-				}).trigger("reloadGrid");
+		messager.confirm("确认发货？",function( $modalInstance ) {
+			var procurementTaskIdList = [];
+			for (var i = 0; i < item_selected.length; i++) {
+				procurementTaskIdList[i] = parseInt(item_selected[i]);
 			}
+			if (procurementTaskIdList.length == 0) {
+				toaster.error("", "请先选择要发货的商品", 3000);
+				return;
+			}
+			var params = {procurementTaskIdList: procurementTaskIdList};
+			$.ajax({
+				url: urls.ms + "/procurement/procurement/batchDelivery.do",
+				data: params,
+				dataType: 'json',
+				type: "POST",
+				success: function (data) {
+					if (data.respCode === "S") {
+						$modalInstance.close();
+						var page = $('#correctList').getGridParam('page')
+						toaster.success("", "操作成功", 3000);
+					} else {
+						$modalInstance.close();
+						toaster.error("", "操作失败", 3000);
+					}
+					list();
+					item_selected = new Array();
+					$('#correctList').jqGrid('setGridParam', {
+						url: urls.ms + "/procurement/procurement/list.do",
+						postData: $scope.search,
+						datatype: 'json',
+						page: page,
+					}).trigger("reloadGrid");
+				}
+			});
 		});
 	}
 	//导出数据

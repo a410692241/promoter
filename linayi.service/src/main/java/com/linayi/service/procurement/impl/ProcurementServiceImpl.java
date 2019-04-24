@@ -392,6 +392,8 @@ public class ProcurementServiceImpl implements ProcurementService {
 				list.get(i).setReceiveStatus("待发货");
 			}else if("WAIT_RECEIVE".equals(list.get(i).getReceiveStatus())){
 				list.get(i).setReceiveStatus("已发货");
+			}else{
+				list.get(i).setReceiveStatus("已发货");
 			}
 			Date date = list.get(i).getCreateTime();
 			cal.setTime(date);

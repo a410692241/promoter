@@ -718,7 +718,7 @@
          and pt.receive_status = #{receiveStatus}
       </if>
       <if test="receiveStatus == '' ">
-          and pt.receive_status in('RECEIVED_FLOW','WAIT_RECEIVE')
+          and pt.receive_status in('RECEIVED_FLOW','WAIT_RECEIVE','RECEIVED')
       </if>
   </select>
     <!--  后台管理系统 流转中心查询出已发货信息
@@ -753,11 +753,14 @@
             CONCAT('2019-01-01 ',DATE_FORMAT(o.create_time, '%H:%i:%s')) &lt; #{wavePickingEndTimeTo})
             )
         </if>
-        <if test="receiveStatus != null and receiveStatus != '' ">
-            and pt.receive_status = #{receiveStatus}
+        <if test="receiveStatus ='RECEIVED_FLOW'  ">
+            and pt.receive_status = 'RECEIVED_FLOW'
+        </if>
+        <if test="WAIT_RECEIVE">
+            and pt.receive_status in('WAIT_RECEIVE','RECEIVED')
         </if>
         <if test="receiveStatus == '' ">
-            and pt.receive_status in('RECEIVED_FLOW','WAIT_RECEIVE')
+            and pt.receive_status in('RECEIVED_FLOW','WAIT_RECEIVE','RECEIVED')
         </if>
     </select>
 </mapper>
