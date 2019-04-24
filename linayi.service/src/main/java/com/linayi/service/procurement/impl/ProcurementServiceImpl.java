@@ -344,8 +344,8 @@ public class ProcurementServiceImpl implements ProcurementService {
 			procurTask.setWavePickingStartTime(StartTime);
 
 			cal.set(Calendar.HOUR_OF_DAY, 13);
-			cal.set(Calendar.SECOND, 00);
-			cal.set(Calendar.MINUTE, 59);
+			cal.set(Calendar.SECOND, 59);
+			cal.set(Calendar.MINUTE, 00);
 			cal.set(Calendar.MILLISECOND,59);
 
 			Date endTime = cal.getTime();
@@ -365,8 +365,8 @@ public class ProcurementServiceImpl implements ProcurementService {
 			procurTask.setWavePickingStartTime(StartTime);
 
 			cal.set(Calendar.HOUR_OF_DAY, 18);
-			cal.set(Calendar.SECOND, 00);
-			cal.set(Calendar.MINUTE, 59);
+			cal.set(Calendar.SECOND, 59);
+			cal.set(Calendar.MINUTE, 00);
 			cal.set(Calendar.MILLISECOND,59);
 
 			Date endTime = cal.getTime();
@@ -402,8 +402,8 @@ public class ProcurementServiceImpl implements ProcurementService {
 			procurTask.setWavePickingStartTime(StartTime);
 
 			cal.set(Calendar.HOUR_OF_DAY, 8);
-			cal.set(Calendar.SECOND, 00);
-			cal.set(Calendar.MINUTE, 59);
+			cal.set(Calendar.SECOND, 59);
+			cal.set(Calendar.MINUTE, 00);
 			cal.set(Calendar.MILLISECOND,59);
 
 			endTime = cal.getTime();
