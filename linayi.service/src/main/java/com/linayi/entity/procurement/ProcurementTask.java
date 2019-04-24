@@ -139,6 +139,10 @@ public class ProcurementTask extends BaseEntity{
 
     private Date wavePickingEndTime;//配送波次结束时间
 
+    private Date wavePickingStartTimeTo;//第三波次第二段时间
+
+    private Date wavePickingEndTimeTo;//第三波次第二段时间
+
     public Date getFlowOutTime() {
         return flowOutTime;
     }
@@ -569,6 +573,21 @@ public class ProcurementTask extends BaseEntity{
 
     public void setWavePickingEndTime(Date wavePickingEndTime) {
         this.wavePickingEndTime = wavePickingEndTime;
+    }
+
+    public Date getWavePickingStartTimeTo() {
+        return wavePickingStartTimeTo;
+    }
+
+    public void setWavePickingStartTimeTo(Date wavePickingStartTimeTo) {
+        this.wavePickingStartTimeTo = wavePickingStartTimeTo;
+    }
+    public Date getWavePickingEndTimeTo() {
+        return wavePickingEndTimeTo;
+    }
+
+    public void setWavePickingEndTimeTo(Date wavePickingEndTimeTo) {
+        this.wavePickingEndTimeTo = wavePickingEndTimeTo;
     }
 
 }
