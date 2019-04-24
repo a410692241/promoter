@@ -714,8 +714,11 @@
           and
           CONCAT('2019-01-01 ',DATE_FORMAT(o.create_time, '%H:%i:%s')) &lt; #{wavePickingEndTime}
       </if>
-      <if test="receiveStatus != null and receiveStatus != '' ">
-         and pt.receive_status = #{receiveStatus}
+      <if test="receiveStatus =='RECEIVED_FLOW'  ">
+          and pt.receive_status = 'RECEIVED_FLOW'
+      </if>
+      <if test="receiveStatus =='WAIT_RECEIVE'">
+          and pt.receive_status in('WAIT_RECEIVE','RECEIVED')
       </if>
       <if test="receiveStatus == '' ">
           and pt.receive_status in('RECEIVED_FLOW','WAIT_RECEIVE','RECEIVED')
@@ -753,10 +756,10 @@
             CONCAT('2019-01-01 ',DATE_FORMAT(o.create_time, '%H:%i:%s')) &lt; #{wavePickingEndTimeTo})
             )
         </if>
-        <if test="receiveStatus ='RECEIVED_FLOW'  ">
+        <if test="receiveStatus =='RECEIVED_FLOW'  ">
             and pt.receive_status = 'RECEIVED_FLOW'
         </if>
-        <if test="WAIT_RECEIVE">
+        <if test="receiveStatus =='WAIT_RECEIVE'">
             and pt.receive_status in('WAIT_RECEIVE','RECEIVED')
         </if>
         <if test="receiveStatus == '' ">
