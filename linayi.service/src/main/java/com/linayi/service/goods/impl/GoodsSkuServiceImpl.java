@@ -45,6 +45,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -944,7 +945,10 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
         int maxPrice = Integer.parseInt(resultMap.get("maxPrice" + PriceKeyWord) + "");
         goodsSku.setMinPrice(minPrice);
         goodsSku.setSoldNum(Integer.parseInt(resultMap.get("soldNum") + ""));
-        goodsSku.setSpreadRate((maxPrice - minPrice) * 100 / Double.parseDouble(minPrice + ""));
+        double spreadRate = (maxPrice - minPrice) * 100 / Double.parseDouble("" + minPrice);
+        BigDecimal bigDecimal = new BigDecimal(spreadRate);
+        double v = bigDecimal.setScale(2, BigDecimal.ROUND_DOWN).doubleValue();
+        goodsSku.setSpreadRate(v);
         return goodsSku;
     }
 

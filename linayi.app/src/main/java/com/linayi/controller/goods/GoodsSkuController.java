@@ -254,7 +254,8 @@ public class GoodsSkuController extends BaseController {
                 return new ResponseData(goodsSku);
             }
             List<GoodsSku> goodsSkus = goodsSkuService.searchByKey(esConfig);
-            return new PageResult<>(goodsSkus,esConfig);
+            PageResult<GoodsSku> goodsSkuPageResult = new PageResult<>(goodsSkus, esConfig);
+            return new ResponseData(goodsSkuPageResult);
         } catch (BusinessException e) {
             return new ResponseData(e.getErrorType());
         } catch (Exception e) {
