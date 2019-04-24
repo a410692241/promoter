@@ -381,6 +381,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 			Date StartTime = cal.getTime();
 			procurTask.setWavePickingStartTime(StartTime);
 
+			cal.set(Calendar.DAY_OF_MONTH,2);
 			cal.set(Calendar.HOUR_OF_DAY, 8);
 			cal.set(Calendar.SECOND, 00);
 			cal.set(Calendar.MINUTE, 00);
