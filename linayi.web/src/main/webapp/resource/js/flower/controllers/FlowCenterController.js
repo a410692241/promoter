@@ -125,15 +125,15 @@ app.controller('flowCenterCtrl', function($scope,toaster,flowCenterService,messa
 		});
 	}
 	function batchDelivery() {
+		var procurementTaskIdList = [];
+		for (var i = 0; i < item_selected.length; i++) {
+			procurementTaskIdList[i] = parseInt(item_selected[i]);
+		}
+		if (procurementTaskIdList.length == 0) {
+			toaster.error("", "请先选择要发货的商品", 3000);
+			return;
+		}
 		messager.confirm("确认发货？",function( $modalInstance ) {
-			var procurementTaskIdList = [];
-			for (var i = 0; i < item_selected.length; i++) {
-				procurementTaskIdList[i] = parseInt(item_selected[i]);
-			}
-			if (procurementTaskIdList.length == 0) {
-				toaster.error("", "请先选择要发货的商品", 3000);
-				return;
-			}
 			var params = {procurementTaskIdList: procurementTaskIdList};
 			$.ajax({
 				url: urls.ms + "/procurement/procurement/batchDelivery.do",
