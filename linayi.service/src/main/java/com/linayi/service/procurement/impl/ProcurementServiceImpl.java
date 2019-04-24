@@ -38,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -325,7 +326,6 @@ public class ProcurementServiceImpl implements ProcurementService {
 	 * @return
 	 */
 	private List<ProcurementTask> getProcurementTaskListByprocurTask(ProcurementTask procurTask){
-		Calendar cal = Calendar.getInstance();
 		List<ProcurementTask> list = new ArrayList<>();
 		if("showAll".equals(procurTask.getReceiveStatus()) || procurTask.getReceiveStatus() == null){
 			procurTask.setReceiveStatus("");
@@ -334,84 +334,59 @@ public class ProcurementServiceImpl implements ProcurementService {
 			list = procurementTaskMapper.getProcurementsByRECEIVEDFLOW(procurTask);
 		}
 		if("1".equals(procurTask.getDeliveryWaveTime())){
-			cal.set(Calendar.YEAR,2019);
-			cal.set(Calendar.MONTH,0);
-			cal.set(Calendar.DAY_OF_MONTH,1);
-			cal.set(Calendar.HOUR_OF_DAY, 8);
-			cal.set(Calendar.SECOND, 00);
-			cal.set(Calendar.MINUTE, 00);
-			cal.set(Calendar.MILLISECOND,0);
+		    try {
+                String str = "2019-01-01 08:00:00";
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date StartTime = sdf.parse(str);
+                procurTask.setWavePickingStartTime(StartTime);
 
-			Date StartTime = cal.getTime();
-			procurTask.setWavePickingStartTime(StartTime);
+                str = "2019-01-01 13:00:00";
+                Date endTime = sdf.parse(str);
+                procurTask.setWavePickingEndTime(endTime);
+                list = procurementTaskMapper.getProcurementsByRECEIVEDFLOW(procurTask);
+            }catch (Exception e){
 
-			cal.set(Calendar.HOUR_OF_DAY, 13);
-			cal.set(Calendar.SECOND, 00);
-			cal.set(Calendar.MINUTE, 00);
-			cal.set(Calendar.MILLISECOND,0);
-
-			Date endTime = cal.getTime();
-			procurTask.setWavePickingEndTime(endTime);
-			list = procurementTaskMapper.getProcurementsByRECEIVEDFLOW(procurTask);
+            }
 		}
 		if("2".equals(procurTask.getDeliveryWaveTime())){
-			cal.set(Calendar.YEAR,2019);
-			cal.set(Calendar.MONTH,0);
-			cal.set(Calendar.DAY_OF_MONTH,1);
-			cal.set(Calendar.HOUR_OF_DAY, 13);
-			cal.set(Calendar.SECOND, 00);
-			cal.set(Calendar.MINUTE, 00);
-			cal.set(Calendar.MILLISECOND,0);
+            try {
+                String str = "2019-01-01 13:00:00";
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date StartTime = sdf.parse(str);
+                procurTask.setWavePickingStartTime(StartTime);
 
-			Date StartTime = cal.getTime();
-			procurTask.setWavePickingStartTime(StartTime);
+                str = "2019-01-01 18:00:00";
+                Date endTime = sdf.parse(str);
+                procurTask.setWavePickingEndTime(endTime);
+                list = procurementTaskMapper.getProcurementsByRECEIVEDFLOW(procurTask);
+            }catch (Exception e){
 
-			cal.set(Calendar.HOUR_OF_DAY, 18);
-			cal.set(Calendar.SECOND, 00);
-			cal.set(Calendar.MINUTE, 00);
-			cal.set(Calendar.MILLISECOND,0);
-
-			Date endTime = cal.getTime();
-			procurTask.setWavePickingEndTime(endTime);
-			list = procurementTaskMapper.getProcurementsByRECEIVEDFLOW(procurTask);
+            }
 		}
 		if("3".equals(procurTask.getDeliveryWaveTime())){
-			cal.set(Calendar.YEAR,2019);
-			cal.set(Calendar.MONTH,0);
-			cal.set(Calendar.DAY_OF_MONTH,1);
-			cal.set(Calendar.HOUR_OF_DAY, 18);
-			cal.set(Calendar.SECOND, 00);
-			cal.set(Calendar.MINUTE, 00);
-			cal.set(Calendar.MILLISECOND,0);
+            try {
+                String str = "2019-01-01 18:00:00";
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date StartTime = sdf.parse(str);
+                procurTask.setWavePickingStartTime(StartTime);
 
-			Date StartTime = cal.getTime();
-			procurTask.setWavePickingStartTime(StartTime);
+                str = "2019-01-01 23:59:59";
+                Date endTime = sdf.parse(str);
+                procurTask.setWavePickingEndTime(endTime);
 
-			cal.set(Calendar.HOUR_OF_DAY, 23);
-			cal.set(Calendar.SECOND, 59);
-			cal.set(Calendar.MINUTE, 59);
-			cal.set(Calendar.MILLISECOND,0);
+                str = "2019-01-01 00:00:00";
+                StartTime = sdf.parse(str);
+                str = "2019-01-01 08:00:00";
+                endTime = sdf.parse(str);
+                procurTask.setWavePickingEndTimeTo(endTime);
+                procurTask.setWavePickingStartTimeTo(StartTime);
+                list = procurementTaskMapper.getProcurementsByRECEIVEDFLOWThree(procurTask);
+            }catch (Exception e){
 
-			Date endTime = cal.getTime();
-			procurTask.setWavePickingEndTime(endTime);
-
-			cal.set(Calendar.HOUR_OF_DAY, 00);
-			cal.set(Calendar.SECOND, 00);
-			cal.set(Calendar.MINUTE, 00);
-			cal.set(Calendar.MILLISECOND,00);
-			StartTime = cal.getTime();
-			procurTask.setWavePickingStartTimeTo(StartTime);
-
-			cal.set(Calendar.HOUR_OF_DAY, 8);
-			cal.set(Calendar.SECOND, 0);
-			cal.set(Calendar.MINUTE, 00);
-			cal.set(Calendar.MILLISECOND,0);
-
-			endTime = cal.getTime();
-			procurTask.setWavePickingEndTimeTo(endTime);
-			list = procurementTaskMapper.getProcurementsByRECEIVEDFLOWThree(procurTask);
+            }
 		}
 
+		Calendar cal =Calendar.getInstance();
 		for(int i=0;i<list.size();i++){
 			if("RECEIVED_FLOW".equals(list.get(i).getReceiveStatus())){
 				list.get(i).setReceiveStatus("待发货");
