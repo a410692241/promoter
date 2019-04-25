@@ -5,14 +5,12 @@ import com.linayi.entity.user.User;
 import com.linayi.service.user.UserService;
 import com.linayi.util.PageResult;
 import com.linayi.util.ResponseData;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Date;
 import java.util.List;
 
 
@@ -48,8 +46,10 @@ public class UserController {
     @RequestMapping("/get.do")
     @ResponseBody
     public Object get(Integer userId) {
-        User list = userService.selectUserByuserId(userId);
-        return list;
+        User user = userService.selectUserByuserId(userId);
+        ModelAndView mv = new ModelAndView("/jsp/user/UserInformationEdit");
+        mv.addObject("user", user);
+        return mv;
     }
 
 }

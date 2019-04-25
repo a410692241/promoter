@@ -48,7 +48,7 @@ app.controller('supermarketCtrl', function($scope,toaster,supermarketService,mes
 				{name:'name',label:'名称',sortable:false}, 
 				{name:'areaName',label:'地址',sortable:false,width:80}, 
 				{name:'address',label:'详细地址',sortable:false},
-				{name:'userId',label:'用户编号',sortable:false},
+				{name:'userId',label:'用户编号',sortable:false,hidden:true},
                 {name:'procurerId',label:'采买员编号',sortable:false},
 				{name:'createTime',label:'创建时间',sortable:false,formatter:function( cellvalue, options, rowObject ){
 					return cellvalue ? new Date( cellvalue ).format("yyyy-MM-dd hh:mm:ss") : "";

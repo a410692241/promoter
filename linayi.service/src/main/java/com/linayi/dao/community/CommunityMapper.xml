@@ -14,12 +14,12 @@
 		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
 	</resultMap>
 	<insert id="insert" parameterType="com.linayi.entity.community.Community">
-    insert into community (community_id, name, mobile, 
-      qq, email, address, 
+    insert into community (community_id, name, mobile,
+      qq, email, address,
       status, area_code,create_time, update_time
       )
-    values (#{communityId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
-      #{qq,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+    values (#{communityId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR},
+      #{qq,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
       #{status,jdbcType=VARCHAR},#{areaCode,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -105,6 +105,9 @@
 			<if test="address != '' and address != null">
 				AND address LIKE concat('%',#{address},'%')
 			</if>
+			<if test="areaCode != '' and areaCode != null">
+				AND area_code = ${areaCode}
+			</if>
 			<if test="email != '' and email != null">
 				AND email=#{email}
 			</if>
@@ -115,6 +118,20 @@
 		</where>
 		ORDER BY community_id DESC
 	</select>
+
+	<select id="getCommunityByAreaCode" resultType="com.linayi.entity.community.Community">
+		SELECT `community_id`, `name`, `mobile`, `qq`, `email`, `area_code`, `address`, `status`, `create_time`, `update_time` FROM community where area_code = #{areaCode}
+	</select>
+
+	<select id="getCommunityByCommunityIdList" resultMap="BaseResultMap">
+		select `community_id`, `name`, `mobile`, `qq`, `email`, `area_code`, `address`, `status`, `create_time`,
+		`update_time` from community
+		where community_id in
+		<foreach collection="communityIdList" item="communityId" index="" open="(" separator="," close=")">
+			#{communityId}
+		</foreach>
+	</select>
+
 
 	<!-- 获取社区信息 Community getCommunity(Community community); -->
 	<select id="getCommunity" resultType="com.linayi.entity.community.Community">
@@ -185,7 +202,7 @@
 			parameterType="com.linayi.entity.community.Community">
   	SELECT
   		community_id
-  	FROM 
+  	FROM
   		community
   	WHERE
   		name LIKE concat('%',#{name},'%')
@@ -193,12 +210,12 @@
 
 	<!-- 通过社区Id改变状态 达到删除社区功能 Integer removeCommunity(Integer communityId); -->
 	<update id="removeCommunity">
-  		UPDATE  
+  		UPDATE
   			community
   		set
    			status = 'REMOVED'
-   		WHERE 
-   			community_id = #{communityId}	
+   		WHERE
+   			community_id = #{communityId}
   </update>
 
 
@@ -211,7 +228,6 @@
   		WHERE
   			u.user_id=#{userId}
 	</select>
-
 	<select id="getcommunityIdByuserIdInDefaultAddress" resultType="java.lang.Integer">
 		SELECT
 			sc.community_id

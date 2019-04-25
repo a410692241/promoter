@@ -21,7 +21,7 @@ app.controller('orderStoreCtrl', function($scope,toaster,orderStoreService,messa
 	
 	/**列表查询*/
 	function list(){
-		var $grid = $("#orderStoreList");
+		var $grid = $("#correctList");
 		if( $grid[0].grid ){
 			$grid.jqGrid('setGridParam', {
 				page : 1,
@@ -30,9 +30,10 @@ app.controller('orderStoreCtrl', function($scope,toaster,orderStoreService,messa
 			return;
 		}
 		$grid.jqGrid({
-			url : urls.ms+"/flower/orderStore/list.do",
-			postData:$scope.search,
-			pager : "#orderStorePager",
+			url: urls.ms + "/procurement/procurement/list.do",
+			postData: $scope.search,
+			pager: "#correctPager",
+			multiselect: true,
 			colModel : [
 				{name:'orderStoreId',label:'主键',sortable:false}, 
 				{name:'orderId',label:'订单ID',sortable:false}, 

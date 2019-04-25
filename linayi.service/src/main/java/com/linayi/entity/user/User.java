@@ -22,6 +22,8 @@ public class User extends BaseEntity implements Serializable {
     
     /**下单员等级*/
     private String orderManLevel;
+
+    private String isFlow;//是否流转中心
     
     /**
      * [昵称]
@@ -460,5 +462,13 @@ public class User extends BaseEntity implements Serializable {
 
     public void setIsShop(String isShop) {
         this.isShop = isShop;
+    }
+
+    public String getIsFlow() {
+        return isFlow;
+    }
+
+    public void setIsFlow(String isFlow) {
+        this.isFlow = isFlow;
     }
 }

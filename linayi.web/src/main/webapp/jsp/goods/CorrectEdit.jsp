@@ -41,9 +41,9 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label ng-show="correct.type==='SHARE'">分享</label><label
-                            ng-show="correct.type!=='SHARE'">纠错</label><label>价格(元)</label>
+                            ng-show="correct.type!=='SHARE'">纠错</label><label>价格(分)</label>
                         <span class="input-icon icon-right">
-                                <input type="text" value="{{correct.price/100}}"
+                                <input type="text" ng-model="correct.price"
                                        class="form-control">
                                 <i class="fa fa-money palegreen"></i>
                             </span>

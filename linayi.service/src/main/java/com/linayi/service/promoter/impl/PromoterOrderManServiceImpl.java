@@ -1,21 +1,6 @@
 package com.linayi.service.promoter.impl;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
 import com.linayi.dao.address.ReceiveAddressMapper;
-import com.linayi.dao.promoter.PromoterMapper;
-import com.linayi.entity.promoter.Promoter;
-import com.linayi.entity.user.ReceiveAddress;
-import com.linayi.service.address.ReceiveAddressService;
-import org.apache.xmlbeans.impl.xb.xsdschema.Public;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
-import org.springframework.data.redis.connection.SortParameters;
-import org.springframework.stereotype.Service;
-
-import com.linayi.dao.order.OrdersGoodsMapper;
 import com.linayi.dao.order.OrdersMapper;
 import com.linayi.dao.promoter.OpenMemberInfoMapper;
 import com.linayi.dao.promoter.OrderManMemberMapper;
@@ -24,13 +9,17 @@ import com.linayi.entity.order.Orders;
 import com.linayi.entity.promoter.OpenMemberInfo;
 import com.linayi.entity.promoter.OrderManMember;
 import com.linayi.entity.promoter.PromoterOrderMan;
+import com.linayi.entity.user.ReceiveAddress;
 import com.linayi.entity.user.User;
 import com.linayi.service.promoter.PromoterOrderManService;
 import com.linayi.service.user.UserService;
 import com.linayi.util.DateUtil;
-import com.linayi.util.ImageUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import javax.swing.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class PromoterOrderManServiceImpl implements PromoterOrderManService {
@@ -67,7 +56,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         if(user.getHeadImage() == null) {
             currentPromoterOrderMan.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
         }else {
-            String headImage = ImageUtil.dealToShow(user.getHeadImage());
+            String headImage = user.getHeadImage();
             currentPromoterOrderMan.setHeadImage(headImage);
         }
 
@@ -102,7 +91,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             if(user.getHeadImage() == null) {
                 orderMan.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
             }else {
-                String headImage = ImageUtil.dealToShow(user.getHeadImage());
+                String headImage = user.getHeadImage();
                 orderMan.setHeadImage(headImage);
             }
 
@@ -139,7 +128,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             if(user.getHeadImage() == null) {
                 member.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
             }else {
-                String headImage = ImageUtil.dealToShow(user.getHeadImage());
+                String headImage = user.getHeadImage();
                 member.setHeadImage(headImage);
             }
             // 获取会员的订单数、订单总金额

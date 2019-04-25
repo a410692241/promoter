@@ -1,13 +1,5 @@
 package com.linayi.service.promoter.impl;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.linayi.dao.account.AccountMapper;
 import com.linayi.dao.order.OrdersGoodsMapper;
 import com.linayi.dao.order.OrdersMapper;
@@ -27,7 +19,13 @@ import com.linayi.service.promoter.OrderManMemberService;
 import com.linayi.service.promoter.PromoterOrderManService;
 import com.linayi.service.user.UserService;
 import com.linayi.util.DateUtil;
-import com.linayi.util.ImageUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class OrderManMemberServiceImpl implements OrderManMemberService {
@@ -47,7 +45,7 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 	private PromoterOrderManService promoterOrderManService;
 	@Autowired
 	private UserService userService;
-	
+
 	@Override
 	@Transactional
 	public User insertMember(String mobile,Integer uid) {
@@ -64,7 +62,7 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 		if(userId == null){
 			 Account accountTB = new Account();
 		        accountTB.setMobile(mobile);
-		        accountTB.setPassword("123456");
+		        accountTB.setPassword("a123456");
 		        accountTB.setUpdateTime(new Date());
 		        //添加用户
 		        user.setNickname(mobile);
@@ -79,13 +77,13 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 		        accountTB.setCreateTime(new Date());
 		        accountTB.setUserId(user.getUserId());
 		        accountMapper.insertAccount(accountTB);
-		        
+
 		        userId =user.getUserId();
 		        newUser.setIsRegist("FALSE");
 		}else{
 			newUser.setIsRegist("TRUE");
 		}
-		
+
 		//插入会员信息
 
 		user = userMapper.selectUserByuserId(userId);
@@ -94,7 +92,7 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 		if(user.getHeadImage() == null){
 			newUser.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
 		}else{
-			newUser.setHeadImage(ImageUtil.dealToShow(user.getHeadImage()));
+			newUser.setHeadImage(user.getHeadImage());
 		}
 		return newUser;
 	}
@@ -134,7 +132,7 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 		orderManMember.setTotalSum(totalSum);
 		return orderManMember;
 	}
-	
+
 	/**
 	 * 通过会员等级计算免费次数
 	 * @param memberLevel
@@ -153,16 +151,24 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 	@Override
 	public Integer updateValidTimeById(Integer uid,Integer userId,String memberLevel,Integer promoterDuration) {
 		Integer openOrderManInfoId = userMapper.getOpenOrderManInfoIdByUserId(userId);
-		
+
 		OpenMemberInfo openMemberInfo = new OpenMemberInfo();
-		openMemberInfo .setStartTime(new Date());
-		Date date = new Date();
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND,0);
+		Date startTime = cal.getTime();
+		openMemberInfo .setStartTime(startTime);
+
 		cal.add(Calendar.MONTH, promoterDuration);
-		date = cal.getTime();
-		openMemberInfo.setEndTime(date);
-		
+		cal.set(Calendar.HOUR_OF_DAY,23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		cal.set(Calendar.MILLISECOND,0);
+		Date endTime = cal.getTime();
+		openMemberInfo.setEndTime(endTime);
+
 		openMemberInfo.setFreeTimes(getFreeNumberByMemberLevel(memberLevel));
 		openMemberInfo.setUserId(uid);
 		openMemberInfo.setOrderManId(userId);
@@ -170,13 +176,13 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 		openMemberInfo.setMemberLevel(memberLevel);
 		openMemberInfo.setOpenOrderManInfoId(openOrderManInfoId);
 		openMemberInfoMapper.insert(openMemberInfo);
-		
+
 		OrderManMember record = new OrderManMember();
 		record.setMemberId(uid);
 		record.setOrderManId(userId);
 		record.setCreateTime(new Date());
 		orderManMemberMapper.insert(record );
-		
+
 		User user = new User();
 		user.setUserId(uid);
 		user.setIsMember("TRUE");
@@ -184,7 +190,7 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 		userMapper.updateUserByuserId(user);
 		return null;
 	}
-	
+
 	@Override
 	public OrderManMember memberDetails(OrderManMember orderManMember) {
 		if("addressInfo".equals(orderManMember.getType())) {
@@ -198,16 +204,16 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 				User currentUser = userService.selectUserList(user).stream().findFirst().orElse(null);
 				if(currentUser != null) {
 					orderManMember.setNickname(currentUser.getNickname());
-					orderManMember.setHeadImage(ImageUtil.dealToShow(currentUser.getHeadImage()));
+					orderManMember.setHeadImage(currentUser.getHeadImage());
 					if(currentUser.getHeadImage() == null) {
 						orderManMember.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
 					}
-					
+
 				}else {
 					orderManMember.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
 				}
 			}
-			
+
 		}
 		if("memberInfo".equals(orderManMember.getType())) {
 			// 获取会员的订单数、订单总金额
@@ -218,15 +224,15 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 			User user = userService.selectUserByuserId(orderManMember.getMemberId());
 			orderManMember.setNickname(user.getNickname());
 			if(user.getHeadImage() != null) {
-				String headImage = ImageUtil.dealToShow(user.getHeadImage());
+				String headImage = user.getHeadImage();
 				orderManMember.setHeadImage(headImage);
 			}else {
 				orderManMember.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
 			}
-			
+
 		}
 		return orderManMember;
-		
+
 	}
 
 	@Override
@@ -241,6 +247,6 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 				userMapper.updateMemberById(openMemberInfo.getUserId());
 			}
 		}
-		
+
 	}
 }

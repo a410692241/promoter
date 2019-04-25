@@ -664,6 +664,8 @@
         <foreach collection="procurementTaskIdList" index="index" item="item1" open="(" separator="," close=")">
             ${item1}
         </foreach>
+       and
+          receive_status='RECEIVED_FLOW'
   </update>
     <!--流转中心任务 查询出已收货的商品列表 List<ProcurementTask> getDeliverGoodsList(ProcurementTask procurTask)-->
     <select id="getDeliverGoodsList" resultType="com.linayi.entity.procurement.ProcurementTask">
@@ -683,4 +685,85 @@
       order by pt.flow_out_time desc
   </select>
 
+  <!--  后台管理系统 流转中心查询出已发货信息
+    List<ProcurementTask> getProcurementsByRECEIVEDFLOW(ProcurementTask procurementTask);-->
+  <select id="getProcurementsByRECEIVEDFLOW" resultType="com.linayi.entity.procurement.ProcurementTask">
+      select
+          pt.procurement_task_id,c.name communityName,pt.orders_id,o.create_time,gs.full_name,
+          gs.barcode,pt.actual_quantity,pt.price,s.name supermarketName,pt.receive_status
+      from
+          procurement_task pt join orders o on pt.orders_id=o.orders_id
+                              join community c on pt.community_id=c.community_id
+                              join goods_sku gs on pt.goods_sku_id=gs.goods_sku_id
+                              join supermarket s on pt.supermarket_id=s.supermarket_id
+      where
+          pt.actual_quantity>0
+      <if test="startTime != null and startTime !='' ">
+          and
+            #{startTime} &lt;= o.create_time
+      </if>
+      <if test="endTime != null and endTime != '' ">
+          and
+            o.create_time &lt;= #{endTime}
+      </if>
+      <if test="wavePickingStartTime != null">
+          and
+          CONCAT('2019-01-01 ',DATE_FORMAT(o.create_time, '%H:%i:%s')) &gt;= #{wavePickingStartTime}
+      </if>
+      <if test="wavePickingEndTime != null">
+          and
+          CONCAT('2019-01-01 ',DATE_FORMAT(o.create_time, '%H:%i:%s')) &lt; #{wavePickingEndTime}
+      </if>
+      <if test="receiveStatus =='RECEIVED_FLOW'  ">
+          and pt.receive_status = 'RECEIVED_FLOW'
+      </if>
+      <if test="receiveStatus =='WAIT_RECEIVE'">
+          and pt.receive_status in('WAIT_RECEIVE','RECEIVED')
+      </if>
+      <if test="receiveStatus == '' ">
+          and pt.receive_status in('RECEIVED_FLOW','WAIT_RECEIVE','RECEIVED')
+      </if>
+  </select>
+    <!--  后台管理系统 流转中心查询出已发货信息
+      List<ProcurementTask> getProcurementsByRECEIVEDFLOW(ProcurementTask procurementTask);-->
+    <select id="getProcurementsByRECEIVEDFLOWThree" resultType="com.linayi.entity.procurement.ProcurementTask">
+        select
+        pt.procurement_task_id,c.name communityName,pt.orders_id,o.create_time,gs.full_name,
+        gs.barcode,pt.actual_quantity,pt.price,s.name supermarketName,pt.receive_status
+        from
+        procurement_task pt join orders o on pt.orders_id=o.orders_id
+        join community c on pt.community_id=c.community_id
+        join goods_sku gs on pt.goods_sku_id=gs.goods_sku_id
+        join supermarket s on pt.supermarket_id=s.supermarket_id
+        where
+        pt.actual_quantity>0
+        <if test="startTime != null and startTime !='' ">
+            and
+            #{startTime} &lt;= o.create_time
+        </if>
+        <if test="endTime != null and endTime != '' ">
+            and
+            o.create_time &lt;= #{endTime}
+        </if>
+        <if test="wavePickingStartTime != null">
+            and(
+            (CONCAT('2019-01-01 ',DATE_FORMAT(o.create_time, '%H:%i:%s')) &gt;= #{wavePickingStartTime}
+            and
+            CONCAT('2019-01-01 ',DATE_FORMAT(o.create_time, '%H:%i:%s')) &lt; #{wavePickingEndTime})
+            or
+            (CONCAT('2019-01-01 ',DATE_FORMAT(o.create_time, '%H:%i:%s')) &gt;= #{wavePickingStartTimeTo}
+            and
+            CONCAT('2019-01-01 ',DATE_FORMAT(o.create_time, '%H:%i:%s')) &lt; #{wavePickingEndTimeTo})
+            )
+        </if>
+        <if test="receiveStatus =='RECEIVED_FLOW'  ">
+            and pt.receive_status = 'RECEIVED_FLOW'
+        </if>
+        <if test="receiveStatus =='WAIT_RECEIVE'">
+            and pt.receive_status in('WAIT_RECEIVE','RECEIVED')
+        </if>
+        <if test="receiveStatus == '' ">
+            and pt.receive_status in('RECEIVED_FLOW','WAIT_RECEIVE','RECEIVED')
+        </if>
+    </select>
 </mapper>

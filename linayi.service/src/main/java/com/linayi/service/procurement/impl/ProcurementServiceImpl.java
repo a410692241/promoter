@@ -22,13 +22,23 @@ import com.linayi.service.community.CommunitySupermarketService;
 import com.linayi.service.order.OrderService;
 import com.linayi.service.procurement.ProcurementService;
 import com.linayi.service.supermarket.SupermarketService;
+import com.linayi.util.DateUtil;
 import com.linayi.util.ImageUtil;
+import com.linayi.util.OSSManageUtil;
 import com.linayi.util.PageResult;
-import lombok.ToString;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -111,7 +121,6 @@ public class ProcurementServiceImpl implements ProcurementService {
 				}
             }
         }
-
         return procurementTaskList;
     }
 
@@ -293,9 +302,111 @@ public class ProcurementServiceImpl implements ProcurementService {
 	@Override
 	public ProcurementTask getprocurementDeatil(ProcurementTask procurementTask) {
 		GoodsSku goodsSku = goodsSkuMapper.getGoodsById(procurementTask.getGoodsSkuId());
-		procurementTask.setImage(ImageUtil.dealToShow(goodsSku.getImage()));
+		procurementTask.setImage(goodsSku.getImage());
 		procurementTask.setGoodsSkuName(goodsSku.getFullName());
 		return procurementTask;
+	}
+
+	@Override
+	public List<ProcurementTask> getProcurementsByRECEIVEDFLOW(ProcurementTask procurTask) {
+		List<ProcurementTask> list = getProcurementTaskListByprocurTask(procurTask);
+		return list;
+	}
+
+	@Override
+	@Transactional
+	public void batchDelivery(List<Long> procurementTaskIdList) {
+		Date flowOutTime = new Date();
+		procurementTaskMapper.confirmDeliverGoods(procurementTaskIdList,flowOutTime);
+	}
+
+	/**
+	 * 后台管理系统 流转中心
+	 * @param procurTask
+	 * @return
+	 */
+	private List<ProcurementTask> getProcurementTaskListByprocurTask(ProcurementTask procurTask){
+		List<ProcurementTask> list = new ArrayList<>();
+		if("showAll".equals(procurTask.getReceiveStatus()) || procurTask.getReceiveStatus() == null){
+			procurTask.setReceiveStatus("");
+			list = procurementTaskMapper.getProcurementsByRECEIVEDFLOW(procurTask);
+		}else{
+			list = procurementTaskMapper.getProcurementsByRECEIVEDFLOW(procurTask);
+		}
+		if("1".equals(procurTask.getDeliveryWaveTime())){
+		    try {
+                String str = "2019-01-01 08:00:00";
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date StartTime = sdf.parse(str);
+                procurTask.setWavePickingStartTime(StartTime);
+
+                str = "2019-01-01 13:00:00";
+                Date endTime = sdf.parse(str);
+                procurTask.setWavePickingEndTime(endTime);
+                list = procurementTaskMapper.getProcurementsByRECEIVEDFLOW(procurTask);
+            }catch (Exception e){
+
+            }
+		}
+		if("2".equals(procurTask.getDeliveryWaveTime())){
+            try {
+                String str = "2019-01-01 13:00:00";
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date StartTime = sdf.parse(str);
+                procurTask.setWavePickingStartTime(StartTime);
+
+                str = "2019-01-01 18:00:00";
+                Date endTime = sdf.parse(str);
+                procurTask.setWavePickingEndTime(endTime);
+                list = procurementTaskMapper.getProcurementsByRECEIVEDFLOW(procurTask);
+            }catch (Exception e){
+
+            }
+		}
+		if("3".equals(procurTask.getDeliveryWaveTime())){
+            try {
+                String str = "2019-01-01 18:00:00";
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date StartTime = sdf.parse(str);
+                procurTask.setWavePickingStartTime(StartTime);
+
+                str = "2019-01-01 23:59:59";
+                Date endTime = sdf.parse(str);
+                procurTask.setWavePickingEndTime(endTime);
+
+                str = "2019-01-01 00:00:00";
+                StartTime = sdf.parse(str);
+                str = "2019-01-01 08:00:00";
+                endTime = sdf.parse(str);
+                procurTask.setWavePickingEndTimeTo(endTime);
+                procurTask.setWavePickingStartTimeTo(StartTime);
+                list = procurementTaskMapper.getProcurementsByRECEIVEDFLOWThree(procurTask);
+            }catch (Exception e){
+
+            }
+		}
+
+		Calendar cal =Calendar.getInstance();
+		for(int i=0;i<list.size();i++){
+			if("RECEIVED_FLOW".equals(list.get(i).getReceiveStatus())){
+				list.get(i).setReceiveStatus("待发货");
+			}else if("WAIT_RECEIVE".equals(list.get(i).getReceiveStatus())){
+				list.get(i).setReceiveStatus("已发货");
+			}else{
+				list.get(i).setReceiveStatus("已发货");
+			}
+			Date date = list.get(i).getCreateTime();
+			cal.setTime(date);
+			Integer hour = cal.get(Calendar.HOUR_OF_DAY);
+			if(8<=hour && hour<13){
+				list.get(i).setDeliveryWaveTime("第一波次");
+			}else if(13<=hour && hour<18){
+				list.get(i).setDeliveryWaveTime("第二波次");
+			}else{
+				list.get(i).setDeliveryWaveTime("第三波次");
+			}
+		}
+		return list;
 	}
 
 	@Override
@@ -325,7 +436,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 
 		procurementTask.setGoodsSkuName(goodsSkuMapper.getGoodsById(procurementTask.getGoodsSkuId()).getName());
 
-		procurementTask.setImage(ImageUtil.dealToShow(goodsSkuMapper.getGoodsById(procurementTask.getGoodsSkuId()).getImage()));
+		procurementTask.setImage(goodsSkuMapper.getGoodsById(procurementTask.getGoodsSkuId()).getImage());
 
 		procurementTask.setServiceFeeString(10);
 
@@ -391,7 +502,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		Community community1 = communityMapper.getCommunity(community);
 		procurementTask1.setGoodsSkuName(goodsSku.getFullName());
 		procurementTask1.setCommunityName(community1.getName());
-		procurementTask1.setImage(ImageUtil.dealToShow(goodsSku.getImage()));
+		procurementTask1.setImage(goodsSku.getImage());
 		procurementTask1.setTotalPrice(getpriceString(procurementTask1.getQuantity() * procurementTask1.getPrice()));
 		return procurementTask1;
 	}
@@ -487,8 +598,8 @@ public class ProcurementServiceImpl implements ProcurementService {
 
 		//图片处理
 		for(ProcurementTask pp:currentProcurementTask){
-			String image = ImageUtil.dealToShow(pp.getGoodsImage());
-			pp.setGoodsImage(image);
+			String image = pp.getGoodsImage();
+			pp.setGoodsImage(ImageUtil.dealToShow(image));
 		}
 
 		return currentProcurementTask;
@@ -622,5 +733,60 @@ public class ProcurementServiceImpl implements ProcurementService {
 			list.get(i).setImage(ImageUtil.dealToShow(image));
 		}
 		return list;
+	}
+
+	@Override
+	public void exportData(ProcurementTask procurementTask, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		// 只是让浏览器知道要保存为什么文件而已，真正的文件还是在流里面的数据，你设定一个下载类型并不会去改变流里的内容。
+		//而实际上只要你的内容正确，文件后缀名之类可以随便改，就算你指定是下载excel文件，下载时我也可以把他改成pdf等。
+		response.setContentType("application/vnd.ms-excel");
+		// 传递中文参数编码
+		String codedFileName = java.net.URLEncoder.encode("分拣商品信息","UTF-8");
+		response.setHeader("content-disposition", "attachment;filename=" + codedFileName + ".xls");
+		List<ProcurementTask> list = getProcurementTaskListByprocurTask(procurementTask);
+		// 定义一个工作薄
+		Workbook workbook = new HSSFWorkbook();
+		// 创建一个sheet页
+		Sheet sheet = workbook.createSheet("分拣商品信息");
+		// 创建一行
+		Row row = sheet.createRow(0);
+		// 在本行赋值 以0开始
+
+		row.createCell(0).setCellValue("采买任务ID");
+		row.createCell(1).setCellValue("网点名称");
+		row.createCell(2).setCellValue("配送波次");
+		row.createCell(3).setCellValue("顾客订单号");
+		row.createCell(4).setCellValue("订单状态");
+		row.createCell(5).setCellValue("商品名称");
+		row.createCell(6).setCellValue("商品条码");
+		row.createCell(7).setCellValue("数量");
+		row.createCell(8).setCellValue("商品单价(元)");
+		row.createCell(9).setCellValue("采买超市");
+		row.createCell(10).setCellValue("下单时间");
+		// 定义样式
+		CellStyle cellStyle = workbook.createCellStyle();
+		// 格式化日期
+		//cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("yyyy-MM-dd"));
+		String pattern = "yyyy-MM-dd HH:mm:ss";
+		// 遍历输出
+		for (int i = 1; i <= list.size(); i++) {
+			ProcurementTask procurTask = list.get(i - 1);
+			row = sheet.createRow(i);
+			row.createCell(0).setCellValue(procurTask.getProcurementTaskId());
+			row.createCell(1).setCellValue(procurTask.getCommunityName());
+			row.createCell(2).setCellValue(procurTask.getDeliveryWaveTime());
+			row.createCell(3).setCellValue(procurTask.getOrdersId());
+			row.createCell(4).setCellValue(procurTask.getReceiveStatus());
+			row.createCell(5).setCellValue(procurTask.getFullName());
+			row.createCell(6).setCellValue(procurTask.getBarcode());
+			row.createCell(7).setCellValue(procurTask.getActualQuantity());
+			row.createCell(8).setCellValue(procurTask.getPrice()/100.00);
+			row.createCell(9).setCellValue(procurTask.getSupermarketName());
+			row.createCell(10).setCellValue(DateUtil.date2String(procurTask.getCreateTime(),pattern));
+		}
+		OutputStream fOut = response.getOutputStream();
+		workbook.write(fOut);
+		fOut.flush();
+		fOut.close();
 	}
 }

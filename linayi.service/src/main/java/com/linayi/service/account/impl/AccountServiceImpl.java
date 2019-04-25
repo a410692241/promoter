@@ -204,6 +204,7 @@ public class AccountServiceImpl implements AccountService {
         //验证手机号是否被使用
         Account account = new Account();
         account.setMobile(mobile);
+        account.setUserType(UserType.USER.name());
         List<Account> accounts = this.selectAccountList(account);
         if (accounts.size() > 0) {
             return true;

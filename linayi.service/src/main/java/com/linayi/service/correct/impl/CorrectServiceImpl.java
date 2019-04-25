@@ -1,32 +1,20 @@
 package com.linayi.service.correct.impl;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-
-import com.linayi.entity.account.AdminAccount;
-import com.linayi.enums.*;
-import com.linayi.util.Configuration;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.linayi.dao.correct.CorrectLogMapper;
 import com.linayi.dao.correct.CorrectMapper;
 import com.linayi.dao.goods.SupermarketGoodsMapper;
 import com.linayi.dao.supermarket.SupermarketMapper;
+import com.linayi.entity.account.AdminAccount;
 import com.linayi.entity.correct.Correct;
 import com.linayi.entity.correct.CorrectLog;
 import com.linayi.entity.correct.SupermarketGoodsVersion;
 import com.linayi.entity.goods.SupermarketGoods;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.entity.user.User;
+import com.linayi.enums.CorrectStatus;
+import com.linayi.enums.CorrectType;
+import com.linayi.enums.OperatorType;
+import com.linayi.enums.PriceType;
 import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.community.CommunitySupermarketService;
@@ -36,7 +24,19 @@ import com.linayi.service.goods.GoodsSkuService;
 import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.service.user.UserService;
 import com.linayi.util.ImageUtil;
+import com.linayi.util.OSSManageUtil;
 import com.linayi.util.PageResult;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class CorrectServiceImpl implements CorrectService {
@@ -444,13 +444,13 @@ public class CorrectServiceImpl implements CorrectService {
             } else {*/
             Correct correctPare = correctMapper.selectByPrimaryKey(correct.getParentId());
             if (correctPare != null) {
-                correct.setImage(Configuration.getConfig().getValue("imageServer") + "/" + correct.getImage());
-                correct.setParentImage(Configuration.getConfig().getValue("imageServer") + "/" + correctPare.getImage());
+                correct.setImage(ImageUtil.dealToShow(correct.getImage()));
+                correct.setParentImage(ImageUtil.dealToShow(correctPare.getImage()));
             }
             /*}*/
 
         } else if (correct.getParentId() == null) {
-            correct.setParentImage(Configuration.getConfig().getValue("imageServer") + "/" + correct.getImage());
+            correct.setParentImage(ImageUtil.dealToShow(correct.getImage()));
         }
         return correct;
     }
@@ -463,8 +463,17 @@ public class CorrectServiceImpl implements CorrectService {
     }
 
     @Override
+    @Transactional
     public Integer updateCorrect(Correct correct) {
-        return correctMapper.updateCorrect(correct);
+        Correct currentCorrect = correctMapper.selectByPrimaryKey(correct.getCorrectId());
+        Integer result = correctMapper.updateCorrect(correct);
+        if(currentCorrect.getPrice() != correct.getPrice() && CorrectStatus.AFFECTED.toString().equals(currentCorrect.getStatus())){
+            Correct newCorrect = new Correct();
+            newCorrect.setStatus(CorrectStatus.AUDIT_SUCCESS.toString());
+            newCorrect.setCorrectId(correct.getCorrectId());
+            correctMapper.updateCorrect(newCorrect);
+        }
+        return result;
     }
 
     public List<Correct> getCorrect(Correct correct) {

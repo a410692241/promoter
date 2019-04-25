@@ -83,7 +83,7 @@ public class ImageUtil {
     public String getImageStrFromPath(String imgPath) throws IOException {
         InputStream in = null;
         byte[] data = null;
-       // ByteArrayOutputStream bos = null;
+        // ByteArrayOutputStream bos = null;
         String metaType = "";
         // 读取图片字节数组  
         try {
@@ -119,7 +119,7 @@ public class ImageUtil {
             }
 
         }
-       return null;
+        return null;
     }
 
     /**
@@ -142,9 +142,9 @@ public class ImageUtil {
      * @return
      */
     public static String dealToShow(String image) {
-    	if (image == null || "".equals(image.trim())) {
-			return null;
-		}
+        if (image == null || "".equals(image.trim())) {
+            return null;
+        }
         return PropertiesUtil.getValueByKey(ConstantUtil.IMAGE_SERVER) + "/" + image;
     }
 
