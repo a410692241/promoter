@@ -287,6 +287,7 @@ public class GoodsSkuController extends BaseController {
             return new ResponseData(map);
 
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseData(ErrorType.SYSTEM_ERROR);
 
         }
