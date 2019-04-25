@@ -1,7 +1,9 @@
 package com.linayi.controller.weixin;
 
+import com.alibaba.fastjson.JSONObject;
 import com.linayi.config.WeixinConfig;
 import com.linayi.dao.account.AccountMapper;
+import com.linayi.dto.WxSignatureDto;
 import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.weixin.WeixinService;
@@ -11,6 +13,7 @@ import com.linayi.util.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -76,5 +79,15 @@ public class WeixinController {
         }
     }
 
-
+    @ResponseBody
+    @PostMapping(value="/getSignature.do")
+    public ResponseData getSignature(@RequestBody JSONObject requestObject){
+        try {
+            WxSignatureDto wxSignatureDto = weixinService.getSignature(requestObject);
+            return new ResponseData(wxSignatureDto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseData(e);
+        }
+    }
 }

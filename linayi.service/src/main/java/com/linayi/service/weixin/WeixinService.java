@@ -1,5 +1,8 @@
 package com.linayi.service.weixin;
 
+import com.alibaba.fastjson.JSONObject;
+import com.linayi.dto.WxSignatureDto;
+
 import javax.servlet.http.HttpServletResponse;
 
 public interface WeixinService {
@@ -11,4 +14,5 @@ public interface WeixinService {
     public Object getCode(String code, HttpServletResponse response,boolean linsheng);
 
 
+    WxSignatureDto getSignature(JSONObject requestObject);
 }

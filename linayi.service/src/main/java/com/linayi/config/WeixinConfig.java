@@ -15,6 +15,8 @@ public class WeixinConfig {
     //如果网页授权作用域为snsapi_userinfo，则此时开发者可以通过access_token和openid拉取用户信息了。
     public static final String GET_WEI_XIN_USER_INFO = "https://api.weixin.qq.com/sns/userinfo?";
     public static final String AUTH_TOKEN_EXPIRE_URL = "https://api.weixin.qq.com/sns/auth?";
+    public static final String GET_ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential";
+    public static final String GET_JSAPI_TICKET_URL = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?type=jsapi&access_token=";
     //刷新微信token
     public static final String REFRESH_TOKEN_URL = "https://api.weixin.qq.com/sns/oauth2/refresh_token?";
     //app项目首页url
