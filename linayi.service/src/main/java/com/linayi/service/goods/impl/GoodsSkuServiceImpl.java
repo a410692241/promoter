@@ -84,8 +84,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 	private CommunityMapper communityMapper;
 	@Resource
 	private OpenMemberInfoService openMemberInfoService;
-	@Autowired
-	private RestHighLevelClient esClient;
+	private RestHighLevelClient esClient = RestClientFactory.getHighLevelClient();
 
 	@Override
 	public List<GoodsSku> getGoodsList(GoodsSku goods) {
