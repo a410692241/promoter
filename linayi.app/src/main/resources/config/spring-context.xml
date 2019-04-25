@@ -109,6 +109,5 @@
 	<bean id="redisUtil" class="com.linayi.util.RedisUtil" >
 		<property name="redisTemplate" ref="redisTemplate"></property>
 	</bean >
-    <import resource="elasticseach.xml"/>
 
 </beans>
