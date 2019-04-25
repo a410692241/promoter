@@ -947,7 +947,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
         goodsSku.setSoldNum(Integer.parseInt(resultMap.get("soldNum") + ""));
         double spreadRate = (maxPrice - minPrice) * 100 / Double.parseDouble("" + minPrice);
         BigDecimal bigDecimal = new BigDecimal(spreadRate);
-        double v = bigDecimal.setScale(2, BigDecimal.ROUND_DOWN).doubleValue();
+        double v = bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
         goodsSku.setSpreadRate(v);
         return goodsSku;
     }
@@ -986,21 +986,30 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
             Integer minPrice = communityGoods.getMinPriceNormal();
             Integer maxPrice = communityGoods.getMaxPriceNormal();
             resultGoodsSku.setMinPrice(minPrice);
-            resultGoodsSku.setSpreadRate((maxPrice - minPrice) * 100 / Double.parseDouble(minPrice + ""));
+            double spreadRate = (maxPrice - minPrice) * 100 / Double.parseDouble(minPrice + "");
+            BigDecimal bigDecimal = new BigDecimal(spreadRate);
+            double v = bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            resultGoodsSku.setSpreadRate(v);
         }
         //高级会员
         else if (MemberLevel.SENIOR.toString().equals(currentMemberLevel.toString())) {
             Integer minPrice = communityGoods.getMinPriceSenior();
             Integer maxPrice = communityGoods.getMaxPriceSenior();
             resultGoodsSku.setMinPrice(minPrice);
-            resultGoodsSku.setSpreadRate((maxPrice - minPrice) * 100 / Double.parseDouble(minPrice + ""));
+            double spreadRate = (maxPrice - minPrice) * 100 / Double.parseDouble(minPrice + "");
+            BigDecimal bigDecimal = new BigDecimal(spreadRate);
+            double v = bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            resultGoodsSku.setSpreadRate(v);
         }
         //超级vip
         else if (MemberLevel.SUPER.toString().equals(currentMemberLevel.toString())) {
             Integer minPrice = communityGoods.getMinPriceSuper();
             Integer maxPrice = communityGoods.getMaxPriceSuper();
             resultGoodsSku.setMinPrice(minPrice);
-            resultGoodsSku.setSpreadRate((maxPrice - minPrice) * 100 / Double.parseDouble(minPrice + ""));
+            double spreadRate = (maxPrice - minPrice) * 100 / Double.parseDouble(minPrice + "");
+            BigDecimal bigDecimal = new BigDecimal(spreadRate);
+            double v = bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            resultGoodsSku.setSpreadRate(v);
         }
         List<Integer> attributeValueIdList = goodsAttrValueMapper.getGoodsAttrValueByGoodsId(goodsSkuId).stream()
                 .collect(Collectors.mapping(GoodsAttrValue::getAttrValueId, Collectors.toList()));
