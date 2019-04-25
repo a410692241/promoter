@@ -1,11 +1,13 @@
 package com.linayi.dao.goods;
 
-import com.linayi.entity.goods.GoodsSku;
+import com.linayi.entity.goods.GoodsSku;import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Map;
 
 
+/**
+ *
+ */
 public interface GoodsSkuMapper {
     int insert(GoodsSku record);
 
@@ -101,4 +103,14 @@ public interface GoodsSkuMapper {
 	 * @return
 	 */
 	List<GoodsSku> getGoodsLists(GoodsSku goodsSku);
+	/**
+	 * 首页推荐商品
+	 * @param goodsSku
+	 * @return
+	 */
+	List<GoodsSku> getRecommendGoodsSku(GoodsSku goodsSku);
+
+	Integer getSoldNumByGoodsSkuId(@Param("goodsSkuId") Long goodsSkuId);
+
+	GoodsSku getGoodsSkuByBarcode(@Param("barcode") String barcode);
 }

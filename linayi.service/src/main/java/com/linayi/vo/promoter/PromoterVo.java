@@ -1,7 +1,10 @@
 package com.linayi.vo.promoter;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.linayi.entity.BaseEntity;
 import com.linayi.vo.PageVo;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -207,5 +210,23 @@ public class PromoterVo {
             return mobile;
         }
     }
+
+	@Setter
+	@Getter
+	@ApiModel("搜索参数类")
+	public static class EsConfig  extends BaseEntity{
+		@ApiModelProperty(value = "搜索框查询的关键字",required = true,example = "乐事薯片")
+		public String key;
+		@ApiModelProperty(value = "条形码",example = "\"123456789\"")
+		public String barcode;
+		@ApiModelProperty(value = "排序方式:(NORMAL:综合;PRICE_UP:价格升序;PRICE_DOWN:价格降序;SOLD_NUM:销量)",example = "SOLD_NUM")
+		public String orderType;
+		@ApiModelProperty(hidden = true)
+		public Integer userId;
+		@ApiModelProperty(value = "每页大小",example = "10")
+		public Integer pageSize;
+		@ApiModelProperty(value = "当前页(不要小于1)",example = "1")
+		public Integer currentPage;
+	}
 
 }

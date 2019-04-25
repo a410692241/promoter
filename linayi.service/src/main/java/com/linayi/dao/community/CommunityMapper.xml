@@ -227,8 +227,19 @@
   			user u JOIN receive_address ra ON u.default_receive_address_id=ra.receive_address_id JOIN small_community ac ON ac.small_community_id=ra.address_one
   		WHERE
   			u.user_id=#{userId}
-
-  	</select>
+	</select>
+	<select id="getcommunityIdByuserIdInDefaultAddress" resultType="java.lang.Integer">
+		SELECT
+			sc.community_id
+		FROM
+			receive_address ad,
+			`user` u,
+			small_community sc
+		WHERE
+			ad.receive_address_id = u.default_receive_address_id
+			AND sc.small_community_id = ad.address_one
+		  	and u.user_id = #{userId}
+	</select>
 
 
 </mapper>

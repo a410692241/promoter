@@ -22,17 +22,17 @@
     </resultMap>
     <insert id="insert" parameterType="com.linayi.entity.goods.GoodsSku" useGeneratedKeys="true" keyProperty="goodsSkuId">
     insert into goods_sku (goods_sku_id, name, full_name, barcode,
-      category_id, brand_id, status,
-      image, update_time, create_time,
-      model, function, produce_address,
-      produce_date, valid_date, manufacturer,
-      other_attribute,user_id)
+      category_id, brand_id, status, 
+      image, update_time, create_time, 
+      model, function, produce_address, 
+      produce_date, valid_date, manufacturer, 
+      other_attribute,user_id,sold_num)
     values (#{goodsSkuId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{fullName,jdbcType=VARCHAR}, #{barcode,jdbcType=VARCHAR},
-      #{categoryId,jdbcType=INTEGER}, #{brandId,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR},
-      #{image,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP},
-      #{model,jdbcType=VARCHAR}, #{function,jdbcType=VARCHAR}, #{produceAddress,jdbcType=VARCHAR},
-      #{produceDate,jdbcType=TIMESTAMP}, #{validDate,jdbcType=TIMESTAMP}, #{manufacturer,jdbcType=VARCHAR},
-      #{otherAttribute,jdbcType=VARCHAR},#{userId,jdbcType=INTEGER})
+      #{categoryId,jdbcType=INTEGER}, #{brandId,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, 
+      #{image,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{model,jdbcType=VARCHAR}, #{function,jdbcType=VARCHAR}, #{produceAddress,jdbcType=VARCHAR}, 
+      #{produceDate,jdbcType=TIMESTAMP}, #{validDate,jdbcType=TIMESTAMP}, #{manufacturer,jdbcType=VARCHAR}, 
+      #{otherAttribute,jdbcType=VARCHAR},#{userId,jdbcType=INTEGER},#{soldNum,jdbcType=INTEGER})
   </insert>
     <insert id="insertSelective" parameterType="com.linayi.entity.goods.GoodsSku">
         insert into goods_sku
@@ -88,6 +88,9 @@
             <if test="otherAttribute != null">
                 other_attribute,
             </if>
+            <if test="soldNum != null">
+                sold_num,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="goodsId != null">
@@ -141,10 +144,13 @@
             <if test="otherAttribute != null">
                 #{otherAttribute,jdbcType=VARCHAR},
             </if>
+            <if test="soldNum != null">
+                #{soldNum,jdbcType=INTEGER},
+            </if>
         </trim>
     </insert>
     <sql id="columnList">
-     goods_sku_id, NAME, full_name,barcode, category_id, brand_id, STATUS, image, update_time, create_time, model, FUNCTION, produce_address, produce_date, valid_date, manufacturer, other_attribute
+     goods_sku_id, NAME, full_name,barcode, category_id, brand_id, STATUS, image, update_time, create_time, model, FUNCTION, produce_address, produce_date, valid_date, manufacturer, other_attribute,sold_num
   </sql>
 
     <update id="updateGoodsFullName" parameterType="com.linayi.entity.goods.GoodsSku">
@@ -209,6 +215,9 @@
             </if>
             <if test="otherAttribute != null">
                 other_attribute = #{otherAttribute},
+            </if>
+            <if test="soldNum != null">
+                sold_num = #{soldNum},
             </if>
         </set>
         where goods_sku_id = #{goodsSkuId}
@@ -400,31 +409,35 @@
     <!--List<GoodsSku> getDifferenceRanking()-->
     <select id="getDifferenceRanking" resultType="com.linayi.entity.goods.GoodsSku">
         SELECT
-        gs.goods_sku_id  goodsSkuId,
-        gs.NAME name,
-        gs.full_name fullName,
-        gs.barcode,
-        gs.category_id categoryId,
-        gs.brand_id brandId,
-        gs.STATUS status,
-        gs.image,
-        gs.update_time  updateTime,
-        gs.create_time  createTime,
-        gs.model,
-        gs.FUNCTION function,
-        gs.produce_address produceAddress,
-        gs.produce_date  produceDate,
-        gs.valid_date validDate,
-        gs.manufacturer,
-        gs.other_attribute  otherAttribute,
-        cg.min_price minPrice,
-        cg.max_price maxPrice,
-        cg.max_supermarket_id maxSupermarketId,
-        cg.min_supermarket_id minSupermarketId,
-        cg.min_supermarket_id_normal,cg.min_price_normal,cg.max_supermarket_id_normal,cg.max_price_normal,cg.min_supermarket_id_senior,cg.min_price_senior,
-        cg.max_supermarket_id_senior,cg.max_price_senior,cg.min_supermarket_id_super,cg.min_price_super,cg.max_supermarket_id_super,cg.max_price_super
-        FROM
-        goods_sku gs,community_goods cg
+            gs.goods_sku_id  goodsSkuId,
+            gs.NAME name,
+            gs.full_name fullName,
+            gs.barcode,
+            gs.category_id categoryId,
+            gs.brand_id brandId,
+            gs.STATUS status,
+            gs.image,
+            gs.update_time  updateTime,
+            gs.create_time  createTime,
+            gs.model,
+            IFNULL(gs.sold_num,0) soldNum,
+            gs.FUNCTION function,
+            gs.produce_address produceAddress,
+            gs.produce_date  produceDate,
+            gs.valid_date validDate,
+            gs.manufacturer,
+            gs.other_attribute  otherAttribute,
+            cg.min_price minPrice,
+            cg.max_price maxPrice,
+            cg.max_supermarket_id maxSupermarketId,
+            cg.min_supermarket_id minSupermarketId,
+            cg.min_supermarket_id_normal,cg.min_price_normal,cg.max_supermarket_id_normal,cg.max_price_normal,cg.min_supermarket_id_senior,cg.min_price_senior,
+            cg.max_supermarket_id_senior,cg.max_price_senior,cg.min_supermarket_id_super,cg.min_price_super,cg.max_supermarket_id_super,cg.max_price_super,
+            REPLACE(GROUP_CONCAT(av.value),',','/') attrValues
+       FROM
+            goods_sku gs LEFT JOIN  community_goods cg ON gs.goods_sku_id=cg.goods_sku_id
+            LEFT JOIN goods_attr_value gav ON gav.goods_sku_id=gs.goods_sku_id
+            LEFT JOIN attribute_value av ON av.value_id=gav.attr_value_id
         <where>
             gs.goods_sku_id=cg.goods_sku_id
             <if test="communityId!=null and communityId!=''">
@@ -437,18 +450,25 @@
                 AND gs.brand_id=#{brandId}
             </if>
             <if test="memberLevel!=null and memberLevel=='NORMAL'">
-                and cg.min_price_normal IS NOT NULL ORDER BY ((cg.max_price_normal-cg.min_price_normal)/cg.min_price_normal) DESC
+                and cg.min_price_normal IS NOT NULL
+                GROUP BY gs.goods_sku_id
+                ORDER BY ((cg.max_price_normal-cg.min_price_normal)/cg.min_price_normal) DESC
             </if>
             <if test="memberLevel!=null and memberLevel=='NOT_MEMBER'">
-                and cg.min_price_normal IS NOT NULL ORDER BY ((cg.max_price_normal-cg.min_price_normal)/cg.min_price_normal) DESC
+                and cg.min_price_normal IS NOT NULL
+                GROUP BY gs.goods_sku_id
+                ORDER BY ((cg.max_price_normal-cg.min_price_normal)/cg.min_price_normal) DESC
             </if>
             <if test="memberLevel!=null and memberLevel=='SENIOR'">
-                and cg.min_price_senior IS NOT NULL ORDER BY ((cg.max_price_senior-cg.min_price_senior)/cg.min_price_senior) DESC
+                and cg.min_price_senior IS NOT NULL
+                GROUP BY gs.goods_sku_id
+                ORDER BY ((cg.max_price_senior-cg.min_price_senior)/cg.min_price_senior) DESC
             </if>
             <if test="memberLevel!=null and memberLevel=='SUPER'">
-                and cg.min_price_super IS NOT NULL  ORDER BY ((cg.max_price_super-cg.min_price_super)/cg.min_price_super) DESC
+                and cg.min_price_super IS NOT NULL
+                GROUP BY gs.goods_sku_id
+                ORDER BY ((cg.max_price_super-cg.min_price_super)/cg.min_price_super) DESC
             </if>
-
         </where>
     </select>
 
@@ -457,25 +477,25 @@
     <!--List<GoodsSku> getGoodsSkuByVagueGoodsName(GoodsSku goodsSku) -->
     <select id="getGoodsSkuByVagueGoodsName" resultType="com.linayi.entity.goods.GoodsSku">
         SELECT
-        goods_sku_id,
+            goods_sku_id,
         NAME name,
-        full_name,
-        barcode,
-        category_id,
-        brand_id,
-        status,
-        image,
-        update_time,
-        create_time,
-        model,
-        function,
-        produce_address,
-        produce_date,
-        valid_date,
-        manufacturer,
-        other_attribute
+            full_name,
+            barcode,
+            category_id,
+            brand_id,
+            status,
+            image,
+            update_time,
+            create_time,
+            model,
+            function,
+            produce_address,
+            produce_date,
+            valid_date,
+            manufacturer,
+            other_attribute
         FROM
-        goods_sku
+           goods_sku
         <where>
             <if test="brandId!=null">
                 and brand_id=#{brandId}
@@ -572,11 +592,71 @@
   	SELECT
   		goods_sku_id
   	FROM
-  		goods_sku
-
+  		goods_sku	 
+ 
   </select>
 
     <select id="selectNamebyId" resultType="com.linayi.entity.goods.GoodsSku">
       select name,image from goods_sku where goods_sku_id=#{goodsSkuId}
   </select>
+
+    <!--首页推荐商品-->
+    <select id="getRecommendGoodsSku" resultType="com.linayi.entity.goods.GoodsSku">
+        SELECT
+            gs.goods_sku_id  goodsSkuId,
+            gs.full_name fullName,
+            gs.category_id categoryId,
+            gs.brand_id brandId,
+            gs.image,
+            gs.create_time  createTime,
+            gs.model,
+            IFNULL(gs.sold_num,0) soldNum,
+            cg.min_price minPrice,
+            cg.max_price maxPrice,
+            cg.max_supermarket_id maxSupermarketId,
+            cg.min_supermarket_id minSupermarketId,
+            cg.min_supermarket_id_normal,
+            cg.min_price_normal,
+            cg.max_supermarket_id_normal,
+            cg.max_price_normal,
+            cg.min_supermarket_id_senior,
+            cg.min_price_senior,
+            cg.max_supermarket_id_senior,
+            cg.max_price_senior,
+            cg.min_supermarket_id_super,
+            cg.min_price_super,
+            cg.max_supermarket_id_super,
+            cg.max_price_super,
+            REPLACE(GROUP_CONCAT(av.value),',','/') attrValues
+        FROM
+            goods_sku gs  LEFT JOIN community_goods cg ON gs.goods_sku_id=cg.goods_sku_id
+            LEFT JOIN goods_attr_value gav ON gav.goods_sku_id=gs.goods_sku_id
+            LEFT JOIN attribute_value av ON av.value_id=gav.attr_value_id
+        <where>
+            <if test="communityId!=null and communityId!=''">
+                AND	cg.community_id=#{communityId}
+            </if>
+            <if test="memberLevel!=null and memberLevel=='NORMAL'">
+                and cg.min_price_normal IS NOT NULL
+            </if>
+            <if test="memberLevel!=null and memberLevel=='NOT_MEMBER'">
+                and cg.min_price_normal IS NOT NULL
+            </if>
+            <if test="memberLevel!=null and memberLevel=='SENIOR'">
+                and cg.min_price_senior IS NOT NULL
+            </if>
+            <if test="memberLevel!=null and memberLevel=='SUPER'">
+                and cg.min_price_super IS NOT NULL
+            </if>
+                GROUP BY gs.goods_sku_id
+                ORDER BY gs.sold_num DESC
+        </where>
+    </select>
+
+    <select id="getSoldNumByGoodsSkuId" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        select sold_num from goods_sku where goods_sku_id = #{goodsSkuId}
+    </select>
+    <select id="getGoodsSkuByBarcode" parameterType="java.lang.String" resultType="com.linayi.entity.goods.GoodsSku">
+        select  <include refid="columnList"/> from goods_sku where barcode = #{barcode}
+    </select>
 </mapper>

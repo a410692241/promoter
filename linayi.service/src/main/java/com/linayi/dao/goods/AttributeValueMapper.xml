@@ -97,7 +97,14 @@
 	 					${item}
 	 				</foreach>
 	 			</if>
+                <if test="attributeIdValueList != null and attributeIdValueList.size() > 0">
+                    and value_id
+                    <foreach collection="attributeIdValueList" item="item" open=" in(" close=")" separator=",">
+                        ${item}
+                    </foreach>
+                </if>
  		</where>
+      order by value_id desc
  	</select>
  	<!-- 通过id修改属性 -->
  	<update id="updateById">
