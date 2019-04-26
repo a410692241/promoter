@@ -25,9 +25,9 @@
                             <span class="input-group-addon">配送波次</span>
                             <select ng-model="search.deliveryWaveTime" ng-change="getType(search.deliveryWaveTime)" ng-init="search.deliveryWaveTime='showAll'">
                                 <option value="showAll">全部</option>
-                                <option value="1">第一波次</option>
-                                <option value="2">第二波次</option>
-                                <option value="3">第三波次</option>
+                                <option value="one">第一波次</option>
+                                <option value="two">第二波次</option>
+                                <option value="three">第三波次</option>
                             </select>
                         </div>
                     </div>
