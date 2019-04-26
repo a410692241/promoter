@@ -178,7 +178,9 @@ public class OrderServiceImpl implements OrderService {
                 if(p.getPrice() == null)
                     sum[0]++;
             });
-
+            GoodsSku goodsSku = goodsSkuMapper.getGoodsById(car.getGoodsSkuId());
+            goodsSku.setSoldNum(goodsSku.getSoldNum() + car.getQuantity());
+            goodsSkuMapper.update(goodsSku);
             supermarketGoods = supermarketGoods.subList(0,supermarketGoods.size() - sum[0]);
 
             OrdersGoods ordersGoods = generateOrdersGoods(order,supermarketGoods, car.getQuantity(), car.getGoodsSkuId());
