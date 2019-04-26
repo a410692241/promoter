@@ -54,7 +54,7 @@
   </update>
   <select id="getOrderList" resultMap="BaseResultMap">
     select orders_id, user_id, receiver_name, mobile, address_one, address_two, address_three, pay_way, save_amount, service_fee, extra_fee, arrive_time, actual_arrive_time,
-    remark, quantity, amount, user_status, community_status, community_id, update_time, create_time from orders
+    remark, quantity, amount, user_status, community_status, community_id, update_time, create_time, delivery_finish_time, delivery_time from orders
     <where>
     <if test="userStatus == 'ALL'">
       and user_status NOT IN ('REFUNDED','REFUSED')
@@ -454,7 +454,7 @@
 		update
 			orders
 		set
-			community_status='DELIVERING'
+			community_status='DELIVERING',delivery_time=SYSDATE()
 		where
 			orders_id = #{ordersId}
 	</update>
@@ -518,8 +518,6 @@
         orders o JOIN order_box ob ON o.orders_id=ob.orders_id
       WHERE
         o.community_status IN ('PACKED','DELIVERING')
-      AND
-        o.community_id = 1
         <if test="smallCommunityIdList!= null and smallCommunityIdList.size() > 0">
             AND
             o.small_community_id IN

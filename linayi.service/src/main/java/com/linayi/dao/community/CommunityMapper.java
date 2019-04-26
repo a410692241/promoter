@@ -24,7 +24,7 @@ public interface CommunityMapper {
      */
     Community getCommunity(Community community);
 
-   List<Community> getCommunityBySmallCommunityIdList(@Param("smallCommunityIdList") List<Integer> smallCommunityIdList);
+    List<Community> getCommunityByCommunityIdList(@Param("communityIdList") List<Integer> communityIdList);
 
     /**
      * 修改社区信息
@@ -40,15 +40,24 @@ public interface CommunityMapper {
      * 通过社区Id改变状态 达到删除社区功能
      */
     Integer removeCommunity(Integer communityId);
-    
-  
-   
+
+
+
     /**
-     	* 根据用户id获取社区id
+     * 根据用户id获取社区id
      * @param userId
      * @return
      */
     Integer getcommunityIdByuserId(Integer userId);
-   
+
+
+    /**根据用户id获取默认收货地址id,最后得到收货地址的communityId
+     * @param userId
+     * @return
+     */
+    Integer getcommunityIdByuserIdInDefaultAddress(Integer userId);
+
+    List<Community> getCommunityByAreaCode(String areaCode);
+
 
 }

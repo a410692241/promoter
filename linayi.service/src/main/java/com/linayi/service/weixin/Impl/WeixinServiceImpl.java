@@ -1,9 +1,11 @@
 package com.linayi.service.weixin.Impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.binarywang.java.emoji.EmojiConverter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.linayi.config.WeixinConfig;
+import com.linayi.dto.WxSignatureDto;
 import com.linayi.entity.account.Account;
 import com.linayi.entity.user.Auth;
 import com.linayi.entity.user.User;
@@ -23,7 +25,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.Map;
 import java.util.UUID;
 
@@ -36,6 +41,7 @@ public class WeixinServiceImpl implements WeixinService {
     @Autowired
     private UserService userService;
     private static EmojiConverter emojiConverter = EmojiConverter.getInstance();
+    private static final String NONCESTR = "linayi";
     @Override
     public Object getCode(String code, HttpServletResponse response,boolean linsheng) {
         //获取access_token
@@ -180,5 +186,66 @@ public class WeixinServiceImpl implements WeixinService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    @Override
+    public WxSignatureDto getSignature(JSONObject requestObject) {
+
+        String timestamp = (System.currentTimeMillis() / 1000) + "";
+        //获取access_token
+        String appId = Configuration.getConfig().getValue(WeixinConfig.APPID);
+        String authTokenExpireUrl = WeixinConfig.GET_ACCESS_TOKEN_URL + "&appid=" + appId + "&secret="
+                + Configuration.getConfig().getValue(WeixinConfig.APPSECRET);
+        String resStr = HttpClientUtil.sendGetRequest(authTokenExpireUrl, null);
+        TypeToken<Map> type = new TypeToken<Map>() {
+        };
+        Gson gson = new Gson();
+        Map<String, String> map = gson.fromJson(resStr, type.getType());
+        String access_token = map.get("access_token") + "";
+
+        String s2 = WeixinConfig.GET_JSAPI_TICKET_URL + access_token;
+        String jsApiResStr = HttpClientUtil.sendGetRequest(s2, null);
+        Map<String, String> mapTicket = gson.fromJson(jsApiResStr, type.getType());
+        String ticket = mapTicket.get("ticket") + "";
+        String signtature = getSignature(timestamp, NONCESTR, requestObject.getString("htmlUrl"), ticket);
+        WxSignatureDto wxSignatureDto = new WxSignatureDto();
+        wxSignatureDto.setSignature(signtature);
+        wxSignatureDto.setAppid(appId);
+        wxSignatureDto.setNoncestr(NONCESTR);
+        wxSignatureDto.setTimestamp(timestamp);
+        return wxSignatureDto;
+    }
+
+
+    public static String getSignature(String timestamp, String nonceStr, String url, String jsapiTicket) {
+        MessageDigest md = null;
+        //注意这里参数名必须全部小写，且必须有序
+        String string1 = "jsapi_ticket=" + jsapiTicket +
+                "&noncestr=" + nonceStr +
+                "&timestamp=" + timestamp +
+                "&url=" + url;
+        String signature = "";
+        try {
+            md = MessageDigest.getInstance("SHA-1");
+            md.reset();
+            md.update(string1.getBytes());
+            signature = byteToHex(md.digest());
+            return signature;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return signature;
+    }
+
+
+    private static String byteToHex(final byte[] hash) {
+        Formatter formatter = new Formatter();
+        for (byte b : hash) {
+            formatter.format("%02x", b);
+        }
+        String result = formatter.toString();
+        formatter.close();
+        return result;
     }
 }

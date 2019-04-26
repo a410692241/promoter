@@ -2,8 +2,6 @@ package com.linayi.service.user.impl;
 
 import com.linayi.dao.address.ReceiveAddressMapper;
 import com.linayi.dao.area.SmallCommunityMapper;
-import com.linayi.dao.goods.AttributeMapper;
-import com.linayi.dao.goods.CommunityGoodsMapper;
 import com.linayi.dao.goods.GoodsSkuMapper;
 import com.linayi.dao.user.ShoppingCarMapper;
 import com.linayi.dao.user.UserMapper;
@@ -11,13 +9,10 @@ import com.linayi.entity.area.SmallCommunity;
 import com.linayi.entity.goods.CommunityGoods;
 import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.goods.SupermarketGoods;
-import com.linayi.entity.promoter.OpenMemberInfo;
 import com.linayi.entity.user.ReceiveAddress;
 import com.linayi.entity.user.ShoppingCar;
 import com.linayi.entity.user.User;
 import com.linayi.enums.MemberLevel;
-import com.linayi.service.community.CommunityService;
-import com.linayi.service.goods.BrandService;
 import com.linayi.service.goods.CommunityGoodsService;
 import com.linayi.service.goods.SupermarketGoodsService;
 import com.linayi.service.promoter.OpenMemberInfoService;
@@ -53,17 +48,31 @@ public class ShopCarServiceImpl implements ShopCarService {
     private SupermarketService supermarketService;
 
     @Override
-    public void addShopCar(ShoppingCar shoppingCar) {
+    public String addShopCar(ShoppingCar shoppingCar) {
         User user = userMapper.selectUserByuserId(shoppingCar.getUserId());
         Integer receiveAddressId = user.getDefaultReceiveAddressId();
         shoppingCar.setReceiveAddressId(receiveAddressId);
         ShoppingCar shopCar = shoppingCarMapper.getShopCar(shoppingCar);
+        ReceiveAddress receiveAddress = receiveAddressMapper.getReceiveAddressByReceiveAddressId(receiveAddressId);
+        Integer smallComunityId = receiveAddress.getAddressOne();
+        SmallCommunity smallCommunity = new SmallCommunity();
+        smallCommunity.setSmallCommunityId(smallComunityId);
+        smallCommunity = smallCommunityMapper.getSmallCommunity(smallCommunity);
+        Integer communityId = smallCommunity.getCommunityId();
+        CommunityGoods communityGoods = new CommunityGoods();
+        communityGoods.setCommunityId(communityId);
+        communityGoods.setGoodsSkuId(shoppingCar.getGoodsSkuId());
+        communityGoods = communityGoodsService.getCommunityGoods(communityGoods);
+        if(communityGoods == null){
+            return "no_price";
+        }
         if (shopCar != null){
             shopCar.setQuantity(shopCar.getQuantity() + shoppingCar.getQuantity());
             shoppingCarMapper.updateShopCar(shopCar);
         }else {
             shoppingCarMapper.insert(shoppingCar);
         }
+        return "success";
     }
 
     @Override
@@ -81,12 +90,17 @@ public class ShopCarServiceImpl implements ShopCarService {
         Map<String, Object> map = new HashMap<>();
         Integer totalPrice = 0;//合计总价格
         MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(shoppingCar.getUserId());
+        ArrayList<ShoppingCar> shoppingCars = new ArrayList<>();
         for (ShoppingCar car : ShoppingCars) {
             //查出商品的最高价格最低价格
             CommunityGoods communityGoods = new CommunityGoods();
             communityGoods.setCommunityId(communityId);
             communityGoods.setGoodsSkuId(car.getGoodsSkuId());
             communityGoods = communityGoodsService.getCommunityGoods(communityGoods);
+            if(communityGoods == null){
+                shoppingCars.add(car);
+                continue;
+            }
             Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketIdAndPriceByLevel(currentMemberLevel, communityGoods);
             Integer minPrice = idAndPriceByLevel[0];
             car.setMinPrice(getpriceString(minPrice));
@@ -103,6 +117,7 @@ public class ShopCarServiceImpl implements ShopCarService {
             }
 
         }
+        ShoppingCars.removeAll(shoppingCars);
         map.put("ShoppingCars",ShoppingCars);
         map.put("totalPrice",getpriceString(totalPrice));
         return map;

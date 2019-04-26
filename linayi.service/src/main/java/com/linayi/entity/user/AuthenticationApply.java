@@ -40,6 +40,8 @@ public class AuthenticationApply extends BaseEntity implements Serializable{
     private Integer supermarketId;
     
     private Integer smallCommunityId;
+    
+    private String supermarketName;
 
 
     //代言人部分属性
@@ -53,7 +55,13 @@ public class AuthenticationApply extends BaseEntity implements Serializable{
 
     private String image;
 
+	public String getSupermarketName() {
+		return supermarketName;
+	}
 
+	public void setSupermarketName(String supermarketName) {
+		this.supermarketName = supermarketName;
+	}
 
 	public Integer getSmallCommunityId() {
 		return smallCommunityId;

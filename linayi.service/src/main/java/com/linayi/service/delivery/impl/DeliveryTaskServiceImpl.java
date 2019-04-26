@@ -14,35 +14,30 @@ import com.linayi.dao.supermarket.SupermarketMapper;
 import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.area.Area;
 import com.linayi.entity.area.SmallCommunity;
-import com.linayi.entity.delivery.DeliveryBox;
 import com.linayi.entity.delivery.DeliveryBoxGoods;
 import com.linayi.entity.delivery.DeliveryTask;
 import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.order.OrderBox;
 import com.linayi.entity.order.Orders;
-
-import com.linayi.entity.procurement.ProcurementTask;
 import com.linayi.entity.procurement.ProcurementTask;
 import com.linayi.entity.user.ShoppingCar;
 import com.linayi.entity.user.User;
 import com.linayi.enums.DeliveryStatus;
 import com.linayi.enums.OrderStatus;
-import com.linayi.enums.UserStatusType;
 import com.linayi.service.delivery.DeliveryTaskService;
 import com.linayi.util.ConstantUtil;
 import com.linayi.util.ImageUtil;
-
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.Resource;
-
+import com.linayi.util.OSSManageUtil;
 import com.linayi.util.PropertiesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class DeliveryTaskServiceImpl implements DeliveryTaskService {

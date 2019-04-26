@@ -5,15 +5,12 @@ import com.linayi.entity.goods.Category;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.goods.CategoryService;
 import com.linayi.util.ImageUtil;
+import com.linayi.util.OSSManageUtil;
 import com.linayi.util.ResponseData;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -172,14 +169,14 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public List<Category> getCategoryByBrandId(Integer brandId) {
-		
+
 		List<Category>categoryList = categoryMapper.getCategoryByBrandId(brandId);
 		if(categoryList.size()>0) {
 			for(Category i:categoryList) {
 				i.setLogo(ImageUtil.dealToShow(i.getLogo()));
 			}
 		}
-		
+
 		return categoryList;
 	}
 

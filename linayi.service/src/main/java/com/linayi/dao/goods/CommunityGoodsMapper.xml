@@ -235,9 +235,13 @@
    max_price_super from community_goods where goods_sku_id = #{goodsSkuId}
   </select>
   <select id="getAllCommunityGood" resultType="com.linayi.entity.goods.CommunityGoods">
-    select `community_goods_id`, `community_id`, `goods_sku_id`, `min_supermarket_id`, `min_price`, `create_time`, `update_time`, `max_supermarket_id`, `max_price`, `min_supermarket_id_normal`, `min_price_normal`, `max_supermarket_id_normal`, `max_price_normal`, `min_supermarket_id_senior`, `min_price_senior`, `max_supermarket_id_senior`, `max_price_senior`, `min_supermarket_id_super`, `min_price_super`, `max_supermarket_id_super`, `max_price_super`
+    select `community_goods_id`, `coselect `community_goods_id`, `community_id`, `goods_sku_id`, `min_supermarket_id`, `min_price`, `create_time`, `update_time`, `max_supermarket_id`, `max_price`, `min_supermarket_id_normal`, `min_price_normal`, `max_supermarket_id_normal`, `max_price_normal`, `min_supermarket_id_senior`, `min_price_senior`, `max_supermarket_id_senior`, `max_price_senior`, `min_supermarket_id_super`, `min_price_super`, `max_supermarket_id_super`, `max_price_super`
     from community_goods
     </select>
+  <select id="getCommunityGoodsByBarcode" resultMap="BaseResultMap">
+    select `community_goods_id`, `community_id`, `goods_sku_id`, `min_supermarket_id`, `min_price`, `create_time`, `update_time`, `max_supermarket_id`, `max_price`, `min_supermarket_id_normal`, `min_price_normal`, `max_supermarket_id_normal`, `max_price_normal`, `min_supermarket_id_senior`, `min_price_senior`, `max_supermarket_id_senior`, `max_price_senior`, `min_supermarket_id_super`, `min_price_super`, `max_supermarket_id_super`, `max_price_super`
+    from community_goods where community_Id = #{communityId} and goods_Sku_Id = #{goodsSkuId}
+  </select>
 
 
 </mapper>

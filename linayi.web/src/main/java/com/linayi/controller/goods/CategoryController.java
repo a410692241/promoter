@@ -1,9 +1,11 @@
 package com.linayi.controller.goods;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.linayi.entity.goods.Category;
+import com.linayi.service.goods.CategoryService;
+import com.linayi.util.ResponseData;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,13 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import com.linayi.entity.goods.Category;
-import com.linayi.service.goods.CategoryService;
-import com.linayi.util.ImageUtil;
-import com.linayi.util.ResponseData;
+import javax.annotation.Resource;
+import java.util.List;
 
 @Controller
 @RequestMapping("/goods/category")
@@ -30,7 +27,7 @@ public class CategoryController {
 	@RequestMapping("/list.do")
 	@ResponseBody
 	public List<Category> getCategoryList() {
-		Short Level = 1; 
+		Short Level = 1;
 		List<Category> category = categoryService.getCatergoysList(Level);
 		return category;
 	}
@@ -43,7 +40,7 @@ public class CategoryController {
 		if(category != null){
 			category.setParentName(category.getName());
 			category.setName(null);
-			category.setLogo(ImageUtil.dealToShow(categorys.getLogo()));
+			category.setLogo(categorys.getLogo());
 			//当操作是add,categoryUpdateKey是2
 			mv.addObject("categoryUpdateKey",2);
 			mv.addObject("category", category);
@@ -64,7 +61,7 @@ public class CategoryController {
 	@RequestMapping(value="/save.do",produces = {"application/json;charset=UTF-8"})
 	@ResponseBody
 	public Object save(@RequestParam("category") String categoryStr,@RequestParam("logo")MultipartFile file){
-		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create(); 
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 		TypeToken<Category> type = new TypeToken<Category>() {};
 		Category category = gson.fromJson(categoryStr, type.getType());
 		//添加
@@ -72,7 +69,7 @@ public class CategoryController {
 		Short level = 5;
 		if(category.getParentName()!=null){
 			if(level.equals(category.getLevel())){
-				return new ResponseData("F",null,"不支持五级菜单").toString(); 
+				return new ResponseData("F",null,"不支持五级菜单").toString();
 			}
 			response = categoryService.insertCategory(category,file);
 		}else{//编辑
@@ -80,7 +77,7 @@ public class CategoryController {
 		}
 		return response;
 	}
-	
+
 	@RequestMapping(value = "/delete.do",produces = {"application/json;charset=UTF-8"})
 	@ResponseBody
 	public Object delete(String categoryIdList) {
@@ -91,5 +88,5 @@ public class CategoryController {
 		}
 		return new ResponseData("操作失败！").toString();
 	}
-	
+
 }

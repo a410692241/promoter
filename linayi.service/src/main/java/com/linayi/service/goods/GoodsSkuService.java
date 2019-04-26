@@ -6,7 +6,6 @@ import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.goods.SupermarketGoods;
 
 import com.linayi.entity.supermarket.Supermarket;
-import com.linayi.entity.user.User;
 import com.linayi.vo.promoter.PromoterVo;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -15,6 +14,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 public interface GoodsSkuService {
@@ -155,4 +155,10 @@ public interface GoodsSkuService {
 	 * @throws Exception
 	 */
 	List<GoodsSku> searchByKey(PromoterVo.EsConfig esConfig) throws Exception;
+
+	/**通过条码查询商品
+	 * @param barcode
+	 * @return
+	 */
+    GoodsSku searchByBarcode(PromoterVo.EsConfig barcode) throws IOException;
 }

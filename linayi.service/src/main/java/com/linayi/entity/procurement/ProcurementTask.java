@@ -29,14 +29,6 @@ public class ProcurementTask extends BaseEntity{
 
     private String procurementTaskIdList;
 
-    public String getProcurementTaskIdList() {
-        return procurementTaskIdList;
-    }
-
-    public void setProcurementTaskIdList(String procurementTaskIdList) {
-        this.procurementTaskIdList = procurementTaskIdList;
-    }
-
     private Long procurementTaskId;
 
     private Long ordersId;
@@ -48,13 +40,6 @@ public class ProcurementTask extends BaseEntity{
     private Integer goodsSkuId;
 
     private Date accessTime;//调用接口的日期
-    public Date getAccessTime() {
-        return accessTime;
-    }
-
-    public void setAccessTime(Date accessTime) {
-        this.accessTime = accessTime;
-    }
 
     //商品全称
     private String fullName;
@@ -121,14 +106,6 @@ public class ProcurementTask extends BaseEntity{
 
     private Long deliveryBoxId;
 
-    public String getSupermarketName() {
-        return supermarketName;
-    }
-
-    public void setSupermarketName(String supermarketName) {
-        this.supermarketName = supermarketName;
-    }
-
     @DateTimeFormat( pattern = "yyyy-MM-dd HH:mm" )
     private Date orderCreateTime;//订单下单时间
 
@@ -149,6 +126,22 @@ public class ProcurementTask extends BaseEntity{
     private Date flowReceiveTime;//[流转中心收货时间]
 
     private Date flowOutTime;//[流转中心发货时间]
+
+    private String barcode;//商品条形码
+
+    private String deliveryWaveTime;//配送波次
+
+    private String startTime;//开始时间
+
+    private String endTime;//结束时间
+
+    private Date wavePickingStartTime;//配送波次开始时间
+
+    private Date wavePickingEndTime;//配送波次结束时间
+
+    private Date wavePickingStartTimeTo;//第三波次第二段时间
+
+    private Date wavePickingEndTimeTo;//第三波次第二段时间
 
     public Date getFlowOutTime() {
         return flowOutTime;
@@ -189,8 +182,6 @@ public class ProcurementTask extends BaseEntity{
     public void setBuyUserName(String buyUserName) {
         this.buyUserName = buyUserName;
     }
-
-
 
     public String getProcureStatus() {
         return procureStatus;
@@ -512,4 +503,91 @@ public class ProcurementTask extends BaseEntity{
     public void setProcureOutTime(Date procureOutTime) {
         this.procureOutTime = procureOutTime;
     }
+
+    public String getSupermarketName() {
+        return supermarketName;
+    }
+
+    public void setSupermarketName(String supermarketName) {
+        this.supermarketName = supermarketName;
+    }
+
+    public String getProcurementTaskIdList() {
+        return procurementTaskIdList;
+    }
+
+    public void setProcurementTaskIdList(String procurementTaskIdList) {
+        this.procurementTaskIdList = procurementTaskIdList;
+    }
+
+    public Date getAccessTime() {
+        return accessTime;
+    }
+
+    public void setAccessTime(Date accessTime) {
+        this.accessTime = accessTime;
+    }
+
+    public String getBarcode() {
+        return barcode;
+    }
+
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
+    }
+
+    public String getDeliveryWaveTime() {
+        return deliveryWaveTime;
+    }
+
+    public void setDeliveryWaveTime(String deliveryWaveTime) {
+        this.deliveryWaveTime = deliveryWaveTime;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public Date getWavePickingStartTime() {
+        return wavePickingStartTime;
+    }
+
+    public void setWavePickingStartTime(Date wavePickingStartTime) {
+        this.wavePickingStartTime = wavePickingStartTime;
+    }
+    public Date getWavePickingEndTime() {
+        return wavePickingEndTime;
+    }
+
+    public void setWavePickingEndTime(Date wavePickingEndTime) {
+        this.wavePickingEndTime = wavePickingEndTime;
+    }
+
+    public Date getWavePickingStartTimeTo() {
+        return wavePickingStartTimeTo;
+    }
+
+    public void setWavePickingStartTimeTo(Date wavePickingStartTimeTo) {
+        this.wavePickingStartTimeTo = wavePickingStartTimeTo;
+    }
+    public Date getWavePickingEndTimeTo() {
+        return wavePickingEndTimeTo;
+    }
+
+    public void setWavePickingEndTimeTo(Date wavePickingEndTimeTo) {
+        this.wavePickingEndTimeTo = wavePickingEndTimeTo;
+    }
+
 }

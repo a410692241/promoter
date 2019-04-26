@@ -85,7 +85,7 @@ public class Orders extends BaseEntity {
     @ApiModelProperty(value = "网点联系电话")
     private String communityPhone;//网点联系电话
     @ApiModelProperty(value = "发货时间")
-    private String deliveryTime;//发货时间
+    private Date deliveryTime;//发货时间
     @ApiModelProperty(value = "收货时间")
     private String receiptTime;//收货时间
     @ApiModelProperty(value = "支付编号")
@@ -394,11 +394,11 @@ public class Orders extends BaseEntity {
         this.communityName = communityName;
     }
 
-    public String getDeliveryTime() {
+    public Date getDeliveryTime() {
         return deliveryTime;
     }
 
-    public void setDeliveryTime(String deliveryTime) {
+    public void setDeliveryTime(Date deliveryTime) {
         this.deliveryTime = deliveryTime;
     }
 
@@ -480,7 +480,7 @@ public class Orders extends BaseEntity {
                   Integer communityId, String communityName, String boxNo, String image, Integer delivererId, Date boxTime,
                   Date deliveryFinishTime, Date updateTime, Date createTime, Integer receiveAddressId, List<ShoppingCar> shoppingCarList,
                   List<GoodsSku> goodsSkuList, String totalPrice, String payPrice, String goodsTotalPrice, String createDate,
-                  String createDateStr, String address, String communityPhone, String deliveryTime, String receiptTime, String payNumber,
+                  String createDateStr, String address, String communityPhone, Date deliveryTime, String receiptTime, String payNumber,
                   String extraFeeString, String serviceFeeString, String serviceMobile, String deliverStatus, String delivererName) {
         this.ordersId = ordersId;
         this.userId = userId;

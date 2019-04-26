@@ -6,11 +6,15 @@ import com.linayi.dao.community.CommunityMapper;
 import com.linayi.entity.area.Area;
 import com.linayi.entity.area.SmallCommunity;
 import com.linayi.entity.community.Community;
+import com.linayi.exception.BusinessException;
+import com.linayi.exception.ErrorType;
 import com.linayi.service.area.SmallCommunityService;
 import com.linayi.service.community.CommunityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import redis.clients.jedis.JedisPoolConfig;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -25,6 +29,7 @@ public class CommunityServiceImpl implements CommunityService {
     private SmallCommunityService smallCommunityService;
     @Resource
     private AreaMapper areaMapper;
+
 
     @Override
     public List<Community> getCommunityList(Community community) {
@@ -76,18 +81,18 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
-    public List<Community> getCommunityByAreaCode(Community community) {
+    public List<Community> getCommunityByAreaCode(Community community) throws Exception {
         String code = community.getAreaCode();
         List<SmallCommunity> smallCommunities = smallCommunityService.getSmallCommunityByAreaCode(code);
-        List<Integer> smallCommunityIdList = smallCommunities.stream().collect(Collectors.mapping(SmallCommunity::getSmallCommunityId, Collectors.toList()));
-        List<Community> communityLists = communityMapper.getCommunityBySmallCommunityIdList(smallCommunityIdList);
+        List<Integer> communityIdList = smallCommunities.stream().collect(Collectors.mapping(SmallCommunity::getCommunityId, Collectors.toList()));
+        List<Community> communityLists = communityMapper.getCommunityByCommunityIdList(communityIdList);
         //对communityId去重
         List<Community> uniqueCommunityList = communityLists.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(o -> o.getCommunityId() + ";" + o.getCommunityId()))), ArrayList::new));
         return uniqueCommunityList;
     }
     
     /** 通过areaCode获取完整的省市区街道名
-     * @param community
+     * @param areaCode
      * @return
      */
     private String getAreaNameByAreaCode(String areaCode){
@@ -107,5 +112,14 @@ public class CommunityServiceImpl implements CommunityService {
         Community community = new Community();
         community.setCommunityId(communityId);
         return communityMapper.getCommunity(community);
+    }
+
+    @Override
+    public Integer getcommunityIdByuserIdInDefaultAddress(Integer userId) {
+        Integer communityId = communityMapper.getcommunityIdByuserIdInDefaultAddress(userId);
+        if (communityId == null) {
+            throw new BusinessException(ErrorType.UNFILLED_SHIPPING_ADDRESS);
+        }
+        return communityId;
     }
 }

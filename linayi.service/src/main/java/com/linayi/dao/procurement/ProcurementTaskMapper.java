@@ -114,4 +114,18 @@ public interface ProcurementTaskMapper {
     List<ProcurementTask> getCommunityProcurementsList(ProcurementTask procurementTask);
 
     List<ProcurementTask> getProcurementsList(@Param("procurementTaskIdList") String procurementTaskIdList);
+
+    /**
+     * 后台管理系统 流转中心查询出已发货信息
+     * @param procurementTask
+     * @return
+     */
+    List<ProcurementTask> getProcurementsByRECEIVEDFLOW(ProcurementTask procurementTask);
+    /**
+     * 后台管理系统 流转中心查询出已发货信息
+     * @param procurementTask
+     * @return
+     */
+    List<ProcurementTask> getProcurementsByRECEIVEDFLOWThree(ProcurementTask procurementTask);
 }
+

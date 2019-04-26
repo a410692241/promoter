@@ -39,7 +39,9 @@ public interface CommunityService {
      * @param community
      * @return
      */
-    List<Community> getCommunityByAreaCode(Community community);
+    List<Community> getCommunityByAreaCode(Community community) throws Exception;
 
     Community getCommunityById(Integer communityId);
+
+    Integer getcommunityIdByuserIdInDefaultAddress(Integer userId);
 }

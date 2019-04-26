@@ -25,4 +25,13 @@ public interface CommunityGoodsMapper {
     CommunityGoods getCommunityGoodsByGoodsId(Integer goodsSkuId);
 
     List<CommunityGoods> getAllCommunityGood();
+
+    /**
+     * 通过id和网点id查询商品
+     *
+     * @param barcode
+     * @param goodsSkuId
+     * @return
+     */
+    CommunityGoods getCommunityGoodsByBarcode(@Param("goodsSkuId")Long goodsSkuId, @Param("communityId")Integer communityId);
 }

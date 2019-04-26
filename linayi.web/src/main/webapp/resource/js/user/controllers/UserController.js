@@ -91,7 +91,20 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 				}},
 				{name:'updateTime',label:'修改时间',sortable:false,formatter:function( cellvalue, options, rowObject ){
 					return cellvalue ? new Date( cellvalue ).format("yyyy-MM-dd hh:mm:ss") : "";
-				}}
+				}},
+				{
+					label: "操作",
+					name: "opt",
+					width: 300,
+					sortable: false,
+					formatter: function (cellvalue, options, rowObject) {
+						var opts = "";
+
+						opts = opts + "<a href='javascript:void(0);' ng-click='edit( " + rowObject.userId + " )' class='btn btn-primary shiny fa fa-edit btn-sm td-compile'>编辑</a> ";
+
+						return opts;
+					}
+				}
 //	             {label:"操作",name:"opt",width:220,sortable:false,formatter:function(cellvalue, options, rowObject){
 //					var opts = "";
 //					opts = opts + "<a href='javascript:void(0);' ng-click='show( "+rowObject.userId+" )' class='btn btn-primary fa fa-eye btn-sm td-compile'>查看</a> ";
@@ -115,6 +128,22 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 				}
 			}
 		});
+	}
+
+	/**编辑*/
+	function edit(id) {
+		var url = urls.ms + "/user/user/get.do?userId=" + id;
+		templateform.open({
+			title: "编辑",
+			url: url,
+			scope: $scope,
+			onOpen: function ($modalInstance, data, $scope) {
+			}
+		}, function ($modalInstance, data, $scope) {
+			save($modalInstance, $scope.correct, $scope);
+		});
+
+
 	}
 	
     /**禁用或者启用*/
@@ -141,55 +170,81 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
     }
     
     /**新增，编辑*/
-    function edit( id ){
-    	var title = '新增';
-    	var url = urls.ms + "/jsp/user/UserEdit.do";
-    	$scope.user = {
-				nickname : "",
-				account : "",	
-				userType : "",
-				headImage : "",
-				email : "",
-				mobile : ""
-			}
-		if( id ){
-			title = '编辑'
-			//获取次id的用户信息
+    // function edit( id ){
+    // 	var title = '新增';
+    // 	var url = urls.ms + "/jsp/user/UserEdit.do";
+    // 	$scope.user = {
+	// 			nickname : "",
+	// 			account : "",
+	// 			userType : "",
+	// 			headImage : "",
+	// 			email : "",
+	// 			mobile : ""
+	// 		}
+	// 	if( id ){
+	// 		title = '编辑'
+	// 		//获取次id的用户信息
+	// 		$.ajax({
+	// 			url : urls.ms + "/user/user/get.do",
+	// 			async : false,
+	// 			type : "post",
+	// 			data : {"userId":id},
+	// 			dataType : "JSON",
+	// 			success : function(data){
+	// 				console.log(data)
+	// 				var user = data.user;
+	// 				var userType = data.userType;
+	// 				$scope.user = {
+	// 					userId : user.userId,
+	// 					nickname : user.nickname,
+	// 					account : user.account,
+	// 					userType : userType,
+	// 					headImage : user.headImage,
+	// 					email : user.email,
+	// 					mobile : user.mobile
+	// 				}
+	// 			}
+	// 		})
+	// 	}
+	// 	templateform.open({
+	// 		title:title + "账号信息",
+	// 		url:url,
+	// 		scope:$scope,
+	// 		data:$scope.user,
+	// 		onOpen:function( $modalInstance, data ,$scope){
+	// 		}
+	// 	},function( $modalInstance,data, $scope ){
+	// 		save( $modalInstance,data, $scope );
+	// 	});
+    // }
+
+	/**保存*/
+	function save($modalInstance, data, $scope) {
+		try {
 			$.ajax({
-				url : urls.ms + "/user/user/get.do",
-				async : false,
-				type : "post",
-				data : {"userId":id},
-				dataType : "JSON",
-				success : function(data){
-					console.log(data)
-					var user = data.user;
-					var userType = data.userType;
-					$scope.user = {
-						userId : user.userId,
-						nickname : user.nickname,
-						account : user.account,
-						userType : userType,
-						headImage : user.headImage,
-						email : user.email,
-						mobile : user.mobile
+				url: urls.ms + "/user/user/save.do",
+				type: "post",
+				data: {
+					"userId": $scope.user.userId,
+					"nickname": $scope.user.nickname,
+					"realName": $scope.user.realName
+				},
+				dataType: "JSON",
+				success: function (data) {
+					if (data.respCode === "S") {
+						$("#userList").trigger("reloadGrid");
+						$modalInstance.close();
+						toaster.success("", "操作成功", 3000);
 					}
 				}
 			})
+		} catch (e) {
+			toaster.error("", typeof e == "string" ? //
+				e : e.msg ? //
+					e.msg : "出错了", 3000);
 		}
-		templateform.open({
-			title:title + "账号信息",
-			url:url,
-			scope:$scope,
-			data:$scope.user,
-			onOpen:function( $modalInstance, data ,$scope){
-			}
-		},function( $modalInstance,data, $scope ){
-			save( $modalInstance,data, $scope );
-		});
-    }
-    
-	/**保存*/
+	}
+	/*/!**保存*!/
     function save( $modalInstance,data, $scope ){
     	try{
     		console.log(data)
@@ -222,7 +277,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 					e : e.msg ? //
 							e.msg : "出错了",3000 );
 		}
-    }
+    }*/
     
     /**查看*/
     function show( id ){
@@ -335,9 +390,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 		},function( $modalInstance,data, $scope ){
 			save( $modalInstance,data, $scope );
 		});
-    	
     }
-    
     //初始化
     init();
 });
