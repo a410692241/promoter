@@ -744,7 +744,7 @@
                 and pt.receive_status in('WAIT_RECEIVE','RECEIVED')
             </if>
             <if test="receiveStatus == '' ">
-                and pt.receive_status in('WAIT_OUT','''RECEIVED_FLOW','WAIT_RECEIVE','RECEIVED')
+                and pt.receive_status in('OUTED','WAIT_OUT','RECEIVED_FLOW','WAIT_RECEIVE','RECEIVED')
             </if>
         </where>
     </select>
