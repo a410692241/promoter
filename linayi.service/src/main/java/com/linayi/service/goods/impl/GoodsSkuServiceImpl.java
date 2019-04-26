@@ -921,7 +921,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		searchSourceBuilder.size(esConfig.getPageSize());
 		String orderType = esConfig.getOrderType();
 		//排序规则
-//		if (PriceOrderType.SOLD_NUM.name().equalsIgnoreCase(orderType)) {
+//		if (PriceOrderType.SPREAD_DOWN.name().equalsIgnoreCase(orderType)) {
 //			searchSourceBuilder.sort("soldNum", SortOrder.DESC);
 //		}
 		if (PriceOrderType.PRICE_UP.name().equalsIgnoreCase(orderType)) {

@@ -219,7 +219,7 @@ public class PromoterVo {
 		public String key;
 		@ApiModelProperty(value = "条形码",example = "\"123456789\"")
 		public String barcode;
-		@ApiModelProperty(value = "排序方式:(NORMAL:综合;PRICE_UP:价格升序;PRICE_DOWN:价格降序;SOLD_NUM:销量)",example = "SOLD_NUM")
+		@ApiModelProperty(value = "排序方式:(NORMAL:综合;PRICE_UP:价格升序;PRICE_DOWN:价格降序;SPREAD_DOWN:价差降序)",example = "PRICE_UP")
 		public String orderType;
 		@ApiModelProperty(hidden = true)
 		public Integer userId;
