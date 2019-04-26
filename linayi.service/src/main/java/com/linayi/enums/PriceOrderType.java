@@ -4,8 +4,8 @@ public enum  PriceOrderType {
 
     NORMAL("综合"),
     PRICE_UP("价格升序"),
-    PRICE_DOWN("价格降序"),
-    SOLD_NUM("销量升序");
+    PRICE_DOWN("价格降序")/*,
+    SOLD_NUM("销量升序")*/;
 
     private String priceOrderTypeName;
 

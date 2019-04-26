@@ -921,9 +921,9 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		searchSourceBuilder.size(esConfig.getPageSize());
 		String orderType = esConfig.getOrderType();
 		//排序规则
-		if (PriceOrderType.SOLD_NUM.name().equalsIgnoreCase(orderType)) {
-			searchSourceBuilder.sort("soldNum", SortOrder.DESC);
-		}
+//		if (PriceOrderType.SOLD_NUM.name().equalsIgnoreCase(orderType)) {
+//			searchSourceBuilder.sort("soldNum", SortOrder.DESC);
+//		}
 		if (PriceOrderType.PRICE_UP.name().equalsIgnoreCase(orderType)) {
 			searchSourceBuilder.sort("minPrice" + keyword, SortOrder.ASC);
 		}
@@ -976,7 +976,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		int minPrice = Integer.parseInt(resultMap.get("minPrice" + PriceKeyWord) + "");
 		int maxPrice = Integer.parseInt(resultMap.get("maxPrice" + PriceKeyWord) + "");
 		goodsSku.setMinPrice(minPrice);
-		goodsSku.setSoldNum(Integer.parseInt(resultMap.get("soldNum") + ""));
+//		goodsSku.setSoldNum(Integer.parseInt(resultMap.get("soldNum") + ""));
 		double spreadRate = (maxPrice - minPrice) * 100 / Double.parseDouble("" + minPrice);
 		BigDecimal bigDecimal = new BigDecimal(spreadRate);
 		double v = bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
@@ -999,7 +999,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		}
 		//设置商品图,商品名,销量
 		resultGoodsSku.setGoodsSkuId(goodsSku.getGoodsSkuId());
-		resultGoodsSku.setSoldNum(goodsSku.getSoldNum());
+//		resultGoodsSku.setSoldNum(goodsSku.getSoldNum());
 		resultGoodsSku.setImage(Configuration.getConfig().getValue(ConstantUtil.IMAGE_SERVER) + "/" + goodsSku.getImage());
 		resultGoodsSku.setFullName(goodsSku.getFullName());
 		Long goodsSkuId = goodsSku.getGoodsSkuId();
