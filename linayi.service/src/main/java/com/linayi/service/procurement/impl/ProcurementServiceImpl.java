@@ -326,73 +326,73 @@ public class ProcurementServiceImpl implements ProcurementService {
 	 * @return
 	 */
 	private List<ProcurementTask> getProcurementTaskListByprocurTask(ProcurementTask procurTask){
-		List<ProcurementTask> list = new ArrayList<>();
 		if("showAll".equals(procurTask.getReceiveStatus()) || procurTask.getReceiveStatus() == null){
 			procurTask.setReceiveStatus("");
-			list = procurementTaskMapper.getProcurementsByRECEIVEDFLOW(procurTask);
-		}else{
-			list = procurementTaskMapper.getProcurementsByRECEIVEDFLOW(procurTask);
-		}
-		if("1".equals(procurTask.getDeliveryWaveTime())){
-		    try {
-                String str = "2019-01-01 08:00:00";
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date StartTime = sdf.parse(str);
-                procurTask.setWavePickingStartTime(StartTime);
-
-                str = "2019-01-01 13:00:00";
-                Date endTime = sdf.parse(str);
-                procurTask.setWavePickingEndTime(endTime);
-                list = procurementTaskMapper.getProcurementsByRECEIVEDFLOW(procurTask);
-            }catch (Exception e){
-
-            }
-		}
-		if("2".equals(procurTask.getDeliveryWaveTime())){
-            try {
-                String str = "2019-01-01 13:00:00";
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date StartTime = sdf.parse(str);
-                procurTask.setWavePickingStartTime(StartTime);
-
-                str = "2019-01-01 18:00:00";
-                Date endTime = sdf.parse(str);
-                procurTask.setWavePickingEndTime(endTime);
-                list = procurementTaskMapper.getProcurementsByRECEIVEDFLOW(procurTask);
-            }catch (Exception e){
-
-            }
-		}
-		if("3".equals(procurTask.getDeliveryWaveTime())){
-            try {
-                String str = "2019-01-01 18:00:00";
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date StartTime = sdf.parse(str);
-                procurTask.setWavePickingStartTime(StartTime);
-
-                str = "2019-01-01 23:59:59";
-                Date endTime = sdf.parse(str);
-                procurTask.setWavePickingEndTime(endTime);
-
-                str = "2019-01-01 00:00:00";
-                StartTime = sdf.parse(str);
-                str = "2019-01-01 08:00:00";
-                endTime = sdf.parse(str);
-                procurTask.setWavePickingEndTimeTo(endTime);
-                procurTask.setWavePickingStartTimeTo(StartTime);
-                list = procurementTaskMapper.getProcurementsByRECEIVEDFLOWThree(procurTask);
-            }catch (Exception e){
-
-            }
 		}
 
+		if("one".equals(procurTask.getDeliveryWaveTime())){
+			try {
+				String str = "2019-01-01 08:00:00";
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date StartTime = sdf.parse(str);
+				procurTask.setWavePickingStartTime(StartTime);
+
+				str = "2019-01-01 13:00:00";
+				Date endTime = sdf.parse(str);
+				procurTask.setWavePickingEndTime(endTime);
+			}catch (Exception e){
+
+			}
+		}
+		if("two".equals(procurTask.getDeliveryWaveTime())){
+			try {
+				String str = "2019-01-01 13:00:00";
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date StartTime = sdf.parse(str);
+				procurTask.setWavePickingStartTime(StartTime);
+
+				str = "2019-01-01 18:00:00";
+				Date endTime = sdf.parse(str);
+				procurTask.setWavePickingEndTime(endTime);
+			}catch (Exception e){
+
+			}
+		}
+		if("three".equals(procurTask.getDeliveryWaveTime())){
+			try {
+				String str = "2019-01-01 18:00:00";
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date StartTime = sdf.parse(str);
+				procurTask.setWavePickingStartTime(StartTime);
+
+				str = "2019-01-01 23:59:59";
+				Date endTime = sdf.parse(str);
+				procurTask.setWavePickingEndTime(endTime);
+
+				str = "2019-01-01 00:00:00";
+				StartTime = sdf.parse(str);
+				str = "2019-01-01 08:00:00";
+				endTime = sdf.parse(str);
+				procurTask.setWavePickingEndTimeTo(endTime);
+				procurTask.setWavePickingStartTimeTo(StartTime);
+			}catch (Exception e){
+
+			}
+		}
+		List<ProcurementTask> list  = procurementTaskMapper.getProcurementsByRECEIVEDFLOW(procurTask);
 		Calendar cal =Calendar.getInstance();
 		for(int i=0;i<list.size();i++){
-			if("RECEIVED_FLOW".equals(list.get(i).getReceiveStatus())){
+			if("PROCURING".equals(list.get(i).getProcureStatus()) && "WAIT_OUT".equals(list.get(i).getReceiveStatus())){
+				list.get(i).setReceiveStatus("采买中");
+			}else if("WAIT_OUT".equals(list.get(i).getReceiveStatus()) && list.get(i).getActualQuantity()>0){
+				list.get(i).setReceiveStatus("已采买");
+			}else if("OUTED".equals(list.get(i).getReceiveStatus())){
+				list.get(i).setReceiveStatus("已提货");
+			}else if("RECEIVED_FLOW".equals(list.get(i).getReceiveStatus())){
 				list.get(i).setReceiveStatus("待发货");
 			}else if("WAIT_RECEIVE".equals(list.get(i).getReceiveStatus())){
 				list.get(i).setReceiveStatus("已发货");
-			}else{
+			}else if("RECEIVE".equals(list.get(i).getReceiveStatus())){
 				list.get(i).setReceiveStatus("已发货");
 			}
 			Date date = list.get(i).getCreateTime();
@@ -759,10 +759,11 @@ public class ProcurementServiceImpl implements ProcurementService {
 		row.createCell(4).setCellValue("订单状态");
 		row.createCell(5).setCellValue("商品名称");
 		row.createCell(6).setCellValue("商品条码");
-		row.createCell(7).setCellValue("数量");
-		row.createCell(8).setCellValue("商品单价(元)");
-		row.createCell(9).setCellValue("采买超市");
-		row.createCell(10).setCellValue("下单时间");
+		row.createCell(7).setCellValue("顾客下单数量");
+		row.createCell(8).setCellValue("实际采买数量");
+		row.createCell(9).setCellValue("商品单价(元)");
+		row.createCell(10).setCellValue("采买超市");
+		row.createCell(11).setCellValue("下单时间");
 		// 定义样式
 		CellStyle cellStyle = workbook.createCellStyle();
 		// 格式化日期
@@ -779,10 +780,11 @@ public class ProcurementServiceImpl implements ProcurementService {
 			row.createCell(4).setCellValue(procurTask.getReceiveStatus());
 			row.createCell(5).setCellValue(procurTask.getFullName());
 			row.createCell(6).setCellValue(procurTask.getBarcode());
-			row.createCell(7).setCellValue(procurTask.getActualQuantity());
-			row.createCell(8).setCellValue(procurTask.getPrice()/100.00);
-			row.createCell(9).setCellValue(procurTask.getSupermarketName());
-			row.createCell(10).setCellValue(DateUtil.date2String(procurTask.getCreateTime(),pattern));
+			row.createCell(7).setCellValue(procurTask.getQuantity());
+			row.createCell(8).setCellValue(procurTask.getActualQuantity());
+			row.createCell(9).setCellValue(procurTask.getPrice()/100.00);
+			row.createCell(10).setCellValue(procurTask.getSupermarketName());
+			row.createCell(11).setCellValue(DateUtil.date2String(procurTask.getCreateTime(),pattern));
 		}
 		OutputStream fOut = response.getOutputStream();
 		workbook.write(fOut);

@@ -36,6 +36,9 @@
                             <span class="input-group-addon">订单状态</span>
                             <select ng-model="search.receiveStatus" ng-change="getType(search.receiveStatus)" ng-init="search.receiveStatus='showAll'">
                                 <option value="showAll">全部</option>
+                                <option value="PROCURING">采买中</option>
+                                <option value="BOUGHT">已采买</option>
+                                <option value="OUTED">已提货</option>
                                 <option value="WAIT_RECEIVE">已发货</option>
                                 <option value="RECEIVED_FLOW">待发货</option>
                             </select>
