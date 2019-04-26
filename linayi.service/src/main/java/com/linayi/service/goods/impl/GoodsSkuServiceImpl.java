@@ -921,9 +921,18 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		searchSourceBuilder.size(esConfig.getPageSize());
 		String orderType = esConfig.getOrderType();
 		//排序规则
-//		if (PriceOrderType.SPREAD_DOWN.name().equalsIgnoreCase(orderType)) {
-//			searchSourceBuilder.sort("soldNum", SortOrder.DESC);
-//		}
+		if (PriceOrderType.SPREAD_DOWN.name().equalsIgnoreCase(orderType)) {
+			if (MemberLevel.NOT_MEMBER.toString().equals(currentMemberLevel.toString()) || MemberLevel.NORMAL.toString().equals(currentMemberLevel.toString())) {
+				searchSourceBuilder.sort("spreadNormal", SortOrder.DESC);
+			}
+			else if (MemberLevel.SENIOR.toString().equals(currentMemberLevel.toString())) {
+				searchSourceBuilder.sort("spreadSenior", SortOrder.DESC);
+			}
+			else if (MemberLevel.SUPER.toString().equals(currentMemberLevel.toString())) {
+				searchSourceBuilder.sort("spreadSuper", SortOrder.DESC);
+			}
+
+		}
 		if (PriceOrderType.PRICE_UP.name().equalsIgnoreCase(orderType)) {
 			searchSourceBuilder.sort("minPrice" + keyword, SortOrder.ASC);
 		}
