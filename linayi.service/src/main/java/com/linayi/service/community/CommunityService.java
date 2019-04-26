@@ -42,4 +42,6 @@ public interface CommunityService {
     List<Community> getCommunityByAreaCode(Community community) throws Exception;
 
     Community getCommunityById(Integer communityId);
+
+    Integer getcommunityIdByuserIdInDefaultAddress(Integer userId);
 }

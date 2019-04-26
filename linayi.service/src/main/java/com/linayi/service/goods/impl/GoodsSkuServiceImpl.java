@@ -10,6 +10,7 @@ import com.linayi.enums.MemberLevel;
 import com.linayi.enums.PriceOrderType;
 import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
+import com.linayi.service.community.CommunityService;
 import com.linayi.service.goods.*;
 import com.linayi.service.promoter.OpenMemberInfoService;
 import com.linayi.util.*;
@@ -82,6 +83,8 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 	private SupermarketGoodsMapper supermarketGoodsMapper;
 	@Autowired
 	private CommunityMapper communityMapper;
+	@Autowired
+	private CommunityService communityService;
 	@Resource
 	private OpenMemberInfoService openMemberInfoService;
 	private RestHighLevelClient esClient = RestClientFactory.getHighLevelClient();
@@ -890,7 +893,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		Integer userId = esConfig.getUserId();
 		MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(userId);
 		//获取配送地址所在的网点id
-		Integer communityId = communityMapper.getcommunityIdByuserIdInDefaultAddress(userId);
+		Integer communityId = communityService.getcommunityIdByuserIdInDefaultAddress(userId);
 		String keyword = "";
 		//普通会员
 		if (MemberLevel.NOT_MEMBER.toString().equals(currentMemberLevel.toString()) || MemberLevel.NORMAL.toString().equals(currentMemberLevel.toString())) {
@@ -912,7 +915,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		String fieldName3 = "brand";
 		//设置查询的条件为商品名存在特定关键字符,而且价格不能为null
 		//对指定字段设置ik分词器
-		searchSourceBuilder.query(QueryBuilders.boolQuery().must(QueryBuilders.multiMatchQuery(key, fieldName, fieldName2, fieldName3))
+		searchSourceBuilder.query(QueryBuilders.boolQuery().must(QueryBuilders.multiMatchQuery(key, fieldName))
 				.must(QueryBuilders.existsQuery("minPrice" + keyword))
 				.must(QueryBuilders.matchQuery("communityId", communityId)));
 		searchSourceBuilder.size(esConfig.getPageSize());
@@ -1001,7 +1004,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		resultGoodsSku.setFullName(goodsSku.getFullName());
 		Long goodsSkuId = goodsSku.getGoodsSkuId();
 		Integer userId = esConfig.getUserId();
-		Integer communityId = communityMapper.getcommunityIdByuserIdInDefaultAddress(userId);
+		Integer communityId = communityService.getcommunityIdByuserIdInDefaultAddress(userId);
 		CommunityGoods communityGoods = communityGoodsMapper.getCommunityGoodsByBarcode(goodsSkuId,communityId);
 		if(communityGoods == null){
 			throw new BusinessException(ErrorType.BARCODE_ERROR);
@@ -1063,7 +1066,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		//获取用户的会员等级
 		MemberLevel memberLevel = openMemberInfoService.getCurrentMemberLevel(goodsSku.getUserId());
 		//根据uid获取网点id
-		Integer communityId = communityMapper.getcommunityIdByuserId(goodsSku.getUserId());
+		Integer communityId = communityService.getcommunityIdByuserIdInDefaultAddress(goodsSku.getUserId());
 		goodsSku.setCommunityId(communityId);
 		goodsSku.setMemberLevel(memberLevel.toString());
 		List<GoodsSku> goodsSkuList = goodsSkuMapper.getRecommendGoodsSku(goodsSku);

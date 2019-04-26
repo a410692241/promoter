@@ -285,7 +285,8 @@ public class GoodsSkuController extends BaseController {
             map.put("totalPage", totalPage);
             map.put("currentPage", goodsSku.getCurrentPage());
             return new ResponseData(map);
-
+        } catch (BusinessException e) {
+            return new ResponseData(e.getErrorType());
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseData(ErrorType.SYSTEM_ERROR);
