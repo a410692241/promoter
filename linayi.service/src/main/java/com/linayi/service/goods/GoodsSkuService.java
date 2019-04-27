@@ -140,4 +140,13 @@ public interface GoodsSkuService {
 	 * @param goodsSku
 	 */
     void exportGoodsData(GoodsSku goodsSku, HttpServletRequest request, HttpServletResponse response) throws Exception;
+	/**
+	 * 根据商品ID将该商品设为推荐商品
+	 * @param goodsSku
+	 */
+	void recommendGoodsSku(GoodsSku goodsSku);/**
+	 * 根据商品ID将该商品取消推荐
+	 * @param goodsSku
+	 */
+	void removedRecommend(GoodsSku goodsSku);
 }
