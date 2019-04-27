@@ -747,5 +747,6 @@
                 and pt.receive_status in('OUTED','WAIT_OUT','RECEIVED_FLOW','WAIT_RECEIVE','RECEIVED')
             </if>
         </where>
+        order by o.create_time desc
     </select>
 </mapper>
