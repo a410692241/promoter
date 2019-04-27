@@ -27,6 +27,7 @@
     <result column="deliverer_id" jdbcType="INTEGER" property="delivererId" />
     <result column="small_community_id" jdbcType="INTEGER" property="smallCommunityId" />
   <result column="order_type" jdbcType="VARCHAR" property="orderType"/>
+  <result column="sex" jdbcType="VARCHAR" property="sex"/>
   </resultMap>
   <update id="updateOrderById" parameterType="com.linayi.entity.order.Orders">
     update orders
@@ -54,7 +55,7 @@
   </update>
   <select id="getOrderList" resultMap="BaseResultMap">
     select orders_id, user_id, receiver_name, mobile, address_one, address_two, address_three, pay_way, save_amount, service_fee, extra_fee, arrive_time, actual_arrive_time,
-    remark, quantity, amount, user_status, community_status, community_id, update_time, create_time, delivery_finish_time, delivery_time from orders
+    remark, quantity, amount, user_status, community_status, community_id, update_time, create_time, delivery_finish_time, delivery_time,sex from orders
     <where>
     <if test="userStatus == 'ALL'">
       and user_status NOT IN ('REFUNDED','REFUSED')
@@ -249,14 +250,14 @@
       pay_way, save_amount, service_fee,
       extra_fee, arrive_time, actual_arrive_time,
       remark, quantity, amount, receive_address_id,
-      user_status, community_status, community_id, address_type,
+      user_status, community_status, community_id, address_type,sex,
       update_time, create_time,small_community_id <if test="orderType!=null and orderType!=''">,order_type</if>)
     values (#{ordersId,jdbcType=BIGINT}, #{userId,jdbcType=INTEGER}, #{receiverName,jdbcType=VARCHAR},
       #{mobile,jdbcType=VARCHAR}, #{addressOne,jdbcType=VARCHAR}, #{addressTwo,jdbcType=VARCHAR}, #{addressThree,jdbcType=VARCHAR},
       #{payWay,jdbcType=VARCHAR}, #{saveAmount,jdbcType=INTEGER}, #{serviceFee,jdbcType=INTEGER},
       #{extraFee,jdbcType=INTEGER}, #{arriveTime,jdbcType=TIMESTAMP}, #{actualArriveTime,jdbcType=TIMESTAMP},
       #{remark,jdbcType=VARCHAR}, #{quantity,jdbcType=INTEGER}, #{amount,jdbcType=INTEGER}, #{receiveAddressId,jdbcType=INTEGER},
-      #{userStatus,jdbcType=VARCHAR}, #{communityStatus,jdbcType=VARCHAR}, #{communityId,jdbcType=INTEGER}, #{addressType,jdbcType=VARCHAR},
+      #{userStatus,jdbcType=VARCHAR}, #{communityStatus,jdbcType=VARCHAR}, #{communityId,jdbcType=INTEGER}, #{addressType,jdbcType=VARCHAR},#{sex,jdbcType=VARCHAR},
       #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP},#{smallCommunityId,jdbcType=INTEGER}<if test="orderType!=null and orderType!=''">,#{orderType}</if>)
   </insert>
   <insert id="insertSelective" parameterType="com.linayi.entity.order.Orders">

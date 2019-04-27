@@ -219,6 +219,7 @@ public class OrderServiceImpl implements OrderService {
         order.setAddressOne(smallCommunity.getAreaCode());
         order.setAddressTwo(smallCommunity.getName());
         //新增小区ID
+        order.setSex(receiveAddress.getSex());
         order.setSmallCommunityId(smallCommunity.getSmallCommunityId());
         order.setAddressThree(receiveAddress.getAddressTwo());
         order.setReceiverName(receiveAddress.getReceiverName());
@@ -373,6 +374,7 @@ public class OrderServiceImpl implements OrderService {
             if (type.equals("orderList")) {
                 addPrice += serviceFee + extraFee;
                 orders2.setReceiverName(orders1.getReceiverName());
+                orders2.setSex(orders1.getSex());
             }
             if (type.equals("orderDetails")) {
                 //服务费
