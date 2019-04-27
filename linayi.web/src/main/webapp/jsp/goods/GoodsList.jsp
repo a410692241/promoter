@@ -99,6 +99,19 @@
                         <span class="input-group-addon">创建者账号</span> <input
                             ng-model="search.userName" type="text" class="form-control">
                     </div>
+                    <div class="input-group form-group form-group-margin">
+                        <span class="input-group-addon">是否推荐商品</span>
+                        <ui-select
+                                on-select="search.isRecommend = $item.code"
+                                ng-init='options=<cl:getByEnum enumName="com.linayi.enums.IsRecommendStatus" nameWithCode="getIsRecommend;name"/>;
+                                   options.splice(0,0,{"name":"全部","code":""});'
+                                ng-model="temp" style="min-width: 200px">
+                            <ui-select-match>{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="item in options | filter:{name: $select.search}">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
                     <div>
                         <a ng-click="list()" class="btn btn-primary form-group-margin"
                            href="javascript:void(0);"> <i class="fa fa-search"></i>搜索

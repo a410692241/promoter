@@ -235,7 +235,9 @@
             <if test="categoryId != null and categoryId != ''">
                 and gs.category_id = #{categoryId}
             </if>
-
+            <if test="isRecommend != null and isRecommend != ''">
+                and gs.is_recommend = #{isRecommend}
+            </if>
             <if test="brandId != null and brandId != ''">
                 and gs.brand_id = #{brandId}
             </if>
