@@ -867,5 +867,17 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		return supermarketMapper.selectAll(supermarket);
 	}
 
+	@Override
+	@Transactional
+	public void recommendGoodsSku(GoodsSku goodsSku) {
+		goodsSku.setIsRecommend("TRUE");
+		goodsSkuMapper.update(goodsSku);
+	}
+	@Override
+	@Transactional
+	public void removedRecommend(GoodsSku goodsSku) {
+		goodsSku.setIsRecommend("FALSE");
+		goodsSkuMapper.update(goodsSku);
+	}
 
 }
