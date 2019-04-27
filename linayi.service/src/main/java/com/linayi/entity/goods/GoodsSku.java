@@ -115,6 +115,16 @@ public class GoodsSku extends BaseEntity {
 
     private String memberLevel;
 
+    private String isRecommend;
+
+    public String getIsRecommend() {
+        return isRecommend;
+    }
+
+    public void setIsRecommend(String isRecommend) {
+        this.isRecommend = isRecommend;
+    }
+
     public String getMemberLevel() {
         return memberLevel;
     }
