@@ -4,8 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.linayi.dao.area.SmallCommunityMapper;
+import com.linayi.dao.order.OrdersGoodsMapper;
 import com.linayi.dao.user.AuthenticationApplyMapper;
+import com.linayi.entity.area.SmallCommunity;
+import com.linayi.entity.community.Community;
 import com.linayi.entity.user.AuthenticationApply;
+import com.linayi.service.area.SmallCommunityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +40,10 @@ public class DeliveryController extends BaseController {
     private DeliveryBoxService deliveryBoxService;
     @Autowired
     private AuthenticationApplyMapper authenticationApplyMapper;
-
+    @Autowired
+    private SmallCommunityService smallCommunityService;
+    @Autowired
+    private SmallCommunityMapper smallCommunityMapper;
 
     //显示订单信息
     @RequestMapping("/deliveryList.do")
@@ -45,11 +53,9 @@ public class DeliveryController extends BaseController {
             if (orders.getPageSize() == null) {
                 orders.setPageSize(8);
             }
-            AuthenticationApply authenticationApply = new AuthenticationApply();
-            authenticationApply.setAuthenticationType("DELIVERER");
-            authenticationApply.setUserId(getUserId());
-            authenticationApply = authenticationApplyMapper.getAuthenticationApplyByUserIdAndType(authenticationApply);
-            if (authenticationApply != null) {
+
+            List<SmallCommunity> deliverer = smallCommunityMapper.getDeliverer(getUserId());
+            if ( deliverer != null) {
                 orders.setDelivererId(getUserId());
             }
             List<Orders> ordersList = deliveryTaskService.getOrdersBydelivererIdAndStatus(orders);
