@@ -374,9 +374,9 @@ public class OrderServiceImpl implements OrderService {
             if (type.equals("orderList")) {
                 addPrice += serviceFee + extraFee;
                 orders2.setReceiverName(orders1.getReceiverName());
-                orders2.setSex(orders1.getSex());
             }
             if (type.equals("orderDetails")) {
+                orders2.setSex(orders1.getSex());
                 //服务费
                 orders2.setServiceFeeString(getpriceString(serviceFee));
                 // 附加费用

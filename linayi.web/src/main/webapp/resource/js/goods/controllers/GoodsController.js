@@ -235,9 +235,9 @@ app.controller('goodsCtrl'/**
                             /*opts = opts + "<a href='javascript:void(0);' ng-click='remove( "+rowObject.goodsSkuId+" )' class='btn btn-primary fa fa-remove btn-sm td-compile'>删除</a> ";*/
                             opts = opts + "<a href='javascript:void(0);' ng-click='share( " + rowObject.goodsSkuId + " )' class='btn btn-primary fa fa-show btn-sm td-compile'>价格分享</a> ";
                             if( rowObject.isRecommend == 'FALSE' ){
-                                opts = opts + "<a href='javascript:void(0);' ng-click='recommendGoodsSku( "+rowObject.goodsSkuId+")' class='btn btn-primary fa fa-eye btn-sm td-compile'>推荐商品</a> ";
+                                opts = opts + "<a href='javascript:void(0);' ng-click='recommendGoodsSku( "+rowObject.goodsSkuId+")' class='btn btn-primary fa fa-show btn-sm td-compile'>推荐</a> ";
                             }else{
-                                opts = opts + "<a href='javascript:void(0);' ng-click='removedRecommend( "+rowObject.goodsSkuId+" )' class='btn btn-primary fa fa-eye btn-sm td-compile'>取消推荐</a> ";
+                                opts = opts + "<a href='javascript:void(0);' ng-click='removedRecommend( "+rowObject.goodsSkuId+" )' class='btn btn-primary fa fa-show btn-sm td-compile'>取消推荐</a> ";
                             }
                             return opts;
                         }
