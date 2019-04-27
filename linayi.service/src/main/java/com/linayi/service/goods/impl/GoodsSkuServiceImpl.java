@@ -532,40 +532,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		List<GoodsSku> goodsSkuList = goodsSkuMapper.getGoodsListBybrandIdcategoryIdGoodsName(goodsSku);
 
 		if(goodsSkuList.size()>0) {
-
-			//普通用户和普通会员
-			if(MemberLevel.NOT_MEMBER.toString().equals(memberLevel.toString()) || MemberLevel.NORMAL.toString().equals(memberLevel.toString())){
-				for(GoodsSku i:goodsSkuList) {
-
-					Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdNormal());
-					i.setMinPrice(i.getMinPriceNormal());
-					i.setMinSupermarket(supermarket.getName());
-					i.setImage(ImageUtil.dealToShow(i.getImage()));
-				}
-			}
-			//高级会员
-			else if(MemberLevel.SENIOR.toString().equals(memberLevel.toString())){
-				for(GoodsSku i:goodsSkuList) {
-
-					Supermarket supermarket = null;
-					supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdSenior());
-					i.setMinPrice(i.getMinPriceSenior());
-					i.setMinSupermarket(supermarket.getName());
-					i.setImage(ImageUtil.dealToShow(i.getImage()));
-				}
-			}
-			//超级vip
-			else if(MemberLevel.SUPER.toString().equals(memberLevel.toString())){
-				for(GoodsSku i:goodsSkuList) {
-
-					Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdSuper());
-					i.setMinPrice(i.getMinPriceSuper());
-					i.setMinSupermarket(supermarket.getName());
-					i.setImage(ImageUtil.dealToShow(i.getImage()));
-				}
-			}
-
-
+			setMemberPrice(memberLevel,goodsSkuList);
 		}
 		return goodsSkuList;
 	}
@@ -584,39 +551,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 
 		if(differenceRankingList.size()>0) {
 
-            //普通用户和普通会员
-            if(MemberLevel.NOT_MEMBER.toString().equals(memberLevel.toString()) || MemberLevel.NORMAL.toString().equals(memberLevel.toString())){
-                for(GoodsSku i:differenceRankingList) {
-                    Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdNormal());
-//                  i.setMaxSupermarket(supermarketMapper.selectSupermarketBysupermarketId(i.getMaxSupermarketId()).getName());
-                    i.setMinPrice(i.getMinPriceNormal());
-                    i.setMinSupermarket(supermarket.getName());
-                    i.setImage(ImageUtil.dealToShow(i.getImage()));
-                    i.setSpreadRate(Double.valueOf((df.format(Double.valueOf((i.getMaxPrice()-i.getMinPrice()))/i.getMinPrice()*100))));
-                }
-            }
-            //高级会员
-            else if(MemberLevel.SENIOR.toString().equals(memberLevel.toString())){
-                for(GoodsSku i:differenceRankingList) {
-                    Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdSenior());
-//                  i.setMaxSupermarket(supermarketMapper.selectSupermarketBysupermarketId(i.getMaxSupermarketId()).getName());
-                    i.setMinPrice(i.getMinPriceSenior());
-                    i.setMinSupermarket(supermarket.getName());
-                    i.setImage(ImageUtil.dealToShow(i.getImage()));
-                    i.setSpreadRate(Double.valueOf((df.format(Double.valueOf((i.getMaxPrice()-i.getMinPrice()))/i.getMinPrice()*100))));
-                }
-            }
-            //超级vip
-            else if(MemberLevel.SUPER.toString().equals(memberLevel.toString())){
-                for(GoodsSku i:differenceRankingList) {
-                    Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdSuper());
-//                  i.setMaxSupermarket(supermarketMapper.selectSupermarketBysupermarketId(i.getMaxSupermarketId()).getName());
-                    i.setMinPrice(i.getMinPriceSuper());
-                    i.setMinSupermarket(supermarket.getName());
-                    i.setImage(ImageUtil.dealToShow(i.getImage()));
-                    i.setSpreadRate(Double.valueOf((df.format(Double.valueOf((i.getMaxPrice()-i.getMinPrice()))/i.getMinPrice()*100))));
-                }
-            }
+			setMemberPrice(memberLevel,differenceRankingList);
 
 		}
 		return differenceRankingList;
@@ -736,33 +671,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		List<GoodsSku> goodsSkuList = goodsSkuMapper.customSearch(goodsSku);
 		if(goodsSkuList.size()!=0) {
 
-			//普通用户和普通会员
-			if(MemberLevel.NOT_MEMBER.toString().equals(memberLevel.toString()) || MemberLevel.NORMAL.toString().equals(memberLevel.toString())){
-				for(GoodsSku i:goodsSkuList) {
-					Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdNormal());
-					i.setMinPrice(i.getMinPriceNormal());
-					i.setMinSupermarket(supermarket.getName());
-					i.setImage(ImageUtil.dealToShow(i.getImage()));
-				}
-			}
-			//高级会员
-			else if(MemberLevel.SENIOR.toString().equals(memberLevel.toString())){
-				for(GoodsSku i:goodsSkuList) {
-					Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdSenior());
-					i.setMinPrice(i.getMinPriceSenior());
-					i.setMinSupermarket(supermarket.getName());
-					i.setImage(ImageUtil.dealToShow(i.getImage()));
-				}
-			}
-			//超级vip
-			else if(MemberLevel.SUPER.toString().equals(memberLevel.toString())){
-				for(GoodsSku i:goodsSkuList) {
-					Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(i.getMinSupermarketIdSuper());
-					i.setMinPrice(i.getMinPriceSuper());
-					i.setMinSupermarket(supermarket.getName());
-					i.setImage(ImageUtil.dealToShow(i.getImage()));
-				}
-			}
+			setMemberPrice(memberLevel,goodsSkuList);
 
 		}
 		return goodsSkuList;

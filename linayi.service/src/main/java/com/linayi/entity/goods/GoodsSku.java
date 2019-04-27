@@ -117,6 +117,17 @@ public class GoodsSku extends BaseEntity {
 
     private Integer soldNum; //销售数量
 
+    private  String isRecommend; //是否是推荐商品
+
+
+    public String getIsRecommend() {
+        return isRecommend;
+    }
+
+    public void setIsRecommend(String isRecommend) {
+        this.isRecommend = isRecommend;
+    }
+
     public Integer getSoldNum() {
         return soldNum;
     }

@@ -219,6 +219,9 @@
             <if test="soldNum != null">
                 sold_num = #{soldNum},
             </if>
+            <if test="isRecommend != null">
+                is_recommend = #{isRecommend},
+            </if>
         </set>
         where goods_sku_id = #{goodsSkuId}
     </update>
@@ -610,7 +613,6 @@
             gs.image,
             gs.create_time  createTime,
             gs.model,
-            IFNULL(gs.sold_num,0) soldNum,
             cg.min_price minPrice,
             cg.max_price maxPrice,
             cg.max_supermarket_id maxSupermarketId,
@@ -634,6 +636,8 @@
             LEFT JOIN attribute_value av ON av.value_id=gav.attr_value_id
         where
             cg.community_id=#{communityId}
+        AND
+            gs.is_recommend ='TRUE'
             <if test="memberLevel!=null and memberLevel=='NORMAL'">
                 and cg.min_price_normal IS NOT NULL
             </if>
@@ -646,8 +650,8 @@
             <if test="memberLevel!=null and memberLevel=='SUPER'">
                 and cg.min_price_super IS NOT NULL
             </if>
-                GROUP BY gs.goods_sku_id
-                ORDER BY gs.sold_num DESC
+            group by gs.goods_sku_id
+
     </select>
 
     <select id="getSoldNumByGoodsSkuId" parameterType="java.lang.Long" resultType="java.lang.Integer">
