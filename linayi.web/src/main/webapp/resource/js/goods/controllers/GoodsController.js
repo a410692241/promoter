@@ -37,6 +37,8 @@ app.controller('goodsCtrl'/**
     , function ($q, $http, $scope, toaster, goodsService, messager, templateform, $templateCache) {
 
         function init() {
+            $scope.recommendGoodsSku = recommendGoodsSku;
+            $scope.removedRecommend = removedRecommend;
             $scope.editeAttribute = editeAttribute;
             $scope.show = show;
             $scope.edit = edit;
@@ -215,6 +217,7 @@ app.controller('goodsCtrl'/**
                         }
                     },
                     {name: 'goodsSkuId', label: '商品编号', width: 60, sortable: false},
+                    {name: 'isRecommend', label: '是否为推荐商品', width: 60, sortable: false,hidden:true},
                     {
                         label: "操作",
                         name: "opt",
@@ -231,6 +234,11 @@ app.controller('goodsCtrl'/**
                             opts = opts + "<a href='javascript:void(0);' ng-click='edit( " + rowObject.goodsSkuId + " )' class='btn btn-primary fa fa-edit btn-sm td-compile'>编辑</a> ";
                             /*opts = opts + "<a href='javascript:void(0);' ng-click='remove( "+rowObject.goodsSkuId+" )' class='btn btn-primary fa fa-remove btn-sm td-compile'>删除</a> ";*/
                             opts = opts + "<a href='javascript:void(0);' ng-click='share( " + rowObject.goodsSkuId + " )' class='btn btn-primary fa fa-show btn-sm td-compile'>价格分享</a> ";
+                            if( rowObject.isRecommend == 'FALSE' ){
+                                opts = opts + "<a href='javascript:void(0);' ng-click='recommendGoodsSku( "+rowObject.goodsSkuId+")' class='btn btn-primary fa fa-show btn-sm td-compile'>推荐</a> ";
+                            }else{
+                                opts = opts + "<a href='javascript:void(0);' ng-click='removedRecommend( "+rowObject.goodsSkuId+" )' class='btn btn-primary fa fa-show btn-sm td-compile'>取消推荐</a> ";
+                            }
                             return opts;
                         }
                     }
@@ -238,7 +246,54 @@ app.controller('goodsCtrl'/**
             });
 
         }
+        /**推荐商品*/
+        function recommendGoodsSku(goodsSkuId){
+            messager.confirm("确认推荐该商品？",function( $modalInstance ){
+                $.ajax({
+                    url:urls.ms+"/goods/goods/recommendGoodsSku.do",
+                    data:{
+                        goodsSkuId:goodsSkuId,
+                    },
+                    dataType:"json",
+                    type:"post",
+                    success:function( data ){
+                        if( data.respCode == "S" ){
+                            list();
+                            $scope.$apply(function(){
+                                $modalInstance.close();
+                            });
 
+                        }else{
+                            toaster.error( "",data.msg,3000 );
+                        }
+                    }
+                });
+            });
+        }
+        /**取消推荐*/
+        function removedRecommend(goodsSkuId){
+            messager.confirm("确认取消推荐？",function( $modalInstance ){
+                $.ajax({
+                    url:urls.ms+"/goods/goods/removedRecommend.do",
+                    data:{
+                        goodsSkuId:goodsSkuId,
+                    },
+                    dataType:"json",
+                    type:"post",
+                    success:function( data ){
+                        if( data.respCode == "S" ){
+                            list();
+                            $scope.$apply(function(){
+                                $modalInstance.close();
+                            });
+
+                        }else{
+                            toaster.error( "",data.msg,3000 );
+                        }
+                    }
+                });
+            });
+        }
         /** 列表查询页面选择类别 */
         function checkedCategory($item) {
             try {

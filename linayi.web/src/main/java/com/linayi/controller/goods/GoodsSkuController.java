@@ -442,4 +442,32 @@ public class GoodsSkuController extends BaseController{
     public void exportGoodsData(GoodsSku goodsSku, HttpServletRequest request, HttpServletResponse response) throws Exception {
             goodsService.exportGoodsData(goodsSku,request,response);
     }
+    /**
+     * 根据商品ID将该商品设为推荐商品
+     * @throws Exception
+     */
+    @RequestMapping("/recommendGoodsSku.do")
+    @ResponseBody
+    public ResponseData recommendGoodsSku(GoodsSku goodsSku){
+        try {
+            goodsService.recommendGoodsSku(goodsSku);
+            return new ResponseData("success");
+        }catch (Exception e){
+            return new ResponseData(ErrorType.SYSTEM_ERROR);
+        }
+    }
+    /**
+     * 根据商品ID将该商品取消推荐
+     * @throws Exception
+     */
+    @RequestMapping("/removedRecommend.do")
+    @ResponseBody
+    public ResponseData removedRecommend(GoodsSku goodsSku){
+        try {
+            goodsService.removedRecommend(goodsSku);
+            return new ResponseData("success");
+        }catch (Exception e){
+            return new ResponseData(ErrorType.SYSTEM_ERROR);
+        }
+    }
 }

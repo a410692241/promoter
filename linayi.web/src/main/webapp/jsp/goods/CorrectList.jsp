@@ -79,13 +79,13 @@
                     <div class="form-group form-group-margin">
                         <div class="input-group">
                             <span class="input-group-addon">有效开始时间</span>
-                            <input ng-model="search.startTime" datetimepicker type="text" class="form-control" style="min-width: 150px">
+                            <input ng-model="search.startTim" datetimepicker type="text" class="form-control" style="min-width: 150px">
                         </div>
                     </div>
                     <div class="form-group form-group-margin">
                         <div class="input-group">
                             <span class="input-group-addon">有效结束时间</span>
-                            <input ng-model="search.endTime" datetimepicker type="text" class="form-control" style="min-width: 150px">
+                            <input ng-model="search.endTim" datetimepicker type="text" class="form-control" style="min-width: 150px">
                         </div>
                     </div>
                     <div class="form-group form-group-margin">

@@ -137,6 +137,7 @@ public class Orders extends BaseEntity {
     private Integer smallCommunityId;
     @ApiModelProperty(value = "小区Id集合")
     private List<Integer> smallCommunityIdList;
+    private String sex;
 
     public List<Integer> getSmallCommunityIdList() {
         return smallCommunityIdList;
@@ -690,5 +691,13 @@ public class Orders extends BaseEntity {
 
     public void setPromoterId(Integer promoterId) {
         this.promoterId = promoterId;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 }

@@ -101,6 +101,28 @@ public class Correct extends BaseEntity {
     /*创建结束时间*/
     private String createTimeEnd;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date startTim;
+
+    public Date getStartTim() {
+        return startTim;
+    }
+
+    public void setStartTim(Date startTim) {
+        this.startTim = startTim;
+    }
+
+    public Date getEndTim() {
+        return endTim;
+    }
+
+    public void setEndTim(Date endTim) {
+        this.endTim = endTim;
+    }
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date endTim;
+
     public String getCreateTimeStart() {
         return createTimeStart;
     }

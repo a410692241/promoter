@@ -21,7 +21,7 @@
                         <span class="input-icon icon-right">
                                 <input type="text"
                                        ng-model="correct.goodsSku.name"
-                                       class="form-control">
+                                       class="form-control"readonly="readonly">
                                 <i class="glyphicon glyphicon-fire blue"></i>
                             </span>
                     </div>
@@ -33,7 +33,7 @@
                         <span class="input-icon icon-right">
                                 <input type="text"
                                        ng-model="correct.user.nickname"
-                                       class="form-control">
+                                       class="form-control"readonly="readonly">
                                 <i class="glyphicon glyphicon-user blue"></i>
                             </span>
                     </div>
@@ -41,10 +41,11 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label ng-show="correct.type==='SHARE'">分享</label><label
-                            ng-show="correct.type!=='SHARE'">纠错</label><label>价格(分)</label>
+                            ng-show="correct.type!=='SHARE'">纠错</label><label>价格(元)</label>
                         <span class="input-icon icon-right">
-                                <input type="text" ng-model="correct.price"
-                                       class="form-control">
+                                <input type="text"
+                                       value="{{correct.price/100}}"
+                                       class="form-control"readonly="readonly">
                                 <i class="fa fa-money palegreen"></i>
                             </span>
                     </div>

@@ -33,7 +33,8 @@ app.controller('flowCenterCtrl', function($scope,toaster,flowCenterService,messa
 				{name: 'receiveStatus', label: '订单状态', sortable: false},
 				{name: 'fullName', label: '商品名称', sortable: false},
 				{name: 'barcode', label: '商品条码', sortable: false},
-				{name: 'actualQuantity', label: '数量', sortable: false},
+				{name: 'quantity', label: '顾客下单数量', sortable: false},
+				{name: 'actualQuantity', label: '实际采买数量', sortable: false},
 				{
 					name: 'price',
 					label: '商品单价(元)',

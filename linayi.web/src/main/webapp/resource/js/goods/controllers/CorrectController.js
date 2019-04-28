@@ -34,6 +34,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
             postData: $scope.search,
             pager: "#correctPager",
             multiselect: true,
+            rownumWidth: 100,
             colModel: [
                 {name: 'correctId', label: '主键', sortable: false, hidden: true},
                 {name: 'user.realName', label: '真实姓名', sortable: false},
@@ -78,8 +79,8 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
                 },
                 {
                     name: 'price',
-                    label: '价格(元)',
-                    width: 100,
+                    label: '分享价格(元)',
+                    width: 130,
                     sortable: false,
                     formatter: function (cellvalue, options, rowObject) {
                         return cellvalue / 100;
@@ -248,13 +249,15 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
     function audit(rowId) {
         var rowData = $("#correctList").jqGrid("getRowData", rowId);
         /*var priceType = rowData.priceType;*/
-        /*var status = rowData.status;
-        var goodsName = rowData.goodsSku.name;
-        var nickname = rowData.user.nickname;*/
+        /*var status = rowData.status;*/
+        /* var goodsName = rowData.name;
+         var nickname = rowData.nickname;*/
         var correctId = rowData.correctId;
         var goodsSkuId = rowData.goodsSkuId;
         var supermarketId = rowData.supermarketId;
         var userId = rowData.userId;
+        var startTime = rowData.startTime;
+        var endTime = rowData.startTime;
         /*if(type == 2 && status != 50){
             toaster.info("纠错的商品无需审核！")
             return;
@@ -315,17 +318,18 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
             }],
             onOpen: function ($modalInstance, data, $scope) {
                 //获取数据
-                var goodsSku_name = rowData["goodsSku.name"];
-                var user_nickname = rowData["user.nickname"];
+                var goodsSku_name = rowData["goodsSku.fullName"];
+                var user_nickname = rowData["user.realName"];
                 $scope.correct = {
                     goodsSku_name: goodsSku_name,
                     user_nickname: user_nickname,
                     user: rowData.user,
                     price: rowData.price + "元",
                     priceType: rowData.priceType,
-                    startTime: rowData.startTime,
-                    endTime: rowData.endTime
+                    startTime: startTime,
+                    endTime: endTime
                 }
+
             }
         }, function ($modalInstance, data, $scope) {
         });

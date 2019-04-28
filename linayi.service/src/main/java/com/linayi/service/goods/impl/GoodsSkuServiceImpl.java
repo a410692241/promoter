@@ -874,6 +874,18 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		esConfig.setTotal( Integer.parseInt(totalHits + ""));
 		return goodsSkus;
 
+	@Override
+	@Transactional
+	public void recommendGoodsSku(GoodsSku goodsSku) {
+		goodsSku.setIsRecommend("TRUE");
+		goodsSkuMapper.update(goodsSku);
+	}
+	@Override
+	@Transactional
+	public void removedRecommend(GoodsSku goodsSku) {
+		goodsSku.setIsRecommend("FALSE");
+		goodsSkuMapper.update(goodsSku);
+	}
 
 	}
 
