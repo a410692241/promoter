@@ -23,9 +23,7 @@ import com.linayi.service.correct.SupermarketGoodsVersionService;
 import com.linayi.service.goods.GoodsSkuService;
 import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.service.user.UserService;
-import com.linayi.util.ImageUtil;
-import com.linayi.util.OSSManageUtil;
-import com.linayi.util.PageResult;
+import com.linayi.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -344,6 +342,8 @@ public class CorrectServiceImpl implements CorrectService {
 
     @Override
     public PageResult<Correct> page(Correct correct) {
+        correct.setStartTime(correct.getStartTim());
+        correct.setEndTime(correct.getEndTim());
         Integer currentPage = correct.getCurrentPage();
         Integer pageSize = correct.getPageSize();
         correct.setCurrentPage(null);
@@ -388,6 +388,7 @@ public class CorrectServiceImpl implements CorrectService {
             correctResp = corrects.subList(fromIndex, toIndex);
         }
         PageResult<Correct> page = new PageResult<>(correctResp, corrects.size());
+        System.out.println(corrects.size()+"---------");
         return page;
     }
 
@@ -436,21 +437,28 @@ public class CorrectServiceImpl implements CorrectService {
             correct.setUser(userService.selectUserByuserId(correct.getUserId()));
             correct.setGoodsSku(goodsSkuService.getGoodsSkuById(correct.getGoodsSkuId()));
         }
-
+        if (correct.getImage() != null) {
+            correct.setImage(Configuration.getConfig().getValue("imageServer") + "/" + correct.getImage());
+        }
         //设置上次纠错人的证据照片
         if (correct != null && correct.getParentId() != null) {
             /*if (correct.getParentId() == -1) {
                 correct.setParentImage(Configuration.getConfig().getValue("imageServer") + "/" +correct.getImage());
             } else {*/
             Correct correctPare = correctMapper.selectByPrimaryKey(correct.getParentId());
-            if (correctPare != null) {
-                correct.setImage(ImageUtil.dealToShow(correct.getImage()));
-                correct.setParentImage(ImageUtil.dealToShow(correctPare.getImage()));
+            if (correctPare != null && correctPare.getImage() != null) {
+                correct.setParentImage(Configuration.getConfig().getValue("imageServer") + "/" + correctPare.getImage());
             }
             /*}*/
 
         } else if (correct.getParentId() == null) {
-            correct.setParentImage(ImageUtil.dealToShow(correct.getImage()));
+            correct.setParentImage("http://www.laykj.cn/wherebuy/images/2019/04/26/10/0b3db243-6338-4c4c-99a8-ccb26b623837.jpg");
+        }
+        if(CheckUtil.isNullEmpty(correct.getParentImage())){
+            correct.setParentImage("http://www.laykj.cn/wherebuy/images/2019/04/26/10/0b3db243-6338-4c4c-99a8-ccb26b623837.jpg");
+        }
+        if(CheckUtil.isNullEmpty(correct.getImage())){
+            correct.setImage("http://www.laykj.cn/wherebuy/images/2019/04/26/10/0b3db243-6338-4c4c-99a8-ccb26b623837.jpg");
         }
         return correct;
     }

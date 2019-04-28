@@ -32,7 +32,7 @@
 	<div class="form-group col-lg-6 col-xs-6 col-sm-12">
 	   <label class="col-sm-4 no-padding-right" style="text-align: right;">价格有效期：</label>
 	   <div class="col-sm-8">
-	   		{{correct.validStart}} 至  {{correct.validEnd}}
+	   		{{correct.startTime}} 至  {{correct.endTime}}
 	   </div>
 	</div>
 
