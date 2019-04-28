@@ -32,6 +32,7 @@ public enum ErrorType {
     UNFILLED_SHIPPING_ADDRESS(1915,"未填写收货地址!"),
     REDIS_DATA_ERROR(1916,"redis数据出错!"),
     NOT_A_COMMUNITY_ACCOUNT(1917,"该账号不是社区账号!"),
+    BARCODE_ERROR(1918,"请确保条码正确,该条码找不到对应的商品!"),
     THIS_ACCOUNT_IS_NOT_ASSOCIATED_WITH_THE_COMMUNITY(1918,"该账号未关联社区!"),
     ACCOUNT_OR_PASSWORD_ERROR(2000,"密码错误"),
     ACCOUNT_AND_ROLEID(2005,"数据库已经存在了这条数据"),

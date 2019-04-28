@@ -171,6 +171,9 @@ public class OrderServiceImpl implements OrderService {
             //待采买任务
             ProcurementTask procurementTask = generateProcurementTask(smallCommunity, ordersGoods, supermarket);
             procurementTaskMapper.insert(procurementTask);
+            GoodsSku goodsSku = goodsSkuMapper.getGoodsById(car.getGoodsSkuId());
+            goodsSku.setSoldNum(goodsSku.getSoldNum() + car.getQuantity());
+            goodsSkuMapper.update(goodsSku);
             shoppingCarMapper.deleteCarById(Integer.parseInt(car.getShoppingCarId() + ""));
         }
     }

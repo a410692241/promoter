@@ -19,12 +19,20 @@ public class AttributeValue {
 	 * 属性ID集合
 	 */
 	private List<Integer> attributeIdList = new ArrayList<>();
+	private List<Integer> attributeIdValueList = new ArrayList<>();
 
     private Date updateTime;
 
     private Date createTime;
-    
-    
+
+
+    public List<Integer> getAttributeIdValueList() {
+        return attributeIdValueList;
+    }
+
+    public void setAttributeIdValueList(List<Integer> attributeIdValueList) {
+        this.attributeIdValueList = attributeIdValueList;
+    }
 
     public List<Integer> getAttributeIdList() {
 		return attributeIdList;

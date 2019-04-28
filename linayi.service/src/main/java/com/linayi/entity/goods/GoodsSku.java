@@ -115,7 +115,10 @@ public class GoodsSku extends BaseEntity {
 
     private String memberLevel;
 
-    private String isRecommend;
+    private Integer soldNum; //销售数量
+
+    private  String isRecommend; //是否是推荐商品
+
 
     public String getIsRecommend() {
         return isRecommend;
@@ -123,6 +126,14 @@ public class GoodsSku extends BaseEntity {
 
     public void setIsRecommend(String isRecommend) {
         this.isRecommend = isRecommend;
+    }
+
+    public Integer getSoldNum() {
+        return soldNum;
+    }
+
+    public void setSoldNum(Integer soldNum) {
+        this.soldNum = soldNum;
     }
 
     public String getMemberLevel() {

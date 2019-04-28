@@ -6,4 +6,5 @@ public class SystemPropert {
 
     public static final String SIMPLE_MESSAGE_URL = "http://api.yiletter.com/SMS/Send";
     public static final String MOBILE_APPKEY = "mobile.appKey";
+    public static final String ES_HOST = "ES_host";
 }

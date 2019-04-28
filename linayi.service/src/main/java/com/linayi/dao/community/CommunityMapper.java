@@ -51,6 +51,13 @@ public interface CommunityMapper {
     Integer getcommunityIdByuserId(Integer userId);
 
 
+    /**根据用户id获取默认收货地址id,最后得到收货地址的communityId
+     * @param userId
+     * @return
+     */
+    Integer getcommunityIdByuserIdInDefaultAddress(Integer userId);
+
     List<Community> getCommunityByAreaCode(String areaCode);
+
 
 }

@@ -52,7 +52,6 @@ public class receiveAddressServiceImpl implements ReceiveAddressService {
         Integer userId = receiveAddress.getUserId();
         User user = userService.selectUserByuserId(userId);
 //      receiveAddress.setMobile(user.getMobile());
-        receiveAddress.setSex("0".equals(receiveAddress.getSex()) ? Sex.MALE.name() : Sex.FEMALE.name());
         receiveAddress.setCreateTime(new Date());
         receiveAddress.setUpdateTime(new Date());
         receiveAddress.setStatus(RemoveType.NORMAL.name());
