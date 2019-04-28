@@ -655,7 +655,7 @@
                 and cg.min_price_super IS NOT NULL
             </if>
             group by gs.goods_sku_id
-
+            order by gs.goods_sku_id desc
     </select>
 
     <select id="getSoldNumByGoodsSkuId" parameterType="java.lang.Long" resultType="java.lang.Integer">
