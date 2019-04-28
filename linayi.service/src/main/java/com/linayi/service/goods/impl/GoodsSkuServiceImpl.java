@@ -873,6 +873,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		}
 		esConfig.setTotal( Integer.parseInt(totalHits + ""));
 		return goodsSkus;
+	}
 
 	@Override
 	@Transactional
@@ -880,6 +881,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		goodsSku.setIsRecommend("TRUE");
 		goodsSkuMapper.update(goodsSku);
 	}
+
 	@Override
 	@Transactional
 	public void removedRecommend(GoodsSku goodsSku) {
@@ -887,7 +889,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		goodsSkuMapper.update(goodsSku);
 	}
 
-	}
+
 
 	/**
 	 * @param hit

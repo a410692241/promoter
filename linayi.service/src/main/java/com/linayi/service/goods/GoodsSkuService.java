@@ -7,6 +7,7 @@ import com.linayi.entity.goods.SupermarketGoods;
 
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.vo.promoter.PromoterVo;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.multipart.MultipartFile;
@@ -155,6 +156,12 @@ public interface GoodsSkuService {
 	 * @throws Exception
 	 */
 	List<GoodsSku> searchByKey(PromoterVo.EsConfig esConfig) throws Exception;
+
+	@Transactional
+	void recommendGoodsSku(GoodsSku goodsSku);
+
+	@Transactional
+	void removedRecommend(GoodsSku goodsSku);
 
 	/**通过条码查询商品
 	 * @param barcode
