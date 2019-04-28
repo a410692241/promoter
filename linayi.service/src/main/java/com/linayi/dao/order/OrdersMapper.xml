@@ -434,7 +434,7 @@
       goods_sku_id=#{goodsSkuId}
   </select>
   <select id="getOrderById" resultMap="BaseResultMap">
-    select orders_id, user_id, receiver_name, mobile, address_one, address_two, address_three, pay_way, save_amount, service_fee, extra_fee, arrive_time, actual_arrive_time,
+    select sex, orders_id, user_id, receiver_name, mobile, address_one, address_two, address_three, pay_way, save_amount, service_fee, extra_fee, arrive_time, actual_arrive_time,
     remark, quantity, amount, user_status, community_status, community_id,deliverer_id,delivery_finish_time, update_time, create_time from orders where orders_id = #{ordersId}
   </select>
 
