@@ -248,7 +248,7 @@ public class OrderServiceImpl implements OrderService {
         Date deliveryTime = cl.getTime();
         order.setArriveTime(deliveryTime);
         //实际送达时间
-        order.setActualArriveTime(deliveryTime);
+//        order.setActualArriveTime(deliveryTime);
         //订单商品数量
         order.setQuantity(num);
         return order;
