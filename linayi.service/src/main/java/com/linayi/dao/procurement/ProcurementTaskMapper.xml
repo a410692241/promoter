@@ -744,7 +744,20 @@
                 and pt.receive_status in('WAIT_RECEIVE','RECEIVED')
             </if>
             <if test="receiveStatus == '' ">
-                and pt.receive_status in('OUTED','WAIT_OUT','RECEIVED_FLOW','WAIT_RECEIVE','RECEIVED')
+                and
+                (
+                (pt.actual_quantity>0
+                and pt.receive_status = 'RECEIVED_FLOW')
+                or
+                (pt.procure_status ='PROCURING'
+                and pt.receive_status ='WAIT_OUT')
+                or(pt.actual_quantity>0
+                and pt.receive_status ='WAIT_OUT')
+                or(pt.actual_quantity>0
+                and pt.receive_status ='OUTED')
+                or(pt.actual_quantity>0
+                and pt.receive_status in('WAIT_RECEIVE','RECEIVED'))
+                )
             </if>
         </where>
         order by o.create_time desc
