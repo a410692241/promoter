@@ -867,7 +867,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 			Long goodsSkuId = esGoodsSkuByHit.getGoodsSkuId();
 			GetRequest goods_index = new GetRequest("goods_sku_index", "goods_sku", goodsSkuId + "");
 			GetResponse goods_index_resp = esClient.get(goods_index, RequestOptions.DEFAULT);
-			if (goods_index_resp != null) {
+			if (goods_index_resp.isExists()) {
 				Map<String, Object> sourceAsMap = goods_index_resp.getSourceAsMap();
 				esGoodsSkuByHit.setImage(Configuration.getConfig().getValue(ConstantUtil.IMAGE_SERVER) + "/" + sourceAsMap.get("image") + "");
 				esGoodsSkuByHit.setAttrValues(sourceAsMap.get("attribute") + "");
