@@ -1,5 +1,6 @@
 package com.linayi.controller.order;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,7 +88,7 @@ public class OrderController extends BaseController {
 
     /**
      * 查看订单详情
-     * @param param
+     * @param paramupdateOrderStatus
      * @param request
      * @return
      */
@@ -132,6 +133,9 @@ public class OrderController extends BaseController {
         pvu.Exist("ordersId","userStatus");
         try {
             Orders orders = pvu.transObj(Orders.class);
+            if("FINISHED".equals(orders.getUserStatus())){
+                orders.setDeliveryFinishTime(new Date());
+            }
             orderService.updateOrderStatus(orders);
             return new ResponseData("success");
         } catch (Exception e) {

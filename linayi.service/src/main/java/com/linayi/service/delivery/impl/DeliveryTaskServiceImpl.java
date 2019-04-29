@@ -252,8 +252,10 @@ public class DeliveryTaskServiceImpl implements DeliveryTaskService {
 
     @Override
     public Integer updateFinishedStatus(Orders orders) {
-        Date now = new Date();
-        orders.setDeliveryFinishTime(now);
+        Orders orderById = ordersMapper.getOrderById(orders.getOrdersId());
+        if (orderById.getDeliveryFinishTime() == null) {
+            orders.setDeliveryFinishTime(new Date());
+        }
         orders.setCommunityStatus(OrderStatus.DELIVER_FINISHED.toString());
         return ordersMapper.updateOrdersCommunityStatusByOrdersId(orders);
     }

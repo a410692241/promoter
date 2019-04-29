@@ -114,7 +114,10 @@ public class ProcurementServiceImpl implements ProcurementService {
             for (ProcurementTask task : procurementTaskList) {
             	if(task != null){
 					GoodsSku goods = goodsSkuMapper.getGoodsById(task.getGoodsSkuId());
-					task.setGoodsImage(ImageUtil.dealToShow(goods.getImage()));
+					if(goods != null){
+						task.setGoodsImage(ImageUtil.dealToShow(goods.getImage()));
+					}
+
 				}
             }
         }
