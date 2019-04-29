@@ -64,7 +64,7 @@ app.controller('goodsCtrl'/**
             $scope.changeStatus = changeStatus;
             $scope.importUI = importUI;
             $scope.supermarkets = [];
-            list();
+            // list();
         }
 
         function importUI() {

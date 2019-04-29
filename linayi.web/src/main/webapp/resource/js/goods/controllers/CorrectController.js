@@ -12,7 +12,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
         $scope.cancel = cancel;
         $scope.exportData = exportData;
         $scope.save = save;
-        list();
+        // list();
         $scope.search = {
             status: "",
             priceType: ""
