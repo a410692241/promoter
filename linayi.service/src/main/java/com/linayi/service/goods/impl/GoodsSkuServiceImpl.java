@@ -547,12 +547,10 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		}
 		goodsSku.setMemberLevel(memberLevel.toString());
 		List<GoodsSku> differenceRankingList = goodsSkuMapper.getDifferenceRanking(goodsSku);
-		DecimalFormat df = new DecimalFormat("#.00");
-
-		if(differenceRankingList.size()>0) {
-
-			setMemberPrice(memberLevel,differenceRankingList);
-
+		if (differenceRankingList.size() != 0) {
+			for (GoodsSku sku : differenceRankingList) {
+				sku.setImage(ImageUtil.dealToShow(sku.getImage()));
+			}
 		}
 		return differenceRankingList;
 	}
@@ -1010,7 +1008,9 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		goodsSku.setMemberLevel(memberLevel.toString());
 		List<GoodsSku> goodsSkuList = goodsSkuMapper.getRecommendGoodsSku(goodsSku);
 		if (goodsSkuList.size() != 0) {
-			setMemberPrice(memberLevel, goodsSkuList);
+			for (GoodsSku sku : goodsSkuList) {
+				sku.setImage(ImageUtil.dealToShow(sku.getImage()));
+			}
 		}
 		return goodsSkuList;
 	}
