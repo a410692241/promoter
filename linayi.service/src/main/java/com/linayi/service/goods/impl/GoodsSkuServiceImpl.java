@@ -853,8 +853,12 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		searchRequest.indices("community_goods_index");
 		SearchResponse response = esClient.search(searchRequest, RequestOptions.DEFAULT);
 		SearchHits hits = response.getHits();
-		long totalHits = hits.getTotalHits();
 		List<GoodsSku> goodsSkus = new ArrayList<>();
+		if (hits.totalHits == 0) {
+			return goodsSkus;
+		}
+		long totalHits = hits.getTotalHits();
+
 		//获取当前数据
 		//获取的带有价格的数据,额外添加规格属性,商品图
 		for (SearchHit hit : hits) {
