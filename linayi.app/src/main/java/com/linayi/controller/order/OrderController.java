@@ -88,7 +88,7 @@ public class OrderController extends BaseController {
 
     /**
      * 查看订单详情
-     * @param paramupdateOrderStatus
+     * @param param
      * @param request
      * @return
      */
@@ -134,7 +134,7 @@ public class OrderController extends BaseController {
         try {
             Orders orders = pvu.transObj(Orders.class);
             if("FINISHED".equals(orders.getUserStatus())){
-                orders.setDeliveryFinishTime(new Date());
+                orders.setActualArriveTime(new Date());
             }
             orderService.updateOrderStatus(orders);
             return new ResponseData("success");

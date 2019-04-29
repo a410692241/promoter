@@ -391,7 +391,7 @@ public class OrderServiceImpl implements OrderService {
                 // 送货时间
                 orders2.setDeliveryTime(orders1.getDeliveryTime());
                 //收货时间
-                orders2.setDeliveryFinishTime(orders1.getDeliveryFinishTime());
+                orders2.setReceiptTime(DateUtil.date2String(orders1.getActualArriveTime(), DateUtil.Y_M_D_H_M_PATTERN));
             }
             //网点名字和联系方式
             Integer communityId = orders1.getCommunityId();
