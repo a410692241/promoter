@@ -871,6 +871,9 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 				Map<String, Object> sourceAsMap = goods_index_resp.getSourceAsMap();
 				esGoodsSkuByHit.setImage(Configuration.getConfig().getValue(ConstantUtil.IMAGE_SERVER) + "/" + sourceAsMap.get("image") + "");
 				esGoodsSkuByHit.setAttrValues(sourceAsMap.get("attribute") + "");
+			}else{
+				esGoodsSkuByHit.setImage("");
+				esGoodsSkuByHit.setAttrValues("");
 			}
 
 			goodsSkus.add(esGoodsSkuByHit);
@@ -925,7 +928,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 	 * @return
 	 */
 	@Override
-	public GoodsSku searchByBarcode(PromoterVo.EsConfig esConfig) throws IOException {
+	public GoodsSku searchByBarcode(PromoterVo.EsConfig esConfig)  {
 		GoodsSku resultGoodsSku = new GoodsSku();
 		String barcode = esConfig.getBarcode();
 		GoodsSku goodsSku = goodsSkuMapper.getGoodsSkuByBarcode(barcode);
