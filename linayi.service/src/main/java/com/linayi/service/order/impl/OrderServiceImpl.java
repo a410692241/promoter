@@ -401,7 +401,7 @@ public class OrderServiceImpl implements OrderService {
             community.setCommunityId(communityId);
             Community community1 = communityMapper.getCommunity(community);
             orders2.setCommunityId(communityId);
-            orders2.setServiceMobile(community1.getMobile());
+            orders2.setCommunityPhone(community1.getMobile());
             orders2.setCommunityName(community1.getName());
             MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(orders1.getUserId());
             orders2.setCreateDateStr(DateUtil.date2String(orders1.getCreateTime(), DateUtil.Y_M_D_H_M_PATTERN));
