@@ -42,6 +42,7 @@
       <if test="extraFee != null">extra_fee=#{extraFee},</if>
       <if test="serviceFee != null">service_fee=#{serviceFee},</if>
       <if test="arriveTime != null">email=#{arriveTime},</if>
+      <if test="deliveryFinishTime != null">delivery_finish_time=#{deliveryFinishTime},</if>
       <if test="actualArriveTime != null">actual_arrive_time=#{actualArriveTime},</if>
       <if test="remark != null">remark=#{remark},</if>
       <if test="quantity != null">email=#{quantity},</if>
