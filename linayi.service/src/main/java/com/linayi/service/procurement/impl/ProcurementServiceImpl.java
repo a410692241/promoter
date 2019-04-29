@@ -22,10 +22,7 @@ import com.linayi.service.community.CommunitySupermarketService;
 import com.linayi.service.order.OrderService;
 import com.linayi.service.procurement.ProcurementService;
 import com.linayi.service.supermarket.SupermarketService;
-import com.linayi.util.DateUtil;
-import com.linayi.util.ImageUtil;
-import com.linayi.util.OSSManageUtil;
-import com.linayi.util.PageResult;
+import com.linayi.util.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
@@ -132,6 +129,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 	public List<ProcurementTask> getCommunityProcurement(ProcurementTask procurementTask) {
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementList(procurementTask);
 		for (ProcurementTask task : procurementTaskList) {
+			task.setTotalPrice(task.getTotalPrice()+ ConstantUtil.SERVICE_FEE);
 			task.setGoodsImage(ImageUtil.dealToShow(task.getGoodsImage()));
 		}
 		return procurementTaskList;
