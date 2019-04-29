@@ -425,7 +425,6 @@
             gs.update_time  updateTime,
             gs.create_time  createTime,
             gs.model,
-            IFNULL(gs.sold_num,0) soldNum,
             gs.FUNCTION function,
             gs.produce_address produceAddress,
             gs.produce_date  produceDate,
