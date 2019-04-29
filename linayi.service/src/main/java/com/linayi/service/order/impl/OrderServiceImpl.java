@@ -390,8 +390,10 @@ public class OrderServiceImpl implements OrderService {
                 orders2.setRemark(orders1.getRemark());
                 // 送货时间
                 orders2.setDeliveryTime(orders1.getDeliveryTime());
+                //配送完成时间
+//                orders2.setDeliveryFinishTime(orders1.getDeliveryFinishTime());
                 //收货时间
-                orders2.setReceiptTime(DateUtil.date2String(orders1.getActualArriveTime(), DateUtil.Y_M_D_H_M_PATTERN));
+                orders2.setReceiptTime(DateUtil.date2String(orders1.getActualArriveTime() == null ? orders1.getDeliveryFinishTime() : orders1.getActualArriveTime(), DateUtil.Y_M_D_H_M_PATTERN));
             }
             //网点名字和联系方式
             Integer communityId = orders1.getCommunityId();
