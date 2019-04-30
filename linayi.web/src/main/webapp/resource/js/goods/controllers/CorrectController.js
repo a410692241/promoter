@@ -257,7 +257,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
         var supermarketId = rowData.supermarketId;
         var userId = rowData.userId;
         var startTime = rowData.startTime;
-        var endTime = rowData.startTime;
+        var endTime = rowData.endTime;
         /*if(type == 2 && status != 50){
             toaster.info("纠错的商品无需审核！")
             return;
