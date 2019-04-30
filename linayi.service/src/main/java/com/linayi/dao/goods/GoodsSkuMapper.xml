@@ -477,6 +477,7 @@
     </select>
 
 
+
     <!-- 根据商品名称模糊查询商品列表 -->
     <!--List<GoodsSku> getGoodsSkuByVagueGoodsName(GoodsSku goodsSku) -->
     <select id="getGoodsSkuByVagueGoodsName" resultType="com.linayi.entity.goods.GoodsSku">
