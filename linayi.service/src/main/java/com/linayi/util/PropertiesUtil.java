@@ -2,6 +2,7 @@ package com.linayi.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Properties;
 
 public class PropertiesUtil {
@@ -12,7 +13,7 @@ public class PropertiesUtil {
         InputStream in = PropertiesUtil.class.getClassLoader().getResourceAsStream("config/system.properties");
         // 使用properties对象加载输入流
         try {
-            properties.load(in);
+            properties.load(new InputStreamReader(in,"utf-8"));
         } catch (IOException e) {
             e.printStackTrace();
         }
