@@ -479,6 +479,10 @@ public class CorrectServiceImpl implements CorrectService {
         return correctMapper.getCorrect(correct);
     }
 
+    public List<Correct> getCorrectExpire(Correct correct){
+        return correctMapper.getCorrectExpire(correct);
+    }
+
     /*生效定时器*/
     @Override
     @Transactional

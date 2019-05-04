@@ -20,6 +20,7 @@ public class PriceAffectTimer extends QuartzJobBean {
         correct.setStatus(CorrectStatus.AUDIT_SUCCESS.toString());
         //查询审核通过的数据
         List<Correct> list = correctService.getCorrect(correct);
+        System.out.println("priceAffect totalNums=" + list.size());
         if(list.size()>0){
             for(Correct corrects : list){
                 try {

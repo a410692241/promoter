@@ -48,6 +48,8 @@ public interface CorrectMapper {
     /*根据条件查看商品价格纠错表*/
     List<Correct> getCorrect(Correct correct);
 
+    List<Correct> getCorrectExpire(Correct correct);
+
     /**
      * 根据主键userId查询corrcetlist集合
      *

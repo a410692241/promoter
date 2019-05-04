@@ -477,6 +477,15 @@
         correct
         where
         status=#{status,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getCorrectExpire" resultType="com.linayi.entity.correct.Correct">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        correct
+        where
+        status=#{status,jdbcType=VARCHAR}
         AND
         end_time &lt;= #{endTime}
     </select>
