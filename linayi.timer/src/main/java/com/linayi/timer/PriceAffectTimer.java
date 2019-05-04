@@ -22,7 +22,11 @@ public class PriceAffectTimer extends QuartzJobBean {
         List<Correct> list = correctService.getCorrect(correct);
         if(list.size()>0){
             for(Correct corrects : list){
-                correctService.priceAffect(corrects);
+                try {
+                    correctService.priceAffect(corrects);
+                } catch (Exception e) {
+
+                }
             }
         }
         System.out.println("Method:价格生效结束！！！");
