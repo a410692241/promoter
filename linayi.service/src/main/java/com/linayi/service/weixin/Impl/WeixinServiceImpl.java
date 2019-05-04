@@ -109,6 +109,7 @@ public class WeixinServiceImpl implements WeixinService {
                 //如果是邻生客户端,需要跳转的是邻生的商户端首页
                 if (!linsheng) {
                     response.sendRedirect(Configuration.getConfig().getValue(WeixinConfig.REDICT_INDEX_URL) + "?accessToken=" + sysetemAccessToken+ "&accountId=" + accountId+"&userId="+userId+"&loginType="+1);
+                    return new ResponseData("登录成功");
                 }
                 response.sendRedirect(Configuration.getConfig().getValue(WeixinConfig.LINSHENG_REDICT_INDEX_URL) + "?accessToken=" + sysetemAccessToken);
             } catch (IOException e) {
