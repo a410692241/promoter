@@ -34,6 +34,8 @@ public interface CorrectService {
     /*根据条件查看商品价格纠错表*/
     List<Correct> getCorrect(Correct correct);
 
+    List<Correct> getCorrectExpire(Correct correct);
+
     /*生效定时器调用方法*/
     void priceAffect(Correct correct);
 
