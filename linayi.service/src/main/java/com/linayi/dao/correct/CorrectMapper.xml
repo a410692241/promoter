@@ -477,6 +477,8 @@
         correct
         where
         status=#{status,jdbcType=VARCHAR}
+        AND
+        end_time &lt;= #{endTime}
     </select>
 
 

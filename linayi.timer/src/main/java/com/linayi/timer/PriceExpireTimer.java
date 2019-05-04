@@ -9,6 +9,7 @@ import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
+import java.util.Date;
 import java.util.List;
 
 public class PriceExpireTimer extends QuartzJobBean implements Job {
@@ -22,6 +23,7 @@ public class PriceExpireTimer extends QuartzJobBean implements Job {
             System.out.println("Method:价格过期方法开始！");
             Correct correct = new Correct();
             correct.setStatus(CorrectStatus.AFFECTED.toString());
+            correct.setEndTime(new Date());
             //查询审核通过的数据
             List<Correct> list = correctService.getCorrect(correct);
             if(list.size()>0){
