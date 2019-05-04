@@ -35,6 +35,7 @@ public class SupermarketGoods extends BaseEntity implements Serializable{
 	//距离排序
     private Integer rank;
 
+	private String barcode;
 
 	public String getName() {
 		return name;
@@ -54,57 +55,25 @@ public class SupermarketGoods extends BaseEntity implements Serializable{
 
 	private List<Integer> supermarketIdList;
 
-
-
 	public List<Integer> getSupermarketIdList() {
 		return supermarketIdList;
 	}
-
-
 
 	public void setSupermarketIdList(List<Integer> supermarketIdList) {
 		this.supermarketIdList = supermarketIdList;
 	}
 
-
-
-
-
 	public String getSupermarketName() {
 		return supermarketName;
-	}
-
-
-	@Override
-	public String toString() {
-		return "SupermarketGoods{" +
-				"supermarketGoodsId=" + supermarketGoodsId +
-				", supermarketId=" + supermarketId +
-				", goodsSkuId=" + goodsSkuId +
-				", price=" + price +
-				", correctId=" + correctId +
-				", supermarketName='" + supermarketName + '\'' +
-				", correctType='" + correctType + '\'' +
-				", name='" + name + '\'' +
-				", fullName='" + fullName + '\'' +
-				", status='" + status + '\'' +
-				", priceStr='" + priceStr + '\'' +
-				", rank=" + rank +
-				", supermarketIdList=" + supermarketIdList +
-				'}';
 	}
 
 	public String getCorrectType() {
 		return correctType;
 	}
 
-
-
 	public void setCorrectType(String correctType) {
 		this.correctType = correctType;
 	}
-
-
 
 	public void setSupermarketName(String supermarketName) {
 		this.supermarketName = supermarketName;
@@ -173,4 +142,13 @@ public class SupermarketGoods extends BaseEntity implements Serializable{
 	public void setRank(Integer rank) {
 		this.rank = rank;
 	}
+
+	public String getBarcode() {
+		return barcode;
+	}
+
+	public void setBarcode(String barcode) {
+		this.barcode = barcode;
+	}
+
 }

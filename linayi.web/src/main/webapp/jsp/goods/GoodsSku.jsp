@@ -34,6 +34,12 @@
 									ng-model="search.name" type="text" class="form-control">
 							</div>
 						</div>
+						<div class="form-group form-group-margin">
+							<div class="input-group">
+								<span class="input-group-addon">商品条形码</span> <input
+									ng-model="search.barcode" type="text" class="form-control">
+							</div>
+						</div>
 <!-- 						<div class="form-group form-group-margin">
 							<div class="input-group">
 								<span class="input-group-addon">创建时间</span> <input type="text"

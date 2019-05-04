@@ -727,7 +727,6 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		if (supermarketGoods != null && supermarketGoods.size() > 0) {
 			for (SupermarketGoods supermarketGoods2 : supermarketGoods) {
 				supermarketGoods2.setPriceStr(getpriceString(supermarketGoods2.getPrice()));
-				System.out.println(getpriceString(supermarketGoods2.getPrice()));
 			}
 		}
 		return supermarketGoods;
