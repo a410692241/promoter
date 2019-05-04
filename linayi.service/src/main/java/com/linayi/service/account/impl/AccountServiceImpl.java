@@ -270,10 +270,17 @@ public class AccountServiceImpl implements AccountService {
         if (!b) {
             throw new BusinessException(ErrorType.VERIFICATION_CODE_ERROR);
         }
+        //手机号是否重复
         //验证成功,修改密码
         Account account = new Account();
         account.setMobile(mobile);
         Account accountDb= accountMapper.selectAccountList(account).stream().findFirst().orElse(null);
+        if(accountDb == null){
+            throw new BusinessException(ErrorType.USERNAME_DOES_NOT_EXIST);
+        }
+        if (password.equals(accountDb.getPassword())) {
+            throw new BusinessException(ErrorType.SAME_AS_THE_ORIGINAL_PASSWORD);
+        }
         Account accountParam = new Account();
         accountParam.setPassword(password);
         accountParam.setAccountId(accountDb.getAccountId());
