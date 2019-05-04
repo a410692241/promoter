@@ -916,7 +916,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
         double spreadRate = Double.parseDouble(resultMap.get("spread" + PriceKeyWord) + "");
 		BigDecimal bigDecimal = new BigDecimal(spreadRate);
 		double v = bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-		goodsSku.setSpreadRate(v);
+		goodsSku.setSpreadRate(v * 100);
 		return goodsSku;
 	}
 
