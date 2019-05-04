@@ -35,10 +35,6 @@
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
-		            <!-- <ref bean="priceAffectTimerCronTrigger"/> -->
-		            <!-- <ref bean="priceExpireTimerCronTrigger"/> -->
-		            <!-- <ref bean="purchaseTaskGenerator"/> -->
-
 		    </list>
 		</property>
 		<property name="jobFactory" ref="jobFactory"></property>
