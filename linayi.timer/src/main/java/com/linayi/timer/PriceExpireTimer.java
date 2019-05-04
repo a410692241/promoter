@@ -17,24 +17,26 @@ public class PriceExpireTimer extends QuartzJobBean implements Job {
     @Autowired
     private CorrectService correctService;
 
-	@Override
-	protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-        try {
-            System.out.println("Method:价格过期方法开始！");
-            Correct correct = new Correct();
-            correct.setStatus(CorrectStatus.AFFECTED.toString());
-            correct.setEndTime(new Date());
-            //查询审核通过的数据
-            List<Correct> list = correctService.getCorrect(correct);
-            if(list.size()>0){
-                for(Correct corrects : list){
+    @Override
+    protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
+        System.out.println("Method:价格过期方法开始！");
+        Correct correct = new Correct();
+        correct.setStatus(CorrectStatus.AFFECTED.toString());
+        correct.setEndTime(new Date());
+        //查询审核通过的数据
+        List<Correct> list = correctService.getCorrect(correct);
+        System.out.println("priceExpire totalNums=" + list.size());
+        if (list.size() > 0) {
+            for (Correct corrects : list) {
+                try {
                     correctService.priceExpire(corrects);
+                } catch (Exception e) {
+                    System.out.println("priceExpire has Exception correct_id=" + corrects.getCorrectId());
+                    e.printStackTrace();
                 }
             }
-            System.out.println("Method:价格过期方法结束！！！");
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        System.out.println("Method:价格过期方法结束！！！");
     }
-	
+
 }
