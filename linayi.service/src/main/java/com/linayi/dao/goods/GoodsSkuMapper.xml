@@ -422,15 +422,15 @@
             gs.create_time  createTime,
         <if test="memberLevel=='NORMAL' or memberLevel=='NOT_MEMBER'">
             cg.min_price_normal minPrice,
-            format(((cg.max_price_normal-cg.min_price_normal)/cg.min_price_normal*100),2) spreadRate,
+            truncate(((cg.max_price_normal-cg.min_price_normal)/cg.min_price_normal*100),2) spreadRate,
         </if>
         <if test="memberLevel!=null and memberLevel=='SENIOR'">
             cg.min_price_senior minPrice,
-            format(((cg.max_price_senior-cg.min_price_senior)/cg.min_price_senior*100),2) spreadRate,
+            truncate(((cg.max_price_senior-cg.min_price_senior)/cg.min_price_senior*100),2) spreadRate,
         </if>
         <if test="memberLevel!=null and memberLevel=='SUPER'">
             cg.min_price_super minPrice,
-            format(((cg.max_price_super-cg.min_price_super)/cg.min_price_super*100),2) spreadRate,
+            truncate(((cg.max_price_super-cg.min_price_super)/cg.min_price_super*100),2) spreadRate,
         </if>
             REPLACE(GROUP_CONCAT(av.value),',','/') attrValues
        FROM
@@ -610,19 +610,19 @@
             gs.create_time  createTime,
             <if test="memberLevel!=null and memberLevel=='NORMAL'">
                 cg.min_price_normal minPrice,
-                format(((cg.max_price_normal-cg.min_price_normal)/cg.min_price_normal*100),2) spreadRate,
+                truncate(((cg.max_price_normal-cg.min_price_normal)/cg.min_price_normal*100),2) spreadRate,
             </if>
             <if test="memberLevel!=null and memberLevel=='NOT_MEMBER'">
                 cg.min_price_normal minPrice,
-                format(((cg.max_price_normal-cg.min_price_normal)/cg.min_price_normal*100),2) spreadRate,
+                truncate(((cg.max_price_normal-cg.min_price_normal)/cg.min_price_normal*100),2) spreadRate,
             </if>
             <if test="memberLevel!=null and memberLevel=='SENIOR'">
                 cg.min_price_senior minPrice,
-                format(((cg.max_price_senior-cg.min_price_senior)/cg.min_price_senior*100),2) spreadRate,
+                truncate(((cg.max_price_senior-cg.min_price_senior)/cg.min_price_senior*100),2) spreadRate,
             </if>
             <if test="memberLevel!=null and memberLevel=='SUPER'">
                 cg.min_price_super minPrice,
-                format(((cg.max_price_super-cg.min_price_super)/cg.min_price_super*100),2) spreadRate,
+                truncate(((cg.max_price_super-cg.min_price_super)/cg.min_price_super*100),2) spreadRate,
             </if>
             REPLACE(GROUP_CONCAT(av.value),',','/') attrValues
         FROM
