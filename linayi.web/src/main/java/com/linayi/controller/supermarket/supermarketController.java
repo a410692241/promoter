@@ -29,11 +29,9 @@ public class supermarketController {
 	private SupermarketService supermarketService;
 	@Resource
 	private AreaService areaService;
-	
+
 	@RequestMapping("/list.do")
     @ResponseBody
-
-
     public Object userList(Supermarket supermarket,Integer communityId,String type) {
         List<Supermarket> list = supermarketService.selectAll(supermarket,communityId,type);
         if(list.size()>0){
@@ -42,7 +40,7 @@ public class supermarketController {
         }
        return list;
     }
-	
+
 	@RequestMapping("/save.do")
     @ResponseBody
     public Object save(@RequestParam(value = "logoFile",required =false) CommonsMultipartFile logoFile,MultipartHttpServletRequest request,Supermarket supermarket) {
@@ -54,18 +52,18 @@ public class supermarketController {
             return new ResponseData(true);
         }
     }
-	
+
 	@RequestMapping("/edit.do")
     @ResponseBody
     public Object get(Integer supermarketId) {
 		Supermarket list = supermarketService.selectSupermarketBysupermarketId(supermarketId);
         return new ResponseData(list);
     }
-	
+
 	/**
 	 * 根据id查超市
 	 * @param supermarketId
-	 * @return 
+	 * @return
 	 */
 	@RequestMapping("/show.do")
     public Object show(Integer supermarketId) {
@@ -74,7 +72,7 @@ public class supermarketController {
 		mv.addObject("supermarket",supermarket);
         return mv;
     }
-	
+
 	 /**
 	  * 删除用户信息
 	  * @param supermarketId
@@ -87,7 +85,7 @@ public class supermarketController {
     	 supermarketService.deleteSupermarketrBysupermarketId(supermarketId);
         return new ResponseData(true);
     }
-    
+
     /**
      * 获取省
      * @return
@@ -98,7 +96,7 @@ public class supermarketController {
 		List<Area> areaList = areaService.getProvince();
 		return new ResponseData(areaList);
 	}
-  
+
   	/**
   	 * 获取市区
   	 * @param area

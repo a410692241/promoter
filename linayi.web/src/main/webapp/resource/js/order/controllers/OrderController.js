@@ -1,7 +1,7 @@
 'use strict';
 
 app.controller('orderCtrl', function($scope,toaster,orderService,messager,templateform, $timeout ) {
-	
+
 	function init(){
 		$scope.show = show;
 		$scope.edit = edit;
@@ -18,7 +18,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 		}
 		$scope.list();
 	}
-	
+
 	/** 列表查询 */
 	function list(){
 		var $grid = $("#orderList");
@@ -26,23 +26,26 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 			$grid.jqGrid('setGridParam', {
 				page : 1,
 				postData:$scope.search,
-				
+
 			}).trigger("reloadGrid");
 			return;
 		}
-		
+
 		$grid.jqGrid({
 			url : urls.ms+"/order/order/orderList.do",
 			postData:$scope.search,
 			pager : "#orderPager",
 			colModel : [
 				{name:'ordersId',label:'订单号',sortable:false},
-				{name:'communityId',label:'社区ID',sortable:false,hidden:true}, 
+				{name:'communityId',label:'社区ID',sortable:false,hidden:true},
 				{name:'receiverName',label:'下单人',sortable:false},
 				// {name:'goodsSkuId',label:'商品订单id',sortable:false},
 				{name:'amount',label:'订单金额(元)',sortable:false,formatter:function( value, row, rowObject ){
 					return value / 100;
-				}}, 
+				}},
+				{name:'orderGoodsTotalPrice',label:'订单采买金额(元)',sortable:false,formatter:function( value, row, rowObject ){
+						return value / 100;
+					}},
 				{name:'communityStatus',label:'订单状态',sortable:false,formatter:function( value, row, rowObject ){
 					 switch (value) {
 						 case 'PROCURING':
@@ -70,7 +73,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 						break;
 					}
 					}},
-				{name:'mobile',label:'手机号码',sortable:false}, 
+				{name:'mobile',label:'手机号码',sortable:false},
 				{name:'address',label:'送货地址',sortable:false},
 				{name:'createTime',label:'下单时间',sortable:false,formatter:function( cellvalue, options, rowObject ){
 					return cellvalue ? new Date( cellvalue ).format("yyyy-MM-dd hh:mm:ss") : "";
@@ -85,14 +88,14 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 			subGridRowExpanded: showChildGrid,
 		    subGridOptions : {
 				reloadOnExpand :false,
-				selectOnExpand : true 
+				selectOnExpand : true
 			}
 		});
 	}
 	// var parentId;
 	// var parentRow;
 
-	
+
 	/** 订单商品，订单跟踪 */
 	 function showChildGrid(parentRowID, parentRowKey) {
 		// parentId = parentRowID;
@@ -109,7 +112,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 		 var $compileElm = $compile( $template )( $scope );
 		 listOrderSkuList.apply( $compileElm,[row] );
 	 }
-	
+
 	 /** 订单商品 */
 	function listOrderSkuList( order ){
 		var $compileElm = $( this );
@@ -162,10 +165,10 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 								return '';
 								break;
 						}
-		            }}, 
+		            }},
 		            {name:'createTime',label:'下单时间',sortable:false,width:30,formatter:function(value,row,rowObject){
 		            	return new Date(value).format('yyyy-MM-dd HH:mm:ss')
-		            }}, 
+		            }},
 					{label:"操作",name:"opt",width:40,sortable:false,formatter:function(cellvalue, options, rowObject){
 							var opts = "";
 							/*	if( rowObject.status == 1 || rowObject.status==2 ){
@@ -334,7 +337,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
     		});
     	});
     }
-    
+
     // /** 新增，编辑 */
     // function edit( id ){
     // 	var url = urls.ms + "/order/order/edit.do?";
@@ -352,7 +355,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 	// 		save( $modalInstance,data, $scope );
 	// 	});
     // }
-    
+
 	// /** 保存 */
     // function save( $modalInstance,data, $scope ){
     // 	try{
@@ -376,7 +379,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 	// 						e.msg : "出错了",3000 );
 	// 	}
     // }
-    
+
     /** 查看 */
     function show( procurementTaskId) {
 		var url = urls.ms + "/order/orderSku/orderSupermarketList.do?";

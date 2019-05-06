@@ -619,6 +619,17 @@ public class OrderServiceImpl implements OrderService {
         List<Orders> orderList = ordersMapper.getALLOrder(orders);
         for (Orders o : orderList) {
             o.setAddressOne(getAreaNameByAreaCode(o.getAddressOne()));
+            List<OrdersGoods> ordersGoodsList = ordersGoodsMapper.getOrdersGoodsByOrdersId(o.getOrdersId());
+            if (ordersGoodsList != null && ordersGoodsList.size() > 0){
+                Integer total = 0;
+                for (OrdersGoods ordersGoods : ordersGoodsList) {
+                    ProcurementTask procurementTask = new ProcurementTask();
+                    procurementTask.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
+                    List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskListAsc(procurementTask);
+                    total += ordersGoods.getQuantity() * procurementTaskList.get(0).getPrice();
+                }
+                o.setOrderGoodsTotalPrice(total + ConstantUtil.SERVICE_FEE);
+            }
 //            OrdersSku ordersSku = ordersMapper.selectSkuIdByordersId(o.getOrdersId());
 //            o.setGoodsSkuId(ordersSku.getGoodsSkuId());
         }

@@ -76,6 +76,7 @@ public class Orders extends BaseEntity {
     private String payPrice;//实付价格
     @ApiModelProperty(value = "商品总价")
     private String goodsTotalPrice;//商品总价
+    private Integer orderGoodsTotalPrice;//商品总价
     @ApiModelProperty(hidden = true)
     private String createDate;//创建时间2
     @ApiModelProperty(hidden = true)
@@ -699,5 +700,13 @@ public class Orders extends BaseEntity {
 
     public void setSex(String sex) {
         this.sex = sex;
+    }
+
+    public Integer getOrderGoodsTotalPrice() {
+        return orderGoodsTotalPrice;
+    }
+
+    public void setOrderGoodsTotalPrice(Integer orderGoodsTotalPrice) {
+        this.orderGoodsTotalPrice = orderGoodsTotalPrice;
     }
 }
