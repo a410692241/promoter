@@ -97,7 +97,7 @@ public class GoodsSkuController extends BaseController {
     }
 
 
-    //差价排行(已测试)
+    //原差价排行修改为特价商品排行
     @RequestMapping("/differenceRanking.do")
     public Object showDifferenceRanking(@RequestBody GoodsSku goodsSku) {
         try {
@@ -105,7 +105,7 @@ public class GoodsSkuController extends BaseController {
             if (goodsSku.getPageSize() == null) {
                 goodsSku.setPageSize(8);
             }
-            List<GoodsSku> differenceRankingList = goodsSkuService.getDifferenceRanking(goodsSku);
+            List<GoodsSku> differenceRankingList = goodsSkuService.getSpecialPrice(goodsSku);
             Integer totalPage = (int) Math.ceil(Double.valueOf(goodsSku.getTotal()) / Double.valueOf(goodsSku.getPageSize()));
             if (totalPage <= 0) {
                 totalPage++;

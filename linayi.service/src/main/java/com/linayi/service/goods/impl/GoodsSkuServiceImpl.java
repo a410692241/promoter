@@ -1059,4 +1059,22 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 
 		return goodsSkuList;
 	}
+
+
+	@Override
+	public List<GoodsSku> getSpecialPrice(GoodsSku goodsSku) {
+		//获取用户的会员等级
+		MemberLevel memberLevel = openMemberInfoService.getCurrentMemberLevel(goodsSku.getUserId());
+		if(goodsSku.getCommunityId()==null) {
+			goodsSku.setCommunityId(communityMapper.getcommunityIdByuserId(goodsSku.getUserId()));
+		}
+		goodsSku.setMemberLevel(memberLevel.toString());
+		List<GoodsSku> differenceRankingList = goodsSkuMapper.getSpecialPrice(goodsSku);
+		if (differenceRankingList.size() != 0) {
+			for (GoodsSku sku : differenceRankingList) {
+				sku.setImage(ImageUtil.dealToShow(sku.getImage()));
+			}
+		}
+		return differenceRankingList;
+	}
 }
