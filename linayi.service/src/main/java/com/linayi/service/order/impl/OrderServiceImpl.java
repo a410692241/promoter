@@ -406,89 +406,90 @@ public class OrderServiceImpl implements OrderService {
             MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(orders1.getUserId());
             orders2.setCreateDateStr(DateUtil.date2String(orders1.getCreateTime(), DateUtil.Y_M_D_H_M_PATTERN));
             List<ShoppingCar> cars = new ArrayList<>();
-            for (OrdersGoods ordersGoods : ordersGoodsList) {
-                ShoppingCar shoppingCar = new ShoppingCar();
-                GoodsSku goodsSku = goodsSkuMapper.getGoodsById(ordersGoods.getGoodsSkuId());
-                if(goodsSku == null)
-                    continue;
-                String goodsName = getGoodsName(goodsSku);
-                shoppingCar.setGoodsName(goodsName);
-                shoppingCar.setGoodsSkuId(Integer.parseInt(goodsSku.getGoodsSkuId() + ""));
-                shoppingCar.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
-                ProcurementTask procurement = new ProcurementTask();
-                procurement.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
-                List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurement);
-                shoppingCar.setStatus(procurementTaskList.get(0).getProcureStatus());
-                Integer minPrice;
-                Integer maxPrice;
-                String minPriceSupermarketName;
-                String maxPriceSupermarketName;
-                if (ordersGoods.getMaxPrice() == null || ordersGoods.getMaxSupermarketId() == null){
-                    String supermarketList = ordersGoods.getSupermarketList();
-                    List<Map> list = JSON.parseArray(supermarketList, Map.class);
-                    List<SupermarketGoods> supermarketGoods = new ArrayList<>();
-                    for (Map map : list) {
-                        SupermarketGoods supermarketGoods1 = new SupermarketGoods();
-                        supermarketGoods1.setPrice(Integer.parseInt(map.get("price") + ""));
-                        supermarketGoods1.setSupermarketId(Integer.parseInt(map.get("supermarket_id") + ""));
-                        supermarketGoods1.setRank(1);
-                        supermarketGoods.add(supermarketGoods1);
+            try {
+                for (OrdersGoods ordersGoods : ordersGoodsList) {
+                    ShoppingCar shoppingCar = new ShoppingCar();
+                    GoodsSku goodsSku = goodsSkuMapper.getGoodsById(ordersGoods.getGoodsSkuId());
+                    String goodsName = getGoodsName(goodsSku);
+                    shoppingCar.setGoodsName(goodsName);
+                    shoppingCar.setGoodsSkuId(Integer.parseInt(goodsSku.getGoodsSkuId() + ""));
+                    shoppingCar.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
+                    ProcurementTask procurement = new ProcurementTask();
+                    procurement.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
+                    List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurement);
+                    shoppingCar.setStatus(procurementTaskList.get(0).getProcureStatus());
+                    Integer minPrice;
+                    Integer maxPrice;
+                    String minPriceSupermarketName;
+                    String maxPriceSupermarketName;
+                    if (ordersGoods.getMaxPrice() == null || ordersGoods.getMaxSupermarketId() == null){
+                        String supermarketList = ordersGoods.getSupermarketList();
+                        List<Map> list = JSON.parseArray(supermarketList, Map.class);
+                        List<SupermarketGoods> supermarketGoods = new ArrayList<>();
+                        for (Map map : list) {
+                            SupermarketGoods supermarketGoods1 = new SupermarketGoods();
+                            supermarketGoods1.setPrice(Integer.parseInt(map.get("price") + ""));
+                            supermarketGoods1.setSupermarketId(Integer.parseInt(map.get("supermarket_id") + ""));
+                            supermarketGoods1.setRank(1);
+                            supermarketGoods.add(supermarketGoods1);
+                        }
+
+                        Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketPriceByLevel(currentMemberLevel, supermarketGoods);
+                        minPrice = idAndPriceByLevel[0];
+                        maxPrice = idAndPriceByLevel[2];
+
+                        minPriceSupermarketName = supermarketService.getSupermarketById(idAndPriceByLevel[1]).getName();
+                        maxPriceSupermarketName = supermarketService.getSupermarketById(idAndPriceByLevel[3]).getName();
+
+                    }else {
+                        minPrice = ordersGoods.getPrice();
+                        maxPrice = ordersGoods.getMaxPrice();
+
+                        minPriceSupermarketName = supermarketService.getSupermarketById(ordersGoods.getSupermarketId()).getName();
+                        maxPriceSupermarketName = supermarketService.getSupermarketById(ordersGoods.getMaxSupermarketId()).getName();
                     }
 
-                    Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketPriceByLevel(currentMemberLevel, supermarketGoods);
-                    minPrice = idAndPriceByLevel[0];
-                    maxPrice = idAndPriceByLevel[2];
+                    shoppingCar.setQuantity(ordersGoods.getQuantity());
+                    shoppingCar.setMinPrice(getpriceString(minPrice));
+                    shoppingCar.setMaxPrice(getpriceString(maxPrice));
+                    shoppingCar.setMaxSupermarketName(maxPriceSupermarketName);
+                    shoppingCar.setMinSupermarketName(minPriceSupermarketName);
+                    shoppingCar.setSpreadRate(NumberUtil.formatDouble((maxPrice - minPrice) * 100 / Double.parseDouble("" + minPrice)) + "%");
+                    shoppingCar.setHeJiPrice(getpriceString(ordersGoods.getQuantity() * minPrice));
+                    cars.add(shoppingCar);
 
-                    minPriceSupermarketName = supermarketService.getSupermarketById(idAndPriceByLevel[1]).getName();
-                    maxPriceSupermarketName = supermarketService.getSupermarketById(idAndPriceByLevel[3]).getName();
+                    goodsPayPrice += ordersGoods.getQuantity() * minPrice;
+                    goodsTotalPrice += ordersGoods.getQuantity() * minPrice;
 
+                }
+                payPrice += goodsPayPrice + addPrice;
+                totalPrice += goodsTotalPrice + addPrice;
+                orders2.setOrdersId(orders1.getOrdersId());
+                orders2.setCreateDate(DateUtil.date2String(orders1.getCreateTime(), "yyyy/MM/dd"));
+                orders2.setGoodsTotalPrice(getpriceString(goodsTotalPrice));
+                orders2.setPayPrice(getpriceString(payPrice));
+                orders2.setTotalPrice(getpriceString(totalPrice));
+                orders2.setShoppingCarList(cars);
+                String userStatus = orders1.getUserStatus();
+                orders2.setUserStatus(orders1.getUserStatus());
+                String communityStatus = orders1.getCommunityStatus();
+                orders2.setCommunityStatus(communityStatus);
+
+                //已取消：CANCELED
+                if("CANCELED".equals(userStatus)){
+                    orders2.setStatus("CANCELED");
+                }if("FINISHED".equals(userStatus)){
+                    orders2.setStatus("FINISHED");
                 }else {
-                    minPrice = ordersGoods.getPrice();
-                    maxPrice = ordersGoods.getMaxPrice();
-
-                    minPriceSupermarketName = supermarketService.getSupermarketById(ordersGoods.getSupermarketId()).getName();
-                    maxPriceSupermarketName = supermarketService.getSupermarketById(ordersGoods.getMaxSupermarketId()).getName();
+                    if("RECEIVED".equals(communityStatus) || "PACKED".equals(communityStatus)){
+                        communityStatus = "DELIVERING";
+                    }
+                    orders2.setStatus(communityStatus);
                 }
-
-                shoppingCar.setQuantity(ordersGoods.getQuantity());
-                shoppingCar.setMinPrice(getpriceString(minPrice));
-                shoppingCar.setMaxPrice(getpriceString(maxPrice));
-                shoppingCar.setMaxSupermarketName(maxPriceSupermarketName);
-                shoppingCar.setMinSupermarketName(minPriceSupermarketName);
-                shoppingCar.setSpreadRate(NumberUtil.formatDouble((maxPrice - minPrice) * 100 / Double.parseDouble("" + minPrice)) + "%");
-                shoppingCar.setHeJiPrice(getpriceString(ordersGoods.getQuantity() * minPrice));
-                cars.add(shoppingCar);
-
-                goodsPayPrice += ordersGoods.getQuantity() * minPrice;
-                goodsTotalPrice += ordersGoods.getQuantity() * minPrice;
-
+                orders3.add(orders2);
+            }catch (Exception e){
+                e.printStackTrace();
             }
-            payPrice += goodsPayPrice + addPrice;
-            totalPrice += goodsTotalPrice + addPrice;
-            orders2.setOrdersId(orders1.getOrdersId());
-            orders2.setCreateDate(DateUtil.date2String(orders1.getCreateTime(), "yyyy/MM/dd"));
-            orders2.setGoodsTotalPrice(getpriceString(goodsTotalPrice));
-            orders2.setPayPrice(getpriceString(payPrice));
-            orders2.setTotalPrice(getpriceString(totalPrice));
-            orders2.setShoppingCarList(cars);
-            String userStatus = orders1.getUserStatus();
-            orders2.setUserStatus(orders1.getUserStatus());
-            String communityStatus = orders1.getCommunityStatus();
-            orders2.setCommunityStatus(communityStatus);
-
-            //已取消：CANCELED
-            if("CANCELED".equals(userStatus)){
-                orders2.setStatus("CANCELED");
-            }if("FINISHED".equals(userStatus)){
-                orders2.setStatus("FINISHED");
-            }else {
-                if("RECEIVED".equals(communityStatus) || "PACKED".equals(communityStatus)){
-                    communityStatus = "DELIVERING";
-                }
-                orders2.setStatus(communityStatus);
-            }
-
-            orders3.add(orders2);
         }
         return orders3;
     }
