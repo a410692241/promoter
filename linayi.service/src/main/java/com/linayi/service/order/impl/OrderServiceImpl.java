@@ -409,6 +409,8 @@ public class OrderServiceImpl implements OrderService {
             for (OrdersGoods ordersGoods : ordersGoodsList) {
                 ShoppingCar shoppingCar = new ShoppingCar();
                 GoodsSku goodsSku = goodsSkuMapper.getGoodsById(ordersGoods.getGoodsSkuId());
+                if(goodsSku == null)
+                    continue;
                 String goodsName = getGoodsName(goodsSku);
                 shoppingCar.setGoodsName(goodsName);
                 shoppingCar.setGoodsSkuId(Integer.parseInt(goodsSku.getGoodsSkuId() + ""));
