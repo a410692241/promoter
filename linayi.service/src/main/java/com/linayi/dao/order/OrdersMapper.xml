@@ -403,7 +403,7 @@
 
   <select id="getGoodsOrderSku" resultType="com.linayi.entity.order.OrdersSku">
      select
-      o.orders_id ordersId,og.orders_goods_id ordersGoodsId,gs.goods_sku_id goodsSkuId,pt.price price,gs.image,o.community_id communityId,gs.NAME goodsName,o.user_status receiveOption,s.name supermarketName,o.create_time createTime,og.quantity,o.community_status communityStatus,pt.procure_status procureStatus
+      o.orders_id ordersId,og.orders_goods_id ordersGoodsId,gs.goods_sku_id goodsSkuId,pt.price price,gs.image,o.community_id communityId,gs.NAME goodsName,gs.full_name fullName,o.user_status receiveOption,s.name supermarketName,o.create_time createTime,og.quantity,o.community_status communityStatus,pt.procure_status procureStatus
     from
       orders o join orders_goods og on o.orders_id=og.orders_id join goods_sku gs on  og.goods_sku_id=gs.goods_sku_id join procurement_task pt on pt.orders_goods_id = og.orders_goods_id join supermarket s on s.supermarket_id=pt.supermarket_id
     where

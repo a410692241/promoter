@@ -136,7 +136,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 					{name:'image',label:'商品图片',sortable:false,width:30,formatter:function( cellValue, options, rowObject ){
 							return "<img src="+cellValue+" height=60 width=100>";
 						}},
-		            {name:'goodsName',label:'商品',sortable:false,width:30},
+		            {name:'fullName',label:'商品',sortable:false,width:30},
 		            {name:'supermarketName',label:'超市',sortable:false,width:30},
 		            {name:'price',label:'超市价格(元)',sortable:false,width:30,formatter:function( cellValue, options, rowObject ){
 		            	return cellValue ? cellValue / 100 : "";
