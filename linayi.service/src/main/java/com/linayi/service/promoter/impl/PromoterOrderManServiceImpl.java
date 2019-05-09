@@ -3,10 +3,13 @@ package com.linayi.service.promoter.impl;
 import com.linayi.dao.address.ReceiveAddressMapper;
 import com.linayi.dao.order.OrdersMapper;
 import com.linayi.dao.promoter.OpenMemberInfoMapper;
+import com.linayi.dao.promoter.OpenOrderManInfoMapper;
 import com.linayi.dao.promoter.OrderManMemberMapper;
 import com.linayi.dao.promoter.PromoterOrderManMapper;
+import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.order.Orders;
 import com.linayi.entity.promoter.OpenMemberInfo;
+import com.linayi.entity.promoter.OpenOrderManInfo;
 import com.linayi.entity.promoter.OrderManMember;
 import com.linayi.entity.promoter.PromoterOrderMan;
 import com.linayi.entity.user.ReceiveAddress;
@@ -16,6 +19,7 @@ import com.linayi.service.user.UserService;
 import com.linayi.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -35,6 +39,10 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     private OpenMemberInfoMapper openMemberInfoMapper;
     @Autowired
     private ReceiveAddressMapper receiveAddressMapper;
+    @Autowired
+    private OpenOrderManInfoMapper openOrderManInfoMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public PromoterOrderMan promoterIndex(PromoterOrderMan promoterOrderMan) {
@@ -394,5 +402,43 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             orders.setCreateTimeEnd(DateUtil.date2String(cl.getTime(), "yyyy-MM-dd HH:mm:ss"));
         }
         return orders;
+    }
+    @Override
+    @Transactional
+    public void openOrderManByPromoter(OpenOrderManInfo openOrderManInfo) {
+        PromoterOrderMan promoterOrderMan = new PromoterOrderMan();
+        promoterOrderMan.setOrderManId(openOrderManInfo.getOrderManId());
+        promoterOrderMan.setPromoterId(openOrderManInfo.getPromoterId());
+        promoterOrderMan.setIdentity(openOrderManInfo.getIdentity());
+        promoterOrderMan.setCreateTime(new Date());
+        promoterOrderManMapper.insert(promoterOrderMan);
+
+        Calendar c = Calendar.getInstance();  //得到当前日期和时间
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND,0);
+        Date startTime = c.getTime();
+        openOrderManInfo.setStartTime(startTime);
+
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.YEAR,1);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.MILLISECOND,0);
+        Date endTime = cal.getTime();
+        openOrderManInfo.setEndTime(endTime);
+        openOrderManInfo.setCreateTime(new Date());
+        openOrderManInfoMapper.insert(openOrderManInfo);
+
+        User user = new User();
+        user.setUserId(openOrderManInfo.getOrderManId());
+        user.setOpenOrderManInfoId(openOrderManInfo.getOpenOrderManInfoId());
+        user.setIsSharer("FALSE");
+        user.setIsProcurer("FALSE");
+        user.setIsOrderMan("TRUE");
+        userMapper.updateUserByuserId(user);
+        System.out.println("用户ID为"+openOrderManInfo.getOrderManId()+"开通下单员身份成功！");
     }
 }

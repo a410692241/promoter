@@ -1,6 +1,7 @@
 package com.linayi.service.promoter;
 
 import com.linayi.entity.order.Orders;
+import com.linayi.entity.promoter.OpenOrderManInfo;
 import com.linayi.entity.promoter.OrderManMember;
 import com.linayi.entity.promoter.PromoterOrderMan;
 
@@ -42,5 +43,9 @@ public interface PromoterOrderManService {
      * @return
      */
     PromoterOrderMan getStatisVIP(Integer orderManId, Integer userId, String range);
-
+    /**
+     * 推广商发展下单员
+     * @param openOrderManInfo 需传推广商ID，下单员ID，下单员身份，下单员等级
+     */
+    void openOrderManByPromoter(OpenOrderManInfo openOrderManInfo);
 }
