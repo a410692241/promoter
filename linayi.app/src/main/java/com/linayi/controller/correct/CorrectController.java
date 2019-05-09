@@ -132,7 +132,7 @@ public class CorrectController extends BaseController {
 	public Object view(@RequestBody Map<String, Object> param){
 		ParamValidUtil<Correct> pvu = new ParamValidUtil<>(param);
 		Correct correct = pvu.transObj(Correct.class);
-//		try {
+		try {
 			if((correct.getCorrectId() == null || correct.getCorrectId()  <= 0)){
 				throw new BusinessException(ErrorType.INCOMPLETE_INFO);
 			}
@@ -143,11 +143,11 @@ public class CorrectController extends BaseController {
 			correct1.setStrEndTime(sdf.format(correct1.getEndTime()));
 
 			return new ResponseData(correct1);
-//		} catch (BusinessException e) {
-//			return new ResponseData(e.getErrorType()).toString();
-//		} catch (Exception e) {
-//			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
-//		}
+		} catch (BusinessException e) {
+			return new ResponseData(e.getErrorType()).toString();
+		} catch (Exception e) {
+			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+		}
 	}
 
 	@RequestMapping("/recall.do")
