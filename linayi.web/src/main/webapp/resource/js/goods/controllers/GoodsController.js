@@ -799,7 +799,7 @@ app.controller('goodsCtrl'/**
             while (s.length <= rs + 2) {
                 s += '0';
             }
-            return s * 100;
+            return parseInt(s) * 100;
         }
 
         function editeAttribute(goodsSkuId) {
