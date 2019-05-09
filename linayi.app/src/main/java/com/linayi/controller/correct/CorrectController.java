@@ -65,7 +65,7 @@ public class CorrectController extends BaseController {
 				){
 				throw new BusinessException(ErrorType.INCOMPLETE_INFO);
 			}
-			if(correct.getEndTim().before(correct.getStartTime())){
+			if(correct.getEndTime().before(correct.getStartTime())){
 				throw new BusinessException(ErrorType.TIME_SEQUENCE_ERROR);
 			}
 
@@ -98,7 +98,7 @@ public class CorrectController extends BaseController {
 			){
 				throw new BusinessException(ErrorType.INCOMPLETE_INFO);
 			}
-			if(correct.getEndTim().before(correct.getStartTime())){
+			if(correct.getEndTime().before(correct.getStartTime())){
 				throw new BusinessException(ErrorType.TIME_SEQUENCE_ERROR);
 			}
 
