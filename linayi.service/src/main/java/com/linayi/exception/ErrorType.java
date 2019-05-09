@@ -46,11 +46,12 @@ public enum ErrorType {
     NOT_YOUR_CORRECT(2015,"不是您的分享/纠错申请，不能撤回!"),
     JUST_CORRECT_MINE(2016,"生效价格不是您分享的，不能申请纠错!"),
     OPERATION_FAIL(2017,"操作失败!"),
-    BRAND_ERROR(2018,"品牌重复"),
+    BRAND_ERROR(2018,"brandSame"),
     NO_PROCURE_GOODS(2019,"没有采买到任何商品，装箱失败!"),
     HAVE_OPEN_Promoter(2020,"此手机号已开通了会员!"),
     NOT_ORDER_MAN(2021,"你不是下单员!"),
-    NOT_MODIFY(2008,"订单已取消，不能更改状态!")
+    NOT_MODIFY(2008,"订单已取消，不能更改状态!"),
+    TIME_SEQUENCE_ERROR(2022,"结束时间要大于开始时间!")
 	;
 
 
