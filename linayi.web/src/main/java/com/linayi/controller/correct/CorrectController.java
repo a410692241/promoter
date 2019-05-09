@@ -370,6 +370,10 @@ public class CorrectController extends BaseController {
         ) {
             throw new BusinessException(ErrorType.INCOMPLETE_INFO);
         }
+            if(correct.getPrice()>=210000000){
+            System.out.println("分享价格参数溢出,:");
+            throw new Exception();
+        }
 
         //后台分享部分数据处理,设置默认开始时间为当前时间，结束时间为一年后
         if (correct.getStartTime() == null) {
