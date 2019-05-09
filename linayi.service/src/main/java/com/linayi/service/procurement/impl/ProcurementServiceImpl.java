@@ -443,7 +443,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 
 		procurementTask.setSupermarketName(supermarketMapper.selectSupermarketBysupermarketId(procurementTask.getSupermarketId()).getName());
 
-		procurementTask.setBuyUserName(userMapper.selectUserByuserId(procurementTask.getUserId()).getRealName()); //采买员姓名
+		//procurementTask.setBuyUserName(userMapper.selectUserByuserId(procurementTask.getUserId()).getRealName()); //采买员姓名
 		if (procurementTask.getActualQuantity() != null && procurementTask.getPrice() != null){
 			procurementTask.setTotalPrice(procurementTask.getActualQuantity() * procurementTask.getPrice()+"");
 		}
