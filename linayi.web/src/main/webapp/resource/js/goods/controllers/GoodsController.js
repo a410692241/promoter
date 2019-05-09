@@ -754,7 +754,8 @@ app.controller('goodsCtrl'/**
             }
             console.log($scope);
             var correct = $scope.correct;
-            correct.price = (Math.round($("#price").val() * 100));
+
+            correct.price = toDecimal2($("#price").val());
             var priceType = correct.priceType;
             correct.correctType = $("#correctType").val();
             correct.correctId = $("#correctId").val();
@@ -782,6 +783,23 @@ app.controller('goodsCtrl'/**
                     }
                 }
             });
+        }
+        function toDecimal2(x) {
+            var f = parseFloat(x);
+            if (isNaN(f)) {
+                return false;
+            }
+            var f = Math.round(x*100)/100;
+            var s = f.toString();
+            var rs = s.indexOf('.');
+            if (rs < 0) {
+                rs = s.length;
+                s += '.';
+            }
+            while (s.length <= rs + 2) {
+                s += '0';
+            }
+            return s * 100;
         }
 
         function editeAttribute(goodsSkuId) {
