@@ -168,4 +168,12 @@ public interface GoodsSkuService {
 	 * @return
 	 */
     GoodsSku searchByBarcode(PromoterVo.EsConfig barcode) throws IOException;
+
+
+	/**
+	 * 促销排行
+	 * @param goodsSku
+	 * @return
+	 */
+	List<GoodsSku> getSpecialPrice(GoodsSku goodsSku);
 }

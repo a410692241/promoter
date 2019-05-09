@@ -113,4 +113,11 @@ public interface GoodsSkuMapper {
 	Integer getSoldNumByGoodsSkuId(@Param("goodsSkuId") Long goodsSkuId);
 
 	GoodsSku getGoodsSkuByBarcode(@Param("barcode") String barcode);
+
+	/**
+	 * 促销排行
+	 * @param goodsSku
+	 * @return
+	 */
+	List<GoodsSku> getSpecialPrice(GoodsSku goodsSku);
 }
