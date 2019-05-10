@@ -148,7 +148,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             OpenMemberInfo openMemberInfo =new OpenMemberInfo();
             openMemberInfo.setUserId(member.getMemberId());
             List<OpenMemberInfo> currentOpenMemberInfo = openMemberInfoMapper.getMemberStartTimeByUserId(openMemberInfo);
-            member.setOpenMemberTime(currentOpenMemberInfo.get(0).getStartTime());
+            member.setOpenMemberTime(currentOpenMemberInfo.get(0).getCreateTime());
         }
         return memberList;
     }
