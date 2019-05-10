@@ -395,6 +395,7 @@ public class OrderServiceImpl implements OrderService {
                 //收货时间
                 orders2.setReceiptTime(DateUtil.date2String(orders1.getActualArriveTime() == null ? orders1.getDeliveryFinishTime() : orders1.getActualArriveTime(), DateUtil.Y_M_D_H_M_PATTERN));
             }
+
             //网点名字和联系方式
             Integer communityId = orders1.getCommunityId();
             Community community = new Community();
@@ -448,8 +449,12 @@ public class OrderServiceImpl implements OrderService {
                         minPriceSupermarketName = supermarketService.getSupermarketById(ordersGoods.getSupermarketId()).getName();
                         maxPriceSupermarketName = supermarketService.getSupermarketById(ordersGoods.getMaxSupermarketId()).getName();
                     }
-
-                    shoppingCar.setQuantity(ordersGoods.getQuantity());
+                    //社区端订单详情查看
+                    if("community".equals(type)){
+                        shoppingCar.setQuantity(procurementTaskList.get(0).getActualQuantity());
+                    }else {
+                        shoppingCar.setQuantity(ordersGoods.getQuantity());
+                    }
                     shoppingCar.setMinPrice(getpriceString(minPrice));
                     shoppingCar.setMaxPrice(getpriceString(maxPrice));
                     shoppingCar.setMaxSupermarketName(maxPriceSupermarketName);
@@ -497,8 +502,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Orders getOrderDetails(Orders orders, HttpServletRequest request) {
         List<Orders> orderList = ordersMapper.getOrderList(orders);
+        List<Orders> ordersList;
         if (orderList != null && orderList.size() > 0) {
-            List<Orders> ordersList = getOrdersList(orderList, "orderDetails");
+            String communityName = orders.getCommunityName();
+            if(communityName != null && "community".equals(communityName)){
+                ordersList = getOrdersList(orderList, "community");
+            }else {
+                ordersList = getOrdersList(orderList, "orderDetails");
+            }
+
             Orders orders1 = orderList.get(0);
             Orders orders2 = ordersList.get(0);
 
