@@ -164,14 +164,14 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		if (categorysByCate != null && categorysByCate.size() > 0) {
 			categoryId = categorysByCate.get(0).getCategoryId();
 		}
-		if (brandId != null && !"".equals(brand)) {
+		if (brandId == null && !"".equals(brand)) {
 			Brand brand1 = new Brand();
 			brand1.setName(brand);
 			brand1.setStatus("NORMAL");
 			brandMapper.insert(brand1);
 		}
 
-		if (categoryId != null && !"".equals(category)) {
+		if (categoryId == null && !"".equals(category)) {
 			Category category1 = new Category();
 			category1.setName(category);
 			category1.setLevel(Short.parseShort(CategoryLevel.fourth.getValue() + ""));
