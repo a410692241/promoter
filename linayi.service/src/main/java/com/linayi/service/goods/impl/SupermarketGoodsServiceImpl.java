@@ -129,8 +129,14 @@ public class SupermarketGoodsServiceImpl implements SupermarketGoodsService {
     // 根据社区网点id和商品id获取超市和价格信息
     @Override
     public List<Supermarket> getPriceSupermarketBycommunityIdAndgoodsSkuId(Integer userId, Integer goodsSkuId) {
-        // 通过用户id获取超市id集合
-        List<Supermarket> supermarketList = supermarketMapper.getSupermarketByAddress(userId);
+        List<Supermarket> supermarketList = new ArrayList<Supermarket>();
+        if(userId == null){
+            supermarketList = supermarketMapper.selectAll(new Supermarket());
+        }else{
+            // 通过用户id获取超市id集合
+            supermarketList = supermarketMapper.getSupermarketByAddress(userId);
+        }
+
         // 遍历超市集合
         for (Supermarket supermarket : supermarketList) {
             // 通过超市id、商品id、状态为“生效”中查询纠错表
