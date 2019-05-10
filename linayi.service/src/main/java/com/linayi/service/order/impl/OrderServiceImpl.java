@@ -501,10 +501,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Orders getOrderDetails(Orders orders, HttpServletRequest request) {
+        String communityName = orders.getCommunityName();
+        orders.setCommunityName(null);
         List<Orders> orderList = ordersMapper.getOrderList(orders);
         List<Orders> ordersList;
         if (orderList != null && orderList.size() > 0) {
-            String communityName = orders.getCommunityName();
             if(communityName != null && "community".equals(communityName)){
                 ordersList = getOrdersList(orderList, "community");
             }else {
