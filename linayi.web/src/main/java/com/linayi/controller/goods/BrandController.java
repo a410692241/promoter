@@ -55,7 +55,7 @@ public class BrandController {
     @RequestMapping("/parse.do")
     @ResponseBody
     public Object parseExcel(MultipartFile file) {
-        brandService.insetExcelBrand(file);
+        Object o = brandService.insetExcelBrand(file);
         return new ResponseData("操作成功");
     }
 
@@ -67,14 +67,18 @@ public class BrandController {
     @RequestMapping("/save.do")
     @ResponseBody
     public Object addBrand(String brandName) {
-        Brand brand = new Brand();
-        brand.setName(brandName);
-        brand.setStatus("NORMAL");
+        if(CheckUtil.isNotNullEmpty(brandName)&&brandName.equals(null)) {
+            Brand brand = new Brand();
+            brand.setName(brandName);
+            brand.setStatus("NORMAL");
             Brand bra = brandService.selectBrandByName(brandName);
             if (!CheckUtil.isNullEmpty(bra)) {
                 return new ResponseData(ErrorType.BRAND_ERROR).toString();
             }
             brandService.insertBrand(brand);
-        return new ResponseData("success").toString();
+            return new ResponseData("success").toString();
+        }else{
+            return new ResponseData(ErrorType.SYSTEM_ERROR);
+        }
     }
 }

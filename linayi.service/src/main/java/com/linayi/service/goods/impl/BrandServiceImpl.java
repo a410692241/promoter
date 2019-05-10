@@ -88,12 +88,14 @@ public class BrandServiceImpl implements BrandService {
             Workbook wb = Workbook.getWorkbook(inputStream);
             // Excel的页签数量
             int sheet_size = wb.getNumberOfSheets();
-            System.out.println();
             for (int index = 0; index < sheet_size; index++) {
                 List<List> outerList=new ArrayList<List>();
                 // 每个页签创建一个Sheet对象
                 Sheet sheet = wb.getSheet(index);
                 // sheet.getRows()返回该页的总行数
+                if(sheet.getRows()==0||CheckUtil.isNullEmpty(sheet.getRows())){
+                    return outerList;
+                }
                 for (int i = 0; i < sheet.getRows(); i++) {
                     List innerList=new ArrayList();
                     // sheet.getColumns()返回该页的总列数

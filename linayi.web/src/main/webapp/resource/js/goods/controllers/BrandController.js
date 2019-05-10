@@ -99,7 +99,7 @@ app.controller('brandCtrl', function($q,$scope,toaster,brandService,messager,tem
 						$modalInstance.close();
 					}else{
 						$scope.$apply(function(){
-							toaster.error( "",data.msg,3000 );
+							toaster.error( "","品牌名不能为空",3000 );
 						});
 					}
 				}
