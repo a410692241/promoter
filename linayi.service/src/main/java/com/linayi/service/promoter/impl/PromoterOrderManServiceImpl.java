@@ -259,7 +259,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             List<Orders> allOrder = null;
 
             List<OrderManMember> orderManMemberList = null;
-            if("ORDER_MAN".equals(identity)){
+            if("ORDER_MAN".equals(identity.trim())){
                 //下单员
                 orderManMember.setOrderManId(orderManId);
                 receiveAddress.setUserId(orderManId);
@@ -268,7 +268,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
                 allOrder = ordersMapper.getOrdersByOrderMan(orders);
                 //查找所有会员
                 orderManMemberList = orderManMemberMapper.getOrderManMemberListByOrderManId(promoterOrderMan);
-            }else if("LEGAL_MAN".equals(identity)){
+            }else if("LEGAL_MAN".equals(identity.trim())){
                 //法人
                 orders.setPromoterId(promoterOrderMan.getPromoterId());
                 receiveAddress.setPromoterId(promoterOrderMan.getPromoterId());
