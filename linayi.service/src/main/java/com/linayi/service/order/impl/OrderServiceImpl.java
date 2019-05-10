@@ -409,15 +409,20 @@ public class OrderServiceImpl implements OrderService {
             List<ShoppingCar> cars = new ArrayList<>();
             try {
                 for (OrdersGoods ordersGoods : ordersGoodsList) {
+                    ProcurementTask procurement = new ProcurementTask();
+                    procurement.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
+                    List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurement);
+                    if("community".equals(type)){
+                        if(procurementTaskList.get(0).getActualQuantity() == null || procurementTaskList.get(0).getActualQuantity() < 1){
+                            continue;
+                        }
+                    }
                     ShoppingCar shoppingCar = new ShoppingCar();
                     GoodsSku goodsSku = goodsSkuMapper.getGoodsById(ordersGoods.getGoodsSkuId());
                     String goodsName = getGoodsName(goodsSku);
                     shoppingCar.setGoodsName(goodsName);
                     shoppingCar.setGoodsSkuId(Integer.parseInt(goodsSku.getGoodsSkuId() + ""));
                     shoppingCar.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
-                    ProcurementTask procurement = new ProcurementTask();
-                    procurement.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
-                    List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurement);
                     shoppingCar.setStatus(procurementTaskList.get(0).getProcureStatus());
                     Integer minPrice;
                     Integer maxPrice;
