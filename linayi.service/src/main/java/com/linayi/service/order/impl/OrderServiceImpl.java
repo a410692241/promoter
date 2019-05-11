@@ -346,7 +346,7 @@ public class OrderServiceImpl implements OrderService {
                 orders.setCommunityStatus(null);
         }
         List<Orders> ordersList;
-        if(communityName != null && "".equals("community")){
+        if(communityName != null && "community".equals(communityName)){
             ordersList = ordersMapper.getProcureOrderList(orders);
         }else {
             ordersList = ordersMapper.getOrderList(orders);
