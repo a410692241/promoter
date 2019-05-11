@@ -42,9 +42,6 @@ public class Correct extends BaseEntity {
 
     private String supermarkerName;
 
-    private Integer rightPrice;
-
-
     public String getSupermarkerName() {
         return supermarkerName;
     }
@@ -543,13 +540,5 @@ public class Correct extends BaseEntity {
 
     public void setAdminAccount(AdminAccount adminAccount) {
         this.adminAccount = adminAccount;
-    }
-
-    public Integer getRightPrice() {
-        return rightPrice;
-    }
-
-    public void setRightPrice(Integer rightPrice) {
-        this.rightPrice = rightPrice;
     }
 }

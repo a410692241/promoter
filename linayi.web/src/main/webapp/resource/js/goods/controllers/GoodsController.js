@@ -753,10 +753,10 @@ app.controller('goodsCtrl'/**
                 return;
             }
             console.log($scope);
+            debugger;
             var correct = $scope.correct;
-
-            correct.rightPrice = toDecimal2($("#price").val());
-            var priceType = correct.priceType;
+            correct.price =  Math.round($("#rightPrice").val()*100);
+            var price = $("#rightPrice").val();
             correct.correctType = $("#correctType").val();
             correct.correctId = $("#correctId").val();
             var startTime = $scope.correct.startTime;
@@ -768,6 +768,7 @@ app.controller('goodsCtrl'/**
                 $scope.correct.endTime = endTime.substring(0, 16);
 
             }
+            correct.rightPrice = null;
             $.ajax({
                 url: urls.ms + "/correct/correct/updatePriceForAdmin.do",
                 data: $scope.correct,
@@ -784,23 +785,7 @@ app.controller('goodsCtrl'/**
                 }
             });
         }
-        function toDecimal2(x) {
-            var f = parseFloat(x);
-            if (isNaN(f)) {
-                return false;
-            }
-            var f = Math.round(x*100)/100;
-            var s = f.toString();
-            var rs = s.indexOf('.');
-            if (rs < 0) {
-                rs = s.length;
-                s += '.';
-            }
-            while (s.length <= rs + 2) {
-                s += '0';
-            }
-            return s * 100;
-        }
+
 
         function editeAttribute(goodsSkuId) {
             var param = "?goodsSkuId=" + goodsSkuId;

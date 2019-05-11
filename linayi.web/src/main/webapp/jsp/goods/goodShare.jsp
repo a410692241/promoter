@@ -76,7 +76,7 @@
                         <label ng-show="correct.type==='SHARE'">分享</label><label
                             ng-show="correct.type!=='SHARE'">分享</label><label>价格(元)</label>
                         <span class="input-icon icon-right">
-                                <input type="text" ng-model="correct.price" id="price"
+                                <input type="text" ng-model="correct.rightPrice" id="rightPrice"
                                        class="form-control">
                                 <i class="fa fa-money palegreen"></i>
                             </span>

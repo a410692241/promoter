@@ -362,7 +362,6 @@ public class CorrectController extends BaseController {
         cal.setTime(nowTime);//设置起时间
         cal.add(Calendar.YEAR, 1);//增加一年
         Date afterOneYearTime = cal.getTime();
-        correct.setPrice(correct.getRightPrice());
         try{
         if (
                 (correct.getPrice() == null || correct.getPrice() <= 0) ||
