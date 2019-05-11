@@ -42,7 +42,6 @@ public class Correct extends BaseEntity {
 
     private String supermarkerName;
 
-
     public String getSupermarkerName() {
         return supermarkerName;
     }

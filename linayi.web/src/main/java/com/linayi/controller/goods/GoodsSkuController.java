@@ -358,10 +358,10 @@ public class GoodsSkuController extends BaseController{
     }
 
     @RequestMapping("/shareEdit.do")
-    public ModelAndView edit(String goodsSkuId) {
+    @ResponseBody
+    public Object edit(String goodsSkuId,HttpServletRequest request) {
         Correct correct = new Correct();
         correct.setGoodsSkuId(Long.parseLong(goodsSkuId));
-        ModelAndView modelAndView = new ModelAndView();
         List<Supermarket> supermarkets = supermarketGoodsService.getPriceSupermarketBycommunityIdAndgoodsSkuId(null, Integer.parseInt(goodsSkuId));
         List<Map> maps = new ArrayList<>();
         supermarkets.forEach(item -> {
@@ -369,14 +369,16 @@ public class GoodsSkuController extends BaseController{
             map.put("code", item.getSupermarketId());
             map.put("name", item.getName());
             maps.add(map);
+            maps.add(map);
         });
         Gson gson = new Gson();
         String supermarketSelect = gson.toJson(maps);
-
-        modelAndView.setViewName("jsp/goods/goodShare");
-        modelAndView.addObject("correct", correct);
-        modelAndView.addObject("supermarketSelect", supermarketSelect);
-        return modelAndView;
+        Map<String, Object> map = new HashMap<>();
+        map.put("correct", correct);
+        HttpSession session = request.getSession();
+        session.setAttribute("supermarketSelect",supermarketSelect);
+        map.put("supermarkets", supermarkets);
+        return new ResponseData(map);
     }
 
     @RequestMapping("/edit.do")

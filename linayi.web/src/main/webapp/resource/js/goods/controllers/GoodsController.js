@@ -382,27 +382,36 @@ app.controller('goodsCtrl'/**
 
         /** 分享 */
         function share(id) {
-            var url = urls.ms + "/goods/goods/shareEdit.do?";
-            if (id) {
-                url = url + $.param({goodsSkuId: id});
-            }
-            templateform.open({
-                title: "价格分享",
+            var url = urls.ms + "/goods/goods/shareEdit.do";
+            $.ajax({
                 url: url,
-                scope: $scope,
-                onOpen: function ($modalInstance, data, $scope) {
-                    var url = urls.ms + "/correct/correct/priceSupermarket.do?";
-                    $.ajax({
+                data: {
+                    goodsSkuId: id
+                },
+                dataType: "json",
+                type: "post",
+                success: function (data) {
+                    var url = urls.ms + "/jsp/goods/goodShare.jsp";
+                    templateform.open({
+                        title: "价格分享",
                         url: url,
-                        data: {"goodsSkuId": id},
-                        dataType: "json",
-                        success: function (datas) {
-                            supermarkets = datas.data;
+                        scope: $scope,
+                        data:data,
+                        onOpen: function ($modalInstance, data, $scope) {
+                            var datas = data.data;
+                            var correct = datas.correct;
+                            var supermarketList = datas.supermarkets;
+                            supermarkets = supermarketList;
+                            $scope.correct = {
+                                goodsSkuId: correct.goodsSkuId,
+                                supermarketId: correct.supermarketId,
+                                priceType: correct.priceType
+                            }
                         }
+                    }, function ($modalInstance, data, $scope) {
+                        saveShare($modalInstance, data, $scope);
                     });
                 }
-            }, function ($modalInstance, data, $scope) {
-                saveShare($modalInstance, data, $scope);
             });
         }
 
@@ -752,11 +761,9 @@ app.controller('goodsCtrl'/**
             } else {
                 return;
             }
-            console.log($scope);
+            debugger;
             var correct = $scope.correct;
-
-            correct.price = toDecimal2($("#price").val());
-            var priceType = correct.priceType;
+            correct.price =  Math.round($("#rightPrice").val()*100);
             correct.correctType = $("#correctType").val();
             correct.correctId = $("#correctId").val();
             var startTime = $scope.correct.startTime;
@@ -784,23 +791,7 @@ app.controller('goodsCtrl'/**
                 }
             });
         }
-        function toDecimal2(x) {
-            var f = parseFloat(x);
-            if (isNaN(f)) {
-                return false;
-            }
-            var f = Math.round(x*100)/100;
-            var s = f.toString();
-            var rs = s.indexOf('.');
-            if (rs < 0) {
-                rs = s.length;
-                s += '.';
-            }
-            while (s.length <= rs + 2) {
-                s += '0';
-            }
-            return parseInt(s* 100) ;
-        }
+
 
         function editeAttribute(goodsSkuId) {
             var param = "?goodsSkuId=" + goodsSkuId;
@@ -818,9 +809,9 @@ app.controller('goodsCtrl'/**
                 var supermarket = supermarkets[i];
                 if (supermarket.supermarketId === supermarketId) {
                     if (supermarket.goodsPrice != undefined) {
-                        $("#price").val(supermarket.goodsPrice / 100);
+                        $("#rightPrice").val(supermarket.goodsPrice / 100);
                     } else {
-                        $("#price").val('');
+                        $("#rightPrice").val('');
                     }
                     $("#correctType").val(supermarket.correctType);
                     $("#correctId").val(supermarket.correctId);
