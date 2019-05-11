@@ -294,7 +294,7 @@ public class DeliveryTaskServiceImpl implements DeliveryTaskService {
                 String name = supermarketMapper.selectSupermarketBysupermarketId(procurementTask.getSupermarketId()).getName();
                 shoppingCar.setMinSupermarketName(name);
                 GoodsSku goodsSku = goodsSkuMapper.getGoodsById(procurementTask.getGoodsSkuId());
-                shoppingCar.setGoodsName(goodsSku.getName());
+                shoppingCar.setGoodsName(goodsSku.getFullName());
                 shoppingCar.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
                 shoppingCar.setMinPrice(procurementTask.getPrice() + "");
                 shoppingCar.setQuantity(procurementTask.getActualQuantity());
