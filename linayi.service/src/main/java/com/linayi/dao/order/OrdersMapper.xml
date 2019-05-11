@@ -496,6 +496,8 @@
       WHERE
           o.community_status = 'RECEIVED'
           AND o.community_id = #{communityId}
+      GROUP BY
+        o.orders_id
   </select>
 <!--通过订单Id修改状态为配送中   Integer updateStatusByOrdersId(Long ordersId); -->
 	<update id="updateStatusByOrdersId">
