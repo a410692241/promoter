@@ -59,7 +59,7 @@ public interface OrdersMapper {
     OrdersSku getOrderSupermarketList(OrdersSku ordersSku);
 
     Orders getOrderById(Long ordersId);
-    
+
     /**
      * 根据社区id和社区状态为已收货  查询订单表
      * @param order
@@ -79,15 +79,15 @@ public interface OrdersMapper {
      * @return
      */
     Integer updateFinishedStatusByOrdersId(Long ordersId);
-    
-    
+
+
     /**
      * 通过订单ordersId查询订单信息
      * @param ordersId
      * @return
      */
    Orders getOrdersByOrdersId(Long ordersId);
-   
+
    /**
     * 通过订单Id修改状态为已装箱PACKED,插入配送员id
     * @param ordersId
@@ -115,7 +115,7 @@ public interface OrdersMapper {
      * @return
      */
     Integer updateOrdersCommunityStatusByOrdersId(Orders orders);
-    
+
     List<Orders> getOrderListDelivery(Orders orders);
 
     /**
@@ -147,4 +147,11 @@ public interface OrdersMapper {
      * @return
      */
     List<Orders> getOrdersByUserIdAndOrderManId(Orders orders);
+
+    /**
+     * 查询已经完成采买，并且实际采买数量不为零的订单
+     * @param orders
+     * @return
+     */
+    List<Orders> getProcureOrderList(Orders orders);
 }

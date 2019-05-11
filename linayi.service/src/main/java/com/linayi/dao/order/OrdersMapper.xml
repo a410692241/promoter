@@ -144,6 +144,52 @@
     </where>
     order by `create_time` desc
   </select>
+  <select id="getProcureOrderList" resultMap="BaseResultMap">
+      select orders_id, user_id, receiver_name, mobile, address_one, address_two, address_three, pay_way, save_amount, service_fee, extra_fee, arrive_time, actual_arrive_time,
+      remark, quantity, amount, user_status, community_status, community_id, update_time, create_time, delivery_finish_time, delivery_time,sex from orders s
+      <where>
+          <if test="userStatus == 'ALL'">
+              and user_status NOT IN ('REFUNDED','REFUSED')
+          </if>
+          <if test="userStatus == 'FINISHED'">
+              and community_status = 'DELIVER_FINISHED'
+          </if>
+          <if test="userStatus == 'IN_PROGRESS'">
+              and community_status != 'DELIVER_FINISHED'
+          </if>
+          <if test="userStatus == 'CANCELED'">
+              and user_Status = 'CANCELED'
+          </if>
+          <if test="userStatus == 'REFUND'">
+              and user_Status IN ('REFUSED','REFUNDED')
+          </if>
+          <if test="communityStatus != null and communityStatus != 'DELIVERING'">
+              AND community_status = #{communityStatus}
+          </if>
+          <if test="communityStatus != null and communityStatus == 'DELIVERING'">
+              AND community_status IN ('PROCURE_FINISHED','RECEIVED','PACKED','DELIVERING')
+          </if>
+          <if test="communityStatus == 'CANCELED'">
+              and community_status = 'CANCELED'
+          </if>
+          <if test="communityId != null">
+              AND community_id = #{communityId}
+          </if>
+          <if test="updateTime != null">
+              AND update_time = #{updateTime}
+          </if>
+          <if test="createTimeStart != null and createTimeStart != ''">
+              AND create_time <![CDATA[ >= ]]> #{createTimeStart}
+          </if>
+          <if test="createTimeEnd != null and createTimeEnd != ''">
+              AND create_time <![CDATA[ <= ]]> #{createTimeEnd}
+          </if>
+          <if test="communityName == 'community'">
+              AND (SELECT SUM(pt.procure_quantity) FROM procurement_task pt where pt.orders_id = s.orders_id) > 0
+          </if>
+      </where>
+      order by `create_time` desc
+  </select>
     <select id="getALLOrder" resultMap="BaseResultMap">
         select orders_id, user_id, receiver_name, mobile, address_one, address_two, address_three, pay_way, save_amount, service_fee, extra_fee, arrive_time, actual_arrive_time,
         remark, quantity, amount, user_status, community_status, community_id, update_time, create_time from orders

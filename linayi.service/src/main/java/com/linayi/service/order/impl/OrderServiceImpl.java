@@ -338,14 +338,19 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public PageResult<Orders> getProcureOrderList(Orders orders) {
+        String communityName = orders.getCommunityName();
         String communityStatus = orders.getCommunityStatus();
         if (communityStatus != null) {
             orders.setUserId(null);
             if ("ALL".equals(communityStatus))
                 orders.setCommunityStatus(null);
         }
-
-        List<Orders> ordersList = ordersMapper.getOrderList(orders);
+        List<Orders> ordersList;
+        if(communityName != null && "".equals("community")){
+            ordersList = ordersMapper.getProcureOrderList(orders);
+        }else {
+            ordersList = ordersMapper.getOrderList(orders);
+        }
         PageResult<Orders> ordersPageResult = new PageResult<>(ordersList,orders);
         return ordersPageResult;
     }
