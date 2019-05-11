@@ -562,10 +562,10 @@
 	<select id="getOrdersBySmallCommunityIdAndStatus" parameterType="com.linayi.entity.order.Orders" resultType="com.linayi.entity.order.Orders">
       SELECT
         o.sex,o.orders_id,o.user_id,o.receiver_name,o.mobile,o.address_one,o.address_two,o.address_three,o.pay_way,o.save_amount,o.service_fee,o.arrive_time,
-        o.actual_arrive_time,o.remark,o.quantity,o.amount,o.user_status,o.community_status,o.community_id,o.deliverer_id,o.delivery_finish_time,
+        o.actual_arrive_time,o.remark,SUM(p.actual_quantity) actualQuantity, o.quantity,o.amount,o.user_status,o.community_status,o.community_id,o.deliverer_id,o.delivery_finish_time,
         o.update_time,o.create_time, (select u.real_name from user u where u.user_id = o.user_id) buyUserName
       FROM
-        orders o JOIN order_box ob ON o.orders_id=ob.orders_id
+        orders o JOIN order_box ob ON o.orders_id=ob.orders_id join procurement_task p on o.orders_id=p.orders_id
       WHERE
         o.community_status IN ('PACKED','DELIVERING')
         <if test="smallCommunityIdList!= null and smallCommunityIdList.size() > 0">
@@ -576,6 +576,8 @@
                 ${item}
             </foreach>
         </if>
+      GROUP  BY
+        o.orders_id
       ORDER BY
         o.community_status = 'PACKED',ob.box_time DESC
     </select>
