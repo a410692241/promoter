@@ -139,6 +139,24 @@ public class Orders extends BaseEntity {
     @ApiModelProperty(value = "小区Id集合")
     private List<Integer> smallCommunityIdList;
     private String sex;
+    @ApiModelProperty(value = "实际采买数量")
+    private Integer actualQuantity;
+
+    public String getBuyUserName() {
+        return buyUserName;
+    }
+
+    public void setBuyUserName(String buyUserName) {
+        this.buyUserName = buyUserName;
+    }
+
+    public Integer getActualQuantity() {
+        return actualQuantity;
+    }
+
+    public void setActualQuantity(Integer actualQuantity) {
+        this.actualQuantity = actualQuantity;
+    }
 
     public List<Integer> getSmallCommunityIdList() {
         return smallCommunityIdList;
@@ -480,10 +498,14 @@ public class Orders extends BaseEntity {
                   String addressThree, String payWay, Integer saveAmount, Integer serviceFee, Integer extraFee, Date arriveTime,
                   Date actualArriveTime, String remark, Integer quantity, Integer amount, String userStatus, String communityStatus,
                   Integer communityId, String communityName, String boxNo, String image, Integer delivererId, Date boxTime,
-                  Date deliveryFinishTime, Date updateTime, Date createTime, Integer receiveAddressId, List<ShoppingCar> shoppingCarList,
-                  List<GoodsSku> goodsSkuList, String totalPrice, String payPrice, String goodsTotalPrice, String createDate,
-                  String createDateStr, String address, String communityPhone, Date deliveryTime, String receiptTime, String payNumber,
-                  String extraFeeString, String serviceFeeString, String serviceMobile, String deliverStatus, String delivererName) {
+                  Date deliveryFinishTime, Date updateTime, Date createTime, Integer receiveAddressId,
+                  List<ShoppingCar> shoppingCarList, List<GoodsSku> goodsSkuList, String totalPrice, String payPrice,
+                  String goodsTotalPrice, Integer orderGoodsTotalPrice, String createDate, String createDateStr, String address,
+                  String communityPhone, Date deliveryTime, String receiptTime, String payNumber, String extraFeeString,
+                  String serviceFeeString, String serviceMobile, String deliverStatus, String delivererName, String buyUserName,
+                  String status, String orderType, String range, String addressType, String createTimeStart, String createTimeEnd,
+                  String customerName, Integer orderManId, Integer promoterId, Integer smallCommunityId,
+                  List<Integer> smallCommunityIdList, String sex, Integer actualQuantity) {
         this.ordersId = ordersId;
         this.userId = userId;
         this.receiverName = receiverName;
@@ -517,6 +539,7 @@ public class Orders extends BaseEntity {
         this.totalPrice = totalPrice;
         this.payPrice = payPrice;
         this.goodsTotalPrice = goodsTotalPrice;
+        this.orderGoodsTotalPrice = orderGoodsTotalPrice;
         this.createDate = createDate;
         this.createDateStr = createDateStr;
         this.address = address;
@@ -529,6 +552,20 @@ public class Orders extends BaseEntity {
         this.serviceMobile = serviceMobile;
         this.deliverStatus = deliverStatus;
         this.delivererName = delivererName;
+        this.buyUserName = buyUserName;
+        this.status = status;
+        this.orderType = orderType;
+        this.range = range;
+        this.addressType = addressType;
+        this.createTimeStart = createTimeStart;
+        this.createTimeEnd = createTimeEnd;
+        this.customerName = customerName;
+        this.orderManId = orderManId;
+        this.promoterId = promoterId;
+        this.smallCommunityId = smallCommunityId;
+        this.smallCommunityIdList = smallCommunityIdList;
+        this.sex = sex;
+        this.actualQuantity = actualQuantity;
     }
 
     public Orders() {
@@ -571,11 +608,12 @@ public class Orders extends BaseEntity {
                 ", totalPrice='" + totalPrice + '\'' +
                 ", payPrice='" + payPrice + '\'' +
                 ", goodsTotalPrice='" + goodsTotalPrice + '\'' +
+                ", orderGoodsTotalPrice=" + orderGoodsTotalPrice +
                 ", createDate='" + createDate + '\'' +
                 ", createDateStr='" + createDateStr + '\'' +
                 ", address='" + address + '\'' +
                 ", communityPhone='" + communityPhone + '\'' +
-                ", deliveryTime='" + deliveryTime + '\'' +
+                ", deliveryTime=" + deliveryTime +
                 ", receiptTime='" + receiptTime + '\'' +
                 ", payNumber='" + payNumber + '\'' +
                 ", extraFeeString='" + extraFeeString + '\'' +
@@ -583,6 +621,7 @@ public class Orders extends BaseEntity {
                 ", serviceMobile='" + serviceMobile + '\'' +
                 ", deliverStatus='" + deliverStatus + '\'' +
                 ", delivererName='" + delivererName + '\'' +
+                ", buyUserName='" + buyUserName + '\'' +
                 ", status='" + status + '\'' +
                 ", orderType='" + orderType + '\'' +
                 ", range='" + range + '\'' +
@@ -594,6 +633,8 @@ public class Orders extends BaseEntity {
                 ", promoterId=" + promoterId +
                 ", smallCommunityId=" + smallCommunityId +
                 ", smallCommunityIdList=" + smallCommunityIdList +
+                ", sex='" + sex + '\'' +
+                ", actualQuantity=" + actualQuantity +
                 '}';
     }
 
