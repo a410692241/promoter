@@ -489,13 +489,13 @@
   <!-- List<Orders> getOrderListByCommunityIdAndRECEIVED(Orders order) -->
   <select id="getOrderListByCommunityIdAndRECEIVED" resultType="com.linayi.entity.order.Orders">
     SELECT
-      orders_id, user_id, receiver_name, mobile, address_one, address_two, address_three, pay_way, save_amount, service_fee, extra_fee, arrive_time, actual_arrive_time,
-        remark, quantity, amount, user_status, community_status, community_id, update_time, create_time
+      o.orders_id, o.user_id, o.receiver_name, o.mobile, o.address_one, o.address_two, o.address_three, o.pay_way, o.save_amount, o.service_fee, o.extra_fee, o.arrive_time, o.actual_arrive_time,
+        o.remark,SUM(p.actual_quantity) actualQuantity,o.quantity, o.amount, o.user_status, o.community_status, o.community_id, o.update_time, o.create_time
       FROM
-        orders
+        orders o join procurement_task p on o.orders_id=p.orders_id
       WHERE
-          community_status = 'RECEIVED'
-          AND community_id = #{communityId}
+          o.community_status = 'RECEIVED'
+          AND o.community_id = #{communityId}
   </select>
 <!--通过订单Id修改状态为配送中   Integer updateStatusByOrdersId(Long ordersId); -->
 	<update id="updateStatusByOrdersId">
