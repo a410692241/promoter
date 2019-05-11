@@ -755,7 +755,7 @@ app.controller('goodsCtrl'/**
             console.log($scope);
             var correct = $scope.correct;
 
-            correct.price = toDecimal2($("#price").val());
+            correct.rightPrice = toDecimal2($("#price").val());
             var priceType = correct.priceType;
             correct.correctType = $("#correctType").val();
             correct.correctId = $("#correctId").val();
