@@ -753,7 +753,6 @@ app.controller('goodsCtrl'/**
                 return;
             }
             console.log($scope);
-            debugger;
             var correct = $scope.correct;
             correct.price =  Math.round($("#rightPrice").val()*100);
             var price = $("#rightPrice").val();
@@ -776,6 +775,7 @@ app.controller('goodsCtrl'/**
                 type: "post",
                 success: function (data) {
                     isTrue = true;
+                    $("#rightPrice").val(price);
                     if (data.respCode === "S") {
                         $modalInstance.close();
                         alert("修改价格成功,等待审核!");
