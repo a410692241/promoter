@@ -108,7 +108,7 @@
 
 
 			var $radio = $(this);
-			debugger;
+
 			// if this was previously checked
 			if ($radio.data('waschecked') == true){
 				$radio.prop('checked', false);
