@@ -413,7 +413,7 @@ public class OrderServiceImpl implements OrderService {
                     procurement.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
                     List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurement);
                     if("community".equals(type)){
-                        if(procurementTaskList.get(0).getActualQuantity() == null || procurementTaskList.get(0).getActualQuantity() < 1){
+                        if(procurementTaskList.get(0).getProcureQuantity() == null || procurementTaskList.get(0).getProcureQuantity() < 1){
                             continue;
                         }
                     }
