@@ -37,6 +37,7 @@ public class AuthenticationInterceptor {
 		notNeedCheckTokenMethods.add("/common/picture/upload.do");
 		notNeedCheckTokenMethods.add("/account/account/communityLogin.do");
 		notNeedCheckTokenMethods.add("/area/area/getAreaMap.do");
+		notNeedCheckTokenMethods.add("/getCommunityAppUpdateInfo.do");
 	}
 
 
