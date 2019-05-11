@@ -382,7 +382,7 @@ public class CorrectController extends BaseController {
         if (correct.getEndTime() == null) {
             correct.setEndTime(afterOneYearTime);
         }
-        if (correct.getPriceType() == null) {
+        if (correct.getPriceType() == null || "".equals(correct.getPriceType())) {
             correct.setPriceType(PriceType.NORMAL.toString());
         }
         String userType = OperatorType.ADMIN.toString();

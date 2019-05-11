@@ -382,27 +382,36 @@ app.controller('goodsCtrl'/**
 
         /** 分享 */
         function share(id) {
-            var url = urls.ms + "/goods/goods/shareEdit.do?";
-            if (id) {
-                url = url + $.param({goodsSkuId: id});
-            }
-            templateform.open({
-                title: "价格分享",
+            var url = urls.ms + "/goods/goods/shareEdit.do";
+            $.ajax({
                 url: url,
-                scope: $scope,
-                onOpen: function ($modalInstance, data, $scope) {
-                    var url = urls.ms + "/correct/correct/priceSupermarket.do?";
-                    $.ajax({
+                data: {
+                    goodsSkuId: id
+                },
+                dataType: "json",
+                type: "post",
+                success: function (data) {
+                    var url = urls.ms + "/jsp/goods/goodShare.jsp";
+                    templateform.open({
+                        title: "价格分享",
                         url: url,
-                        data: {"goodsSkuId": id},
-                        dataType: "json",
-                        success: function (datas) {
-                            supermarkets = datas.data;
+                        scope: $scope,
+                        data:data,
+                        onOpen: function ($modalInstance, data, $scope) {
+                            var datas = data.data;
+                            var correct = datas.correct;
+                            var supermarketList = datas.supermarkets;
+                            supermarkets = supermarketList;
+                            $scope.correct = {
+                                goodsSkuId: correct.goodsSkuId,
+                                supermarketId: correct.supermarketId,
+                                priceType: correct.priceType
+                            }
                         }
+                    }, function ($modalInstance, data, $scope) {
+                        saveShare($modalInstance, data, $scope);
                     });
                 }
-            }, function ($modalInstance, data, $scope) {
-                saveShare($modalInstance, data, $scope);
             });
         }
 
@@ -752,10 +761,9 @@ app.controller('goodsCtrl'/**
             } else {
                 return;
             }
-            console.log($scope);
+            debugger;
             var correct = $scope.correct;
             correct.price =  Math.round($("#rightPrice").val()*100);
-            var price = $("#rightPrice").val();
             correct.correctType = $("#correctType").val();
             correct.correctId = $("#correctId").val();
             var startTime = $scope.correct.startTime;
@@ -767,7 +775,6 @@ app.controller('goodsCtrl'/**
                 $scope.correct.endTime = endTime.substring(0, 16);
 
             }
-            correct.rightPrice = null;
             $.ajax({
                 url: urls.ms + "/correct/correct/updatePriceForAdmin.do",
                 data: $scope.correct,
@@ -775,7 +782,6 @@ app.controller('goodsCtrl'/**
                 type: "post",
                 success: function (data) {
                     isTrue = true;
-                    $("#rightPrice").val(price);
                     if (data.respCode === "S") {
                         $modalInstance.close();
                         alert("修改价格成功,等待审核!");
@@ -803,9 +809,9 @@ app.controller('goodsCtrl'/**
                 var supermarket = supermarkets[i];
                 if (supermarket.supermarketId === supermarketId) {
                     if (supermarket.goodsPrice != undefined) {
-                        $("#price").val(supermarket.goodsPrice / 100);
+                        $("#rightPrice").val(supermarket.goodsPrice / 100);
                     } else {
-                        $("#price").val('');
+                        $("#rightPrice").val('');
                     }
                     $("#correctType").val(supermarket.correctType);
                     $("#correctId").val(supermarket.correctId);

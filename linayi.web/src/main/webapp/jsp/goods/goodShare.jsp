@@ -2,15 +2,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" isELIgnored="false"%>
 <%@ taglib prefix="cl" uri="http://www.lay.com/option" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-
-<div init-model='correct'>
-    <%=JSONObject.toJSONString(request.getAttribute("correct"))%>
-</div>
-<div init-model='supermarkets'>
-    <%=JSONObject.toJSONString(request.getAttribute("supermarkets"))%>
-</div>
-
-</div>
 <div class="col-lg-12 col-sm-12 col-xs-12">
     <div class="widget flat radius-bordered">
         <div class="widget-header bg-danger">
@@ -54,11 +45,6 @@
                         <input id="correctId" type="text"  ng-model="correct.correctId" class="form-control">
                     </div>
                 </div>
-
-
-
-
-
                 <%--<div class="col-sm-6">
                     <div class="form-group">
                         <label ng-show="correct.type==='SHARE'">分享</label><label
@@ -76,7 +62,7 @@
                         <label ng-show="correct.type==='SHARE'">分享</label><label
                             ng-show="correct.type!=='SHARE'">分享</label><label>价格(元)</label>
                         <span class="input-icon icon-right">
-                                <input type="text" ng-model="correct.rightPrice" id="rightPrice"
+                                <input type="text" ng-model="rightPrice" id="rightPrice"
                                        class="form-control">
                                 <i class="fa fa-money palegreen"></i>
                             </span>
