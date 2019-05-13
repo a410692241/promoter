@@ -97,7 +97,11 @@ app.controller('brandCtrl', function($q,$scope,toaster,brandService,messager,tem
 					if( data.respCode==='S' ){
 						$("#brandList").trigger("reloadGrid");
 						$modalInstance.close();
-					}else{
+					}else if(data.respCode==='F' && data.errorType==='2018' ){
+						$scope.$apply(function(){
+							toaster.error( "","品牌名已存在",3000 );
+						});
+					} else{
 						$scope.$apply(function(){
 							toaster.error( "","品牌名不能为空",3000 );
 						});
