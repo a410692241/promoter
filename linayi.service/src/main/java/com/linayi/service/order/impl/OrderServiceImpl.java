@@ -464,21 +464,19 @@ public class OrderServiceImpl implements OrderService {
                     //社区端订单详情查看
                     if("community".equals(type)){
                         shoppingCar.setQuantity(procurementTaskList.get(0).getActualQuantity());
-                        goodsPayPrice += procurementTaskList.get(0).getActualQuantity() * minPrice;
                     }else {
                         shoppingCar.setQuantity(ordersGoods.getQuantity());
-                        goodsPayPrice += ordersGoods.getQuantity() * minPrice;
-                        goodsTotalPrice += ordersGoods.getQuantity() * minPrice;
                     }
                     shoppingCar.setMinPrice(getpriceString(minPrice));
                     shoppingCar.setMaxPrice(getpriceString(maxPrice));
                     shoppingCar.setMaxSupermarketName(maxPriceSupermarketName);
                     shoppingCar.setMinSupermarketName(minPriceSupermarketName);
                     shoppingCar.setSpreadRate(NumberUtil.formatDouble((maxPrice - minPrice) * 100 / Double.parseDouble("" + minPrice)) + "%");
-                    shoppingCar.setHeJiPrice(getpriceString(ordersGoods.getQuantity() * minPrice));
+                    shoppingCar.setHeJiPrice(getpriceString(shoppingCar.getQuantity() * minPrice));
                     cars.add(shoppingCar);
 
-
+                    goodsPayPrice += ordersGoods.getQuantity() * minPrice;
+                    goodsTotalPrice += ordersGoods.getQuantity() * minPrice;
 
                 }
                 payPrice += goodsPayPrice + addPrice;
