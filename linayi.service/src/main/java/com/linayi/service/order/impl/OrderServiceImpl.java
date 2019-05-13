@@ -340,6 +340,7 @@ public class OrderServiceImpl implements OrderService {
     public PageResult<Orders> getProcureOrderList(Orders orders) {
         String communityName = orders.getCommunityName();
         String communityStatus = orders.getCommunityStatus();
+        Integer userId = orders.getUserId();
         if (communityStatus != null) {
             orders.setUserId(null);
             if ("ALL".equals(communityStatus))
@@ -347,7 +348,7 @@ public class OrderServiceImpl implements OrderService {
         }
         List<Orders> ordersList;
         if(communityName != null && "community".equals(communityName)){
-            orders.setCommunityId(orders.getUserId());
+            orders.setCommunityId(userId);
             ordersList = ordersMapper.getProcureOrderList(orders);
         }else {
             ordersList = ordersMapper.getOrderList(orders);
