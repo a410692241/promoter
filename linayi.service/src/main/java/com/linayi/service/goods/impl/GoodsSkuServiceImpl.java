@@ -540,18 +540,21 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 	//差价排行
 	@Override
 	public List<GoodsSku> getDifferenceRanking(GoodsSku goodsSku) {
+		System.out.println("程序开始~~~~~~~~~~~~~");
 		//获取用户的会员等级
 		MemberLevel memberLevel = openMemberInfoService.getCurrentMemberLevel(goodsSku.getUserId());
 		if(goodsSku.getCommunityId()==null) {
 			goodsSku.setCommunityId(communityMapper.getcommunityIdByuserId(goodsSku.getUserId()));
 		}
 		goodsSku.setMemberLevel(memberLevel.toString());
+		System.out.println("开始获取列表~~~~~~~~~~~~~");
 		List<GoodsSku> differenceRankingList = goodsSkuMapper.getDifferenceRanking(goodsSku);
 		if (differenceRankingList.size() != 0) {
 			for (GoodsSku sku : differenceRankingList) {
 				sku.setImage(ImageUtil.dealToShow(sku.getImage()));
 			}
 		}
+		System.out.println("程序结束~~~~~~~~~~~~~");
 		return differenceRankingList;
 	}
 
