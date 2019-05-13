@@ -845,7 +845,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		else if (PriceOrderType.PRICE_DOWN.name().equalsIgnoreCase(orderType)) {
 			searchSourceBuilder.sort("minPrice" + keyword, SortOrder.DESC);
 		}else{
-			searchSourceBuilder.sort("timestamp", SortOrder.DESC);
+			searchSourceBuilder.sort("goodsSkuId", SortOrder.DESC);
 		}
 		searchSourceBuilder.from((esConfig.getCurrentPage() - 1) * esConfig.getPageSize());
 		searchRequest.source(searchSourceBuilder);
