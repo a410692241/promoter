@@ -145,8 +145,8 @@
     order by `create_time` desc
   </select>
   <select id="getProcureOrderList" resultMap="BaseResultMap">
-      select orders_id, user_id, receiver_name, mobile, address_one, address_two, address_three, pay_way, save_amount-1000 saveAmount, service_fee, extra_fee, arrive_time, actual_arrive_time,
-      remark, quantity, amount, user_status, community_status, community_id, update_time, create_time, delivery_finish_time, delivery_time,sex from orders s
+      select orders_id, user_id, receiver_name, mobile, address_one, address_two, address_three, pay_way, save_amount, service_fee, extra_fee, arrive_time, actual_arrive_time,
+      remark, quantity, amount-1000, user_status, community_status, community_id, update_time, create_time, delivery_finish_time, delivery_time,sex from orders s
       <where>
           <if test="userStatus == 'ALL'">
               and user_status NOT IN ('REFUNDED','REFUSED')
