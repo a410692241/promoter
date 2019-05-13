@@ -687,8 +687,12 @@
         LEFT JOIN goods_attr_value gav ON gav.goods_sku_id=gs.goods_sku_id
         LEFT JOIN attribute_value av ON av.value_id=gav.attr_value_id
         <where>
-            <if test="communityId!=null and communityId!=''">
-                cg.goods_sku_id in (select distinct cc.goods_sku_id from community_supermarket css JOIN  correct cc ON css.supermarket_id=cc.supermarket_id where css.community_id=#{communityId} AND cc.price_type="PROMOTION" AND cc.STATUS="AFFECTED")
+            <if test="goodsSkuIdList!= null and goodsSkuIdList.size() > 0">
+                cg.goods_sku_id  IN
+                <foreach collection="goodsSkuIdList" item="item" index="index"
+                         open="(" separator="," close=")">
+                    ${item}
+                </foreach>
             </if>
             <if test="categoryId!=null and categoryId!=''">
                 AND gs.category_id=#{categoryId}
@@ -714,4 +718,16 @@
         </where>
     </select>
 
+    <!--获取社区绑定的超市促销商品集合-->
+    <select id="getGoodsSukIdByCommunityId" resultType="java.lang.Long">
+        SELECT DISTINCT
+              cc.goods_sku_id
+         FROM
+              community_supermarket css
+         JOIN correct cc ON css.supermarket_id = cc.supermarket_id
+         WHERE
+              css.community_id = #{communityId}
+         AND  cc.price_type = "PROMOTION"
+         AND  cc. STATUS = "AFFECTED"
+    </select>
 </mapper>

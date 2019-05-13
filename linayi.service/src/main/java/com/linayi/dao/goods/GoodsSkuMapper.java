@@ -120,4 +120,12 @@ public interface GoodsSkuMapper {
 	 * @return
 	 */
 	List<GoodsSku> getSpecialPrice(GoodsSku goodsSku);
+
+	/**
+	 * 根据社区id获取特价商品id集合
+	 * 根据社区id获取特价商品id集合
+	 * @param communityId
+	 * @return
+	 */
+	List<Long> getGoodsSukIdByCommunityId(Integer communityId);
 }
