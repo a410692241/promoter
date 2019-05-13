@@ -92,9 +92,16 @@ app.controller('communitySupermarketCtrl', function($scope,toaster,communitySupe
 			]
 		});
 	}
+
+	var isTrue=true;
 	 /**绑定超市*/
     function bind(supermarketId){
-    	messager.confirm("确认绑定该超市？",function( $modalInstance ){
+    	messager.confirm("确认绑定该超市？点击'是'会处理大批量数据请耐心等待弹框消失",function( $modalInstance ){
+			if (isTrue){
+				isTrue=false
+			} else {
+				return;
+			}
     		$.ajax({
     			url:urls.ms+"/communitySupermarket/bind.do",
     			data:{
@@ -104,6 +111,7 @@ app.controller('communitySupermarketCtrl', function($scope,toaster,communitySupe
     			dataType:"json",
     			type:"post",
     			success:function( data ){
+					isTrue=true;
 	    				if( data.respCode == "S" ){
 	    					list();
 	    					$scope.$apply(function(){
@@ -119,9 +127,16 @@ app.controller('communitySupermarketCtrl', function($scope,toaster,communitySupe
     		});
     	});
     }
+
+	var isFalse=true;
     /**解除绑定超市*/
     function unbind(supermarketId){
-    	messager.confirm("确认解绑该超市？",function( $modalInstance ){
+    	messager.confirm("确认解绑该超市？点击'是'会处理大批量数据请耐心等待弹框消失",function( $modalInstance ){
+    		if (isFalse){
+				isFalse=false;
+			} else {
+    			return;
+			}
     		$.ajax({
     			url:urls.ms+"/communitySupermarket/unbind.do",
     			data:{
@@ -131,6 +146,7 @@ app.controller('communitySupermarketCtrl', function($scope,toaster,communitySupe
     			dataType:"json",
     			type:"post",
     			success:function( data ){
+					isFalse=true;
 	    				if( data.respCode == "S" ){
 	    					list();
 	    					$scope.$apply(function(){
