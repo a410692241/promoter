@@ -67,7 +67,7 @@ public class BrandController {
     @RequestMapping("/save.do")
     @ResponseBody
     public Object addBrand(String brandName) {
-        if(CheckUtil.isNotNullEmpty(brandName)&&brandName.equals(null)) {
+        if(CheckUtil.isNotNullEmpty(brandName)&& !brandName.equals(null)) {
             Brand brand = new Brand();
             brand.setName(brandName);
             brand.setStatus("NORMAL");
