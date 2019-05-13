@@ -839,11 +839,13 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 			}
 
 		}
-		if (PriceOrderType.PRICE_UP.name().equalsIgnoreCase(orderType)) {
+		else if (PriceOrderType.PRICE_UP.name().equalsIgnoreCase(orderType)) {
 			searchSourceBuilder.sort("minPrice" + keyword, SortOrder.ASC);
 		}
-		if (PriceOrderType.PRICE_DOWN.name().equalsIgnoreCase(orderType)) {
+		else if (PriceOrderType.PRICE_DOWN.name().equalsIgnoreCase(orderType)) {
 			searchSourceBuilder.sort("minPrice" + keyword, SortOrder.DESC);
+		}else{
+			searchSourceBuilder.sort("timestamp", SortOrder.DESC);
 		}
 		searchSourceBuilder.from((esConfig.getCurrentPage() - 1) * esConfig.getPageSize());
 		searchRequest.source(searchSourceBuilder);
