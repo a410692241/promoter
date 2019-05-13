@@ -71,7 +71,6 @@ public class DeliveryTaskServiceImpl implements DeliveryTaskService {
         List<Orders> listOrders = ordersMapper.getOrderListDelivery(orders);
         List<Orders> newListOrders = new ArrayList<>();
         //通过订单Id获得订单的商品数量和配送箱信息
-        Integer sum = 0;
         for (int i = 0; i < listOrders.size(); i++) {
             Long ordersId = listOrders.get(i).getOrdersId();
             //获取配送箱信息
@@ -80,6 +79,7 @@ public class DeliveryTaskServiceImpl implements DeliveryTaskService {
             for (int k = 0; k < OrderBoxList.size(); k++) {
                 orders = new Orders();
                 //通过订单Id获得订单的商品数量
+                Integer sum = 0;
                 ProcurementTask procurementTask = new ProcurementTask();
                 procurementTask.setOrdersId(ordersId);
                 procurementTask.setBoxNo(OrderBoxList.get(k).getBoxNo());
