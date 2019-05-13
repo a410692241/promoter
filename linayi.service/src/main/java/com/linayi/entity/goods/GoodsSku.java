@@ -119,6 +119,15 @@ public class GoodsSku extends BaseEntity {
 
     private  String isRecommend; //是否是推荐商品
 
+    private  List<Long> goodsSkuIdList; //用于存放goodsSkuId集合
+
+    public List<Long> getGoodsSkuIdList() {
+        return goodsSkuIdList;
+    }
+
+    public void setGoodsSkuIdList(List<Long> goodsSkuIdList) {
+        this.goodsSkuIdList = goodsSkuIdList;
+    }
 
     public String getIsRecommend() {
         return isRecommend;

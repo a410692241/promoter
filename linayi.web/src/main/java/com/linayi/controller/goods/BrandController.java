@@ -67,16 +67,16 @@ public class BrandController {
     @RequestMapping("/save.do")
     @ResponseBody
     public Object addBrand(String brandName) {
-        if(CheckUtil.isNotNullEmpty(brandName)&&brandName.equals(null)) {
+        if(CheckUtil.isNotNullEmpty(brandName)) {
             Brand brand = new Brand();
             brand.setName(brandName);
             brand.setStatus("NORMAL");
             Brand bra = brandService.selectBrandByName(brandName);
             if (!CheckUtil.isNullEmpty(bra)) {
-                return new ResponseData(ErrorType.BRAND_ERROR).toString();
+                return new ResponseData(ErrorType.BRAND_ERROR);
             }
             brandService.insertBrand(brand);
-            return new ResponseData("success").toString();
+            return new ResponseData("success");
         }else{
             return new ResponseData(ErrorType.SYSTEM_ERROR);
         }

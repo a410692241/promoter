@@ -96,7 +96,7 @@ app.controller('promoterCtrl', function ($http, $scope, toaster, promoterService
     }/*,
             //设置页面
             loadComplete: function () {
-                debugger;
+
                 var dataCorrectArr = new Array();
                 var dataArr = $("#promoterList").jqGrid('getRowData');
                 for (var i = 0; i < dataArr.length; i++) {
@@ -112,7 +112,7 @@ app.controller('promoterCtrl', function ($http, $scope, toaster, promoterService
                 }
             },
             onSelectAll: function (aRowids, status) {
-                debugger;
+
                 for (var index = 0; index < aRowids.length; index++) {
                     var str = $("#promoterList").jqGrid('getRowData', aRowids[index]).correctId;
                     if (status) {
@@ -129,7 +129,7 @@ app.controller('promoterCtrl', function ($http, $scope, toaster, promoterService
                 }
             },
             onSelectRow: function (aRowids, status) {
-                debugger;
+
                 var str = $("#promoterList").jqGrid('getRowData', aRowids).correctId;
                 if (status) {
                     item_selected.push(str);

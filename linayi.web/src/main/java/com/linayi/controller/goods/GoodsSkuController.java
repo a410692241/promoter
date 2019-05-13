@@ -369,7 +369,6 @@ public class GoodsSkuController extends BaseController{
             map.put("code", item.getSupermarketId());
             map.put("name", item.getName());
             maps.add(map);
-            maps.add(map);
         });
         Gson gson = new Gson();
         String supermarketSelect = gson.toJson(maps);

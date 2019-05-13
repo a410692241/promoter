@@ -88,7 +88,7 @@
             data: {attrStr:attrStr,goodsSkuId:goodsSkuId},
             dataType:"json",
             success: function (data){
-                debugger;
+
                 var s = data.data;
                 if(data.data == "nameRepeat"){
                     alert("商品名称已存在");

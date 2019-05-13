@@ -1061,6 +1061,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 	}
 
 
+	//特价排行
 	@Override
 	public List<GoodsSku> getSpecialPrice(GoodsSku goodsSku) {
 		//获取用户的会员等级
@@ -1069,6 +1070,8 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 			goodsSku.setCommunityId(communityMapper.getcommunityIdByuserId(goodsSku.getUserId()));
 		}
 		goodsSku.setMemberLevel(memberLevel.toString());
+		List<Long> goodsSkuIdList = goodsSkuMapper.getGoodsSukIdByCommunityId(goodsSku.getCommunityId());
+		goodsSku.setGoodsSkuIdList(goodsSkuIdList);
 		List<GoodsSku> differenceRankingList = goodsSkuMapper.getSpecialPrice(goodsSku);
 		if (differenceRankingList.size() != 0) {
 			for (GoodsSku sku : differenceRankingList) {

@@ -761,7 +761,7 @@ app.controller('goodsCtrl'/**
             } else {
                 return;
             }
-            debugger;
+
             var correct = $scope.correct;
             correct.price =  Math.round($("#rightPrice").val()*100);
             correct.correctType = $("#correctType").val();
