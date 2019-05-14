@@ -76,6 +76,7 @@ public class SelfOrderController {
             }
             return rr;
         } catch (Exception e) {
+            e.printStackTrace();
             return rr;
         }
     }
