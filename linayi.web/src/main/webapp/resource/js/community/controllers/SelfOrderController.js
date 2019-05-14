@@ -149,10 +149,12 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
                     sortable: false,
                     formatter: function (cellvalue, options, rowObject) {
                         var opts = "";
-                        opts = opts + "<a href='javascript:void(0);' ng-click='editSelfOrder(" + rowObject.selfOrderId + ")' class='btn btn-primary fa fa-edit btn-sm td-compile'>编辑</a> ";
+                        if (rowObject.status !== "WAIT_DEAL"){
+                            opts = opts + "<a href='javascript:void(0);' ng-click='editSelfOrder(" + rowObject.selfOrderId + ")' class='btn btn-primary fa fa-edit btn-sm td-compile'>编辑</a> ";
+                        }
                         opts = opts + "<a href='javascript:void(0);' ng-click='contactUser(" + rowObject.userId + ")' class='btn btn-primary fa fa-edit btn-sm td-compile'>联系用户</a> ";
                         opts = opts + "<a href='javascript:void(0);' ng-click='showSelfOrderMessage(" + rowObject.selfOrderId + ")' class='btn btn-primary fa fa-eye btn-sm td-compile'>查看采价</a> ";
-                        if (rowObject.status == "WAIT_DEAL") {
+                        if (rowObject.status === "WAIT_DEAL") {
                             var param_string = angular.toJson({
                                 selfOrderId: rowObject.selfOrderId,
                                 goodsName: rowObject.goodsName,
@@ -198,7 +200,7 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
             if (data.minPrice > -1){
                 data.minPrice = Math.round(100 * data.minPrice);
             }
-            if (data.maxPrice > -1){
+            if (data.maxPrice != -1){
                 data.maxPrice = Math.round(100 * data.maxPrice);
 
             }
