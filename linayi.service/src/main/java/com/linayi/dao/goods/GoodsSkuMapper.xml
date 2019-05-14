@@ -722,7 +722,7 @@
     </select>
 
     <!--获取社区绑定的超市促销商品集合-->
-    <select id="getGoodsSukIdByCommunityId" resultType="java.lang.Long" parameterType="com.linayi.entity.goods.GoodsSku">
+    <select id="getGoodsSukIdByCommunityId" resultType="java.lang.Long" >
         SELECT DISTINCT
               cc.goods_sku_id
          FROM
