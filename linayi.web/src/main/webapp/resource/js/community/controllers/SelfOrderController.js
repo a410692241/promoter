@@ -30,7 +30,7 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
                 return '待确认';
                 break;
             default:
-                return cellvalue;
+                return (cellvalue / 100).toFixed(2);
                 break;
         }
     }
@@ -183,8 +183,11 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
 
     function saveSelfOrder($modalInstance, data, $scope) {
         try {
+            data = JSON.parse(JSON.stringify($scope.selfOrder));
+            data.minPrice = Math.round(100 * data.minPrice);
+            data.maxPrice = Math.round(100 * data.maxPrice);
             orderService.saveSelfOrder({
-                data: $scope.selfOrder,
+                data: data,
                 success: function (data) {
                     if (data.respCode == "S") {
                         $("#selfOrderList").trigger("reloadGrid");

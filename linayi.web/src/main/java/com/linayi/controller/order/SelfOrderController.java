@@ -1,5 +1,6 @@
 package com.linayi.controller.order;
 
+import com.google.gson.Gson;
 import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.order.SelfOrder;
 import com.linayi.entity.user.ReceiveAddress;
@@ -59,8 +60,16 @@ public class SelfOrderController {
     public ModelAndView updateSelfOrder(SelfOrder selfOrder) {
         ModelAndView mv = new ModelAndView("jsp/order/SelfOrderEdit");
         if (selfOrder.getSelfOrderId() != null) {
+            Gson gson = new Gson();
             selfOrder = selfOrderService.getSelfOrder(selfOrder);
-            mv.addObject("selfOrder", selfOrder);
+            Map<String, Object> selfOrderMap = gson.fromJson(gson.toJson(selfOrder), Map.class);
+            if (selfOrder.getMinPrice() != -1){
+                selfOrderMap.put("minPrice", String.format("%.2f", selfOrder.getMinPrice() / 100.0));
+            }
+            if (selfOrder.getMaxPrice() != -1){
+                selfOrderMap.put("maxPrice", String.format("%.2f", selfOrder.getMaxPrice() / 100.0));
+            }
+            mv.addObject("selfOrder", selfOrderMap);
         }
         return mv;
     }
@@ -131,10 +140,10 @@ public class SelfOrderController {
             @RequestParam("saveAmount") Integer saveAmount,
             @RequestParam("serviceFee") Integer serviceFee,
             @RequestParam("extraFee") Integer extraFee
-    ){
+    ) {
         try {
             selfOrderService.turnSelfOrderToOrder(selfOrderId, userId, goodsSkuId, num, amount, saveAmount, serviceFee, extraFee);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseData(ErrorType.SYSTEM_ERROR);
         }
@@ -147,7 +156,7 @@ public class SelfOrderController {
         if (userId != null) {
             User userInfo = selfOrderService.selectUserById(userId);
             ReceiveAddress address = receiveAddressService.getDefaultReceiveAddress(userInfo);
-            if (address != null){
+            if (address != null) {
                 userInfo.setMobile(address.getMobile());
             }
             mv.addObject("userInfo", userInfo);
