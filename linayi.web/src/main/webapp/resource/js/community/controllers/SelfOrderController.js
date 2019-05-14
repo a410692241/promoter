@@ -35,6 +35,17 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
         }
     }
 
+    function priceAndNum(cellvalue, options, rowObject) {
+        switch (cellvalue) {
+            case (-1):
+                return '待确认';
+                break;
+            default:
+                return cellvalue
+                break;
+        }
+    }
+
     function reserveTwoAfterPoint(value, options, rowObject) {
         if (value === -1) {
             return "暂无价格";
@@ -78,7 +89,7 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
                 {name: 'attrValue', label: '商品属性值', sortable: false},
                 {name: 'maxPrice', label: '最高价', sortable: false, formatter: priceAndNumFormatter},
                 {name: 'minPrice', label: '最低价', sortable: false, formatter: priceAndNumFormatter},
-                {name: 'num', label: '采购数量', sortable: false, formatter: priceAndNumFormatter},
+                {name: 'num', label: '采购数量', sortable: false, formatter: priceAndNum},
                 {
                     name: 'status', label: '询价状态', sortable: false, formatter: function (value, row, rowObject) {
                         switch (value) {
@@ -249,11 +260,13 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
             throw BusinessException("请向客户确认数量后下单!");
         }
         var confirm_string = "您要购买的商品是: " + params.fullName + "\n";
-        confirm_string += "最低价：" + reserveTwoAfterPoint(params.minPrice) + "\n";
+        var minPrice = parseFloat(params.minPrice);
+        confirm_string += "最低价：" + reserveTwoAfterPoint(minPrice) + "\n";
 
-        var amount = params.minPrice * params.num;
+        var amount = minPrice * params.num;
         confirm_string += "总价: " + reserveTwoAfterPoint(amount) + "\n";
-        var saveAmount = (params.maxPrice - params.minPrice) * params.num;
+        var maxPrice = parseFloat(params.maxPrice);
+        var saveAmount = (maxPrice - minPrice) * params.num;
         confirm_string += "比价优惠: " + reserveTwoAfterPoint(saveAmount) + "\n";
         confirm_string += "服务费：" + "10" + "\n";
         confirm_string += "额外服务费: " + "0";
