@@ -214,23 +214,23 @@ public class SelfOrderServiceImpl implements SelfOrderService {
         Integer communityId = communityMapper.getcommunityIdByuserId(selfOrder.getUserId());
         //根据社区id获取绑定的超市id集合
         List<Integer> supermarketIdList = communitySupermarketMapper.getSupermarketIdList(communityId);
-        int index = 0, num = 0;
-        for (Integer i : supermarketIdList) {
-            Supermarket supermarket = selfOrderMapper.findSupermarketById(i);
-            if (supermarket != null) {
-                num++;
-            }
-        }
+        int index = 0, num = 5;
+        supermarketIdList = supermarketIdList.subList(0, 5);
         sharers = "[";
         for (Integer sid : supermarketIdList) {
             Supermarket supermarket = findSupermarketById(sid);
             if (supermarket != null) {
                 index++;
-                sharers += "{\"supermarket_id\":" + supermarket.getSupermarketId() + ",\"user_id\":" + supermarket.getUserId() + "}";
+                if (supermarket.getUserId() != null) {
+                    sharers += "{\"supermarket_id\":" + supermarket.getSupermarketId() + ",\"user_id\":" + supermarket.getUserId() + "}";
+                }
                 if (index == num) {
                     break;
+                } else {
+                    if (supermarket.getUserId() != null) {
+                        sharers += ",";
+                    }
                 }
-                sharers += ",";
             }
         }
         sharers += "]";
@@ -261,6 +261,7 @@ public class SelfOrderServiceImpl implements SelfOrderService {
         goodsSku.setCommunityId(communityId);
         return goodsSkuMapper.customSearch(goodsSku);
     }
+
     @Override
     @Transactional
     public void turnSelfOrderToOrder(
@@ -288,8 +289,9 @@ public class SelfOrderServiceImpl implements SelfOrderService {
             smallCommunity = smallCommunityMapper.getSmallCommunity(smallCommunity);
         }
 
-        Orders order = OrderServiceImpl.generateOrders(userId, payWay, "", amount, saveAmount, extraFee, serviceFee, num, receiveAddress, smallCommunity,receiveAddressId,null);
+        Orders order = OrderServiceImpl.generateOrders(userId, payWay, "", amount, saveAmount, extraFee, serviceFee, num, receiveAddress, smallCommunity, receiveAddressId, null);
         order.setOrderType("'SELF_ORDER'");
+        order.setAddressType("MINE");
         ordersMapper.insert(order);
         List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getSupermarketGoodsList(goodsSkuId, smallCommunity.getCommunityId());
         OrdersGoods ordersGoods = orderService.generateOrdersGoods(order, supermarketGoodsList,supermarketGoodsList, num, goodsSkuId);
