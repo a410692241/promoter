@@ -127,5 +127,5 @@ public interface GoodsSkuMapper {
 	 * @param communityId
 	 * @return
 	 */
-	List<Long> getGoodsSukIdByCommunityId(GoodsSku goodsSku);
+	List<Long> getGoodsSukIdByCommunityId(Integer communityId);
 }
