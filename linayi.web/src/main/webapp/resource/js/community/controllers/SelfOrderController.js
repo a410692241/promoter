@@ -229,7 +229,7 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
             success: function (data) {
                 if (data.respCode == "S") {
                     $("#selfOrderList").trigger("reloadGrid");
-                    $modalInstance.close();
+                    // $modalInstance.close();
                 } else {
                     $scope.$apply(function () {
                         toaster.error("", data.errorType, 1000);
