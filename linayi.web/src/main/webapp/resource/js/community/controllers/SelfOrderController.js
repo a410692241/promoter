@@ -195,8 +195,13 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
     function saveSelfOrder($modalInstance, data, $scope) {
         try {
             data = JSON.parse(JSON.stringify($scope.selfOrder));
-            data.minPrice = Math.round(100 * data.minPrice);
-            data.maxPrice = Math.round(100 * data.maxPrice);
+            if (data.minPrice > -1){
+                data.minPrice = Math.round(100 * data.minPrice);
+            }
+            if (data.maxPrice > -1){
+                data.maxPrice = Math.round(100 * data.maxPrice);
+
+            }
             orderService.saveSelfOrder({
                 data: data,
                 success: function (data) {
