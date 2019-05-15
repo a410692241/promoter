@@ -256,7 +256,7 @@
   		join supermarket s on cs.supermarket_id = s.supermarket_id
   		join `user` u on u.default_receive_address_id=ra.receive_address_id
   	where
-  		 ra.user_id = #{userId}
+  		 u.user_id = #{userId}
 	ORDER BY
 	  	cs.rank
   </select>
