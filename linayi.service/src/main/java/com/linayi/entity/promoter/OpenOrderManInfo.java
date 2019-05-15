@@ -21,6 +21,16 @@ public class OpenOrderManInfo {
 
     private Date createTime;
 
+    private String parentType;
+
+    public String getParentType() {
+        return parentType;
+    }
+
+    public void setParentType(String parentType) {
+        this.parentType = parentType;
+    }
+
     public Integer getOpenOrderManInfoId() {
         return openOrderManInfoId;
     }

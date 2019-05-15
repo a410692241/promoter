@@ -105,20 +105,24 @@
         <div>
             <table class="form-center">
                 <tr>
-                    <td style="width: 60px"><span style="color: red">*</span>推广商ID:</td>
+                    <td style="width: 100px">推广商ID:</td>
                     <td><input type="text" id="promoterId" name="promoterId" ></td>
                 </tr>
                 <tr>
-                    <td style="width: 60px"><span style="color: red">*</span>下单员ID:</td>
+                    <td style="width: 60px">下单员ID:</td>
                     <td><input type="text" id="orderManId" name="orderManId" ></td>
                 </tr>
                 <tr>
-                    <td style="width: 60px"><span style="color: red">*</span>下单员身份:</td>
+                    <td style="width: 60px">下单员身份:</td>
                     <td><input type="text" id="identity" name="identity" ></td>
                 </tr>
                 <tr>
-                    <td style="width: 60px"><span style="color: red">*</span>下单员级别:</td>
+                    <td style="width: 60px">下单员级别:</td>
                     <td><input type="text" id="orderManLevel" name="orderManLevel" ></td>
+                </tr>
+                <tr>
+                    <td style="width: 60px">下单员类型:</td>
+                    <td><input type="text" id="parentType" name="parentType" ></td>
                 </tr>
                 <tr>
                     <td colspan="3"><input type="button" id="tj"  onclick="tijiao();" value="确认添加">&nbsp;&nbsp;</td>
@@ -137,7 +141,7 @@
         var orderManId = $("#orderManId").val();
         var identity = $("#identity").val();
         var orderManLevel = $("#orderManLevel").val();
-
+        var parentType=$("#parentType").val();
         if(promoterId == null || promoterId == ""){
             alert("请输入推广商ID");
             return false;
@@ -152,6 +156,10 @@
         }
         if(orderManLevel == null || orderManLevel == ""){
             alert("请输入开通下单员级别！");
+            return false;
+        }
+        if(parentType == null || parentType == ""){
+            alert("请输入开通下单员类型！");
             return false;
         }
         $('#tj').attr('disabled',"true");

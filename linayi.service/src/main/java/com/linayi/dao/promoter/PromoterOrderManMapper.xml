@@ -3,10 +3,10 @@
 <mapper namespace="com.linayi.dao.promoter.PromoterOrderManMapper">
   <insert id="insert" parameterType="com.linayi.entity.promoter.PromoterOrderMan">
     insert into promoter_order_man (promoter_order_man_id, promoter_id, order_man_id, 
-      identity, update_time, create_time
+      identity, update_time, create_time,parent_type
       )
     values (#{promoterOrderManId,jdbcType=INTEGER}, #{promoterId,jdbcType=INTEGER}, #{orderManId,jdbcType=INTEGER}, 
-      #{identity,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}
+      #{identity,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{parentType,jdbcType=VARCHAR}
       )
   </insert>
   <sql id="base_column">

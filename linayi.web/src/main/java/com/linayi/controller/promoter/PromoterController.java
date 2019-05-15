@@ -1,6 +1,7 @@
 package com.linayi.controller.promoter;
 
 import com.linayi.entity.promoter.OpenOrderManInfo;
+import com.linayi.exception.ErrorType;
 import com.linayi.service.promoter.PromoterOrderManService;
 import com.linayi.util.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,12 @@ public class PromoterController {
     @RequestMapping("/add.do")
     @ResponseBody
     public ResponseData add(OpenOrderManInfo openOrderManInfo){
-        promoterOrderManService.openOrderManByPromoter(openOrderManInfo);
-        return new ResponseData("success");
+        try {
+            promoterOrderManService.openOrderManByPromoter(openOrderManInfo);
+            return new ResponseData("success");
+        }catch (Exception e){
+            return new ResponseData(ErrorType.SYSTEM_ERROR);
+        }
     }
     public static void main(String[] args) {
         try {

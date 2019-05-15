@@ -411,6 +411,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         promoterOrderMan.setPromoterId(openOrderManInfo.getPromoterId());
         promoterOrderMan.setIdentity(openOrderManInfo.getIdentity());
         promoterOrderMan.setCreateTime(new Date());
+        promoterOrderMan.setParentType(openOrderManInfo.getParentType());
         promoterOrderManMapper.insert(promoterOrderMan);
 
         Calendar c = Calendar.getInstance();  //得到当前日期和时间
