@@ -30,7 +30,18 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
                 return '待确认';
                 break;
             default:
-                return cellvalue;
+                return (cellvalue / 100).toFixed(2);
+                break;
+        }
+    }
+
+    function priceAndNum(cellvalue, options, rowObject) {
+        switch (cellvalue) {
+            case (-1):
+                return '待确认';
+                break;
+            default:
+                return cellvalue
                 break;
         }
     }
@@ -78,7 +89,7 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
                 {name: 'attrValue', label: '商品属性值', sortable: false},
                 {name: 'maxPrice', label: '最高价', sortable: false, formatter: priceAndNumFormatter},
                 {name: 'minPrice', label: '最低价', sortable: false, formatter: priceAndNumFormatter},
-                {name: 'num', label: '采购数量', sortable: false, formatter: priceAndNumFormatter},
+                {name: 'num', label: '采购数量', sortable: false, formatter: priceAndNum},
                 {
                     name: 'status', label: '询价状态', sortable: false, formatter: function (value, row, rowObject) {
                         switch (value) {
@@ -138,10 +149,12 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
                     sortable: false,
                     formatter: function (cellvalue, options, rowObject) {
                         var opts = "";
-                        opts = opts + "<a href='javascript:void(0);' ng-click='editSelfOrder(" + rowObject.selfOrderId + ")' class='btn btn-primary fa fa-edit btn-sm td-compile'>编辑</a> ";
+                        if (rowObject.status !== "WAIT_DEAL"){
+                            opts = opts + "<a href='javascript:void(0);' ng-click='editSelfOrder(" + rowObject.selfOrderId + ")' class='btn btn-primary fa fa-edit btn-sm td-compile'>编辑</a> ";
+                        }
                         opts = opts + "<a href='javascript:void(0);' ng-click='contactUser(" + rowObject.userId + ")' class='btn btn-primary fa fa-edit btn-sm td-compile'>联系用户</a> ";
                         opts = opts + "<a href='javascript:void(0);' ng-click='showSelfOrderMessage(" + rowObject.selfOrderId + ")' class='btn btn-primary fa fa-eye btn-sm td-compile'>查看采价</a> ";
-                        if (rowObject.status == "WAIT_DEAL") {
+                        if (rowObject.status === "WAIT_DEAL") {
                             var param_string = angular.toJson({
                                 selfOrderId: rowObject.selfOrderId,
                                 goodsName: rowObject.goodsName,
@@ -183,8 +196,16 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
 
     function saveSelfOrder($modalInstance, data, $scope) {
         try {
+            data = JSON.parse(JSON.stringify($scope.selfOrder));
+            if (data.minPrice > -1){
+                data.minPrice = Math.round(100 * data.minPrice);
+            }
+            if (data.maxPrice != -1){
+                data.maxPrice = Math.round(100 * data.maxPrice);
+
+            }
             orderService.saveSelfOrder({
-                data: $scope.selfOrder,
+                data: data,
                 success: function (data) {
                     if (data.respCode == "S") {
                         $("#selfOrderList").trigger("reloadGrid");
@@ -246,11 +267,13 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
             throw BusinessException("请向客户确认数量后下单!");
         }
         var confirm_string = "您要购买的商品是: " + params.fullName + "\n";
-        confirm_string += "最低价：" + reserveTwoAfterPoint(params.minPrice) + "\n";
+        var minPrice = parseFloat(params.minPrice);
+        confirm_string += "最低价：" + reserveTwoAfterPoint(minPrice) + "\n";
 
-        var amount = params.minPrice * params.num;
+        var amount = minPrice * params.num;
         confirm_string += "总价: " + reserveTwoAfterPoint(amount) + "\n";
-        var saveAmount = (params.maxPrice - params.minPrice) * params.num;
+        var maxPrice = parseFloat(params.maxPrice);
+        var saveAmount = (maxPrice - minPrice) * params.num;
         confirm_string += "比价优惠: " + reserveTwoAfterPoint(saveAmount) + "\n";
         confirm_string += "服务费：" + "10" + "\n";
         confirm_string += "额外服务费: " + "0";
