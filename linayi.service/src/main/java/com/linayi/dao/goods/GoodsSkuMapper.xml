@@ -718,7 +718,7 @@
     </select>
 
     <!--获取社区绑定的超市促销商品集合-->
-    <select id="getGoodsSukIdByCommunityId" resultType="java.lang.Long" >
+<!--    <select id="getGoodsSukIdByCommunityId" resultType="java.lang.Long" >
         SELECT DISTINCT
               cc.goods_sku_id
          FROM
@@ -728,5 +728,5 @@
               css.community_id = #{communityId}
          AND  cc.price_type = "PROMOTION"
          AND  cc. STATUS = "AFFECTED"
-    </select>
+    </select>-->
 </mapper>

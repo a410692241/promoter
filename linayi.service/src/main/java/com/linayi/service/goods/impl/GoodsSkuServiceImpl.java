@@ -1073,8 +1073,8 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		}
 
 		goodsSku.setMemberLevel(memberLevel.toString());
-		List<Long> goodsSkuIdList = goodsSkuMapper.getGoodsSukIdByCommunityId(goodsSku.getCommunityId());
-		goodsSku.setGoodsSkuIdList(goodsSkuIdList);
+/*		List<Long> goodsSkuIdList = goodsSkuMapper.getGoodsSukIdByCommunityId(goodsSku.getCommunityId());
+		goodsSku.setGoodsSkuIdList(goodsSkuIdList);*/
 		List<GoodsSku> differenceRankingList = goodsSkuMapper.getSpecialPrice(goodsSku);
 		if (differenceRankingList.size() != 0) {
 			for (GoodsSku sku : differenceRankingList) {
