@@ -30,7 +30,8 @@
                     </div>
                     <div class="input-group form-group form-group-margin">
                         <span class="input-group-addon">类别</span>
-                        <select ng-model="search.categoryId" ng-change="getType(search.categoryId)">
+                        <select ng-model="search.categoryId" ng-change="getType(search.categoryId)" ng-init="">
+                            <option value="">全部</option>
                             <c:forEach items="${categorys}" var="category">
                                 <option value="${category.categoryId}">${category.name}</option>
                             </c:forEach>
@@ -38,26 +39,13 @@
                     </div>
                     <div class="input-group form-group form-group-margin">
                         <span class="input-group-addon">品牌</span>
-                        <select ng-model="search.brandId" ng-change="getType(search.brandId)">
+                        <select ng-model="search.brandId" ng-change="getType(search.brandId)" ng-init="">
+                            <option value="">全部</option>
                             <c:forEach items="${brands}" var="brand">
                                 <option value="${brand.brandId}">${brand.name}</option>
                             </c:forEach>
                         </select>
                     </div>
-                   <%-- <div class="input-group form-group form-group-margin">
-                        <span class="input-group-addon">品牌</span>
-
-                        <ui-select on-select="search.brandId=$item.code;"
-                                   ng-init='options=<cl:selectBySQL sqlId="brandList"/>;
-                                   options.splice(0,0,{"name":"全部","code":""});'
-                                   ng-model="temp" style="min-width: 230px">
-                            <ui-select-match>{{$select.selected.name}}</ui-select-match>
-                            <ui-select-choices
-                                    repeat="item in options | filter:{name: $select.search}">
-                                <span ng-bind-html="item.name | highlight: $select.search"></span>
-                            </ui-select-choices>
-                        </ui-select>
-                    </div>--%>
                     <div class="input-group form-group form-group-margin">
                         <span class="input-group-addon">条形码</span> <input
                             ng-model="search.barcode" type="text" class="form-control">
