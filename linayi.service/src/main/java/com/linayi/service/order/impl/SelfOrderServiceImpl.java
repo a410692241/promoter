@@ -164,17 +164,6 @@ public class SelfOrderServiceImpl implements SelfOrderService {
     public List<SelfOrder> getSelfOrderByUserId(GoodsSku goodsSku) {
 
         List<SelfOrder> selfOrderList = selfOrderMapper.getSelfOrderByUserId(goodsSku);
-        for (SelfOrder selfOrder : selfOrderList) {
-            if (SelfOrderStatus.WAIT_DEAL.toString().equals(selfOrder.getIsOrderSuccess())) {
-                GoodsSku goodsSkuNew = new GoodsSku();
-                goodsSkuNew.setUserId(goodsSku.getUserId());
-                goodsSkuNew.setBrandName(selfOrder.getBrandName());
-                goodsSkuNew.setValueName(selfOrder.getAttrValue());
-                goodsSkuNew.setFullName(selfOrder.getGoodsName());
-                List<GoodsSku> goodsSkuList = goodsSkuService.customSearch(goodsSkuNew);
-                selfOrder.setGoodsSkuList(goodsSkuList);
-            }
-        }
 
         return selfOrderList;
     }
@@ -186,9 +175,8 @@ public class SelfOrderServiceImpl implements SelfOrderService {
         return selfOrderMapper.selectByPrimaryKey(selfOrderId);
     }
 
-    public Integer updateSelfOrderStatusByPrimaryKey(Long selfOrderId, String status) {
-        Date now = new Date();
-        return selfOrderMapper.updateSelfOrderStatusByPrimaryKey(selfOrderId, status, now);
+    public void updateSelfOrderStatusByPrimaryKey(SelfOrder selfOrder) {
+        selfOrderMapper.updateSelfOrderStatusByPrimaryKey(selfOrder);
     }
 
     @Override

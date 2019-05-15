@@ -60,11 +60,11 @@ public interface SelfOrderService {
     /**
      * 根据主键id修改状态并更新时间
      *
-     * @param selfOrderId
-     * @param status
+     * @param
+     * @param
      * @return
      */
-    Integer updateSelfOrderStatusByPrimaryKey(Long selfOrderId, String status);
+    void updateSelfOrderStatusByPrimaryKey(SelfOrder selfOrder);
 
     SelfOrder getSelfOrder(SelfOrder selfOrder);
 

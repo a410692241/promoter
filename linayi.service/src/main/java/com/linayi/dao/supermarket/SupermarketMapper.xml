@@ -251,18 +251,14 @@
 		s.update_time updateTime,
 		s.create_time  createTime
   	FROM
-  		receive_address ra,small_community sc,community_supermarket cs,supermarket s,user u
-  	WHERE
-  		ra.address_one=sc.small_community_id
-		AND sc.community_id=cs.community_id
-  		AND cs.supermarket_id = s.supermarket_id
-  		AND u.default_receive_address_id=ra.receive_address_id
-		  <if test="userId != null">
-			  AND ra.user_id = #{userId}
-		  </if>
+  		receive_address ra join small_community sc on ra.address_one=sc.small_community_id
+  		join community_supermarket cs on sc.community_id=cs.community_id
+  		join supermarket s on cs.supermarket_id = s.supermarket_id
+  		join `user` u on u.default_receive_address_id=ra.receive_address_id
+  	where
+  		 ra.user_id = #{userId}
 	ORDER BY
 	  	cs.rank
-
   </select>
 
   <select id="getSupermarketByProcurerId" resultType="com.linayi.entity.supermarket.Supermarket">

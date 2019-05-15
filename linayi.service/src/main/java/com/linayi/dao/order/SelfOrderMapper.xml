@@ -132,14 +132,17 @@
     </select>
 
     <!-- 根据主键id修改状态并更新时间 -->
-    <update id="updateSelfOrderStatusByPrimaryKey">
+    <update id="updateSelfOrderStatusByPrimaryKey" parameterType="com.linayi.entity.order.SelfOrder">
 UPDATE
 	self_order
 SET
 	status=#{status},
-	update_time=#{updateTime}
+	<if test="isOrderSuccess!=null and isOrderSuccess!=''">
+      is_order_success = #{isOrderSuccess},
+    </if>
+      update_time=#{updateTime}
 WHERE
-	self_order_id =#{selfOrderId}
+	  self_order_id =#{selfOrderId}
 </update>
 
     <select id="getSelfOrder" resultType="com.linayi.entity.order.SelfOrder">

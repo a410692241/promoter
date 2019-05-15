@@ -61,7 +61,7 @@ public interface SelfOrderMapper {
      * @param updateTime
      * @return
      */
-    Integer updateSelfOrderStatusByPrimaryKey(@Param("selfOrderId") Long selfOrderId, @Param("status") String status, @Param("updateTime") Date updateTime);
+    Integer updateSelfOrderStatusByPrimaryKey(SelfOrder selfOrder);
 
     SelfOrder getSelfOrder(SelfOrder selfOrder);
 
