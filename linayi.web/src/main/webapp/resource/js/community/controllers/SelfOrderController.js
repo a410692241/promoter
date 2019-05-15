@@ -12,6 +12,8 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
         $scope.sharePrice = sharePrice;
         $scope.turnToOrder = turnToOrder;
         $scope.contactUser = contactUser;
+        $scope.changeOrderStatus = changeOrderStatus;
+        $scope.buttonControll = false;
         $scope.search = {
             communityId: "",
             ordersId: "",
@@ -149,7 +151,7 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
                     sortable: false,
                     formatter: function (cellvalue, options, rowObject) {
                         var opts = "";
-                        if (rowObject.status !== "WAIT_DEAL"){
+                        if (rowObject.status === "WAIT_DEAL" && rowObject.isOrderSuccess === 'WAIT_DEAL') {
                             opts = opts + "<a href='javascript:void(0);' ng-click='editSelfOrder(" + rowObject.selfOrderId + ")' class='btn btn-primary fa fa-edit btn-sm td-compile'>编辑</a> ";
                         }
                         opts = opts + "<a href='javascript:void(0);' ng-click='contactUser(" + rowObject.userId + ")' class='btn btn-primary fa fa-edit btn-sm td-compile'>联系用户</a> ";
@@ -163,6 +165,9 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
                                 userId: rowObject.userId
                             });
                             opts = opts + "<a href='javascript:void(0);' ng-click='sharePrice(" + param_string + ")' class='btn btn-primary fa fa-share btn-sm td-compile'>通知分享员</a> ";
+                        }
+                        if (rowObject.isOrderSuccess === 'WAIT_DEAL') {
+                            opts = opts + "<a href='javascript:void(0);' ng-click='changeOrderStatus(" + rowObject.selfOrderId + ")' class='btn btn-primary fa fa-edit btn-sm td-compile'>订单失败</a> ";
                         }
                         return opts;
                     }
@@ -194,20 +199,37 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
         });
     };
 
+    function changeOrderStatus(selfOrderId) {
+        var data = {
+            selfOrderId: selfOrderId,
+            isOrderSuccess: "FAIL"
+        }
+        orderService.saveSelfOrder({
+            data: data,
+            success: function (data) {
+                if (data.respCode === "S") {
+                    $("#selfOrderList").trigger("reloadGrid");
+                } else {
+                    toaster.error("修改订单状态失败", data.errorType, 1000)
+                }
+            }
+        })
+    }
+
     function saveSelfOrder($modalInstance, data, $scope) {
         try {
             data = JSON.parse(JSON.stringify($scope.selfOrder));
-            if (data.minPrice > -1){
+            if (data.minPrice > -1) {
                 data.minPrice = Math.round(100 * data.minPrice);
             }
-            if (data.maxPrice != -1){
+            if (data.maxPrice !== -1) {
                 data.maxPrice = Math.round(100 * data.maxPrice);
 
             }
             orderService.saveSelfOrder({
                 data: data,
                 success: function (data) {
-                    if (data.respCode == "S") {
+                    if (data.respCode === "S") {
                         $("#selfOrderList").trigger("reloadGrid");
                         $modalInstance.close();
                     } else {
@@ -243,26 +265,43 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
     };
 
     function sharePrice(param_string) {
+        if ($scope.buttonControll) {
+            return
+        } else {
+            $scope.buttonControll = true
+        }
         var params = param_string;
         console.log(params);
-        orderService.share({
-            data: params,
-            success: function (data) {
-                if (data.respCode == "S") {
-                    $("#selfOrderList").trigger("reloadGrid");
-                    // $modalInstance.close();
-                } else {
-                    $scope.$apply(function () {
-                        toaster.error("", data.errorType, 1000);
-                    });
+        var scope = $scope;
+        try {
+            orderService.share({
+                data: params,
+                success: function (data) {
+                    if (data.respCode === "S") {
+                        $("#selfOrderList").trigger("reloadGrid");
+                        // $modalInstance.close();
+                    } else {
+                        $scope.$apply(function () {
+                            toaster.error("", data.errorType, 1000);
+                        });
+                    }
+                    scope.buttonControll = false;
+                },
+                error: function () {
+                    scope.buttonControll = false;
+                    console.log("in error")
                 }
-            }
-        })
+            })
+        } catch (e) {
+            scope.buttonControll = false;
+            throw e;
+        }
+
     };
 
     function turnToOrder(params) {
         params.num = parseInt(params.num);
-        if (isNaN(params.num)){
+        if (isNaN(params.num)) {
             alert("请向客户确认数量后下单!")
             throw BusinessException("请向客户确认数量后下单!");
         }
@@ -272,6 +311,7 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
 
         var amount = minPrice * params.num;
         confirm_string += "总价: " + reserveTwoAfterPoint(amount) + "\n";
+        confirm_string += "数量: " + params.num + "\n";
         var maxPrice = parseFloat(params.maxPrice);
         var saveAmount = (maxPrice - minPrice) * params.num;
         confirm_string += "比价优惠: " + reserveTwoAfterPoint(saveAmount) + "\n";
@@ -290,9 +330,9 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
                     extraFee: 0
                 },
                 success: function (data) {
-                    if (data.respCode == "S"){
+                    if (data.respCode === "S") {
                         $("#selfOrderList").trigger("reloadGrid");
-                    }else {
+                    } else {
                         $scope.$apply(function () {
                             toaster.error("", data.errorType, 1000);
                         });
@@ -339,7 +379,7 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
                     width: 170,
                     sortable: false,
                     formatter: function (cellvalue, options, rowObject) {
-                        if (selfOrder.isOrderSuccess === '待处理'){
+                        if (selfOrder.isOrderSuccess === '待处理') {
                             var orderParams = {
                                 selfOrderId: selfOrder.selfOrderId,
                                 userId: selfOrder.userId,
@@ -352,8 +392,7 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
                                 fullName: rowObject.fullName
                             };
                             return "<a href='javascript:void(0);' ng-click='turnToOrder(" + angular.toJson(orderParams) + ")' class='btn btn-primary fa fa-check btn-sm td-compile'>下订单</a>";
-                        }
-                        else {
+                        } else {
                             return ""
                         }
                     }
