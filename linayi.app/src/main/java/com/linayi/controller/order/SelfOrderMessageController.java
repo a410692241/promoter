@@ -131,18 +131,23 @@ public class SelfOrderMessageController extends BaseController{
             //分享员点击完毕，修改自定义下单状态
             if (i == 0) {
                 SelfOrder selfOrder = new SelfOrder();
+                int a = 0;
                 for (SelfOrderMessage selfOrderMessage : selfOrderMessageList) {
                     if (HandleType.SUCCESS.toString().equals(selfOrderMessage.getStatus())) {
                         //当有一个处理成功状态
-                        statusString = HandleType.SUCCESS.toString();
+                        a++;
                         break;
-                    } else {
-                        statusString = HandleType.FAIL.toString();
-                        selfOrder.setIsOrderSuccess(HandleType.FAIL.toString());
                     }
+                }
+                if (a>0){
+                    statusString = HandleType.SUCCESS.toString();
+                }else {
+                    statusString = HandleType.FAIL.toString();
+                    selfOrder.setIsOrderSuccess(HandleType.FAIL.toString());
                 }
                 selfOrder.setUpdateTime( new Date());
                 selfOrder.setStatus(statusString);
+                selfOrder.setSelfOrderId(selfOrderId);
                 selfOrderService.updateSelfOrderStatusByPrimaryKey(selfOrder);
                 //添加消息表数据
                 Message message = new Message();
