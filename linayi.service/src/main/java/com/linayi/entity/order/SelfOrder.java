@@ -34,6 +34,16 @@ public class SelfOrder extends BaseEntity {
 
     private Integer num;
 
+    private String communityPhone;
+
+    public String getCommunityPhone() {
+        return communityPhone;
+    }
+
+    public void setCommunityPhone(String communityPhone) {
+        this.communityPhone = communityPhone;
+    }
+
     public Integer getMinPrice() {
         return minPrice;
     }

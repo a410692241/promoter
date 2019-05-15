@@ -12,6 +12,7 @@ import com.linayi.dao.procurement.ProcurementTaskMapper;
 import com.linayi.dao.supermarket.SupermarketMapper;
 import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.area.SmallCommunity;
+import com.linayi.entity.community.Community;
 import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.goods.SupermarketGoods;
 import com.linayi.entity.order.Orders;
@@ -162,9 +163,14 @@ public class SelfOrderServiceImpl implements SelfOrderService {
     //根据用户Id获取自定义列表
     @Override
     public List<SelfOrder> getSelfOrderByUserId(GoodsSku goodsSku) {
-
+        //根据userId获取社区信息
+        Community community = new Community();
+        community.setCommunityId(communityMapper.getcommunityIdByuserId(goodsSku.getUserId()));
+        Community community1 = communityMapper.getCommunity(community);
         List<SelfOrder> selfOrderList = selfOrderMapper.getSelfOrderByUserId(goodsSku);
-
+        for (SelfOrder selfOrder : selfOrderList) {
+            selfOrder.setCommunityPhone(community1.getMobile());
+        }
         return selfOrderList;
     }
 
