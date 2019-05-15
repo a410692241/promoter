@@ -24,6 +24,7 @@ import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.entity.user.Message;
 import com.linayi.entity.user.ReceiveAddress;
 import com.linayi.entity.user.User;
+import com.linayi.enums.MemberLevel;
 import com.linayi.enums.SelfOrderStatus;
 import com.linayi.service.goods.BrandService;
 import com.linayi.service.goods.GoodsSkuService;
@@ -31,7 +32,9 @@ import com.linayi.service.goods.SupermarketGoodsService;
 import com.linayi.service.order.OrderService;
 import com.linayi.service.order.SelfOrderMessageService;
 import com.linayi.service.order.SelfOrderService;
+import com.linayi.service.promoter.OpenMemberInfoService;
 import com.linayi.service.user.MessageService;
+import com.linayi.util.MemberPriceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,6 +80,8 @@ public class SelfOrderServiceImpl implements SelfOrderService {
     SupermarketMapper supermarketMapper;
     @Autowired
     private ProcurementTaskMapper procurementTaskMapper;
+    @Autowired
+    private OpenMemberInfoService openMemberInfoService;
 
 
     /* 内容格式 */
@@ -282,18 +287,30 @@ public class SelfOrderServiceImpl implements SelfOrderService {
             smallCommunity.setSmallCommunityId(receiveAddress.getAddressOne());
             smallCommunity = smallCommunityMapper.getSmallCommunity(smallCommunity);
         }
-
+        MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(userId);
         Orders order = OrderServiceImpl.generateOrders(userId, payWay, "", amount, saveAmount, extraFee, serviceFee, num, receiveAddress, smallCommunity, receiveAddressId, null);
         order.setOrderType("'SELF_ORDER'");
         order.setAddressType("MINE");
         ordersMapper.insert(order);
+
         List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getSupermarketGoodsList(goodsSkuId, smallCommunity.getCommunityId());
-        OrdersGoods ordersGoods = orderService.generateOrdersGoods(order, supermarketGoodsList,supermarketGoodsList, num, goodsSkuId);
+        MemberPriceUtil.supermarketPriceByLevel(currentMemberLevel, supermarketGoodsList);
+
+        OrdersGoods ordersGoods = orderService.generateOrdersGoods(order, MemberPriceUtil.supermarketGoods, MemberPriceUtil.allSpermarketGoodsList, num, goodsSkuId);
         ordersGoodsMapper.insert(ordersGoods);
-        Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(supermarketGoodsList.get(supermarketGoodsList.size() - 1).getSupermarketId());
+        SupermarketGoods supermarketGoods = MemberPriceUtil.allSpermarketGoodsList.get(MemberPriceUtil.allSpermarketGoodsList.size() - 1);
+        Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(supermarketGoods.getSupermarketId());
+        supermarket.setPrice(supermarketGoods.getPrice());
+        supermarket.setSupermarketId(supermarket.getSupermarketId());
+
         //待采买任务
         ProcurementTask procurementTask = OrderServiceImpl.generateProcurementTask(smallCommunity, ordersGoods, supermarket);
         procurementTaskMapper.insert(procurementTask);
+
+        GoodsSku goodsSku = goodsSkuMapper.getGoodsById(goodsSkuId);
+        goodsSku.setSoldNum(goodsSku.getSoldNum() == null ? 0 : goodsSku.getSoldNum() + num);
+        goodsSkuMapper.update(goodsSku);
+
         SelfOrder selfOrder = new SelfOrder();
         selfOrder.setSelfOrderId(selfOrderId);
         selfOrder.setIsOrderSuccess("SUCCESS");

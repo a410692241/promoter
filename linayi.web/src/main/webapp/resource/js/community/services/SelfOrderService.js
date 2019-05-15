@@ -145,6 +145,9 @@ app.service('orderService', [function() {
 			maxPrice: data.maxPrice,
 			num: data.num
 		};
+		if (data.isOrderSuccess != null){
+			options.data.isOrderSuccess = data.isOrderSuccess;
+		}
 		options.url = urls.ms + "/selfOrder/save.do"
 		ajax(options)
 	}

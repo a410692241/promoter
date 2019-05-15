@@ -50,7 +50,7 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label>最高价</label>
+                        <label>最高价(元)</label>
                         <span class="input-icon icon-right">
                                 <input type="text"
                                        ng-model="selfOrder.maxPrice"
@@ -61,7 +61,7 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label>最低价</label>
+                        <label>最低价(元)</label>
                         <span class="input-icon icon-right">
                                 <input type="text"
                                        ng-model="selfOrder.minPrice"
@@ -72,7 +72,7 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label>数量</label>
+                        <label>数量(件)</label>
                         <span class="input-icon icon-right">
                                 <input type="text"
                                        ng-model="selfOrder.num"

@@ -12,6 +12,8 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
         $scope.sharePrice = sharePrice;
         $scope.turnToOrder = turnToOrder;
         $scope.contactUser = contactUser;
+        $scope.changeOrderStatus = changeOrderStatus;
+        $scope.buttonControll = false;
         $scope.search = {
             communityId: "",
             ordersId: "",
@@ -26,7 +28,7 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
 
     function priceAndNumFormatter(cellvalue, options, rowObject) {
         switch (cellvalue) {
-            case (-1):
+            case (0):
                 return '待确认';
                 break;
             default:
@@ -37,7 +39,7 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
 
     function priceAndNum(cellvalue, options, rowObject) {
         switch (cellvalue) {
-            case (-1):
+            case (0):
                 return '待确认';
                 break;
             default:
@@ -47,8 +49,8 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
     }
 
     function reserveTwoAfterPoint(value, options, rowObject) {
-        if (value === -1) {
-            return "暂无价格";
+        if (value === -1 || value == null) {
+            return "缺货";
         }
         value = Math.round(parseFloat(value)) / 100;
         var xsd = value.toString().split(".");
@@ -87,9 +89,9 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
                 {name: 'goodsName', label: '商品名称', sortable: false},
                 {name: 'brandName', label: '品牌名称', sortable: false},
                 {name: 'attrValue', label: '商品属性值', sortable: false},
-                {name: 'maxPrice', label: '最高价', sortable: false, formatter: priceAndNumFormatter},
-                {name: 'minPrice', label: '最低价', sortable: false, formatter: priceAndNumFormatter},
-                {name: 'num', label: '采购数量', sortable: false, formatter: priceAndNum},
+                {name: 'maxPrice', label: '最高价(元)', sortable: false, formatter: priceAndNumFormatter},
+                {name: 'minPrice', label: '最低价(元)', sortable: false, formatter: priceAndNumFormatter},
+                {name: 'num', label: '采购数量(件)', sortable: false, formatter: priceAndNum},
                 {
                     name: 'status', label: '询价状态', sortable: false, formatter: function (value, row, rowObject) {
                         switch (value) {
@@ -149,12 +151,14 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
                     sortable: false,
                     formatter: function (cellvalue, options, rowObject) {
                         var opts = "";
-                        if (rowObject.status !== "WAIT_DEAL"){
+                        if (rowObject.status === "WAIT_DEAL" && rowObject.isOrderSuccess === 'WAIT_DEAL') {
                             opts = opts + "<a href='javascript:void(0);' ng-click='editSelfOrder(" + rowObject.selfOrderId + ")' class='btn btn-primary fa fa-edit btn-sm td-compile'>编辑</a> ";
                         }
                         opts = opts + "<a href='javascript:void(0);' ng-click='contactUser(" + rowObject.userId + ")' class='btn btn-primary fa fa-edit btn-sm td-compile'>联系用户</a> ";
-                        opts = opts + "<a href='javascript:void(0);' ng-click='showSelfOrderMessage(" + rowObject.selfOrderId + ")' class='btn btn-primary fa fa-eye btn-sm td-compile'>查看采价</a> ";
-                        if (rowObject.status === "WAIT_DEAL") {
+                        if (rowObject.status === "WAIT_DEAL" && rowObject.isOrderSuccess === 'WAIT_DEAL') {
+                            opts = opts + "<a href='javascript:void(0);' ng-click='showSelfOrderMessage(" + rowObject.selfOrderId + ")' class='btn btn-primary fa fa-eye btn-sm td-compile'>查看采价</a> ";
+                        }
+                        if (rowObject.status === "WAIT_DEAL" && rowObject.isOrderSuccess === 'WAIT_DEAL') {
                             var param_string = angular.toJson({
                                 selfOrderId: rowObject.selfOrderId,
                                 goodsName: rowObject.goodsName,
@@ -163,6 +167,9 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
                                 userId: rowObject.userId
                             });
                             opts = opts + "<a href='javascript:void(0);' ng-click='sharePrice(" + param_string + ")' class='btn btn-primary fa fa-share btn-sm td-compile'>通知分享员</a> ";
+                        }
+                        if (rowObject.isOrderSuccess === 'WAIT_DEAL') {
+                            opts = opts + "<a href='javascript:void(0);' ng-click='changeOrderStatus(" + rowObject.selfOrderId + ")' class='btn btn-primary fa fa-edit btn-sm td-compile'>订单失败</a> ";
                         }
                         return opts;
                     }
@@ -194,20 +201,37 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
         });
     };
 
+    function changeOrderStatus(selfOrderId) {
+        var data = {
+            selfOrderId: selfOrderId,
+            isOrderSuccess: "FAIL"
+        }
+        orderService.saveSelfOrder({
+            data: data,
+            success: function (data) {
+                if (data.respCode === "S") {
+                    $("#selfOrderList").trigger("reloadGrid");
+                } else {
+                    toaster.error("修改订单状态失败", data.errorType, 1000)
+                }
+            }
+        })
+    }
+
     function saveSelfOrder($modalInstance, data, $scope) {
         try {
             data = JSON.parse(JSON.stringify($scope.selfOrder));
-            if (data.minPrice > -1){
+            if (data.minPrice > 0) {
                 data.minPrice = Math.round(100 * data.minPrice);
             }
-            if (data.maxPrice != -1){
+            if (data.maxPrice > 0) {
                 data.maxPrice = Math.round(100 * data.maxPrice);
 
             }
             orderService.saveSelfOrder({
                 data: data,
                 success: function (data) {
-                    if (data.respCode == "S") {
+                    if (data.respCode === "S") {
                         $("#selfOrderList").trigger("reloadGrid");
                         $modalInstance.close();
                     } else {
@@ -243,40 +267,58 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
     };
 
     function sharePrice(param_string) {
+        if ($scope.buttonControll) {
+            return
+        } else {
+            $scope.buttonControll = true
+        }
         var params = param_string;
         console.log(params);
-        orderService.share({
-            data: params,
-            success: function (data) {
-                if (data.respCode == "S") {
-                    $("#selfOrderList").trigger("reloadGrid");
-                    // $modalInstance.close();
-                } else {
-                    $scope.$apply(function () {
-                        toaster.error("", data.errorType, 1000);
-                    });
+        var scope = $scope;
+        try {
+            orderService.share({
+                data: params,
+                success: function (data) {
+                    if (data.respCode === "S") {
+                        $("#selfOrderList").trigger("reloadGrid");
+                        // $modalInstance.close();
+                    } else {
+                        $scope.$apply(function () {
+                            toaster.error("", data.errorType, 1000);
+                        });
+                    }
+                    scope.buttonControll = false;
+                },
+                error: function () {
+                    scope.buttonControll = false;
+                    console.log("in error")
                 }
-            }
-        })
+            })
+        } catch (e) {
+            scope.buttonControll = false;
+            throw e;
+        }
+
     };
 
     function turnToOrder(params) {
         params.num = parseInt(params.num);
-        if (isNaN(params.num)){
+        if (isNaN(params.num) || params.num === 0) {
             alert("请向客户确认数量后下单!")
             throw BusinessException("请向客户确认数量后下单!");
         }
         var confirm_string = "您要购买的商品是: " + params.fullName + "\n";
         var minPrice = parseFloat(params.minPrice);
-        confirm_string += "最低价：" + reserveTwoAfterPoint(minPrice) + "\n";
-
-        var amount = minPrice * params.num;
-        confirm_string += "总价: " + reserveTwoAfterPoint(amount) + "\n";
+        confirm_string += "最低价(元)：" + reserveTwoAfterPoint(minPrice) + "\n";
+        confirm_string += "数量(件): " + params.num + "\n";
+        confirm_string += "服务费(元)：" + "10" + "\n";
+        var amount = minPrice * params.num + 1000;
+        confirm_string += "总价(元): " + reserveTwoAfterPoint(amount) + "\n";
         var maxPrice = parseFloat(params.maxPrice);
         var saveAmount = (maxPrice - minPrice) * params.num;
-        confirm_string += "比价优惠: " + reserveTwoAfterPoint(saveAmount) + "\n";
-        confirm_string += "服务费：" + "10" + "\n";
-        confirm_string += "额外服务费: " + "0";
+        confirm_string += "比价优惠(元): " + reserveTwoAfterPoint(saveAmount) + "\n";
+        confirm_string += "额外服务费(元): " + "0";
+        console.log("saveAmount: " + saveAmount);
         if (window.confirm(confirm_string)) {
             orderService.turnToOrder({
                 data: {
@@ -290,9 +332,9 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
                     extraFee: 0
                 },
                 success: function (data) {
-                    if (data.respCode == "S"){
+                    if (data.respCode === "S") {
                         $("#selfOrderList").trigger("reloadGrid");
-                    }else {
+                    } else {
                         $scope.$apply(function () {
                             toaster.error("", data.errorType, 1000);
                         });
@@ -323,8 +365,8 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
                 {name: "goodsSkuId", label: "sku-id", hidden: true, sortable: false},
                 {name: "fullName", label: "商品全称", sortable: false},
                 {name: 'minSupermarket', label: '最低价超市', sortable: false},
-                {name: 'minPrice', label: '最低价', sortable: false, formatter: reserveTwoAfterPoint},
-                {name: 'maxPrice', label: '最高价', sortable: false, formatter: reserveTwoAfterPoint},
+                {name: 'minPrice', label: '最低价(元)', sortable: false, formatter: reserveTwoAfterPoint},
+                {name: 'maxPrice', label: '最高价(元)', sortable: false, formatter: reserveTwoAfterPoint},
                 {
                     name: 'spreadRate',
                     label: '价差率',
@@ -339,7 +381,7 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
                     width: 170,
                     sortable: false,
                     formatter: function (cellvalue, options, rowObject) {
-                        if (selfOrder.isOrderSuccess === '待处理'){
+                        if (selfOrder.isOrderSuccess === '待处理') {
                             var orderParams = {
                                 selfOrderId: selfOrder.selfOrderId,
                                 userId: selfOrder.userId,
@@ -352,8 +394,7 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
                                 fullName: rowObject.fullName
                             };
                             return "<a href='javascript:void(0);' ng-click='turnToOrder(" + angular.toJson(orderParams) + ")' class='btn btn-primary fa fa-check btn-sm td-compile'>下订单</a>";
-                        }
-                        else {
+                        } else {
                             return ""
                         }
                     }
@@ -386,7 +427,7 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
             },
             colModel: [
                 {name: 'supermarketName', label: '超市名', sortable: false},
-                {name: 'price', label: '价格', sortable: false, formatter: reserveTwoAfterPoint}
+                {name: 'price', label: '价格(元)', sortable: false, formatter: reserveTwoAfterPoint}
             ],
             loadonce: true,
             width: 300,

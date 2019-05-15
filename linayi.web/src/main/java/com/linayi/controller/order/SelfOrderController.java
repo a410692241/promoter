@@ -63,10 +63,10 @@ public class SelfOrderController {
             Gson gson = new Gson();
             selfOrder = selfOrderService.getSelfOrder(selfOrder);
             Map<String, Object> selfOrderMap = gson.fromJson(gson.toJson(selfOrder), Map.class);
-            if (selfOrder.getMinPrice() != -1){
+            if (selfOrder.getMinPrice() > 0){
                 selfOrderMap.put("minPrice", String.format("%.2f", selfOrder.getMinPrice() / 100.0));
             }
-            if (selfOrder.getMaxPrice() != -1){
+            if (selfOrder.getMaxPrice() > 0){
                 selfOrderMap.put("maxPrice", String.format("%.2f", selfOrder.getMaxPrice() / 100.0));
             }
             mv.addObject("selfOrder", selfOrderMap);
