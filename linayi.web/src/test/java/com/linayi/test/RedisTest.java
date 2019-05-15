@@ -15,6 +15,7 @@ import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.goods.SupermarketGoods;
 import com.linayi.entity.order.Orders;
 import com.linayi.entity.order.OrdersSku;
+import com.linayi.entity.order.SelfOrder;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.entity.user.Message;
 import com.linayi.enums.MessageType;
@@ -211,7 +212,10 @@ public class RedisTest {
 
     @Test
     public void testUpdateSelfOrderStatusByPrimaryKey(){
-        selfOrderService.updateSelfOrderStatusByPrimaryKey(4L,"SUCCESS");
+        SelfOrder selfOrder = new SelfOrder();
+        selfOrder.setSelfOrderId(4L);
+        selfOrder.setStatus("SUCCESS");
+        selfOrderService.updateSelfOrderStatusByPrimaryKey(selfOrder);
     }
 
     @Test
