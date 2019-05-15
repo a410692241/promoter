@@ -72,7 +72,11 @@ public class GoodsSkuController extends BaseController{
         return "jsp/goods/GoodsAdd";
     }
 
-
+    @RequestMapping("/goGoodsList.do")
+    public String goGoodsList(ModelMap model) {
+        goodsService.getBrandAndVal(model);
+        return "jsp/goods/GoodsList";
+    }
     /**
      * 添加商品
      *

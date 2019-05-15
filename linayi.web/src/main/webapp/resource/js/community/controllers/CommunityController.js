@@ -164,7 +164,7 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
 			},
 			colModel : [
 				{name:'communityId',label:'社区ID',sortable:false,width:80},
-				{name:'email',label:'email',sortable:false,width:80},
+				{name:'email',label:'email',sortable:false,width:120},
 				{name:'name',label:'社区名称',sortable:false,width:160},
 				{name:'qq',label:'qq',sortable:false,width:80},
 				{name:'mobile',label:'手机号',sortable:false,width:80},
