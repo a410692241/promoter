@@ -45,7 +45,7 @@ app.controller('selectUserCtrl', function($scope,toaster,selectUserService,messa
 				{name:'nickname',label:'昵称',sortable:false},
 				{name:'realName',label:'真实姓名',sortable:false},
 				{name:'qq',label:'QQ',sortable:false},
-				{name:'email',label:'邮箱',sortable:false},
+				{name:'email',label:'邮箱',sortable:false,width:220},
 				/*{name:'status',label:'用户状态',sortable:false,formatter:function( cellvalue, options, rowObject ){
 					if(cellvalue==1000){
 	            		return "有效"; 
