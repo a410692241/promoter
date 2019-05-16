@@ -71,7 +71,7 @@ app.controller('selectRoleCtrl', function($scope,toaster,selectUserService,messa
 		});
 	}
 
-	function showUserContent( id ){
+	/*function showUserContent( id ){
 		var url = urls.ms + "/jsp/system/userContent.jsp?";
 		if( id ){
 			url = url + $.param( {accountId:id} );
@@ -110,7 +110,7 @@ app.controller('selectRoleCtrl', function($scope,toaster,selectUserService,messa
 			keyboard: true,
 			scope:$scope,
 		});
-	}
+	}*/
 
 	//分配角色
 	function fenpeiRole( id ){
