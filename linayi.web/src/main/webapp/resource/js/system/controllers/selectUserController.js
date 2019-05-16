@@ -40,7 +40,7 @@ app.controller('selectUserCtrl', function($scope,toaster,selectUserService,messa
 			colModel : [
 				{name:'userName',label:'账号名称',sortable:false},
 				{name:'userType',label:'类型',sortable:false},
-				{name:'userId',label:'编码',sortable:false},
+				{name:'userId',label:'员工编号',sortable:false},
 				/*{name:'realName',label:'真实姓名',sortable:false},*/
 				/*{name:'qq',label:'QQ',sortable:false},*/
 				/*{name:'email',label:'邮箱',sortable:false},*/
