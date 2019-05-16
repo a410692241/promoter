@@ -41,6 +41,7 @@ app.controller('selectUserCtrl', function($scope,toaster,selectUserService,messa
 			colModel : [
 				/*{name:'userName',label:'账号名',sortable:false},*/
 				/*{name:'sex',label:'性别',sortable:false},*/
+                {name:'employeeId',label:'员工编号',sortable:false},
 				{name:'nickname',label:'昵称',sortable:false},
 				{name:'realName',label:'真实姓名',sortable:false},
 				{name:'qq',label:'QQ',sortable:false},
