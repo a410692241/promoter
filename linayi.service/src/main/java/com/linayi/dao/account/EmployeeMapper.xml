@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.linayi.dao.account.EmployeeMapper">
-  <insert id="insert" parameterType="com.linayi.entity.account.Employee">
+  <insert id="insert" parameterType="com.linayi.entity.account.Employee" useGeneratedKeys="true" keyProperty="employeeId">
     insert into employee (employee_id, nickname, qq, 
       email, mobile, real_name, 
       create_time, update_time)

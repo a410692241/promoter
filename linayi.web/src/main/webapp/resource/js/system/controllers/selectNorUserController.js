@@ -62,7 +62,7 @@ app.controller('selectUserCtrl', function($scope,toaster,selectUserService,messa
 			               		optString += " <a href='javascript:void(0)' ng-click='cancelFrozen("+rowObject.accountId+",1001)' class='btn btn-primary fa fa-eye btn-sm td-compile'>[禁用]</a>";
 			               	}*/
 			           		/*optString+= " <a href='javascript:void(0)' ng-click='resetPWD("+rowObject.accountId+")' class='btn btn-primary fa fa-undo btn-sm td-compile'>[密码重置]</a>";*/
-			           		optString+= " <a href='javascript:void(0)' ng-click='remove("+rowObject.employeeId+")' class='btn btn-primary fa fa-remove btn-sm td-compile'>[删除]</a>";
+			           		// optString+= " <a href='javascript:void(0)' ng-click='remove("+rowObject.employeeId+")' class='btn btn-primary fa fa-remove btn-sm td-compile'>[删除]</a>";
 			           	}
 			           	 return optString;
 	             }}
