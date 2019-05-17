@@ -41,10 +41,11 @@ app.controller('selectUserCtrl', function($scope,toaster,selectUserService,messa
 			colModel : [
 				/*{name:'userName',label:'账号名',sortable:false},*/
 				/*{name:'sex',label:'性别',sortable:false},*/
+                {name:'employeeId',label:'员工编号',sortable:false},
 				{name:'nickname',label:'昵称',sortable:false},
 				{name:'realName',label:'真实姓名',sortable:false},
 				{name:'qq',label:'QQ',sortable:false},
-				{name:'email',label:'邮箱',sortable:false},
+				{name:'email',label:'邮箱',sortable:false,width:220},
 				/*{name:'status',label:'用户状态',sortable:false,formatter:function( cellvalue, options, rowObject ){
 					if(cellvalue==1000){
 	            		return "有效"; 
@@ -62,7 +63,7 @@ app.controller('selectUserCtrl', function($scope,toaster,selectUserService,messa
 			               		optString += " <a href='javascript:void(0)' ng-click='cancelFrozen("+rowObject.accountId+",1001)' class='btn btn-primary fa fa-eye btn-sm td-compile'>[禁用]</a>";
 			               	}*/
 			           		/*optString+= " <a href='javascript:void(0)' ng-click='resetPWD("+rowObject.accountId+")' class='btn btn-primary fa fa-undo btn-sm td-compile'>[密码重置]</a>";*/
-			           		optString+= " <a href='javascript:void(0)' ng-click='remove("+rowObject.employeeId+")' class='btn btn-primary fa fa-remove btn-sm td-compile'>[删除]</a>";
+			           		// optString+= " <a href='javascript:void(0)' ng-click='remove("+rowObject.employeeId+")' class='btn btn-primary fa fa-remove btn-sm td-compile'>[删除]</a>";
 			           	}
 			           	 return optString;
 	             }}
@@ -74,7 +75,7 @@ app.controller('selectUserCtrl', function($scope,toaster,selectUserService,messa
 		});
 	}
 
-	function showUserContent( id ){
+	/*function showUserContent( id ){
 		var url = urls.ms + "/jsp/system/userContent.jsp?";
 		if( id ){
 			url = url + $.param( {accountId:id} );
@@ -113,7 +114,7 @@ app.controller('selectUserCtrl', function($scope,toaster,selectUserService,messa
 		    keyboard: true,
 		    scope:$scope,
 		});
-	}
+	}*/
 	
 	//分配角色
 	/*function fenpeiRole( id ){

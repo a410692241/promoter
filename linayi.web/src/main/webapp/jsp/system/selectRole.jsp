@@ -18,6 +18,7 @@ function listUserRoleList(){
 		rownumbers:false,
 		rowNum:-1,
 		multiboxonly:true,
+		multiselect: true,
 		colModel : [
 			{name:'roleId',label:'主键',sortable:false},
 			{name:'roleName',label:'角色名',sortable:false}, 

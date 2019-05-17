@@ -155,7 +155,7 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
                             opts = opts + "<a href='javascript:void(0);' ng-click='editSelfOrder(" + rowObject.selfOrderId + ")' class='btn btn-primary fa fa-edit btn-sm td-compile'>编辑</a> ";
                         }
                         opts = opts + "<a href='javascript:void(0);' ng-click='contactUser(" + rowObject.userId + ")' class='btn btn-primary fa fa-edit btn-sm td-compile'>联系用户</a> ";
-                        if (rowObject.status === "WAIT_DEAL" && rowObject.isOrderSuccess === 'WAIT_DEAL') {
+                        if (rowObject.status !== "WAIT_DEAL" && rowObject.isOrderSuccess === 'WAIT_DEAL') {
                             opts = opts + "<a href='javascript:void(0);' ng-click='showSelfOrderMessage(" + rowObject.selfOrderId + ")' class='btn btn-primary fa fa-eye btn-sm td-compile'>查看采价</a> ";
                         }
                         if (rowObject.status === "WAIT_DEAL" && rowObject.isOrderSuccess === 'WAIT_DEAL') {

@@ -118,7 +118,6 @@ public class UserServiceImpl implements UserService {
         Date date = new Date();
         Integer accountId = account.getAccountId();
         account.setEmployeeId(accountId);
-        int userId = (int)(Math.random()*10000);
         if (accountId != null) {
             //修改,判断用户名和手机号是否跟之前一样,一样返回未做任何修改
             Account acc = userMapper.selectEmployeeById(account);
@@ -142,13 +141,11 @@ public class UserServiceImpl implements UserService {
         } else {
             //新增
             try {
-                Employee emp = employeeMapper.selectByEmployeeId(userId);
                 Account acc = adminAccountMapper.selectByName(account.getUserName());
             }catch (Exception e){
                 return new ResponseData(ErrorType.ACCOUNT_ERROR).toString();
             }
             account.setCreateTime(date);
-            account.setUserId(userId);
             Employee employee = new Employee();
             employee.setEmail(account.getEmail());
             employee.setMobile(account.getMobile());
@@ -156,10 +153,10 @@ public class UserServiceImpl implements UserService {
             employee.setRealName(account.getRealName());
             employee.setQq(account.getQq());
             employee.setCreateTime(date);
-            employee.setEmployeeId(userId);
             employeeMapper.insert(employee);
             /*Integer employeeId = userMapper.selectEmployIdByNick(account.getNickname());*/
             /*account.setUserId(employeeId);*/
+            account.setUserId(employee.getEmployeeId());
             account.setStatus(EnabledDisabled.ENABLED.name());
             account.setUserType("EMPLOYEE");
             account.setPassword(MD5Util.MD5(account.getPassword()));

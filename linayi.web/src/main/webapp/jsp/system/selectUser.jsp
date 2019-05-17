@@ -50,6 +50,12 @@
 		                           </ui-select>
 		                       </div>
 			                </div>
+					<div class="form-group form-group-margin">
+						<div class="input-group">
+							<span class="input-group-addon">员工编号</span>
+							<input ng-model="search.userId" type="text" class="form-control">
+						</div>
+					</div>
 				  <a ng-click="list()" class="btn btn-primary form-group-margin" href="javascript:void(0);">
 				  	<i class="fa fa-search"></i>搜索
 				  </a>

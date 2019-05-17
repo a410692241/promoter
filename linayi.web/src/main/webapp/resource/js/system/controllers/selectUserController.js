@@ -39,18 +39,18 @@ app.controller('selectUserCtrl', function($scope,toaster,selectUserService,messa
 			pager : "#selectUserPager",
 			colModel : [
 				{name:'userName',label:'账号名称',sortable:false},
-				{name:'userType',label:'类型',sortable:false},
-				{name:'userId',label:'编码',sortable:false},
+				{name:'userType',label:'类型',sortable:false,formatter:function(cellvalue, options, rowObject){return cellvalue = "员工";}},
+				{name:'userId',label:'员工编号',sortable:false},
 				/*{name:'realName',label:'真实姓名',sortable:false},*/
 				/*{name:'qq',label:'QQ',sortable:false},*/
 				/*{name:'email',label:'邮箱',sortable:false},*/
-				{name:'status',label:'用户状态',sortable:false,formatter:function( cellvalue, options, rowObject ){
+				{name:'status',label:'账号状态',sortable:false,formatter:function( cellvalue, options, rowObject ){
 						if(cellvalue==='ENABLED'){
 							return "有效";
 						}else if(cellvalue==='DISABLED'){
 							return "无效";
 						}				}},
-				{name:'mobile',label:'联系电话',sortable:false},
+				// {name:'mobile',label:'联系电话',sortable:false},
 				{label:"操作",name:"opt",width:450,sortable:false,formatter:function(cellvalue, options, rowObject){
 						var optString="";
 						optString+=" <a href='javascript:void(0)' ng-click='edit("+rowObject.accountId+")' class='btn btn-primary fa fa-edit btn-sm td-compile'>[修改]</a>"+
@@ -63,7 +63,7 @@ app.controller('selectUserCtrl', function($scope,toaster,selectUserService,messa
 								optString += " <a href='javascript:void(0)' ng-click='cancelFrozen("+rowObject.accountId+",1001)' class='btn btn-primary fa fa-eye btn-sm td-compile'>[禁用]</a>";
 							}
 							optString += " <a href='javascript:void(0)' ng-click='resetPWD("+rowObject.accountId+")' class='btn btn-primary fa fa-undo btn-sm td-compile'>[密码重置]</a>";
-							optString += " <a href='javascript:void(0)' ng-click='remove("+rowObject.accountId+")' class='btn btn-primary fa fa-remove btn-sm td-compile'>[删除]</a>";
+							// optString += " <a href='javascript:void(0)' ng-click='remove("+rowObject.accountId+")' class='btn btn-primary fa fa-remove btn-sm td-compile'>[删除]</a>";
 						}
 						return optString;
 					}}
@@ -75,7 +75,7 @@ app.controller('selectUserCtrl', function($scope,toaster,selectUserService,messa
 		});
 	}
 
-	function showUserContent( id ){
+	/*function showUserContent( id ){
 		var url = urls.ms + "/jsp/system/userContent.jsp?";
 		if( id ){
 			url = url + $.param( {accountId:id} );
@@ -114,7 +114,7 @@ app.controller('selectUserCtrl', function($scope,toaster,selectUserService,messa
 			keyboard: true,
 			scope:$scope,
 		});
-	}
+	}*/
 
 
 
