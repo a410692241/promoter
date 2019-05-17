@@ -130,9 +130,7 @@ public class SelfOrderController{
             @RequestParam("goodsSkuId") Integer goodsSkuId
     ) {
         try {
-            Map map = supermarketGoodsService.getPriceSupermarketByGoodsSkuId(userId, goodsSkuId);
-            Map result = supermarketGoodsService.getPriceSupermarketByGoodsSkuId(userId,
-                    goodsSkuId);
+            Map result = supermarketGoodsService.getPriceSupermarketByGoodsSkuId(userId, goodsSkuId);
             return new PageResult((List) result.get("supermarketGoodsList"), 5);
         } catch (Exception e) {
             return new PageResult(new LinkedList<>(), 0);
