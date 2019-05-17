@@ -215,7 +215,7 @@ public class SelfOrderServiceImpl implements SelfOrderService {
         List<Integer> supermarketIdList = communitySupermarketMapper.getSupermarketIdList(communityId);
         MemberLevel memberLevel = openMemberInfoService.getCurrentMemberLevel(selfOrder.getUserId());
         int index = 0, num = MemberPriceUtil.levelAndSupermarketNum.get(memberLevel.toString());
-        supermarketIdList = supermarketIdList.subList(0, num);
+        supermarketIdList = supermarketIdList.size() > num ? supermarketIdList.subList(0, num) : supermarketIdList;
         sharers = "[";
         for (Integer sid : supermarketIdList) {
             Supermarket supermarket = findSupermarketById(sid);
