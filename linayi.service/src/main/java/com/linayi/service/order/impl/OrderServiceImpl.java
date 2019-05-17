@@ -134,6 +134,8 @@ public class OrderServiceImpl implements OrderService {
                 }else {
                     return new ResponseData("F", ErrorType.SYSTEM_ERROR.getErrorMsg());
                 }
+            }else {
+                return new ResponseData("F", ErrorType.SYSTEM_ERROR.getErrorMsg());
             }
         }
 
