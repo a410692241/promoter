@@ -433,7 +433,7 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
             width: 300,
             rownumbers: false,
             height: '100%',
-            rowNum: 20
+            rowNum: 21
         })
     }
 
