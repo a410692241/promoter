@@ -237,10 +237,12 @@ public class SelfOrderServiceImpl implements SelfOrderService {
         for (Integer s : supermarketIdList) {
             Supermarket supermarket = findSupermarketById(s);
             if (supermarket != null) {
-                SelfOrderMessage message = new SelfOrderMessage(selfOrder.getSelfOrderId(), "WAIT_DEAL", supermarket.getUserId(), new Date(), new Date());
-                Message msg = new Message("SELF_ORDER", "您有一条新消息,请注意查收!", null, supermarket.getUserId(), "SHARER", "NOT_VIEW", new Date(), new Date());
-                selfOrderMessageService.sendBuyerMessage(message);
-                messageService.sendAllMessage(msg);
+                if (supermarket.getUserId() != null){
+                    SelfOrderMessage message = new SelfOrderMessage(selfOrder.getSelfOrderId(), "WAIT_DEAL", supermarket.getUserId(), new Date(), new Date());
+                    Message msg = new Message("SELF_ORDER", "您有一条新消息,请注意查收!", null, supermarket.getUserId(), "SHARER", "NOT_VIEW", new Date(), new Date());
+                    selfOrderMessageService.sendBuyerMessage(message);
+                    messageService.sendAllMessage(msg);
+                }
             }
         }
         selfOrder.setStatus("PROCESSING");

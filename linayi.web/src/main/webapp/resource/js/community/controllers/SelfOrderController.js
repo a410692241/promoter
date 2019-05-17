@@ -50,7 +50,7 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
 
     function reserveTwoAfterPoint(value, options, rowObject) {
         if (value === -1 || value == null) {
-            return "缺货";
+            return "无价格/无货";
         }
         value = Math.round(parseFloat(value)) / 100;
         var xsd = value.toString().split(".");
@@ -432,7 +432,8 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
             loadonce: true,
             width: 300,
             rownumbers: false,
-            height: '100%'
+            height: '100%',
+            rowNum: 21
         })
     }
 

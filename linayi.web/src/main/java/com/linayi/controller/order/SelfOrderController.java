@@ -3,10 +3,13 @@ package com.linayi.controller.order;
 import com.google.gson.Gson;
 import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.order.SelfOrder;
+import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.entity.user.ReceiveAddress;
 import com.linayi.entity.user.User;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.address.ReceiveAddressService;
+import com.linayi.service.goods.GoodsSkuService;
+import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.service.goods.SupermarketGoodsService;
 import com.linayi.service.order.SelfOrderService;
 import com.linayi.util.PageResult;
@@ -23,7 +26,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping("selfOrder")
-public class SelfOrderController {
+public class SelfOrderController{
 
     @Resource
     private SelfOrderService selfOrderService;
@@ -33,6 +36,12 @@ public class SelfOrderController {
 
     @Autowired
     ReceiveAddressService receiveAddressService;
+
+    @Autowired
+    SupermarketService supermarketService;
+
+    @Autowired
+    private GoodsSkuService goodsSkuService;
 
     @RequestMapping("/selfOrderlist.do")
     @ResponseBody
@@ -104,7 +113,7 @@ public class SelfOrderController {
     @ResponseBody
     public PageResult searchGoods(GoodsSku goodsSku) {
         try {
-            List<GoodsSku> goodsSkuList = selfOrderService.searchGoods(goodsSku);
+            List<GoodsSku> goodsSkuList = goodsSkuService.customSearch(goodsSku);
             PageResult<GoodsSku> goodsSkuPageResult = new PageResult<>(goodsSkuList, goodsSku.getTotal());
             return goodsSkuPageResult;
         } catch (Exception e) {
@@ -121,6 +130,7 @@ public class SelfOrderController {
             @RequestParam("goodsSkuId") Integer goodsSkuId
     ) {
         try {
+            Map map = supermarketGoodsService.getPriceSupermarketByGoodsSkuId(userId, goodsSkuId);
             Map result = supermarketGoodsService.getPriceSupermarketByGoodsSkuId(userId,
                     goodsSkuId);
             return new PageResult((List) result.get("supermarketGoodsList"), 5);
