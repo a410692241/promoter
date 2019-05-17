@@ -6,6 +6,7 @@ import com.linayi.entity.order.OrdersGoods;
 import com.linayi.entity.order.OrdersSku;
 import com.linayi.entity.procurement.ProcurementTask;
 import com.linayi.util.PageResult;
+import com.linayi.util.ResponseData;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -16,7 +17,7 @@ public interface OrderService {
      * 新增订单
      * @param param
      */
-    void addOrder(Map<String, Object> param);
+    ResponseData addOrder(Map<String, Object> param);
 
     /**
      * 根据条件查询所有订单

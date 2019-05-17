@@ -5,17 +5,22 @@ import com.linayi.enums.CorrectStatus;
 import com.linayi.service.correct.CorrectService;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import java.util.List;
 public class PriceAffectTimer extends QuartzJobBean {
+
+    Logger logger = LoggerFactory.getLogger(PriceAffectTimer.class);
+
     @Autowired
     private CorrectService correctService;
 
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-        System.out.println("Method:价格生效方法开始！");
+        logger.info("PriceAffectTimerMethod:START");
         Correct correct = new Correct();
         correct.setStatus(CorrectStatus.AUDIT_SUCCESS.toString());
         //查询审核通过的数据
@@ -30,7 +35,7 @@ public class PriceAffectTimer extends QuartzJobBean {
                 }
             }
         }
-        System.out.println("Method:价格生效结束！！！");
+        logger.info("PriceAffectTimerMethod:END");
     }
 
 

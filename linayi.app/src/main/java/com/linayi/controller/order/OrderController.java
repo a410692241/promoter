@@ -41,8 +41,7 @@ public class OrderController extends BaseController {
         try {
             pvu.Exist("amount","serviceFee","extraFee","saveAmount");
             param.put("userId",getUserId());
-            orderService.addOrder(param);
-            return new ResponseData("success");
+            return orderService.addOrder(param);
         } catch (Exception e) {
             e.printStackTrace();
         }

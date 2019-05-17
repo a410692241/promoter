@@ -31,6 +31,7 @@ import com.linayi.entity.user.ShoppingCar;
 import com.linayi.entity.user.User;
 import com.linayi.enums.MemberLevel;
 import com.linayi.enums.OrderStatus;
+import com.linayi.exception.ErrorType;
 import com.linayi.service.goods.BrandService;
 import com.linayi.service.goods.CommunityGoodsService;
 import com.linayi.service.goods.SupermarketGoodsService;
@@ -90,7 +91,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public void addOrder(Map<String, Object> param) {
+    public ResponseData addOrder(Map<String, Object> param) {
         Integer userId = (Integer) param.get("userId");
         User user = userMapper.selectUserByuserId(userId);
         Integer receiveAddressId = user.getDefaultReceiveAddressId();
@@ -129,6 +130,8 @@ public class OrderServiceImpl implements OrderService {
                         openMemberInfo.setFreeTimes(freeTimes);
                         openMemberInfoMapper.updateById(openMemberInfo);
                     }
+                }else {
+                    return new ResponseData("F", ErrorType.SYSTEM_ERROR.getErrorMsg());
                 }
             }
         }
@@ -176,6 +179,7 @@ public class OrderServiceImpl implements OrderService {
             goodsSkuMapper.update(goodsSku);
             shoppingCarMapper.deleteCarById(Integer.parseInt(car.getShoppingCarId() + ""));
         }
+        return new ResponseData("success");
     }
 
     @Override

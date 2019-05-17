@@ -51,7 +51,8 @@ public enum ErrorType {
     HAVE_OPEN_Promoter(2020,"此手机号已开通了会员!"),
     NOT_ORDER_MAN(2021,"你不是下单员!"),
     NOT_MODIFY(2008,"订单已取消，不能更改状态!"),
-    TIME_SEQUENCE_ERROR(2022,"结束时间要大于开始时间!")
+    TIME_SEQUENCE_ERROR(2022,"结束时间要大于开始时间!"),
+    NOTMEMBER(2023,"您不是会员，请成为会员，再下单!")
 	;
 
 

@@ -6,20 +6,23 @@ import com.linayi.service.correct.CorrectService;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
-
 import java.util.Date;
 import java.util.List;
 
 public class PriceExpireTimer extends QuartzJobBean implements Job {
+
+    Logger logger = LoggerFactory.getLogger(PriceExpireTimer.class);
 
     @Autowired
     private CorrectService correctService;
 
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-        System.out.println("Method:价格过期方法开始！");
+        logger.info("PriceExpireTimerMethod:START");
         Correct correct = new Correct();
         correct.setStatus(CorrectStatus.AFFECTED.toString());
         correct.setEndTime(new Date());
@@ -36,7 +39,7 @@ public class PriceExpireTimer extends QuartzJobBean implements Job {
                 }
             }
         }
-        System.out.println("Method:价格过期方法结束！！！");
+        logger.info("PriceExpireTimerMethod:END");
     }
 
 }
