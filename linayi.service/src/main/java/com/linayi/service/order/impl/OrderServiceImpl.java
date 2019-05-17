@@ -132,10 +132,10 @@ public class OrderServiceImpl implements OrderService {
                         openMemberInfoMapper.updateById(openMemberInfo);
                     }
                 }else {
-                    return new ResponseData("F", ErrorType.NOT_MEMBER.getErrorMsg());
+                    return new ResponseData(ErrorType.NOT_MEMBER);
                 }
             }else {
-                return new ResponseData("F", ErrorType.NOT_MEMBER.getErrorMsg());
+                return new ResponseData(ErrorType.NOT_MEMBER);
             }
         }
 
