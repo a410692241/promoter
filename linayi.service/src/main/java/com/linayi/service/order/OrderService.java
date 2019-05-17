@@ -17,7 +17,7 @@ public interface OrderService {
      * 新增订单
      * @param param
      */
-    ResponseData addOrder(Map<String, Object> param);
+    ResponseData addOrder(Map<String, Object> param) throws Exception;
 
     /**
      * 根据条件查询所有订单

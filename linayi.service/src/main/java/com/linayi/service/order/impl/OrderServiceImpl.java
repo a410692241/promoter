@@ -39,6 +39,7 @@ import com.linayi.service.order.OrderService;
 import com.linayi.service.promoter.OpenMemberInfoService;
 import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.util.*;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,7 +92,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public ResponseData addOrder(Map<String, Object> param) {
+    public ResponseData addOrder(Map<String, Object> param) throws Exception {
         Integer userId = (Integer) param.get("userId");
         User user = userMapper.selectUserByuserId(userId);
         Integer receiveAddressId = user.getDefaultReceiveAddressId();
@@ -138,7 +139,9 @@ public class OrderServiceImpl implements OrderService {
 
         //获取所有的购物车
         List<ShoppingCar> shoppingCars = getShoppingCars(userId, receiveAddressId);
-        if (shoppingCars == null) return;
+        if (shoppingCars == null){
+            throw new Exception();
+        }
 
         //获取收货地址
         ReceiveAddress receiveAddress = new ReceiveAddress();
@@ -309,8 +312,10 @@ public class OrderServiceImpl implements OrderService {
         String communityStatus = orders.getCommunityStatus();
         if (communityStatus != null) {
             orders.setUserId(null);
-            if ("ALL".equals(communityStatus))
-            orders.setCommunityStatus(null);
+            if ("ALL".equals(communityStatus)){
+                orders.setCommunityStatus(null);
+            }
+
         }
 
         List<Orders> ordersList = ordersMapper.getOrderList(orders);
@@ -347,8 +352,10 @@ public class OrderServiceImpl implements OrderService {
         Integer userId = orders.getUserId();
         if (communityStatus != null) {
             orders.setUserId(null);
-            if ("ALL".equals(communityStatus))
+            if ("ALL".equals(communityStatus)){
                 orders.setCommunityStatus(null);
+            }
+
         }
         List<Orders> ordersList;
         if(communityName != null && "community".equals(communityName)){
