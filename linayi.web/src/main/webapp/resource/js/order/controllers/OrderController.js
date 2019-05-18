@@ -75,6 +75,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 					}},
 				{name:'mobile',label:'手机号码',sortable:false},
 				{name:'address',label:'送货地址',sortable:false},
+				{name:'remark',label:'备注',sortable:false},
 				{name:'createTime',label:'下单时间',sortable:false,formatter:function( cellvalue, options, rowObject ){
 					return cellvalue ? new Date( cellvalue ).format("yyyy-MM-dd hh:mm:ss") : "";
 				}},
