@@ -797,92 +797,103 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 	}
 	@Override
 	public List<GoodsSku> searchByKey(PromoterVo.EsConfig esConfig) throws Exception {
-		//获取会员等级
-		Integer userId = esConfig.getUserId();
-		MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(userId);
-		//获取配送地址所在的网点id
-		Integer communityId = communityService.getcommunityIdByuserIdInDefaultAddress(userId);
-		String keyword = "";
-		//普通会员
-		if (MemberLevel.NOT_MEMBER.toString().equals(currentMemberLevel.toString()) || MemberLevel.NORMAL.toString().equals(currentMemberLevel.toString())) {
-			keyword = "Normal";
-		}
-		//高级会员
-		else if (MemberLevel.SENIOR.toString().equals(currentMemberLevel.toString())) {
-			keyword = "Senior";
-		}
-		//超级vip
-		else if (MemberLevel.SUPER.toString().equals(currentMemberLevel.toString())) {
-			keyword = "Super";
-		}
-		String key = esConfig.getKey();
-		SearchRequest searchRequest = new SearchRequest();
-		searchRequest.preference(userId + "");
-		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-		String fieldName = "fullName";
-		String fieldName2 = "category";
-		String fieldName3 = "brand";
-		//设置查询的条件为商品名存在特定关键字符,而且价格不能为null
-		//对指定字段设置ik分词器
-		searchSourceBuilder.query(QueryBuilders.boolQuery().must(QueryBuilders.multiMatchQuery(key, fieldName))
-				.must(QueryBuilders.existsQuery("minPrice" + keyword))
-				.must(QueryBuilders.matchQuery("communityId", communityId)));
-		searchSourceBuilder.size(esConfig.getPageSize());
-		String orderType = esConfig.getOrderType();
-		//在字段上排序时，不会计算分数。 通过将 track_scores 设置为 true，仍将计算和跟踪分数。
+        //获取会员等级
+        Integer userId = esConfig.getUserId();
+        MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(userId);
+        //获取配送地址所在的网点id
+        Integer communityId = communityService.getcommunityIdByuserIdInDefaultAddress(userId);
+        String keyword = "";
+        //普通会员
+        if (MemberLevel.NOT_MEMBER.toString().equals(currentMemberLevel.toString()) || MemberLevel.NORMAL.toString().equals(currentMemberLevel.toString())) {
+            keyword = "Normal";
+        }
+        //高级会员
+        else if (MemberLevel.SENIOR.toString().equals(currentMemberLevel.toString())) {
+            keyword = "Senior";
+        }
+        //超级vip
+        else if (MemberLevel.SUPER.toString().equals(currentMemberLevel.toString())) {
+            keyword = "Super";
+        }
+        String key = esConfig.getKey();
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.preference(userId + "");
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        String fieldName = "fullName";
+        String fieldName2 = "category";
+        String fieldName3 = "brand";
+        //设置查询的条件为商品名存在特定关键字符,而且价格不能为null
+        //对指定字段设置ik分词器
+        Integer categoryId = esConfig.getCategoryId();
+        //分类搜索
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        if (!CheckUtil.isNullEmpty(key)) {
+            boolQueryBuilder.must(QueryBuilders.multiMatchQuery(key, fieldName));
+        }
+        if (!CheckUtil.isNullEmpty(categoryId)) {
+            searchSourceBuilder.query(boolQueryBuilder
+                    .must(QueryBuilders.matchQuery("categoryId", categoryId))
+                    .must(QueryBuilders.existsQuery("minPrice" + keyword))
+                    .must(QueryBuilders.matchQuery("communityId", communityId)));
+        }else{
+            //非分类
+            searchSourceBuilder.query(boolQueryBuilder
+                    .must(QueryBuilders.existsQuery("minPrice" + keyword))
+                    .must(QueryBuilders.matchQuery("communityId", communityId)));
+        }
+
+        searchSourceBuilder.size(esConfig.getPageSize());
+        String orderType = esConfig.getOrderType();
+        //在字段上排序时，不会计算分数。 通过将 track_scores 设置为 true，仍将计算和跟踪分数。
         searchSourceBuilder.trackScores(true);
         //排序规则
         if (PriceOrderType.SPREAD_DOWN.name().equalsIgnoreCase(orderType)) {
             if (MemberLevel.NOT_MEMBER.toString().equals(currentMemberLevel.toString()) || MemberLevel.NORMAL.toString().equals(currentMemberLevel.toString())) {
-				searchSourceBuilder.sort("spreadNormal", SortOrder.DESC);
-			}
-			else if (MemberLevel.SENIOR.toString().equals(currentMemberLevel.toString())) {
-				searchSourceBuilder.sort("spreadSenior", SortOrder.DESC);
-			}
-			else if (MemberLevel.SUPER.toString().equals(currentMemberLevel.toString())) {
-				searchSourceBuilder.sort("spreadSuper", SortOrder.DESC);
-			}
+                searchSourceBuilder.sort("spreadNormal", SortOrder.DESC);
+            } else if (MemberLevel.SENIOR.toString().equals(currentMemberLevel.toString())) {
+                searchSourceBuilder.sort("spreadSenior", SortOrder.DESC);
+            } else if (MemberLevel.SUPER.toString().equals(currentMemberLevel.toString())) {
+                searchSourceBuilder.sort("spreadSuper", SortOrder.DESC);
+            }
 
-		}
-		else if (PriceOrderType.PRICE_UP.name().equalsIgnoreCase(orderType)) {
-			searchSourceBuilder.sort("minPrice" + keyword, SortOrder.ASC);
-		}
-		else if (PriceOrderType.PRICE_DOWN.name().equalsIgnoreCase(orderType)) {
-			searchSourceBuilder.sort("minPrice" + keyword, SortOrder.DESC);
-		}
-		searchSourceBuilder.from((esConfig.getCurrentPage() - 1) * esConfig.getPageSize());
-		searchRequest.source(searchSourceBuilder);
-		searchRequest.indices("community_goods_index");
-		SearchResponse response = esClient.search(searchRequest, RequestOptions.DEFAULT);
-		SearchHits hits = response.getHits();
-		List<GoodsSku> goodsSkus = new ArrayList<>();
-		if (hits.totalHits == 0) {
-			return goodsSkus;
-		}
-		long totalHits = hits.getTotalHits();
+        } else if (PriceOrderType.PRICE_UP.name().equalsIgnoreCase(orderType)) {
+            searchSourceBuilder.sort("minPrice" + keyword, SortOrder.ASC);
+        } else if (PriceOrderType.PRICE_DOWN.name().equalsIgnoreCase(orderType)) {
+            searchSourceBuilder.sort("minPrice" + keyword, SortOrder.DESC);
+        }
+        searchSourceBuilder.from((esConfig.getCurrentPage() - 1) * esConfig.getPageSize());
+        searchRequest.source(searchSourceBuilder);
+        searchRequest.indices("community_goods_index");
+        SearchResponse response = esClient.search(searchRequest, RequestOptions.DEFAULT);
+        SearchHits hits = response.getHits();
+        List<GoodsSku> goodsSkus = new ArrayList<>();
+        if (hits.totalHits == 0) {
+            return goodsSkus;
+        }
+        long totalHits = hits.getTotalHits();
 
-		//获取当前数据
-		//获取的带有价格的数据,额外添加规格属性,商品图
-		for (SearchHit hit : hits) {
-			GoodsSku esGoodsSkuByHit = getEsGoodsSkuByHit(hit, keyword);
+        //获取当前数据
+        //获取的带有价格的数据,额外添加规格属性,商品图
+        for (SearchHit hit : hits) {
+            GoodsSku esGoodsSkuByHit = getEsGoodsSkuByHit(hit, keyword);
 
-			Long goodsSkuId = esGoodsSkuByHit.getGoodsSkuId();
-			GetRequest goods_index = new GetRequest("goods_sku_index", "goods_sku", goodsSkuId + "");
-			GetResponse goods_index_resp = esClient.get(goods_index, RequestOptions.DEFAULT);
-			if (goods_index_resp.isExists()) {
-				Map<String, Object> sourceAsMap = goods_index_resp.getSourceAsMap();
-				esGoodsSkuByHit.setImage(Configuration.getConfig().getValue(ConstantUtil.IMAGE_SERVER) + "/" + sourceAsMap.get("image") + "");
-				esGoodsSkuByHit.setAttrValues(sourceAsMap.get("attribute") + "");
-			}else{
-				esGoodsSkuByHit.setImage("");
-				esGoodsSkuByHit.setAttrValues("");
-			}
+            Long goodsSkuId = esGoodsSkuByHit.getGoodsSkuId();
+            GetRequest goods_index = new GetRequest("goods_sku_index", "goods_sku", goodsSkuId + "");
+            GetResponse goods_index_resp = esClient.get(goods_index, RequestOptions.DEFAULT);
+            if (goods_index_resp.isExists()) {
+                Map<String, Object> sourceAsMap = goods_index_resp.getSourceAsMap();
+                esGoodsSkuByHit.setImage(Configuration.getConfig().getValue(ConstantUtil.IMAGE_SERVER) + "/" + sourceAsMap.get("image") + "");
+                esGoodsSkuByHit.setAttrValues(sourceAsMap.get("attribute") + "");
+            } else {
+                esGoodsSkuByHit.setImage("");
+                esGoodsSkuByHit.setAttrValues("");
+            }
 
-			goodsSkus.add(esGoodsSkuByHit);
-		}
-		esConfig.setTotal( Integer.parseInt(totalHits + ""));
-		return goodsSkus;
-	}
+            goodsSkus.add(esGoodsSkuByHit);
+        }
+        esConfig.setTotal(Integer.parseInt(totalHits + ""));
+        return goodsSkus;
+    }
 
 	@Override
 	@Transactional
