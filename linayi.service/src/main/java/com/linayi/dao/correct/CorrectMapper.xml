@@ -477,6 +477,8 @@
         correct
         where
         status=#{status,jdbcType=VARCHAR}
+        and
+        (#{actualStartTime} BETWEEN start_time and end_time)
     </select>
 
     <select id="getCorrectExpire" resultType="com.linayi.entity.correct.Correct">
