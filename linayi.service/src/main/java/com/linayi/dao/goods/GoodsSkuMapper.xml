@@ -374,12 +374,34 @@
     <!-- List<GoodsSku>getGoodsListBybrandIdcategoryIdGoodsName() -->
     <select id="getGoodsListBybrandIdcategoryIdGoodsName" resultType="com.linayi.entity.goods.GoodsSku" >
         SELECT
-        gs.goods_sku_id,gs.name,gs.full_name,gs.barcode,gs.category_id,gs.brand_id,gs.status,gs.image,gs.update_time,gs.create_time,gs.model,
-        gs.function,gs.produce_address,gs.produce_date,gs.valid_date,gs.manufacturer,gs.other_attribute,cg.min_price minPrice,ss.name minSupermarket,
-        cg.min_supermarket_id_normal,cg.min_price_normal,cg.max_supermarket_id_normal,cg.max_price_normal,cg.min_supermarket_id_senior,cg.min_price_senior,
-        cg.max_supermarket_id_senior,cg.max_price_senior,cg.min_supermarket_id_super,cg.min_price_super,cg.max_supermarket_id_super,cg.max_price_super
+            gs.goods_sku_id  goodsSkuId,
+            gs.full_name fullName,
+            gs.category_id categoryId,
+            gs.brand_id brandId,
+            gs.image,
+            gs.create_time  createTime,
+            <if test="memberLevel!=null and memberLevel=='NORMAL'">
+                cg.min_price_normal minPrice,
+                round(((cg.max_price_normal-cg.min_price_normal)/cg.min_price_normal*100),2) spreadRate,
+            </if>
+            <if test="memberLevel!=null and memberLevel=='NOT_MEMBER'">
+                cg.min_price_normal minPrice,
+                round(((cg.max_price_normal-cg.min_price_normal)/cg.min_price_normal*100),2) spreadRate,
+            </if>
+            <if test="memberLevel!=null and memberLevel=='SENIOR'">
+                cg.min_price_senior minPrice,
+                round(((cg.max_price_senior-cg.min_price_senior)/cg.min_price_senior*100),2) spreadRate,
+            </if>
+            <if test="memberLevel!=null and memberLevel=='SUPER'">
+                cg.min_price_super minPrice,
+                round(((cg.max_price_super-cg.min_price_super)/cg.min_price_super*100),2) spreadRate,
+            </if>
+            REPLACE(GROUP_CONCAT(distinct av.value),',','/') attrValues
         FROM
-        goods_sku gs JOIN community_goods cg ON gs.goods_sku_id=cg.goods_sku_id JOIN supermarket ss ON cg.min_supermarket_id=ss.supermarket_id
+        goods_sku gs JOIN community_goods cg ON gs.goods_sku_id=cg.goods_sku_id
+        JOIN supermarket ss ON cg.min_supermarket_id=ss.supermarket_id
+        LEFT JOIN goods_attr_value gav ON gav.goods_sku_id=gs.goods_sku_id
+        LEFT JOIN attribute_value av ON av.value_id=gav.attr_value_id
         <where>
             cg.community_id=#{communityId}
             <if test="categoryId!=null">
@@ -391,17 +413,20 @@
             <if test="fullName!=null and fullName!=''">
                 and gs.full_name like concat('%',#{fullName},'%')
             </if>
-            <if test="memberLevel!=null and memberLevel=='NORMAL'">
+            <if test="memberLevel=='NORMAL' or  memberLevel=='NOT_MEMBER'">
                 and cg.min_price_normal IS NOT NULL
-            </if>
-            <if test="memberLevel!=null and memberLevel=='NOT_MEMBER'">
-                and cg.min_price_normal IS NOT NULL
+                GROUP BY gs.goods_sku_id
+                ORDER BY ((cg.max_price_normal-cg.min_price_normal)/cg.min_price_normal) DESC
             </if>
             <if test="memberLevel!=null and memberLevel=='SENIOR'">
                 and cg.min_price_senior IS NOT NULL
+                GROUP BY gs.goods_sku_id
+                ORDER BY ((cg.max_price_senior-cg.min_price_senior)/cg.min_price_senior) DESC
             </if>
             <if test="memberLevel!=null and memberLevel=='SUPER'">
                 and cg.min_price_super IS NOT NULL
+                GROUP BY gs.goods_sku_id
+                ORDER BY ((cg.max_price_super-cg.min_price_super)/cg.min_price_super) DESC
             </if>
         </where>
     </select>

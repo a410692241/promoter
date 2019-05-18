@@ -138,7 +138,7 @@ public class SupermarketGoodsServiceImpl implements SupermarketGoodsService {
         }
 
         // 遍历超市集合
-        for (Supermarket supermarket : supermarketList) {
+         for (Supermarket supermarket : supermarketList) {
             // 通过超市id、商品id、状态为“生效”中查询纠错表
             Correct param = new Correct();
             param.setSupermarketId(supermarket.getSupermarketId());
@@ -163,9 +163,11 @@ public class SupermarketGoodsServiceImpl implements SupermarketGoodsService {
                     supermarket.setCorrectType("CORRECT");
                     //获取该商品的超市价格
                     SupermarketGoods currentSupermarketGoods = supermarketGoodsMapper.getSupermarketGoodsBysupermarketIdAndgoodsSkuId(currentCorrect.getGoodsSkuId().intValue(),currentCorrect.getSupermarketId());
-                    supermarket.setGoodsPrice(currentSupermarketGoods.getPrice().toString());
-                    supermarket.setCorrectId(currentCorrect.getCorrectId());
-                    supermarket.setGoodsSkuId(currentCorrect.getGoodsSkuId());
+                   if (currentSupermarketGoods!=null) {
+                           supermarket.setGoodsPrice(currentSupermarketGoods.getPrice().toString());
+                           supermarket.setCorrectId(currentCorrect.getCorrectId());
+                           supermarket.setGoodsSkuId(currentCorrect.getGoodsSkuId());
+                   }
                 }
 
                 // 否则表示该商品无价格
