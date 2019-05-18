@@ -815,6 +815,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		}
 		String key = esConfig.getKey();
 		SearchRequest searchRequest = new SearchRequest();
+		searchRequest.preference(userId + "");
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 		String fieldName = "fullName";
 		String fieldName2 = "category";
@@ -844,8 +845,6 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		}
 		else if (PriceOrderType.PRICE_DOWN.name().equalsIgnoreCase(orderType)) {
 			searchSourceBuilder.sort("minPrice" + keyword, SortOrder.DESC);
-		}else{
-			searchSourceBuilder.sort("goodsSkuId", SortOrder.DESC);
 		}
 		searchSourceBuilder.from((esConfig.getCurrentPage() - 1) * esConfig.getPageSize());
 		searchRequest.source(searchSourceBuilder);
