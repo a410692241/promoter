@@ -827,9 +827,11 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 				.must(QueryBuilders.matchQuery("communityId", communityId)));
 		searchSourceBuilder.size(esConfig.getPageSize());
 		String orderType = esConfig.getOrderType();
-		//排序规则
-		if (PriceOrderType.SPREAD_DOWN.name().equalsIgnoreCase(orderType)) {
-			if (MemberLevel.NOT_MEMBER.toString().equals(currentMemberLevel.toString()) || MemberLevel.NORMAL.toString().equals(currentMemberLevel.toString())) {
+		//在字段上排序时，不会计算分数。 通过将 track_scores 设置为 true，仍将计算和跟踪分数。
+        searchSourceBuilder.trackScores(true);
+        //排序规则
+        if (PriceOrderType.SPREAD_DOWN.name().equalsIgnoreCase(orderType)) {
+            if (MemberLevel.NOT_MEMBER.toString().equals(currentMemberLevel.toString()) || MemberLevel.NORMAL.toString().equals(currentMemberLevel.toString())) {
 				searchSourceBuilder.sort("spreadNormal", SortOrder.DESC);
 			}
 			else if (MemberLevel.SENIOR.toString().equals(currentMemberLevel.toString())) {
