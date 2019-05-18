@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
+import java.util.Date;
 import java.util.List;
 public class PriceAffectTimer extends QuartzJobBean {
 
@@ -22,7 +23,9 @@ public class PriceAffectTimer extends QuartzJobBean {
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         logger.info("PriceAffectTimerMethod:START");
         Correct correct = new Correct();
+        Date date = new Date();
         correct.setStatus(CorrectStatus.AUDIT_SUCCESS.toString());
+        correct.setActualStartTime(date);
         //查询审核通过的数据
         List<Correct> list = correctService.getCorrect(correct);
         System.out.println("priceAffect totalNums=" + list.size());

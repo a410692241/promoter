@@ -116,13 +116,12 @@ public class OrderServiceImpl implements OrderService {
                 //给顾客下单
                 addressType = "CUSTOMER";
             }
-        }else{
+        }
+        if("MINE".equals(addressType)){
             openMemberInfo.setUserId(userId);
             List<OpenMemberInfo> openMemberInfos = openMemberInfoMapper.getMemberInfo(openMemberInfo);
             if (openMemberInfos != null && openMemberInfos.size() > 0){
                 openMemberInfo = openMemberInfos.get(0);
-                Date endTime = openMemberInfo.getEndTime();
-                if (endTime.getTime() > System.currentTimeMillis()){
                     //是会员
                     Integer freeTimes = openMemberInfo.getFreeTimes();
                     if (freeTimes != null && freeTimes > 0){
@@ -130,9 +129,6 @@ public class OrderServiceImpl implements OrderService {
                         serviceFee = 0;
                         openMemberInfo.setFreeTimes(freeTimes);
                         openMemberInfoMapper.updateById(openMemberInfo);
-                    }
-                }else {
-                    return new ResponseData(ErrorType.NOT_MEMBER);
                 }
             }else {
                 return new ResponseData(ErrorType.NOT_MEMBER);
