@@ -20,7 +20,7 @@
     		open_member_info_id=#{openMemberInfoId}
     </update>
     <sql id="base_column">
-        open_member_info_id, user_id, member_level, start_time, end_time, order_man_id, create_time,open_order_man_info_id
+        open_member_info_id, user_id, member_level, start_time, end_time, free_times,order_man_id, create_time,open_order_man_info_id
     </sql>
     <select id="getMemberInfo" resultType="com.linayi.entity.promoter.OpenMemberInfo">
         select <include refid="base_column"/> from open_member_info
@@ -37,8 +37,8 @@
             <if test="startTime != null">
                 AND start_time = #{startTime}
             </if>
-            <if test="endTime != null">
-                AND end_time = #{endTime}
+            <if test="true ">
+                AND end_time <![CDATA[ >= ]]> NOW()
             </if>
             <if test="orderManId != null">
                 AND order_man_id = #{orderManId}
@@ -57,6 +57,9 @@
             </if>
             <if test="startTime != null">
                 start_time = #{startTime},
+            </if>
+            <if test="freeTimes != null">
+                free_times = #{freeTimes},
             </if>
             <if test="endTime != null">
                 end_time = #{endTime},

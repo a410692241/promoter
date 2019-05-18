@@ -3,16 +3,20 @@ package com.linayi.service.user.impl;
 import com.linayi.dao.address.ReceiveAddressMapper;
 import com.linayi.dao.area.SmallCommunityMapper;
 import com.linayi.dao.goods.GoodsSkuMapper;
+import com.linayi.dao.promoter.OpenMemberInfoMapper;
+import com.linayi.dao.promoter.PromoterOrderManMapper;
 import com.linayi.dao.user.ShoppingCarMapper;
 import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.area.SmallCommunity;
 import com.linayi.entity.goods.CommunityGoods;
 import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.goods.SupermarketGoods;
+import com.linayi.entity.promoter.OpenMemberInfo;
 import com.linayi.entity.user.ReceiveAddress;
 import com.linayi.entity.user.ShoppingCar;
 import com.linayi.entity.user.User;
 import com.linayi.enums.MemberLevel;
+import com.linayi.exception.ErrorType;
 import com.linayi.service.goods.CommunityGoodsService;
 import com.linayi.service.goods.SupermarketGoodsService;
 import com.linayi.service.promoter.OpenMemberInfoService;
@@ -46,6 +50,8 @@ public class ShopCarServiceImpl implements ShopCarService {
     private CommunityGoodsService communityGoodsService;
     @Autowired
     private SupermarketService supermarketService;
+    @Autowired
+    private OpenMemberInfoMapper openMemberInfoMapper;
 
     @Override
     public String addShopCar(ShoppingCar shoppingCar) {
@@ -190,16 +196,26 @@ public class ShopCarServiceImpl implements ShopCarService {
         shoppingCar.setSelectStatus("SELECTED");
         //所有购物车
         List<ShoppingCar> shoppingCars = shoppingCarMapper.getAllCarByReceiveAddressId(shoppingCar);
-
         // 总价
         Integer totalPrice = 0;
         //比价优惠
         Integer offerPrice = 0;
-        //服务费
-        result.put("serviceFee", getpriceString(ConstantUtil.SERVICE_FEE));
+
+        OpenMemberInfo openMemberInfo = new OpenMemberInfo();
+        openMemberInfo.setUserId(shoppingCar.getUserId());
+        List<OpenMemberInfo> openMemberInfos = openMemberInfoMapper.getMemberInfo(openMemberInfo);
+        if (openMemberInfos != null && openMemberInfos.size() > 0){
+            totalPrice = 0 + ConstantUtil.ADDITIONAL_FEES;
+            result.put("serviceFee", getpriceString(0));
+        }else {
+            //服务费
+            result.put("serviceFee", getpriceString(ConstantUtil.SERVICE_FEE));
+            totalPrice = ConstantUtil.SERVICE_FEE + ConstantUtil.ADDITIONAL_FEES;
+        }
+
         // 附加费用
         result.put("additionalFees",getpriceString(ConstantUtil.ADDITIONAL_FEES));
-        totalPrice = ConstantUtil.SERVICE_FEE + ConstantUtil.ADDITIONAL_FEES;
+
         // 预计送达时间
         Calendar cl = Calendar.getInstance();
         cl.setTime(new Date());
