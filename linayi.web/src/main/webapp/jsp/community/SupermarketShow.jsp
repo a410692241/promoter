@@ -67,7 +67,7 @@
 				</div>
 				<div class="col-sm-6">
 					<div class="form-group">
-						<label>绑定用户</label>
+						<label>绑定分享员</label>
 						<span class="input-icon icon-right">
                                 <input type="text" disabled
 									   ng-model="supermarket.userId"
