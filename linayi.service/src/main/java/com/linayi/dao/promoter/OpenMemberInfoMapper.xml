@@ -37,8 +37,8 @@
             <if test="startTime != null">
                 AND start_time = #{startTime}
             </if>
-            <if test="true ">
-                AND end_time <![CDATA[ >= ]]> NOW()
+            <if test="endTime != null">
+                AND end_time <![CDATA[ >= ]]> #{endTime}
             </if>
             <if test="orderManId != null">
                 AND order_man_id = #{orderManId}
