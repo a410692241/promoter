@@ -13,6 +13,11 @@ public interface OpenMemberInfoMapper {
      */
     Integer updateValidTimeById(OpenMemberInfo openMemberInfo);
 
+    /**
+     *未过期的会员记录
+     * @param openMemberInfo
+     * @return
+     */
     List<OpenMemberInfo> getMemberInfo(OpenMemberInfo openMemberInfo);
 
     void updateById(OpenMemberInfo memberInfo);
