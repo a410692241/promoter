@@ -635,7 +635,7 @@ select `code` from `area` where name=#{name}
     </select>
     <select id="getReceiveAddressByReceiveAddressId" resultType="com.linayi.entity.user.ReceiveAddress">
         select
-			receive_address_id,receiver_name,address_one,address_two
+			receive_address_id,receiver_name,address_one,address_two,address_type
 		from
 			receive_address
 		where
