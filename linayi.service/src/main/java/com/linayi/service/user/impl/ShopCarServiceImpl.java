@@ -12,6 +12,7 @@ import com.linayi.entity.goods.CommunityGoods;
 import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.goods.SupermarketGoods;
 import com.linayi.entity.promoter.OpenMemberInfo;
+import com.linayi.entity.promoter.PromoterOrderMan;
 import com.linayi.entity.user.ReceiveAddress;
 import com.linayi.entity.user.ShoppingCar;
 import com.linayi.entity.user.User;
@@ -52,6 +53,8 @@ public class ShopCarServiceImpl implements ShopCarService {
     private SupermarketService supermarketService;
     @Autowired
     private OpenMemberInfoMapper openMemberInfoMapper;
+    @Autowired
+    private PromoterOrderManMapper promoterOrderManMapper;
 
     @Override
     public String addShopCar(ShoppingCar shoppingCar) {
@@ -197,21 +200,52 @@ public class ShopCarServiceImpl implements ShopCarService {
         //所有购物车
         List<ShoppingCar> shoppingCars = shoppingCarMapper.getAllCarByReceiveAddressId(shoppingCar);
         // 总价
-        Integer totalPrice = 0;
+        Integer totalPrice = ConstantUtil.SERVICE_FEE + ConstantUtil.ADDITIONAL_FEES;
         //比价优惠
         Integer offerPrice = 0;
 
+
+
+        //判断是否为下单员
+        PromoterOrderMan promoterOrderMan = promoterOrderManMapper.getPromoterOrderManByOrderManId(shoppingCar.getUserId());
         OpenMemberInfo openMemberInfo = new OpenMemberInfo();
-        openMemberInfo.setUserId(shoppingCar.getUserId());
-        List<OpenMemberInfo> openMemberInfos = openMemberInfoMapper.getMemberInfo(openMemberInfo);
-        if (openMemberInfos != null && openMemberInfos.size() > 0){
-            totalPrice = 0 + ConstantUtil.ADDITIONAL_FEES;
-            result.put("serviceFee", getpriceString(0));
-        }else {
-            //服务费
-            result.put("serviceFee", getpriceString(ConstantUtil.SERVICE_FEE));
-            totalPrice = ConstantUtil.SERVICE_FEE + ConstantUtil.ADDITIONAL_FEES;
+        String addressType = "MINE";
+        if (promoterOrderMan != null){
+            //下单员
+            if (receiveAddress.getAddressType() != null &&"CUSTOMER".equals(receiveAddress.getAddressType())){
+                //给顾客下单
+                addressType = "CUSTOMER";
+                result.put("serviceFee", getpriceString(ConstantUtil.SERVICE_FEE));
+            }
         }
+        if("MINE".equals(addressType)){
+            openMemberInfo.setUserId(shoppingCar.getUserId());
+            List<OpenMemberInfo> openMemberInfos = openMemberInfoMapper.getMemberInfo(openMemberInfo);
+            if (openMemberInfos != null && openMemberInfos.size() > 0){
+                openMemberInfo = openMemberInfos.get(0);
+                //是会员
+                Integer freeTimes = openMemberInfo.getFreeTimes();
+                if (freeTimes != null && freeTimes > 0){
+                    totalPrice = 0 + ConstantUtil.ADDITIONAL_FEES;
+                    result.put("serviceFee", getpriceString(0));
+                }
+            }else {
+                //服务费
+                result.put("serviceFee", getpriceString(ConstantUtil.SERVICE_FEE));
+            }
+        }
+
+//        OpenMemberInfo openMemberInfo = new OpenMemberInfo();
+//        openMemberInfo.setUserId(shoppingCar.getUserId());
+//        List<OpenMemberInfo> openMemberInfos = openMemberInfoMapper.getMemberInfo(openMemberInfo);
+//        if (openMemberInfos != null && openMemberInfos.size() > 0){
+//            totalPrice = 0 + ConstantUtil.ADDITIONAL_FEES;
+//            result.put("serviceFee", getpriceString(0));
+//        }else {
+//            //服务费
+//            result.put("serviceFee", getpriceString(ConstantUtil.SERVICE_FEE));
+//            totalPrice = ConstantUtil.SERVICE_FEE + ConstantUtil.ADDITIONAL_FEES;
+//        }
 
         // 附加费用
         result.put("additionalFees",getpriceString(ConstantUtil.ADDITIONAL_FEES));
