@@ -119,6 +119,7 @@ public class OrderServiceImpl implements OrderService {
         }
         if("MINE".equals(addressType)){
             openMemberInfo.setUserId(userId);
+            openMemberInfo.setEndTime(new Date());
             List<OpenMemberInfo> openMemberInfos = openMemberInfoMapper.getMemberInfo(openMemberInfo);
             if (openMemberInfos != null && openMemberInfos.size() > 0){
                 openMemberInfo = openMemberInfos.get(0);
