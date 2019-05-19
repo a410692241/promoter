@@ -204,7 +204,8 @@ public class ShopCarServiceImpl implements ShopCarService {
         //比价优惠
         Integer offerPrice = 0;
 
-
+        //服务费
+        result.put("serviceFee", getpriceString(ConstantUtil.SERVICE_FEE));
 
         //判断是否为下单员
         PromoterOrderMan promoterOrderMan = promoterOrderManMapper.getPromoterOrderManByOrderManId(shoppingCar.getUserId());
@@ -215,7 +216,6 @@ public class ShopCarServiceImpl implements ShopCarService {
             if (receiveAddress.getAddressType() != null &&"CUSTOMER".equals(receiveAddress.getAddressType())){
                 //给顾客下单
                 addressType = "CUSTOMER";
-                result.put("serviceFee", getpriceString(ConstantUtil.SERVICE_FEE));
             }
         }
         if("MINE".equals(addressType)){
@@ -230,9 +230,6 @@ public class ShopCarServiceImpl implements ShopCarService {
                     totalPrice = 0 + ConstantUtil.ADDITIONAL_FEES;
                     result.put("serviceFee", getpriceString(0));
                 }
-            }else {
-                //服务费
-                result.put("serviceFee", getpriceString(ConstantUtil.SERVICE_FEE));
             }
         }
 
