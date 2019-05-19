@@ -235,18 +235,6 @@ public class ShopCarServiceImpl implements ShopCarService {
             }
         }
 
-//        OpenMemberInfo openMemberInfo = new OpenMemberInfo();
-//        openMemberInfo.setUserId(shoppingCar.getUserId());
-//        List<OpenMemberInfo> openMemberInfos = openMemberInfoMapper.getMemberInfo(openMemberInfo);
-//        if (openMemberInfos != null && openMemberInfos.size() > 0){
-//            totalPrice = 0 + ConstantUtil.ADDITIONAL_FEES;
-//            result.put("serviceFee", getpriceString(0));
-//        }else {
-//            //服务费
-//            result.put("serviceFee", getpriceString(ConstantUtil.SERVICE_FEE));
-//            totalPrice = ConstantUtil.SERVICE_FEE + ConstantUtil.ADDITIONAL_FEES;
-//        }
-
         // 附加费用
         result.put("additionalFees",getpriceString(ConstantUtil.ADDITIONAL_FEES));
 
