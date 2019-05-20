@@ -402,7 +402,7 @@ public class OrderServiceImpl implements OrderService {
                 // 附加费用
                 orders2.setExtraFeeString(getpriceString(extraFee));
 
-                addPrice = ConstantUtil.SERVICE_FEE + ConstantUtil.ADDITIONAL_FEES;
+                addPrice = serviceFee + extraFee;
                 //备注
                 orders2.setRemark(orders1.getRemark());
                 // 送货时间
@@ -670,7 +670,7 @@ public class OrderServiceImpl implements OrderService {
                     List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskListAsc(procurementTask);
                     total += ordersGoods.getQuantity() * procurementTaskList.get(0).getPrice();
                 }
-                o.setOrderGoodsTotalPrice(total + ConstantUtil.SERVICE_FEE);
+                o.setOrderGoodsTotalPrice(total + o.getServiceFee());
             }
 //            OrdersSku ordersSku = ordersMapper.selectSkuIdByordersId(o.getOrdersId());
 //            o.setGoodsSkuId(ordersSku.getGoodsSkuId());

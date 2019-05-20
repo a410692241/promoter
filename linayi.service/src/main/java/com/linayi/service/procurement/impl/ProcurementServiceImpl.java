@@ -204,13 +204,14 @@ public class ProcurementServiceImpl implements ProcurementService {
 	@Override
 	public void updateProcurmentStatus(ProcurementTask procurTask) {
 		Integer quantity = procurTask.getQuantity();
+		String status = procurTask.getStatus();
 		String procurementTaskIdList = procurTask.getProcurementTaskIdList();
 		List<ProcurementTask> procurementTaskList = null;
 		if (procurementTaskIdList != null){
 			procurementTaskList = procurementTaskMapper.getProcurementsList(procurementTaskIdList);
 		}
 		Date procureTime = new Date();
-		if (quantity == null){
+		if ("PRICE_HIGH".equals(status)){
 			//价高
 			if (procurementTaskList != null && procurementTaskList.size() > 0){
 				for (ProcurementTask procurementTask : procurementTaskList) {
@@ -221,7 +222,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 					updateOrders(procurementTask);
 				}
 			}
-		}else if(quantity > 0){
+		}else if("LACK".equals(status)){
 			//缺货
 			if (procurementTaskList != null && procurementTaskList.size() > 0){
 				for (ProcurementTask procurementTask : procurementTaskList) {
@@ -246,7 +247,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 					updateOrders(procurementTask);
 				}
 			}
-		}else if(quantity == 0){
+		}else if("BOUGHT".equals(status)){
 			//已买
 			if (procurementTaskList != null && procurementTaskList.size() > 0){
 				for (ProcurementTask procurementTask : procurementTaskList) {
