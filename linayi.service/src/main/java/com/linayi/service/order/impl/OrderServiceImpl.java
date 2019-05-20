@@ -755,14 +755,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public Integer updateOrderById(Orders orders) {
-        Orders order = ordersMapper.getOrderById(orders.getOrdersId());
-        if (order.getCommunityStatus().equals("CANCELED")){
-            return 0;
-        }
-            if ("CANCELED".equals(orders.getCommunityStatus())){
-                orders.setUserStatus("CANCELED");
-            }
+//        Orders order = ordersMapper.getOrderById(orders.getOrdersId());
+//        if (order.getCommunityStatus().equals("CANCELED")){
+//            return 0;
+//        }
+//            if ("CANCELED".equals(orders.getCommunityStatus())){
+//                orders.setUserStatus("CANCELED");
+//            }
         return ordersMapper.updateOrderById(orders);
     }
 

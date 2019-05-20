@@ -46,7 +46,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 				{name:'orderGoodsTotalPrice',label:'订单实际金额(元)',sortable:false,formatter:function( value, row, rowObject ){
 						return value / 100;
 					}},
-				{name:'communityStatus',label:'订单状态',sortable:false,formatter:function( value, row, rowObject ){
+				{name:'communityStatus',label:'订单流转状态',sortable:false,formatter:function( value, row, rowObject ){
 					 switch (value) {
 						 case 'PROCURING':
 							 return '采买中';
@@ -72,6 +72,24 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 					default:
 						break;
 					}
+					}},
+				{name:'userStatus',label:'订单用户端状态',sortable:false,formatter:function( value, row, rowObject ){
+						switch (value) {
+							case 'IN_PROGRESS':
+								return '待收货';
+								break;
+							case 'CANCELED':
+								return '已取消';
+								break;
+							case 'CONFIRM_RECEIVE':
+								return '确认收货';
+								break;
+							case 'FINISHED':
+								return '已完成';
+								break;
+							default:
+								break;
+						}
 					}},
 				{name:'mobile',label:'手机号码',sortable:false},
 				{name:'address',label:'送货地址',sortable:false},
@@ -224,8 +242,9 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 
     /**保存*/
     function save( $modalInstance, ordersId, $scope){
+		messager.confirm("确认修改？",function( $modalInstance1 ){
          try{
-			 var data = {ordersId: ordersId,communityStatus:$scope.search.communityStatus};
+			 var data = {ordersId: ordersId,userStatus:$scope.search.userStatus};
 			 $.ajax({
 				 url:urls.ms+"/smallCommunity/saveOrders.do",
 				 data :data,
@@ -236,9 +255,10 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 					 $scope.$apply(function(){
 						 if( data.respCode == "S" ){
 							 $("#communityLocationList").trigger("reloadGrid");
-							 $scope.search.communityStatus = '';
+							 $scope.search.userStatus = '';
 							 list();
 							 $modalInstance.close();
+							 $modalInstance1.close();
 						 }else{
 							 toaster.error( "",data.data,3000 );
 						 }
@@ -269,8 +289,8 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
                 e : e.msg ? //
                     e.msg : "出错了",3000 );
         }
-    }
-
+		});
+	}
 	// /**
 	//  * 改价
 	//  */
