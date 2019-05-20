@@ -32,11 +32,6 @@
 						<span ng-bind-html="item.name | highlight: $select.search"></span>
 					</ui-select-choices>
 				</ui-select>
-<%--					<select ng-model="search.categoryId" ng-init="">--%>
-<%--						<c:forEach items="${categorys}" var="category">--%>
-<%--							<option value="${category.categoryId}" <c:if test="${brand.categoryId == categoryId}">selected</c:if>>${category.name}</option>--%>
-<%--						</c:forEach>--%>
-<%--					</select>--%>
 			</div>
 		</div>
 		<div class="form-group col-lg-6 col-xs-6 col-sm-12">
@@ -52,11 +47,6 @@
 						<span ng-bind-html="item.name | highlight: $select.search"></span>
 					</ui-select-choices>
 				</ui-select>
-<%--				<select ng-model="search.brandId" ng-init="">--%>
-<%--					<c:forEach items="${brands}" var="brand">--%>
-<%--						<option value="${brand.brandId}" <c:if test="${brand.brandId == brandId}">selected</c:if>>${brand.name}</option>--%>
-<%--					</c:forEach>--%>
-<%--				</select>--%>
 			</div>
 		</div>
 		<div class="form-group col-lg-6 col-xs-6 col-sm-12">

@@ -382,6 +382,7 @@ public class GoodsSkuController extends BaseController{
     @ResponseBody
     public Object edit(Long goodsSkuId,HttpServletRequest request) {
         GoodsSku goodsSku = goodsService.getGoodsSku(goodsSkuId);
+        request.getSession().setAttribute("goodsSku", goodsSku);
         return new ResponseData(goodsSku);
     }
 
