@@ -142,9 +142,9 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 		if("NORMAL".equals(memberLevel)){
 			return 0;
 		}else if("SENIOR".equals(memberLevel)){
-			return 5;
+			return 10;
 		}else{
-			return 8;
+			return 20;
 		}
 	}
 
