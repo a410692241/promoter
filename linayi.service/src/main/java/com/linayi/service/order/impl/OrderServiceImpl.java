@@ -656,6 +656,10 @@ public class OrderServiceImpl implements OrderService {
         }
         List<Orders> orderList = ordersMapper.getALLOrder(orders);
         for (Orders o : orderList) {
+            Community community = new Community();
+            community.setCommunityId(o.getCommunityId());
+            community = communityMapper.getCommunity(community);
+            o.setCommunityName(community.getName());
             o.setAddressOne(getAreaNameByAreaCode(o.getAddressOne()));
             List<OrdersGoods> ordersGoodsList = ordersGoodsMapper.getOrdersGoodsByOrdersId(o.getOrdersId());
             if (ordersGoodsList != null && ordersGoodsList.size() > 0){

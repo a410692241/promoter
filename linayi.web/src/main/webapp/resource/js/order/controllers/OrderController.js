@@ -79,6 +79,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 				{name:'createTime',label:'下单时间',sortable:false,formatter:function( cellvalue, options, rowObject ){
 					return cellvalue ? new Date( cellvalue ).format("yyyy-MM-dd hh:mm:ss") : "";
 				}},
+				{name:'communityName',label:'所属社区',sortable:false},
                 {label:"操作",name:"opt",width:170,sortable:false,formatter:function(cellvalue, options, rowObject){
                         var opts = "";
                             opts = opts + "<a href='javascript:void(0);' ng-click='edit( "+rowObject.ordersId+")' class='btn btn-primary fa fa-edit btn-sm td-compile'>修改状态</a> ";
