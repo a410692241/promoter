@@ -13,7 +13,6 @@
 	   <div class="col-sm-10">
 				<select ng-model="search.userStatus" ng-change="getType(search.userStatus)" ng-init="search.type=''">
 					<option value="CANCELED">取消订单</option>
-					<option value="CONFIRM_RECEIVE">确认收货</option>
 				</select>
 		   <%--<ui-select on-select="search.categoryId=$item.code;"
 					  ng-init='options=<cl:selectBySQL sqlId="categoryList" param="{level:4}"/>;
