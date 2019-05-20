@@ -239,7 +239,7 @@ public class ShopCarServiceImpl implements ShopCarService {
         // 预计送达时间
         Calendar cl = Calendar.getInstance();
         cl.setTime(new Date());
-        cl.add(Calendar.DAY_OF_WEEK,1);
+        cl.add(Calendar.HOUR_OF_DAY,12);
         Date deliveryTime = cl.getTime();
         result.put("deliveryTime",deliveryTime);
         // 共多少件

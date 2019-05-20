@@ -11,16 +11,26 @@
         <body>
         <input type="hidden" id="procurementTaskId" value="${procurementTaskId}">
         <div class="row" ng-controller="orderDetailCtrl">
-        <div class="col-xs-12 col-md-12">
+                <div class="col-xs-12 col-md-12">
 
 
-        <!-- 表格 -->
-        <table id="orderSupermarketList" style="width: 100%"></table>
-        <%--<!-- 分页 -->
-        <div id="correctPager"></div>--%>
+                        <!-- 表格 -->
+                        <table id="orderSupermarketList" style="width: 100%"></table>
+                        <%--<!-- 分页 -->
+                        <div id="correctPager"></div>--%>
 
-        <!--消息框 -->
+                        <!--消息框 -->
+                </div>
         </div>
+                <%--超市选择--%>
+        <div class="input-group form-group form-group-margin">
+                <span class="input-group-addon">超市</span>
+                <select ng-model="search.categoryId" ng-change="getType(search.categoryId)" ng-init="">
+                        <option value="">全部</option>
+                        <c:forEach items="${categorys}" var="category">
+                                <option value="${category.categoryId}">${category.name}</option>
+                        </c:forEach>
+                </select>
         </div>
         </body>
         </html>

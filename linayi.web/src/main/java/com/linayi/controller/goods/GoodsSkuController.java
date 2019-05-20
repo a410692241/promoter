@@ -9,6 +9,7 @@ import com.linayi.entity.correct.SupermarketGoodsVersion;
 import com.linayi.entity.goods.*;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.entity.user.User;
+import com.linayi.enums.CategoryLevel;
 import com.linayi.enums.OperatorType;
 import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
@@ -386,9 +387,17 @@ public class GoodsSkuController extends BaseController{
 
     @RequestMapping("/edit.do")
     @ResponseBody
-    public Object edit(Long goodsSkuId,HttpServletRequest request) {
+    public Object edit(Long goodsSkuId,HttpServletRequest request,Model model) {
         GoodsSku goodsSku = goodsService.getGoodsSku(goodsSkuId);
-        request.getSession().setAttribute("goodsSku", goodsSku);
+        model.addAttribute("goodsSku", goodsSku);
+        model.addAttribute("categoryId", goodsSku.getCategoryId());
+        request.getSession().setAttribute("brandId", goodsSku.getBrandId());
+        // 获取4级分类用于管理员选择
+        List<Category> categorys = categoryService.getCategorysByLevel(CategoryLevel.fourth.getValue());
+        model.addAttribute("categorys", categorys);
+        // 获取品牌用于管理员选择
+        List<Brand> brands = brandService.getBrandsByName();
+        model.addAttribute("brands", brands);
         return new ResponseData(goodsSku);
     }
 
