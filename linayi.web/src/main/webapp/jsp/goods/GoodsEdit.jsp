@@ -22,41 +22,41 @@
 		<div class="form-group col-lg-6 col-xs-6 col-sm-12">
 			<label  class="col-sm-2 control-label no-padding-right" style="text-align: right;">分类</label>
 			<div class="col-sm-10">
-<%--				<ui-select on-select="goods.categoryId=$item.code;goods.categoryName=$item.name;"--%>
-<%--						   ng-init='options=<cl:selectBySQL sqlId="categoryList" param="{'level':4}"/>;--%>
-<%--						   tempCategoryName={"name":"${goodsSku.categoryName}","code":"${goodsSku.categoryId}"};'--%>
-<%--						   ng-model="tempCategoryName" style="min-width: 230px">--%>
-<%--					<ui-select-match>{{$select.selected.name}}</ui-select-match>--%>
-<%--					<ui-select-choices--%>
-<%--							repeat="item in options | filter:{name: $select.search}">--%>
-<%--						<span ng-bind-html="item.name | highlight: $select.search"></span>--%>
-<%--					</ui-select-choices>--%>
-<%--				</ui-select>--%>
-					<select ng-model="search.categoryId" ng-init="">
-						<c:forEach items="${categorys}" var="category">
-							<option value="${category.categoryId}" <c:if test="${brand.categoryId == categoryId}">selected</c:if>>${category.name}</option>
-						</c:forEach>
-					</select>
+				<ui-select on-select="goods.categoryId=$item.code;goods.categoryName=$item.name;"
+						   ng-init='options=<cl:selectBySQL sqlId="categoryList" param="{'level':4}"/>;
+						   tempCategoryName={"name":"${goodsSku.categoryName}","code":"${goodsSku.categoryId}"};'
+						   ng-model="tempCategoryName" style="min-width: 230px">
+					<ui-select-match>{{$select.selected.name}}</ui-select-match>
+					<ui-select-choices
+							repeat="item in options | filter:{name: $select.search}">
+						<span ng-bind-html="item.name | highlight: $select.search"></span>
+					</ui-select-choices>
+				</ui-select>
+<%--					<select ng-model="search.categoryId" ng-init="">--%>
+<%--						<c:forEach items="${categorys}" var="category">--%>
+<%--							<option value="${category.categoryId}" <c:if test="${brand.categoryId == categoryId}">selected</c:if>>${category.name}</option>--%>
+<%--						</c:forEach>--%>
+<%--					</select>--%>
 			</div>
 		</div>
 		<div class="form-group col-lg-6 col-xs-6 col-sm-12">
 			<label  class="col-sm-2 control-label no-padding-right" style="text-align: right;">品牌</label>
 			<div class="col-sm-10">
-<%--				<ui-select on-select="goods.brandId=$item.code;goods.brandName=$item.name;"--%>
-<%--						   ng-init='options=<cl:selectBySQL sqlId="brandList"/>;--%>
-<%--						   tempBrandName={"name":"${goodsSku.brandName}","code":"${goodsSku.brandId}"};'--%>
-<%--						   ng-model="tempBrandName" style="min-width: 230px">--%>
-<%--					<ui-select-match>{{$select.selected.name}}</ui-select-match>--%>
-<%--					<ui-select-choices--%>
-<%--							repeat="item in options | filter:{name: $select.search}">--%>
-<%--						<span ng-bind-html="item.name | highlight: $select.search"></span>--%>
-<%--					</ui-select-choices>--%>
-<%--				</ui-select>--%>
-				<select ng-model="search.brandId" ng-init="">
-					<c:forEach items="${brands}" var="brand">
-						<option value="${brand.brandId}" <c:if test="${brand.brandId == brandId}">selected</c:if>>${brand.name}</option>
-					</c:forEach>
-				</select>
+				<ui-select on-select="goods.brandId=$item.code;goods.brandName=$item.name;"
+						   ng-init='options=<cl:selectBySQL sqlId="brandList"/>;
+						   tempBrandName={"name":"${goodsSku.brandName}","code":"${goodsSku.brandId}"};'
+						   ng-model="tempBrandName" style="min-width: 230px">
+					<ui-select-match>{{$select.selected.name}}</ui-select-match>
+					<ui-select-choices
+							repeat="item in options | filter:{name: $select.search}">
+						<span ng-bind-html="item.name | highlight: $select.search"></span>
+					</ui-select-choices>
+				</ui-select>
+<%--				<select ng-model="search.brandId" ng-init="">--%>
+<%--					<c:forEach items="${brands}" var="brand">--%>
+<%--						<option value="${brand.brandId}" <c:if test="${brand.brandId == brandId}">selected</c:if>>${brand.name}</option>--%>
+<%--					</c:forEach>--%>
+<%--				</select>--%>
 			</div>
 		</div>
 		<div class="form-group col-lg-6 col-xs-6 col-sm-12">
