@@ -23,14 +23,14 @@
                 </div>
         </div>
                 <%--超市选择--%>
-        <div class="input-group form-group form-group-margin">
-                <span class="input-group-addon">超市</span>
-                <select ng-model="search.categoryId" ng-change="getType(search.categoryId)" ng-init="">
-                        <option value="">全部</option>
-                        <c:forEach items="${categorys}" var="category">
-                                <option value="${category.categoryId}">${category.name}</option>
-                        </c:forEach>
-                </select>
-        </div>
+<%--        <div class="input-group form-group form-group-margin">--%>
+<%--                <span class="input-group-addon">超市</span>--%>
+<%--                <select ng-model="search.categoryId" ng-change="getType(search.categoryId)" ng-init="">--%>
+<%--                        <option value="">全部</option>--%>
+<%--                        <c:forEach items="${categorys}" var="category">--%>
+<%--                                <option value="${category.categoryId}">${category.name}</option>--%>
+<%--                        </c:forEach>--%>
+<%--                </select>--%>
+<%--        </div>--%>
         </body>
         </html>
