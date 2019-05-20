@@ -331,20 +331,39 @@
     <!--
          查询后台管理纠错列表分页
     -->
-    <select id="queryPage" resultMap="BaseResultMap"
+    <select id="queryPage" resultType="com.linayi.entity.correct.Correct"
             parameterType="com.linayi.entity.correct.Correct">
-        SELECT
-        c.correct_id,c.goods_sku_id,u.real_name,u.mobile,s.supermarket_id,c.`status`,g.`full_name`,c.type,c.price,c.price_type,c.start_time,c.end_time,c.create_time
+    select
+        c.correct_id,
+        c.goods_sku_id,
+        c.user_type userType,
+        IF(c.user_type='USER',uu.real_name,u.user_name) realName,
+        IF(c.user_type='USER',uu.mobile,u.mobile) mobile,
+        s.supermarket_id,
+        c.status,
+        g.full_name fullName,
+        c.type,
+        c.price,
+        c.price_type,
+        c.start_time,
+        c.end_time,
+        c.create_time,
+        s.name name
         FROM
-        `correct` c left join `user` u on c.user_id = u.user_id left join supermarket s on c.supermarket_id =
-        s.supermarket_id
-        left join goods_sku g on c.goods_sku_id = g.goods_sku_id where c.user_type = "USER"
-
+        correct c
+        LEFT JOIN `admin_account` u ON c.user_id = u.account_id
+        LEFT JOIN `user` uu ON c.user_id = uu.user_id
+        LEFT JOIN supermarket s ON c.supermarket_id = s.supermarket_id
+        LEFT JOIN goods_sku g ON c.goods_sku_id = g.goods_sku_id
+        where
+        1=1
         <if test="mobile !=null and mobile != ''">
-            and u.mobile like concat('%',#{mobile,jdbcType=VARCHAR},'%')
+            and IF(c.user_type='USER',uu.mobile,u.mobile)
+            like concat('%', #{mobile},'%')
         </if>
         <if test="realName !=null and realName != ''">
-            and u.real_name like concat('%', #{realName,jdbcType=VARCHAR},'%')
+          and  IF(c.user_type='USER',uu.real_name,u.user_name)
+           like concat('%', #{realName},'%')
         </if>
         <if test="name!=null and name!=''">
             and s.name like concat(#{name},'%')
@@ -370,7 +389,6 @@
         <if test="goodsSkuName != null and goodsSkuName != '' ">
             and g.full_name like concat('%',#{goodsSkuName},'%')
         </if>
-
         order by c.correct_id desc
     </select>
     <select id="queryAdminPage" resultMap="BaseResultMap"

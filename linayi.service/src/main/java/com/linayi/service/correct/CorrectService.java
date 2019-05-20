@@ -8,7 +8,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface CorrectService {
-    PageResult<Correct> page(Correct correct);
+    List<Correct> page(Correct correct);
     Correct selectByCorrectId(Long correctId);
 
 

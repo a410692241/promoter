@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -50,7 +51,11 @@ public class CorrectController extends BaseController {
     @RequestMapping("/list.do")
     @ResponseBody
     public Object list(Correct correct) {
-        return correctService.page(correct);
+        List<Correct> correctResp = correctService.page(correct);
+
+        PageResult<Correct> page = new PageResult<>(correctResp, correct.getTotal());
+
+        return page;
     }
 
     @RequestMapping("/get.do")

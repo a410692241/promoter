@@ -341,8 +341,10 @@ public class CorrectServiceImpl implements CorrectService {
 
 
     @Override
-    public PageResult<Correct> page(Correct correct) {
-        correct.setStartTime(correct.getStartTim());
+    public List<Correct> page(Correct correct) {
+
+
+   /*     correct.setStartTime(correct.getStartTim());
         correct.setEndTime(correct.getEndTim());
         Integer currentPage = correct.getCurrentPage();
         Integer pageSize = correct.getPageSize();
@@ -387,9 +389,9 @@ public class CorrectServiceImpl implements CorrectService {
         }else{
             correctResp = corrects.subList(fromIndex, toIndex);
         }
-        PageResult<Correct> page = new PageResult<>(correctResp, corrects.size());
-        System.out.println(corrects.size()+"---------");
-        return page;
+        PageResult<Correct> page = new PageResult<>(correctResp, corrects.size());*/
+        System.out.println("QQQQQQQQQQQQ");
+        return correctMapper.queryPage(correct);
     }
 
 

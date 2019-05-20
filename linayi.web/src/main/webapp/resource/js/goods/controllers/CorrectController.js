@@ -37,8 +37,8 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
             rownumWidth: 100,
             colModel: [
                 {name: 'correctId', label: '主键', sortable: false, hidden: true},
-                {name: 'user.realName', label: '真实姓名', sortable: false},
-                {name: 'user.mobile', label: '手机号', sortable: false},
+                {name: 'realName', label: '真实姓名', sortable: false},
+                {name: 'mobile', label: '手机号', sortable: false},
                 {
                     name: 'status', label: '状态', sortable: false, formatter: function (cellvalue, options, rowObject) {
                         switch (cellvalue) {
@@ -65,9 +65,9 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
                 },
                 {name: 'userId', label: '用户id', sortable: false, hidden: true},
                 {name: 'goodsSkuId', label: '商品id', sortable: false, hidden: true},
-                {name: 'goodsSku.fullName', label: '商品', sortable: false},
+                {name: 'fullName', label: '商品', sortable: false},
                 {name: 'supermarketId', label: '超市id', sortable: false, hidden: true},
-                {name: 'supermarket.name', label: '超市', sortable: false},
+                {name: 'name', label: '超市', sortable: false},
                 {
                     name: 'type',
                     label: '类型',

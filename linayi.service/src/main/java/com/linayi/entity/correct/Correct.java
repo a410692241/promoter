@@ -20,13 +20,13 @@ public class Correct extends BaseEntity {
     }
 
     private String realName;
-    private Long userName;
+    private String userName;
 
-    public Long getUserName() {
+    public String getUserName() {
         return userName;
     }
 
-    public void setUserName(Long userName) {
+    public void setUserName(String userName) {
         this.userName = userName;
     }
 
