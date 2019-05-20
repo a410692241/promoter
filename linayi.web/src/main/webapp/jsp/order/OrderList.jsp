@@ -39,7 +39,7 @@
                     </div>
                     <div class="form-group form-group-margin">
                         <div class="input-group">
-                            <span class="input-group-addon">订单状态</span>
+                            <span class="input-group-addon">订单流转状态</span>
                             <ui-select
                                     on-select="search.communityStatus = $item.code"
                                     ng-init='options=<cl:getByEnum enumName="com.linayi.enums.OrderStatus" nameWithCode="getOrderTypeName;name"/>;
