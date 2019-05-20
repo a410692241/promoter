@@ -515,7 +515,7 @@
         <if test="procureStatus != null and procureStatus == 'FINISHED'">
             ,pt.procure_out_time procureOutTime
         </if>
-        FROM supermarket s left join procurement_task pt on s.procurer_id = #{userId} and pt.supermarket_id = s.supermarket_id left join goods_sku gs on gs.goods_sku_id = pt.goods_sku_id
+        FROM supermarket s left join procurement_task pt on s.procurer_id = #{userId} and pt.supermarket_id = s.supermarket_id left join goods_sku gs on gs.goods_sku_id = pt.goods_sku_id left join orders o on o.user_status != 'CANCELED' and o.orders_id = pt.orders_id
         <where>
             <if test="procureStatus != null and procureStatus == 'PROCURING'">
                 pt.procure_status = #{procureStatus} and pt.receive_status = 'WAIT_OUT'
