@@ -28,7 +28,7 @@ where `employee_id` =#{employeeId}
     <select id="selectUserByuserId" resultType="com.linayi.entity.user.User">
  		select
 `user_id`,`nickname`,`is_sharer`,`is_procurer`,`head_image`,`birthday`,`sex`,`mobile`,`qq`,
-`email`,`real_name`,`create_time`,`update_time`,default_receive_address_id,is_flow,is_order_man from `user`
+`email`,`real_name`,`create_time`,`update_time`,default_receive_address_id,is_flow,is_order_man,is_member from `user`
 where user_id=#{userId}
  	</select>
 

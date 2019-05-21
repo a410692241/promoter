@@ -48,4 +48,12 @@ public interface PromoterOrderManService {
      * @param openOrderManInfo 需传推广商ID，下单员ID，下单员身份，下单员等级
      */
     void openOrderManByPromoter(OpenOrderManInfo openOrderManInfo);
+
+    /**
+     * 后台管理系统 审核通过家庭服务师
+     * @param userId 用户ID
+     * @param promoterId 推广商ID
+     * @param identity 推广商类型
+     */
+    void applyOrderManInWeb(Integer userId,Integer promoterId,String identity);
 }
