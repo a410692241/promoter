@@ -440,6 +440,70 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         user.setIsProcurer("FALSE");
         user.setIsOrderMan("TRUE");
         userMapper.updateUserByuserId(user);
-        System.out.println("用户ID为"+openOrderManInfo.getOrderManId()+"开通下单员身份成功！");
+    }
+
+    public void applyOrderManInWeb(Integer userId,Integer promoterId,String identity){
+        PromoterOrderMan promoterOrderMan = new PromoterOrderMan();
+        promoterOrderMan.setOrderManId(userId);
+        promoterOrderMan.setPromoterId(promoterId);
+        promoterOrderMan.setIdentity(identity);
+        promoterOrderMan.setCreateTime(new Date());
+        promoterOrderMan.setParentType("COMMUNITY");
+        promoterOrderManMapper.insert(promoterOrderMan);
+
+        OpenOrderManInfo openOrderManInfo = new OpenOrderManInfo();
+        Calendar c = Calendar.getInstance();  //得到当前日期和时间
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND,0);
+        Date startTime = c.getTime();
+        openOrderManInfo.setStartTime(startTime);
+
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.YEAR,1);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.MILLISECOND,0);
+        Date endTime = cal.getTime();
+        openOrderManInfo.setEndTime(endTime);
+        openOrderManInfo.setCreateTime(new Date());
+        openOrderManInfo.setOrderManLevel("1");
+        openOrderManInfo.setPromoterId(promoterId);
+        openOrderManInfo.setOrderManId(userId);
+        openOrderManInfo.setIdentity(identity);
+        openOrderManInfoMapper.insert(openOrderManInfo);
+
+        User userInfo = userMapper.selectUserByuserId(userId);
+        User user = new User();
+        if("FALSE".equals(userInfo.getIsMember())){
+            OpenMemberInfo info = new OpenMemberInfo();
+            info.setMemberLevel("NORMAL");
+            info.setStartTime(startTime);
+            info.setEndTime(endTime);
+            info.setUserId(userId);
+            info.setOrderManId(userId);
+            info.setFreeTimes(0);
+            info.setCreateTime(new Date());
+            info.setOpenOrderManInfoId(openOrderManInfo.getOpenOrderManInfoId());
+            openMemberInfoMapper.insert(info);
+
+            OrderManMember orderManMember = new OrderManMember();
+            orderManMember.setMemberId(userId);
+            orderManMember.setOrderManId(userId);
+            orderManMember.setCreateTime(new Date());
+            orderManMemberMapper.insert(orderManMember);
+
+            user.setIsMember("TRUE");
+            user.setOpenMemberInfoId(info.getOpenMemberInfoId());
+        }
+
+        user.setUserId(userId);
+        user.setOpenOrderManInfoId(openOrderManInfo.getOpenOrderManInfoId());
+        user.setIsSharer("FALSE");
+        user.setIsProcurer("FALSE");
+        user.setIsOrderMan("TRUE");
+        userMapper.updateUserByuserId(user);
     }
 }
