@@ -306,7 +306,7 @@
                 AND create_time = #{createTime}
             </if>
         </where>
-        order by create_time DESC
+        order by procurement_task_id DESC
     </select>
 
     <select id="getProcurementTaskStatus" resultType="com.linayi.entity.procurement.ProcurementTask">
