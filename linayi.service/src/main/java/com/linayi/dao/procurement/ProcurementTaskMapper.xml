@@ -578,9 +578,10 @@
     	box_status,
     	delivery_box_id
   	FROM
-  		procurement_task
+  		procurement_task p left join orders o
   	WHERE
   	    procurement_task_id in (${procurementTaskIdList})
+  	    and o.user_status != 'CANCELED'
   	    order by create_time asc
     </select>
 

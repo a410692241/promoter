@@ -2,6 +2,7 @@ package com.linayi.service.procurement;
 
 import com.linayi.entity.community.Community;
 import com.linayi.entity.procurement.ProcurementTask;
+import com.linayi.util.ResponseData;
 import org.apache.ibatis.annotations.Param;
 
 import javax.servlet.http.HttpServletRequest;
@@ -74,7 +75,7 @@ public interface ProcurementService {
      */
     List<ProcurementTask> getCommunityProcurement(ProcurementTask procurementTask);
 
-    void updateProcurmentStatus(ProcurementTask procurementTask);
+    ResponseData updateProcurmentStatus(ProcurementTask procurementTask);
 
     /**
      * 查询采买任务详情列表

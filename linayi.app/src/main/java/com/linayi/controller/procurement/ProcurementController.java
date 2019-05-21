@@ -122,8 +122,7 @@ public class ProcurementController extends BaseController {
 			ProcurementTask procurementTask = pvu.transObj(ProcurementTask.class);
 			Integer userId = getUserId();
 			procurementTask.setUserId(userId);
-			procurementService.updateProcurmentStatus(procurementTask);
-			return new ResponseData("success");
+			return procurementService.updateProcurmentStatus(procurementTask);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

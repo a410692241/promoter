@@ -17,6 +17,7 @@ import com.linayi.entity.order.Orders;
 import com.linayi.entity.order.OrdersGoods;
 import com.linayi.entity.procurement.ProcurementTask;
 import com.linayi.entity.supermarket.Supermarket;
+import com.linayi.exception.ErrorType;
 import com.linayi.service.community.CommunityService;
 import com.linayi.service.community.CommunitySupermarketService;
 import com.linayi.service.order.OrderService;
@@ -202,13 +203,17 @@ public class ProcurementServiceImpl implements ProcurementService {
 
 	@Transactional
 	@Override
-	public void updateProcurmentStatus(ProcurementTask procurTask) {
+	public ResponseData updateProcurmentStatus(ProcurementTask procurTask) {
 		Integer quantity = procurTask.getQuantity();
 		String status = procurTask.getStatus();
 		String procurementTaskIdList = procurTask.getProcurementTaskIdList();
+		String[] split = procurementTaskIdList.split(",");
 		List<ProcurementTask> procurementTaskList = null;
 		if (procurementTaskIdList != null){
 			procurementTaskList = procurementTaskMapper.getProcurementsList(procurementTaskIdList);
+			if (procurementTaskList.size() < split.length){
+				return new ResponseData("F", ErrorType.ORDER_CANCELED.getErrorMsg());
+			}
 		}
 		Date procureTime = new Date();
 		if ("PRICE_HIGH".equals(status)){
@@ -261,6 +266,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 				}
 			}
 		}
+		return new ResponseData("success");
 	}
 
 	private void updateOrders(ProcurementTask procurementTask){
