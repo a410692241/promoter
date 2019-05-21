@@ -1,11 +1,20 @@
 package com.linayi.controller.order;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.linayi.dao.area.SmallCommunityMapper;
+import com.linayi.entity.area.SmallCommunity;
 import com.linayi.entity.order.OrdersGoods;
 import com.linayi.entity.procurement.ProcurementTask;
+import com.linayi.entity.user.ReceiveAddress;
+import com.linayi.enums.MemberLevel;
+import com.linayi.service.address.ReceiveAddressService;
+import com.linayi.service.area.SmallCommunityService;
+import com.linayi.service.goods.SupermarketGoodsService;
 import com.linayi.service.order.OrdersGoodsService;
 import com.linayi.service.procurement.ProcurementService;
+import com.linayi.util.MemberPriceUtil;
 import com.linayi.util.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,6 +38,11 @@ public class OrderSkuController {
     private OrdersGoodsService ordersGoodsService;
     @Autowired
     private ProcurementService procurementService;
+    @Autowired
+    private ReceiveAddressService receiveAddressService;
+    @Autowired
+    private SupermarketGoodsService supermarketGoodsService;
+    
 
     @RequestMapping("list.do")
     @ResponseBody
@@ -58,8 +72,24 @@ public class OrderSkuController {
 
     @RequestMapping("orderSupermarketList.do")
     public Object orderSupermarketList(ProcurementTask procurementTask){
+
+        ProcurementTask procurementTask1 = procurementService.getProcurementTask(procurementTask);
+        List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getSupermarketGoodsList(procurementTask1.getGoodsSkuId(), procurementTask1.getCommunityId());
+        MemberPriceUtil.supermarketPriceByLevel(MemberLevel.SUPER,supermarketGoodsList);
         ModelAndView mv = new ModelAndView("jsp/order/OrderDetail");
+        ProcurementTask procurementTask2 = new ProcurementTask();
+        procurementTask2.setOrdersId(procurementTask1.getOrdersId());
+        procurementTask2.setOrdersGoodsId(procurementTask1.getOrdersGoodsId());
+        PageResult<ProcurementTask> procurementList = (PageResult<ProcurementTask>) procurementService.getProcurementList(procurementTask2);
+        List<ProcurementTask> data = procurementList.getData();
+        List<Integer> collect = data.stream().map(p -> p.getSupermarketId()).collect(Collectors.toList());
+
+        List<SupermarketGoods> allSpermarketGoodsList = MemberPriceUtil.allSpermarketGoodsList;
+        List<SupermarketGoods> supermarketGoodsList1 = allSpermarketGoodsList.stream().filter(supermarket -> !collect.contains(supermarket.getSupermarketId())).collect(Collectors.toList());
+
         mv.addObject("procurementTaskId", procurementTask.getProcurementTaskId());
+        mv.addObject("spermarketGoodsList",supermarketGoodsList1);
+
         return mv;
     }
     //订单商品按次低价购买

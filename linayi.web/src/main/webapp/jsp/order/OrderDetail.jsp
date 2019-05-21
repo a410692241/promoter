@@ -22,15 +22,17 @@
                         <!--消息框 -->
                 </div>
         </div>
+        <input ng-required="required" type="text"
+               ng-model="procurement.ordersId" class="form-control"/>
                 <%--超市选择--%>
-<%--        <div class="input-group form-group form-group-margin">--%>
-<%--                <span class="input-group-addon">超市</span>--%>
-<%--                <select ng-model="search.categoryId" ng-change="getType(search.categoryId)" ng-init="">--%>
-<%--                        <option value="">全部</option>--%>
-<%--                        <c:forEach items="${categorys}" var="category">--%>
-<%--                                <option value="${category.categoryId}">${category.name}</option>--%>
-<%--                        </c:forEach>--%>
-<%--                </select>--%>
-<%--        </div>--%>
+        <div class="input-group form-group form-group-margin" ng-show="procurement.ordersId">
+                <span class="input-group-addon">超市</span>
+                <select ng-model="search.supermarketId" ng-change="getType(search.categoryId)">
+                        <option>请选择下一家超市</option>
+                        <c:forEach items="${spermarketGoodsList}" var="spermarket">
+                                <option value="${spermarket.supermarketId}">${spermarket.supermarketName}</option>
+                        </c:forEach>
+                </select>
+        </div>
         </body>
         </html>

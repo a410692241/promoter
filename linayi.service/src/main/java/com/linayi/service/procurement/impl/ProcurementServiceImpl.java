@@ -264,7 +264,8 @@ public class ProcurementServiceImpl implements ProcurementService {
 	}
 
 	private void updateOrders(ProcurementTask procurementTask){
-
+		if(procurementTask.getQuantity() == procurementTask.getActualQuantity()){
+			//要采买的数量等于实际采买数量
 		OrdersGoods ordersGoods = new OrdersGoods();
 		ordersGoods.setOrdersId(procurementTask.getOrdersId());
 		ordersGoods.setGoodsSkuId(procurementTask.getGoodsSkuId());
@@ -293,6 +294,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 			ordersMapper.updateOrderById(orders);
 		}
 		orderService.updateOrderReceivedStatus(ordersGoods.getOrdersId());
+		}
 	}
 
 	/**
@@ -647,8 +649,10 @@ public class ProcurementServiceImpl implements ProcurementService {
 		ordersGoods.setOrdersGoodsId(procurementTask2.getOrdersGoodsId());
 		List<OrdersGoods> ordersGoodsList = ordersGoodsMapper.getOrdersGoodsByOrdersGoods(ordersGoods);
 		String procureStatus = ordersGoodsList.get(0).getProcureStatus();
-		if ("FINISHED".equals(procureStatus)){
-			procurementTask2.setProcureStatus("PROCURING");
+		if ("PROCURING".equals(procureStatus) && !"PROCURING".equals(procurementTask2.getProcureStatus())){
+			procurementTask2.setProcureStatus("FINISHED");
+		}else {
+			procurementTask2.setOrdersId(null);
 		}
 		return procurementTask2;
 	}
