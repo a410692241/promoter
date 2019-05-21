@@ -162,6 +162,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 		            	return cellValue ? cellValue / 100 : "";
 		            },editable:true,edittype:"text"},
 		            {name:'quantity',label:'数量',sortable:false,width:30},
+		            {name:'procureQuantity',label:'采买数量',sortable:false,width:30},
 		            {name:'procureStatus',label:'采买状态',sortable:false,width:30,formatter:function(value,row,rowObject){
 		            	switch (value) {
 							// case 'WAIT_PROCURE':

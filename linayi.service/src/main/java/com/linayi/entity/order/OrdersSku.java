@@ -39,6 +39,8 @@ public class OrdersSku  extends BaseEntity {
 
     private String fullName;
 
+    private Integer procureQuantity;
+
     public Long getProcurementTaskId() {
         return procurementTaskId;
     }
@@ -165,5 +167,13 @@ public class OrdersSku  extends BaseEntity {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public Integer getProcureQuantity() {
+        return procureQuantity;
+    }
+
+    public void setProcureQuantity(Integer procureQuantity) {
+        this.procureQuantity = procureQuantity;
     }
 }

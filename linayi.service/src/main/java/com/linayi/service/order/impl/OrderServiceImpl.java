@@ -45,6 +45,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -668,7 +669,14 @@ public class OrderServiceImpl implements OrderService {
                     ProcurementTask procurementTask = new ProcurementTask();
                     procurementTask.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
                     List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskListAsc(procurementTask);
-                    total += ordersGoods.getQuantity() * procurementTaskList.get(0).getPrice();
+                    for (int i = 0; i < procurementTaskList.size(); i++) {
+                        int qunatity = procurementTaskList.get(i).getActualQuantity();
+                        if(i == procurementTaskList.size() - 1){
+                            qunatity = procurementTaskList.get(i).getQuantity();
+                        }
+                        total += qunatity * procurementTaskList.get(i).getPrice();
+                    }
+
                 }
                 o.setOrderGoodsTotalPrice(total + o.getServiceFee());
             }
@@ -728,7 +736,9 @@ public class OrderServiceImpl implements OrderService {
             ProcurementTask procurementTask = new ProcurementTask();
             procurementTask.setOrdersGoodsId(o.getOrdersGoodsId());
             List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskListAsc(procurementTask);
+            Integer sum = procurementTaskList.stream().mapToInt(ProcurementTask::getActualQuantity).sum();
             o.setProcurementTaskId(procurementTaskList.get(0).getProcurementTaskId());
+            o.setProcureQuantity(sum);
             String procureStatus = o.getProcureStatus();
             if ("BOUGHT".equals(procureStatus)){
                 o.setProcureStatus("FINISHED");
@@ -863,6 +873,7 @@ public class OrderServiceImpl implements OrderService {
         procurementTask.setProcureQuantity(0);
         procurementTask.setUserId(supermarket.getProcurerId());
         procurementTask.setSupermarketId(procurementTask.getSupermarketId());
+        procurementTask.setCreateTime(procurementTask.getCreateTime());
         procurementTaskMapper.insert(procurementTask);
     }
 
