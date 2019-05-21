@@ -14,7 +14,8 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 				userStatus:"",
 				communityStatus:"",
 				createTimeStart:"",
-				createTimeEnd:""
+				createTimeEnd:"",
+				supermarketId:""
 		}
 		$scope.list();
 	}
@@ -419,6 +420,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 				$scope.procurement={
 					ordersId:data.ordersId
 				}
+				debugger;
 				var procurementTaskId = data.procurementTaskId;
 				if (data.procureStatus == "FINISHED") {
 					templateform.open({
