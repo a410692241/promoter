@@ -557,30 +557,30 @@
 
     <select id="getProcurementsList" resultType="com.linayi.entity.procurement.ProcurementTask">
       SELECT
-  		procurement_task_id,
-  		orders_id,
-  		supermarket_id,
-  		goods_sku_id,
-  		price,
-  		quantity,
-  		actual_quantity,
-  		receive_status,
-  		procure_status,
-  		community_id,
-  		user_id,
-  		update_time,
-  		create_time,
-  		procure_time,
-  		receive_time,
-  		procure_quantity,
-		receive_quantity,
-		box_quantity,
-    	box_status,
-    	delivery_box_id
+  		p.procurement_task_id,
+  		p.orders_id,
+  		p.supermarket_id,
+  		p.goods_sku_id,
+  		p.price,
+  		p.quantity,
+  		p.actual_quantity,
+  		p.receive_status,
+  		p.procure_status,
+  		p.community_id,
+  		p.user_id,
+  		p.update_time,
+  		p.create_time,
+  		p.procure_time,
+  		p.receive_time,
+  		p.procure_quantity,
+		p.receive_quantity,
+		p.box_quantity,
+    	p.box_status,
+    	p.delivery_box_id
   	FROM
-  		procurement_task p left join orders o
+  		procurement_task p left join orders o on p.orders_id = o.orders_id
   	WHERE
-  	    procurement_task_id in (${procurementTaskIdList})
+  	    p.procurement_task_id in (${procurementTaskIdList})
   	    and o.user_status != 'CANCELED'
   	    order by create_time asc
     </select>
