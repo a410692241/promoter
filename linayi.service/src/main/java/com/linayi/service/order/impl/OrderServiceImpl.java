@@ -848,6 +848,7 @@ public class OrderServiceImpl implements OrderService {
         return sgList;
     }
 
+    @Transactional
     @Override
     public void buySecondHeigh(ProcurementTask procurementTask) {
         Integer supermarketId = procurementTask.getSupermarketId();
@@ -860,15 +861,15 @@ public class OrderServiceImpl implements OrderService {
 
 
         Map s = list.stream().filter(item -> item.get("supermarket_id") == supermarketId).collect(Collectors.toList()).stream().findFirst().orElse(null);
-        int i = list.indexOf(s);
-        Map<String,Object> map = new HashMap<>();
-        map = list.get(i+1);
+//        int i = list.indexOf(s);
+//        Map<String,Object> map = new HashMap<>();
+//        map = list.get(i);
 
         Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(procurementTask.getSupermarketId());
         procurementTask.setQuantity(procurementTask.getQuantity() - procurementTask.getProcureQuantity());
         procurementTask.setProcurementTaskId(null);
         procurementTask.setProcureStatus("PROCURING");
-        procurementTask.setPrice(Integer.parseInt(map.get("price") + ""));
+        procurementTask.setPrice(Integer.parseInt(s.get("price") + ""));
         procurementTask.setCreateTime(new Date());
         procurementTask.setActualQuantity(0);
         procurementTask.setProcureQuantity(0);

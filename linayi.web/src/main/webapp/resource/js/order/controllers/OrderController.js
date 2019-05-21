@@ -7,6 +7,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 		$scope.edit = edit;
 		$scope.remove = remove;
 		$scope.list = list;
+        $scope.binding = binding;
 		$scope.search={
 				communityId:"",
 				ordersId:"",
@@ -403,7 +404,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 	// 						e.msg : "出错了",3000 );
 	// 	}
     // }
-
+    var supermarketId;
     /** 查看 */
     function show( procurementTaskId) {
 		var url = urls.ms + "/order/orderSku/orderSupermarketList.do?";
@@ -422,6 +423,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 				}
 				debugger;
 				var procurementTaskId = data.procurementTaskId;
+
 				if (data.procureStatus == "FINISHED") {
 					templateform.open({
 						title: "超市比价",
@@ -437,7 +439,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 									url: urls.ms + "/order/orderSku/buySecondHeigh.do",
 									async: false,
 									type: "post",
-									data: {"procurementTaskId": procurementTaskId,"supermarketId":$scope.supermarketId},
+									data: {"procurementTaskId": procurementTaskId,"supermarketId":supermarketId},
 									dataType: "JSON",
 									success: function (data) {
 										$("#correctList").trigger("reloadGrid");
@@ -499,6 +501,9 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 
 	}
 
+    function binding(){
+        supermarketId = $("#supermarketId").val();
+    }
 
     // 初始化
     init();

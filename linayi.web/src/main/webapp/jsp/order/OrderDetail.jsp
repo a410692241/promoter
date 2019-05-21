@@ -7,6 +7,7 @@
         <head>
         <meta charset="utf-8"/>
                 <script type="text/javascript" src="resource/js/order/controllers/OrderDetail.js"></script>
+                <script type="text/javascript" src="resource/js/order/controllers/OrderController.js"></script>
         </head>
         <body>
         <input type="hidden" id="procurementTaskId" value="${procurementTaskId}">
@@ -25,7 +26,7 @@
                 <%--超市选择--%>
         <div class="input-group form-group form-group-margin" ng-show="procurement.ordersId">
                 <span class="input-group-addon">超市</span>
-                <select ng-model="search.supermarketId">
+                <select id="supermarketId" ng-click="binding()">
                         <c:forEach items="${spermarketGoodsList}" var="spermarket">
                                 <option value="${spermarket.supermarketId}">${spermarket.supermarketName}</option>
                         </c:forEach>
