@@ -421,7 +421,6 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 				$scope.procurement={
 					ordersId:data.ordersId
 				}
-				debugger;
 				var procurementTaskId = data.procurementTaskId;
 
 				if (data.procureStatus == "FINISHED") {
