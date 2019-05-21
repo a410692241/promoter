@@ -865,15 +865,15 @@ public class OrderServiceImpl implements OrderService {
 //        Map<String,Object> map = new HashMap<>();
 //        map = list.get(i);
 
-        Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(procurementTask.getSupermarketId());
+//        Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(procurementTask.getSupermarketId());
         procurementTask.setQuantity(procurementTask.getQuantity() - procurementTask.getProcureQuantity());
         procurementTask.setProcurementTaskId(null);
         procurementTask.setProcureStatus("PROCURING");
         procurementTask.setPrice(Integer.parseInt(s.get("price") + ""));
         procurementTask.setActualQuantity(0);
         procurementTask.setProcureQuantity(0);
-        procurementTask.setUserId(supermarket.getProcurerId());
-        procurementTask.setSupermarketId(procurementTask.getSupermarketId());
+//        procurementTask.setUserId(supermarket.getProcurerId());
+        procurementTask.setSupermarketId(supermarketId);
         procurementTaskMapper.insert(procurementTask);
     }
 
