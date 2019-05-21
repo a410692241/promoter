@@ -418,7 +418,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 				$scope.procurement={
 					ordersId:data.ordersId
 				}
-				debugger;
+				var procurementTaskId = data.procurementTaskId;
 				if (data.procureStatus == "FINISHED") {
 					templateform.open({
 						title: "超市比价",
@@ -434,7 +434,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 									url: urls.ms + "/order/orderSku/buySecondHeigh.do",
 									async: false,
 									type: "post",
-									data: {"procurementTaskId": data.procurementTaskId,"supermarketId":$scope.supermarketId},
+									data: {"procurementTaskId": procurementTaskId,"supermarketId":$scope.supermarketId},
 									dataType: "JSON",
 									success: function (data) {
 										$("#correctList").trigger("reloadGrid");
@@ -457,7 +457,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 									url: urls.ms + "/order/orderSku/cancelBuy.do",
 									async: false,
 									type: "post",
-									data: {"procurementTaskId": data.procurementTaskId},
+									data: {"procurementTaskId": procurementTaskId},
 									dataType: "JSON",
 									success: function (data) {
 										$("#correctList").trigger("reloadGrid");

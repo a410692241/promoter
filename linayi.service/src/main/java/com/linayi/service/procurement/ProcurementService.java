@@ -143,4 +143,6 @@ public interface ProcurementService {
      * @throws Exception
      */
     void exportData(ProcurementTask procurementTask, HttpServletRequest request, HttpServletResponse response) throws Exception;
+
+    List<ProcurementTask> getProcurements(ProcurementTask procurementTask);
 }

@@ -22,13 +22,10 @@
                         <!--消息框 -->
                 </div>
         </div>
-        <input ng-required="required" type="text"
-               ng-model="procurement.ordersId" class="form-control"/>
                 <%--超市选择--%>
         <div class="input-group form-group form-group-margin" ng-show="procurement.ordersId">
                 <span class="input-group-addon">超市</span>
-                <select ng-model="search.supermarketId" ng-change="getType(search.categoryId)">
-                        <option>请选择下一家超市</option>
+                <select ng-model="search.supermarketId">
                         <c:forEach items="${spermarketGoodsList}" var="spermarket">
                                 <option value="${spermarket.supermarketId}">${spermarket.supermarketName}</option>
                         </c:forEach>

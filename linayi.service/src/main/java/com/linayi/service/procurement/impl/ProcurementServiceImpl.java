@@ -266,11 +266,34 @@ public class ProcurementServiceImpl implements ProcurementService {
 	private void updateOrders(ProcurementTask procurementTask){
 		if(procurementTask.getQuantity() == procurementTask.getActualQuantity()){
 			//要采买的数量等于实际采买数量
-		OrdersGoods ordersGoods = new OrdersGoods();
-		ordersGoods.setOrdersId(procurementTask.getOrdersId());
-		ordersGoods.setGoodsSkuId(procurementTask.getGoodsSkuId());
-		List<OrdersGoods> ordersGoodsList = ordersGoodsMapper.query(ordersGoods);
-		ordersGoods = ordersGoodsList.get(0);
+			OrdersGoods ordersGoods = new OrdersGoods();
+			ordersGoods.setOrdersId(procurementTask.getOrdersId());
+			ordersGoods.setGoodsSkuId(procurementTask.getGoodsSkuId());
+			List<OrdersGoods> ordersGoodsList = ordersGoodsMapper.query(ordersGoods);
+			ordersGoods = ordersGoodsList.get(0);
+			updateOrdersStatus(procurementTask,ordersGoods);
+		}else {
+			OrdersGoods ordersGoods = new OrdersGoods();
+			ordersGoods.setOrdersId(procurementTask.getOrdersId());
+			ordersGoods.setGoodsSkuId(procurementTask.getGoodsSkuId());
+			List<OrdersGoods> ordersGoodsList = ordersGoodsMapper.query(ordersGoods);
+			ordersGoods = ordersGoodsList.get(0);
+			String supermarketList = ordersGoods.getSupermarketList();
+			List<Map> list = JSON.parseArray(supermarketList, Map.class);
+
+			int i = list.indexOf(procurementTask.getSupermarketId());
+			if (list.size() - 1 == i){
+				//已经是最后一家
+				updateOrdersStatus(procurementTask,ordersGoods);
+			}
+		}
+	}
+
+	/**
+	 * 改变订单的状态
+	 * @param procurementTask
+	 */
+	private void updateOrdersStatus(ProcurementTask procurementTask,OrdersGoods ordersGoods) {
 		ordersGoods.setUpdateTime(new Date());
 		ordersGoods.setProcureStatus("FINISHED");
 		ordersGoodsMapper.updateOrdersGoodsById(ordersGoods);
@@ -294,7 +317,6 @@ public class ProcurementServiceImpl implements ProcurementService {
 			ordersMapper.updateOrderById(orders);
 		}
 		orderService.updateOrderReceivedStatus(ordersGoods.getOrdersId());
-		}
 	}
 
 	/**
@@ -795,5 +817,10 @@ public class ProcurementServiceImpl implements ProcurementService {
 		workbook.write(fOut);
 		fOut.flush();
 		fOut.close();
+	}
+
+	@Override
+	public List<ProcurementTask> getProcurements(ProcurementTask procurementTask) {
+		return procurementTaskMapper.getProcurementTaskList(procurementTask);
 	}
 }

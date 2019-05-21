@@ -80,10 +80,9 @@ public class OrderSkuController {
         ProcurementTask procurementTask2 = new ProcurementTask();
         procurementTask2.setOrdersId(procurementTask1.getOrdersId());
         procurementTask2.setOrdersGoodsId(procurementTask1.getOrdersGoodsId());
-        PageResult<ProcurementTask> procurementList = (PageResult<ProcurementTask>) procurementService.getProcurementList(procurementTask2);
-        List<ProcurementTask> data = procurementList.getData();
-        List<Integer> collect = data.stream().map(p -> p.getSupermarketId()).collect(Collectors.toList());
+        List<ProcurementTask> data = procurementService.getProcurements(procurementTask2);
 
+        List<Integer> collect = data.stream().map(p -> p.getSupermarketId()).collect(Collectors.toList());
         List<SupermarketGoods> allSpermarketGoodsList = MemberPriceUtil.allSpermarketGoodsList;
         List<SupermarketGoods> supermarketGoodsList1 = allSpermarketGoodsList.stream().filter(supermarket -> !collect.contains(supermarket.getSupermarketId())).collect(Collectors.toList());
 
