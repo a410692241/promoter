@@ -850,13 +850,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void buySecondHeigh(ProcurementTask procurementTask) {
+        Integer supermarketId = procurementTask.getSupermarketId();
         OrdersGoods ordersGoods = new OrdersGoods();
         procurementTask = procurementTaskMapper.getProcurementById(procurementTask.getProcurementTaskId());
         ordersGoods.setOrdersId(Long.parseLong(procurementTask.getOrdersId() + ""));
         ordersGoods.setGoodsSkuId(procurementTask.getGoodsSkuId());
         List<OrdersGoods> ordersGoodsList = ordersGoodsMapper.query(ordersGoods);
         List<Map> list = JSON.parseArray(ordersGoodsList.get(0).getSupermarketList(), Map.class);
-        Integer supermarketId = procurementTask.getSupermarketId();
+
 
         Map s = list.stream().filter(item -> item.get("supermarket_id") == supermarketId).collect(Collectors.toList()).stream().findFirst().orElse(null);
         int i = list.indexOf(s);

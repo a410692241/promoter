@@ -443,6 +443,8 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 										$modalInstance.close();
 										if (data.data == "success"){
 											toaster.success("", "操作成功", 3000);
+										} else if(data.data == "no_supermarketId"){
+											toaster.error( "","请选择超市",3000 );
 										} else {
 											toaster.error( "","操作失败",3000 );
 										}

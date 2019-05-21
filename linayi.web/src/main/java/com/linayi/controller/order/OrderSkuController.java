@@ -96,6 +96,10 @@ public class OrderSkuController {
     @ResponseBody
     public Object buySecondHeigh(ProcurementTask procurementTask){
         try {
+            Integer supermarketId = procurementTask.getSupermarketId();
+            if (supermarketId == null || supermarketId <=0){
+                return new ResponseData("no_supermarketId");
+            }
             orderService.buySecondHeigh(procurementTask);
             return new ResponseData("success");
         }catch (Exception e){
