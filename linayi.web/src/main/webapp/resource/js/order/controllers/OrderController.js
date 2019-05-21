@@ -45,7 +45,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 				{name:'amount',label:'订单金额(元)',sortable:false,formatter:function( value, row, rowObject ){
 					return value / 100;
 				}},
-				{name:'orderGoodsTotalPrice',label:'订单实际金额(元)',sortable:false,formatter:function( value, row, rowObject ){
+				{name:'orderGoodsTotalPrice',label:'订单实际采买金额(元)',sortable:false,formatter:function( value, row, rowObject ){
 						return value / 100;
 					}},
 				{name:'communityStatus',label:'订单流转状态',sortable:false,formatter:function( value, row, rowObject ){

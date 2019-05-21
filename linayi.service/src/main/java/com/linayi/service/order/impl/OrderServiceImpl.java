@@ -670,11 +670,13 @@ public class OrderServiceImpl implements OrderService {
                     procurementTask.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
                     List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskListAsc(procurementTask);
                     for (int i = 0; i < procurementTaskList.size(); i++) {
-                        int qunatity = procurementTaskList.get(i).getActualQuantity();
-                        if(i == procurementTaskList.size() - 1){
-                            qunatity = procurementTaskList.get(i).getQuantity();
+                        if(!"PROCURING".equals(procurementTaskList.get(i).getProcureStatus())){
+                            int qunatity = procurementTaskList.get(i).getActualQuantity();
+                            if(i == procurementTaskList.size() - 1){
+                                qunatity = procurementTaskList.get(i).getQuantity();
+                            }
+                            total += qunatity * procurementTaskList.get(i).getPrice();
                         }
-                        total += qunatity * procurementTaskList.get(i).getPrice();
                     }
 
                 }
