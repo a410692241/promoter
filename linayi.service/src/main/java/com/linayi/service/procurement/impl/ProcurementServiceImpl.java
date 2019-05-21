@@ -488,9 +488,10 @@ public class ProcurementServiceImpl implements ProcurementService {
 		procurementTask.setOrdersGoodsId(procurement.getOrdersGoodsId());
 		procurementTask.setProcurementTaskId(null);
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurementTask);
-		Integer supermarketId = procurementTaskList.get(0).getSupermarketId();
+		List<Integer> procurementTaskIds = new ArrayList<>();
 		for (ProcurementTask task : procurementTaskList) {
 			task.setSupermarketName(supermarketMapper.selectSupermarketBysupermarketId(task.getSupermarketId()).getName());
+			procurementTaskIds.add(task.getSupermarketId());
 		}
 		Collections.reverse(procurementTaskList);
 		OrdersGoods ordersGoods = new OrdersGoods();
@@ -499,10 +500,12 @@ public class ProcurementServiceImpl implements ProcurementService {
 		OrdersGoods ordersGoods1 = ordersGoodsList.get(0);
 		String sL = ordersGoods1.getSupermarketList();
 		List<Map> list = JSON.parseArray(sL, Map.class);
-		Map map = list.stream().filter(item -> item.get("supermarket_id") == supermarketId).collect(Collectors.toList()).stream().findFirst().orElse(null);
-		int i = list.indexOf(map);
-		for (int i1 = i + 1; i1 < list.size(); i1++) {
+		for (int i1 = 0; i1 < list.size(); i1++) {
 			Map map1 = list.get(i1);
+			int supermarket_id = Integer.parseInt(map1.get("supermarket_id") + "");
+			if(procurementTaskIds.contains(supermarket_id)){
+				continue;
+			}
 			Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(Integer.parseInt(map1.get("supermarket_id") + ""));
 			ProcurementTask procurementTask1 = new ProcurementTask();
 			procurementTask1.setSupermarketName(supermarket.getName());
