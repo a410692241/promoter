@@ -65,13 +65,13 @@
       and userStatus = 'FINISHED'
     </if>
      <if test="userStatus == 'IN_PROGRESS'">
-      and community_status != 'DELIVER_FINISHED'
+      and userStatus != 'CANCELED' and userStatus != 'FINISHED'
     </if>
      <if test="userStatus == 'CANCELED'">
       and user_Status = 'CANCELED'
     </if>
      <if test="userStatus == 'REFUND'">
-      and user_Status IN ('REFUSED','REFUNDED')
+      and user_status IN ('REFUSED','REFUNDED')
     </if>
     <if test="ordersId != null">
       and orders_id = #{ordersId}
