@@ -890,6 +890,7 @@ public class OrderServiceImpl implements OrderService {
         procurementTask.setPrice(Integer.parseInt(s.get("price") + ""));
         procurementTask.setActualQuantity(0);
         procurementTask.setProcureQuantity(0);
+        procurementTask.setReceiveStatus("WAIT_OUT");
 //        procurementTask.setUserId(supermarket.getProcurerId());
         procurementTask.setSupermarketId(supermarketId);
         procurementTaskMapper.insert(procurementTask);
