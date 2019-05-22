@@ -99,13 +99,25 @@
 			<label for="inputEmail3"
 				class="col-sm-2 control-label no-padding-right">部门类型:</label>
 			<div class="col-sm-10">
-				<select id="bindingType">
+				<select id="promoterType" ng-click="promoterType()">
 					<option value="">请选择部门类型</option>
 					<option value="PROMOTER">推广商</option>
 					<option value="COMMUNITY">服务商</option>
 				</select>
+				
 			</div>
 		</div>
+		
+		<div class="form-group col-lg-12 col-xs-12 col-sm-12" id="partDiv" hidden="true">
+			<label for="inputEmail3"
+				class="col-sm-2 control-label no-padding-right">部门:</label>
+			<div class="col-sm-10">
+				<select id="part">
+
+				</select>
+			</div>
+		</div>
+		
 		<div class="form-group col-lg-12 col-xs-12 col-sm-12">
 			<label for="inputEmail3"
 				class="col-sm-2 control-label no-padding-right">家庭服务师级别:</label>
