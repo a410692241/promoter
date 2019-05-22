@@ -286,9 +286,11 @@ public class ProcurementServiceImpl implements ProcurementService {
 			ordersGoods = ordersGoodsList.get(0);
 			String supermarketList = ordersGoods.getSupermarketList();
 			List<Map> list = JSON.parseArray(supermarketList, Map.class);
-			Map s = list.stream().filter(item -> item.get("supermarket_id") == procurementTask.getSupermarketId()).collect(Collectors.toList()).stream().findFirst().orElse(null);
-			int i = list.indexOf(s);
-			if (list.size() - 1 == i){
+			ProcurementTask procurementTask1 = new ProcurementTask();
+			procurementTask1.setOrdersId(procurementTask.getOrdersId());
+			procurementTask1.setOrdersGoodsId(procurementTask.getOrdersGoodsId());
+			List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurementTask1);
+			if (list.size() == procurementTaskList.size()){
 				//已经是最后一家
 				updateOrdersStatus(procurementTask,ordersGoods);
 			}
