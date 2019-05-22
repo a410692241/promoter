@@ -1,9 +1,14 @@
 package com.linayi.controller.promoter;
 
 import com.linayi.entity.promoter.OpenOrderManInfo;
+import com.linayi.entity.promoter.Promoter;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.promoter.PromoterOrderManService;
+import com.linayi.service.promoter.PromoterService;
 import com.linayi.util.ResponseData;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -16,6 +21,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class PromoterController {
     @Autowired
     private PromoterOrderManService promoterOrderManService;
+    
+    @Autowired
+    private PromoterService promoterService;
 
     @RequestMapping("/add.do")
     @ResponseBody
@@ -27,6 +35,19 @@ public class PromoterController {
             return new ResponseData(ErrorType.SYSTEM_ERROR);
         }
     }
+    
+    @RequestMapping("/getPromoterListByType.do")
+    @ResponseBody
+    public ResponseData getPromoterListByType(Promoter promoter){
+        try {
+        	List<Promoter> list = promoterService.getPromoterListByType(promoter);
+            return new ResponseData(list);
+        }catch (Exception e){
+        	e.printStackTrace();
+            return new ResponseData(ErrorType.SYSTEM_ERROR);
+        }
+    }
+    
     public static void main(String[] args) {
         try {
             ApplicationContext context = new ClassPathXmlApplicationContext(new String[] {
