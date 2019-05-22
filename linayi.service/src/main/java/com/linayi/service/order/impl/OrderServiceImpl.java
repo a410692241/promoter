@@ -696,7 +696,7 @@ public class OrderServiceImpl implements OrderService {
                     }
 
                 }
-                o.setOrderGoodsTotalPrice(total + o.getServiceFee());
+                o.setOrderGoodsTotalPrice(total + o.getServiceFee() + o.getExtraFee());
             }
 //            OrdersSku ordersSku = ordersMapper.selectSkuIdByordersId(o.getOrdersId());
 //            o.setGoodsSkuId(ordersSku.getGoodsSkuId());
