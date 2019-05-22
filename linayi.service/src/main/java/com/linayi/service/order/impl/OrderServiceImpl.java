@@ -441,7 +441,11 @@ public class OrderServiceImpl implements OrderService {
                     shoppingCar.setGoodsName(goodsName);
                     shoppingCar.setGoodsSkuId(Integer.parseInt(goodsSku.getGoodsSkuId() + ""));
                     shoppingCar.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
-                    shoppingCar.setStatus(procurementTaskList.get(0).getProcureStatus());
+                    if("PROCURING".equals(ordersGoods.getStatus())){
+                        shoppingCar.setStatus(ordersGoods.getStatus());
+                    }else {
+                        shoppingCar.setStatus(procurementTaskList.get(0).getProcureStatus());
+                    }
                     Integer minPrice;
                     Integer maxPrice;
                     String minPriceSupermarketName;
