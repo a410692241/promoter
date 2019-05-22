@@ -243,8 +243,8 @@ public class DeliveryTaskServiceImpl implements DeliveryTaskService {
                 }
                 if (order.getDelivererId() != null) {
                     order.setDelivererName(userMapper.selectUserByuserId(order.getDelivererId()).getRealName());
-                    order.setAmount(totalPrice + ConstantUtil.SERVICE_FEE);
                 }
+                order.setAmount(totalPrice + order.getServiceFee());
             }
         }
         return ordersList;
@@ -304,9 +304,9 @@ public class DeliveryTaskServiceImpl implements DeliveryTaskService {
             }
             orders.setShoppingCarList(listShoppingCar);
             orders.setGoodsTotalPrice(goodsTotalPrice + "");
-            orders.setServiceFee(ConstantUtil.SERVICE_FEE);
-            orders.setTotalPrice(goodsTotalPrice + ConstantUtil.SERVICE_FEE + "");
-            orders.setPayPrice(goodsTotalPrice + ConstantUtil.SERVICE_FEE + "");
+            orders.setServiceFee(orders.getServiceFee());
+            orders.setTotalPrice(goodsTotalPrice + orders.getServiceFee() + "");
+            orders.setPayPrice(goodsTotalPrice + orders.getServiceFee() + "");
         }
         //网点电话
         orders.setServiceMobile(PropertiesUtil.getValueByKey(ConstantUtil.SERVICE_MOBILE));
