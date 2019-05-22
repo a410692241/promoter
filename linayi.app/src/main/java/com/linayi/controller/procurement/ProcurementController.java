@@ -126,7 +126,7 @@ public class ProcurementController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new ResponseData("F", ErrorType.SYSTEM_ERROR.getErrorMsg());
+		return new ResponseData(ErrorType.SYSTEM_ERROR);
 	}
 
 	/**

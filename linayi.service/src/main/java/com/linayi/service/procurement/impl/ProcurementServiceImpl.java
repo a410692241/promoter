@@ -212,7 +212,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		if (procurementTaskIdList != null){
 			procurementTaskList = procurementTaskMapper.getProcurementsList(procurementTaskIdList);
 			if (procurementTaskList.size() < split.length){
-				return new ResponseData("F", ErrorType.ORDER_CANCELED.getErrorMsg());
+				return new ResponseData(ErrorType.ORDER_CANCELED);
 			}
 		}
 		Date procureTime = new Date();
