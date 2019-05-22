@@ -299,7 +299,7 @@ public class ProcurementController extends BaseController {
         }
     }
     /**
-     * 流转中心任务 获取未发货的商品列表
+     * 流转中心任务 获取发货的商品列表
      * @param param
      * @return
      */
