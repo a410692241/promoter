@@ -18,6 +18,8 @@ public interface UserMapper {
      */
     List<User> selectUserList(User user);
 
+    List<User> selectUserListByWeb(User user);
+
     /** 通过userId更新指定记录指定字段
      * @param user
      */

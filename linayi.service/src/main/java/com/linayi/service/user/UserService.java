@@ -24,6 +24,8 @@ public interface UserService {
      */
     List<User> selectUserList(User user);
 
+    List<User> selectUserListByWeb(User user);
+
     PageResult<User> selectUserListPage(User user);
 
     /** 通过userId更新指定记录指定字段
