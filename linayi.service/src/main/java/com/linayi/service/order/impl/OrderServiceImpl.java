@@ -11,6 +11,7 @@ import com.linayi.dao.order.OrdersGoodsMapper;
 import com.linayi.dao.order.OrdersMapper;
 import com.linayi.dao.procurement.ProcurementTaskMapper;
 import com.linayi.dao.promoter.OpenMemberInfoMapper;
+import com.linayi.dao.promoter.OpenOrderManInfoMapper;
 import com.linayi.dao.promoter.PromoterOrderManMapper;
 import com.linayi.dao.supermarket.SupermarketMapper;
 import com.linayi.dao.user.ShoppingCarMapper;
@@ -24,6 +25,7 @@ import com.linayi.entity.order.OrdersGoods;
 import com.linayi.entity.order.OrdersSku;
 import com.linayi.entity.procurement.ProcurementTask;
 import com.linayi.entity.promoter.OpenMemberInfo;
+import com.linayi.entity.promoter.OpenOrderManInfo;
 import com.linayi.entity.promoter.PromoterOrderMan;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.entity.user.ReceiveAddress;
@@ -87,6 +89,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OpenMemberInfoService openMemberInfoService;
     @Autowired
+    private OpenOrderManInfoMapper openOrderManInfoMapper;
+    @Autowired
     private SupermarketService supermarketService;
     @Autowired
     private CommunityGoodsService communityGoodsService;
@@ -118,12 +122,14 @@ public class OrderServiceImpl implements OrderService {
                 addressType = "CUSTOMER";
             }
         }
+        boolean isVIP = false;
         if("MINE".equals(addressType)){
             openMemberInfo.setUserId(userId);
             openMemberInfo.setEndTime(new Date());
             List<OpenMemberInfo> openMemberInfos = openMemberInfoMapper.getMemberInfo(openMemberInfo);
             if (openMemberInfos != null && openMemberInfos.size() > 0){
                 openMemberInfo = openMemberInfos.get(0);
+                isVIP = true;
                     //是会员
                     Integer freeTimes = openMemberInfo.getFreeTimes();
                     if (freeTimes != null && freeTimes > 0){
@@ -160,6 +166,12 @@ public class OrderServiceImpl implements OrderService {
             }
         }
         Orders order = generateOrders(userId, payWay, remark, amount, saveAmount, extraFee, serviceFee, num, receiveAddress, smallCommunity,receiveAddressId,addressType);
+        if (isVIP){
+            Integer openOrderManInfoId = openMemberInfo.getOpenOrderManInfoId();
+            OpenOrderManInfo openOrderManInfo = openOrderManInfoMapper.getOpenOrderManInfoById(openOrderManInfoId);
+            order.setPromoterId(openOrderManInfo.getPromoterId());
+            order.setOrderManId(openOrderManInfo.getOrderManId());
+        }
         // 插入订单
         ordersMapper.insert(order);
         MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(userId);
