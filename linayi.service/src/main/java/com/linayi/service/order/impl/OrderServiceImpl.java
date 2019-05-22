@@ -757,6 +757,7 @@ public class OrderServiceImpl implements OrderService {
             Integer sum = procurementTaskList.stream().mapToInt(ProcurementTask::getActualQuantity).sum();
             o.setProcurementTaskId(procurementTaskList.get(0).getProcurementTaskId());
             o.setProcureQuantity(sum);
+
             String procureStatus = o.getProcureStatus();
             if ("BOUGHT".equals(procureStatus)){
                 o.setProcureStatus("FINISHED");
