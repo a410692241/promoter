@@ -169,5 +169,21 @@
 		apply_id=#{applyId}
 	</update>
 
+	<update id="updateApplyOrederManInfoById">
+		update
+			authentication_apply
+		set
+			<if test="promoterId !=null and promoterId !='' ">
+				promoter_id=#{promoterId},
+			</if>
+			<if test="identity != null and identity !='' ">
+				identity=#{identity},
+			</if>
+			<if test="status != null and status!=''">
+				status=#{status}
+			</if>
+		where
+			apply_id=#{applyId}
+	</update>
 
 </mapper>

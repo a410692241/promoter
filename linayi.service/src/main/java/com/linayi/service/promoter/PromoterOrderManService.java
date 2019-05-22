@@ -55,5 +55,5 @@ public interface PromoterOrderManService {
      * @param promoterId 推广商ID
      * @param identity 推广商类型
      */
-    void applyOrderManInWeb(Integer userId,Integer promoterId,String identity);
+    void applyOrderManInWeb(String status,Integer applyId,Integer userId,Integer promoterId,String identity);
 }
