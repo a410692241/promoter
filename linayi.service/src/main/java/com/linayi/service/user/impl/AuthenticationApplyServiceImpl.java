@@ -402,4 +402,28 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 		return null;
 	}
 
+	@Override
+	public Object applyOrderMan(AuthenticationApply apply, MultipartFile[] file) {
+		try {
+			AuthenticationApply authenticationApply = new AuthenticationApply();
+			authenticationApply.setAddress(apply.getAddress());
+			authenticationApply.setRealName(apply.getRealName());
+			authenticationApply.setMobile(apply.getMobile());
+			authenticationApply.setUserId(apply.getUserId());
+			authenticationApply.setIdCardFront(ImageUtil.handleUpload(file[0]));
+			authenticationApply.setIdCardBack(ImageUtil.handleUpload(file[1]));
+			authenticationApply.setCreateTime(new Date());
+			authenticationApply.setUpdateTime(new Date());
+			authenticationApply.setStatus("WAIT_AUDIT");
+			authenticationApply.setAuthenticationType("ORDER_MAN");
+			int rows = authenticationApplyMapper.insert(authenticationApply);
+			if(rows != 1){
+				return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseData("操作成功！").toString();
+	}
+
 }

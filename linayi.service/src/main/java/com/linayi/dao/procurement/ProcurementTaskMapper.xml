@@ -467,7 +467,7 @@
               p.actual_quantity>0
          AND
               p.receive_status='WAIT_RECEIVE'
-         GROUP BY p.goods_sku_id
+         GROUP BY p.goods_sku_id,p.price
     </select>
 
     <select id="getProcurements" resultType="com.linayi.entity.procurement.ProcurementTask">
