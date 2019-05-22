@@ -159,12 +159,14 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 							return "<img src="+cellValue+" height=60 width=100>";
 						}},
 		            {name:'fullName',label:'商品',sortable:false,width:30},
-		            {name:'supermarketName',label:'超市',sortable:false,width:30},
-		            {name:'price',label:'超市价格(元)',sortable:false,width:30,formatter:function( cellValue, options, rowObject ){
+		            {name:'quantity',label:'下单数量',sortable:false,width:30},
+		            {name:'procureQuantity',label:'已采买总数量',sortable:false,width:30},
+		            {name:'supermarketName',label:'当前采买超市',sortable:false,width:30},
+		            {name:'price',label:'当前超市采买价格(元)',sortable:false,width:30,formatter:function( cellValue, options, rowObject ){
 		            	return cellValue ? cellValue / 100 : "";
 		            },editable:true,edittype:"text"},
-		            {name:'quantity',label:'数量',sortable:false,width:30},
-		            {name:'procureQuantity',label:'采买数量',sortable:false,width:30},
+		            // {name:'quantity',label:'数量',sortable:false,width:30},
+		            // {name:'procureQuantity',label:'采买数量',sortable:false,width:30},
 		            {name:'procureStatus',label:'采买状态',sortable:false,width:30,formatter:function(value,row,rowObject){
 		            	switch (value) {
 							// case 'WAIT_PROCURE':

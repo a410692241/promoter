@@ -1,32 +1,25 @@
 package com.linayi.controller.order;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import com.linayi.dao.area.SmallCommunityMapper;
-import com.linayi.entity.area.SmallCommunity;
-import com.linayi.entity.order.OrdersGoods;
+import com.linayi.entity.goods.SupermarketGoods;
+import com.linayi.entity.order.OrdersSku;
 import com.linayi.entity.procurement.ProcurementTask;
-import com.linayi.entity.user.ReceiveAddress;
 import com.linayi.enums.MemberLevel;
 import com.linayi.service.address.ReceiveAddressService;
-import com.linayi.service.area.SmallCommunityService;
 import com.linayi.service.goods.SupermarketGoodsService;
+import com.linayi.service.order.OrderService;
 import com.linayi.service.order.OrdersGoodsService;
 import com.linayi.service.procurement.ProcurementService;
 import com.linayi.util.MemberPriceUtil;
+import com.linayi.util.PageResult;
 import com.linayi.util.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.linayi.entity.goods.SupermarketGoods;
-import com.linayi.entity.order.OrdersSku;
-import com.linayi.service.order.OrderService;
-import com.linayi.util.PageResult;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/order/orderSku")
@@ -35,11 +28,7 @@ public class OrderSkuController {
     @Autowired
     private OrderService orderService;
     @Autowired
-    private OrdersGoodsService ordersGoodsService;
-    @Autowired
     private ProcurementService procurementService;
-    @Autowired
-    private ReceiveAddressService receiveAddressService;
     @Autowired
     private SupermarketGoodsService supermarketGoodsService;
     
