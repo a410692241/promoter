@@ -26,9 +26,10 @@
                 <%--超市选择--%>
         <div class="input-group form-group form-group-margin" ng-show="procurement.ordersId">
                 <span class="input-group-addon">超市</span>
-                <select id="supermarketId" ng-click="binding()">
-                        <c:forEach items="${spermarketGoodsList}" var="spermarket">
-                                <option value="${spermarket.supermarketId}">${spermarket.supermarketName}</option>
+                <select id="supermarketId"  ng-click="binding()">
+                        <option value="">请选择下一家超市</option>
+                        <c:forEach items="${spermarketGoodsList}" var="spermarket" varStatus="status">
+                                <option value="${spermarket.supermarketId}" >${spermarket.supermarketName}</option>
                         </c:forEach>
                 </select>
         </div>
