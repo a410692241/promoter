@@ -879,11 +879,6 @@ public class OrderServiceImpl implements OrderService {
 
 
         Map s = list.stream().filter(item -> item.get("supermarket_id") == supermarketId).collect(Collectors.toList()).stream().findFirst().orElse(null);
-//        int i = list.indexOf(s);
-//        Map<String,Object> map = new HashMap<>();
-//        map = list.get(i);
-
-//        Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(procurementTask.getSupermarketId());
         procurementTask.setQuantity(procurementTask.getQuantity() - procurementTask.getProcureQuantity());
         procurementTask.setProcurementTaskId(null);
         procurementTask.setProcureStatus("PROCURING");
@@ -891,28 +886,12 @@ public class OrderServiceImpl implements OrderService {
         procurementTask.setActualQuantity(0);
         procurementTask.setProcureQuantity(0);
         procurementTask.setReceiveStatus("WAIT_OUT");
-//        procurementTask.setUserId(supermarket.getProcurerId());
+        procurementTask.setUpdateTime(null);
         procurementTask.setSupermarketId(supermarketId);
         procurementTaskMapper.insert(procurementTask);
+
     }
 
-    @Override
-    public OrdersGoods cancelBuyGoods(OrdersSku ordersSku) {
-        OrdersGoods ordersGoods = new OrdersGoods();
-        ordersGoods.setOrdersId(Long.parseLong(ordersSku.getOrdersId() + ""));
-        ordersGoods.setGoodsSkuId(ordersSku.getGoodsSkuId());
-        List<OrdersGoods> ordersGoodsList = ordersGoodsMapper.query(ordersGoods);
-        OrdersGoods ordersGoods1 = ordersGoodsList.get(0);
-        ordersGoods.setOrdersGoodsId(ordersGoods1.getOrdersGoodsId());
-        List<Map> list = JSON.parseArray(ordersGoods1.getSupermarketList(), Map.class);
-        Integer supermarketId = ordersGoods1.getSupermarketId();
-        Map s = list.stream().filter(item -> item.get("supermarket_id") == supermarketId).collect(Collectors.toList()).stream().findFirst().orElse(null);
-        String status = s.get("status") + "";
-        ordersGoods.setStatus(status);
-        ordersGoods.setSupermarketList(JSON.toJSONString(list));
-        ordersGoodsMapper.updateOrdersGoodsById(ordersGoods);
-        return ordersGoods;
-    }
 
     @Override
     public OrdersGoods getOrderGoods(OrdersSku ordersSku) {

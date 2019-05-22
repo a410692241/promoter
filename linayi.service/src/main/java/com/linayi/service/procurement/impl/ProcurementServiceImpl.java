@@ -288,7 +288,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 			List<Map> list = JSON.parseArray(supermarketList, Map.class);
 			ProcurementTask procurementTask1 = new ProcurementTask();
 			procurementTask1.setOrdersId(procurementTask.getOrdersId());
-			procurementTask1.setOrdersGoodsId(procurementTask.getOrdersGoodsId());
+			procurementTask1.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
 			List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurementTask1);
 			if (list.size() == procurementTaskList.size()){
 				//已经是最后一家

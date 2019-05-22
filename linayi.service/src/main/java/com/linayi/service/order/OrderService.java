@@ -124,7 +124,6 @@ public interface OrderService {
      * 订单商品取消购买
      * @param ordersSku
      */
-    OrdersGoods cancelBuyGoods(OrdersSku ordersSku);
 
     OrdersGoods getOrderGoods(OrdersSku ordersSku);
 
