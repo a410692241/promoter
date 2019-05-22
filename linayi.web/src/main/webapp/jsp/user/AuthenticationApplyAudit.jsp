@@ -99,9 +99,10 @@
 			<label for="inputEmail3"
 				class="col-sm-2 control-label no-padding-right">部门类型:</label>
 			<div class="col-sm-10">
-				<select id="bindingType" ng-init="" ng-click="bindingType()">
-					<option value="推广商" selected>推广商</option>
-					<option value="服务商">服务商</option>
+				<select id="bindingType">
+					<option value="">请选择部门类型</option>
+					<option value="PROMOTER">推广商</option>
+					<option value="COMMUNITY">服务商</option>
 				</select>
 			</div>
 		</div>
@@ -109,11 +110,32 @@
 			<label for="inputEmail3"
 				class="col-sm-2 control-label no-padding-right">家庭服务师级别:</label>
 			<div class="col-sm-10">
-				<select id="identity" ng-init="identity()" ng-click="identity()">
-					<option value="普通级别" selected>普通级别</option>
-					<option value="主管级别">主管级别</option>
+				<select id="identity" ng-click="identity()">
+					<option value="">请选择家庭服务师级别</option>
+					<option value="ORDER_MAN">普通级别</option>
+					<option value="LEGAL_MAN">主管级别</option>
 				</select>
 			</div>
 		</div>
+		<!-- 		<div
+			class="form-group form-group-margin form-group col-lg-12 col-xs-12 col-sm-12">
+			<div class="input-group">
+				<span class="input-group-addon">部门类型</span> <select id="bindingType"
+					ng-click="bindingType()">
+					<option value="PROMOTER">推广商</option>
+					<option value="COMMUNITY">服务商</option>
+				</select>
+			</div>
+		</div>
+		<div
+			class="form-group form-group-margin form-group col-lg-12 col-xs-12 col-sm-12">
+			<div class="input-group">
+				<span class="input-group-addon">家庭服务师级别</span> <select id="identity"
+					ng-click="identity()">
+					<option value="ORDER_MAN">普通级别</option>
+					<option value="LEGAL_MAN">主管级别</option>
+				</select>
+			</div>
+		</div> -->
 	</div>
 </form>

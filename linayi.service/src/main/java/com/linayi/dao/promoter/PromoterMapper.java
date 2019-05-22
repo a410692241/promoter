@@ -22,4 +22,6 @@ public interface PromoterMapper {
      * @return
      */
     Promoter getPromoterById(Integer promoterId);
+    
+    List<Promoter> getPromoterListByType(Promoter promoter);
 }

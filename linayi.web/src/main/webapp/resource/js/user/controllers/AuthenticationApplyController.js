@@ -10,6 +10,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 		$scope.audit = audit;
 		$scope.batchDisable = batchDisable;
 		$scope.disable = disable;
+		$scope.identity=identity;
 		$scope.search={
 				userId:"",
 				nickname:"",
@@ -252,12 +253,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 		});
 	}
 	    	
-	var bindingType;
 	var identity;
-	
-    function bindingType() {
-    	bindingType = $("#bindingType").val();
-	}
     
     function identity() {
     	identity = $("#identity").val();
@@ -265,10 +261,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 
 	/**审核*/
     function audit(rowId){
-    	
-    	console.log(rowId)
     	var rowData = $("#AuthenticationApplyList").jqGrid("getRowData",rowId);
-    	console.log(rowData);
     	var realName = rowData.realName;
     	var mobile = rowData.mobile;
     	var idCardFront = rowData.idCardFront;
