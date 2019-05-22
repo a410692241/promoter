@@ -42,8 +42,6 @@ public class AuthenticationApply extends BaseEntity implements Serializable{
     private Integer smallCommunityId;
     
     private String supermarketName;
-
-
     //代言人部分属性
     private String nickname;
 
@@ -54,6 +52,26 @@ public class AuthenticationApply extends BaseEntity implements Serializable{
     private String motto;
 
     private String image;
+    
+    private Integer promoterId;
+    
+    private String identity;
+    
+	public Integer getPromoterId() {
+		return promoterId;
+	}
+
+	public void setPromoterId(Integer promoterId) {
+		this.promoterId = promoterId;
+	}
+
+	public String getIdentity() {
+		return identity;
+	}
+
+	public void setIdentity(String identity) {
+		this.identity = identity;
+	}
 
 	public String getSupermarketName() {
 		return supermarketName;
@@ -247,15 +265,16 @@ public class AuthenticationApply extends BaseEntity implements Serializable{
         this.image = image;
     }
 
-
-
-    @Override
+	@Override
 	public String toString() {
 		return "AuthenticationApply [applyId=" + applyId + ", userId=" + userId + ", authenticationType="
 				+ authenticationType + ", realName=" + realName + ", mobile=" + mobile + ", idCardFront=" + idCardFront
 				+ ", idCardBack=" + idCardBack + ", status=" + status + ", createTime=" + createTime + ", updateTime="
 				+ updateTime + ", areaCode=" + areaCode + ", address=" + address + ", supermarketId=" + supermarketId
-				+ ", createTimeStart=" + createTimeStart + ", createTimeEnd=" + createTimeEnd + "]";
+				+ ", smallCommunityId=" + smallCommunityId + ", supermarketName=" + supermarketName + ", nickname="
+				+ nickname + ", specialty=" + specialty + ", hobby=" + hobby + ", motto=" + motto + ", image=" + image
+				+ ", promoterId=" + promoterId + ", identity=" + identity + ", createTimeStart=" + createTimeStart
+				+ ", createTimeEnd=" + createTimeEnd + "]";
 	}
     
 }

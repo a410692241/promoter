@@ -54,4 +54,6 @@ public interface AuthenticationApplyService {
 
 	public Object applySpokesman(AuthenticationApply apply, MultipartFile file);
 
+	public Object applyOrderMan(AuthenticationApply apply, MultipartFile[] file);
+
 }

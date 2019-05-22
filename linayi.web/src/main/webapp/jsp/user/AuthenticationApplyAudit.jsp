@@ -69,11 +69,13 @@
 			<label class="col-sm-4 no-padding-right" style="text-align: right;">联系电话：</label>
 			<div class="col-sm-8">{{apply1.mobile}}</div>
 		</div>
-		<div class="form-group col-lg-6 col-xs-6 col-sm-12" ng-show="apply1.address">
+		<div class="form-group col-lg-6 col-xs-6 col-sm-12"
+			ng-show="apply1.address">
 			<label class="col-sm-4 no-padding-right" style="text-align: right;">详细地址：</label>
 			<div class="col-sm-8">{{apply1.address}}</div>
 		</div>
-		<div class="form-group col-lg-6 col-xs-6 col-sm-12" ng-show="apply1.supermarketName">
+		<div class="form-group col-lg-6 col-xs-6 col-sm-12"
+			ng-show="apply1.supermarketName">
 			<label class="col-sm-4 no-padding-right" style="text-align: right;">超市名称：</label>
 			<div class="col-sm-8">{{apply1.supermarketName}}</div>
 		</div>
@@ -91,6 +93,26 @@
 				<span class="input-icon icon-right"> <img
 					style="width: 100%; height: 240px" ng-src="{{apply1.idCardBack}}">
 				</span>
+			</div>
+		</div>
+		<div class="form-group col-lg-12 col-xs-12 col-sm-12">
+			<label for="inputEmail3"
+				class="col-sm-2 control-label no-padding-right">部门类型:</label>
+			<div class="col-sm-10">
+				<select id="bindingType" ng-init="" ng-click="bindingType()">
+					<option value="推广商" selected>推广商</option>
+					<option value="服务商">服务商</option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group col-lg-12 col-xs-12 col-sm-12">
+			<label for="inputEmail3"
+				class="col-sm-2 control-label no-padding-right">家庭服务师级别:</label>
+			<div class="col-sm-10">
+				<select id="identity" ng-init="identity()" ng-click="identity()">
+					<option value="普通级别" selected>普通级别</option>
+					<option value="主管级别">主管级别</option>
+				</select>
 			</div>
 		</div>
 	</div>
