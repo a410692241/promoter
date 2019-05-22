@@ -58,6 +58,11 @@ public class UserServiceImpl implements UserService {
         List<User> list = userMapper.selectUserList(user);
         return list;
     }
+    @Override
+    public List<User> selectUserListByWeb(User user) {
+        List<User> list = userMapper.selectUserListByWeb(user);
+        return list;
+    }
 
     @Override
     public PageResult<User> selectUserListPage(User user) {

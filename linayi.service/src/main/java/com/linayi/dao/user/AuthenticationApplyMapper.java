@@ -38,4 +38,10 @@ public interface AuthenticationApplyMapper {
 	 */
 	AuthenticationApply getAuthenticationApplyByUserIdAndType(AuthenticationApply apply);
 
+	/**
+	 * 根据ID修改通过审核的家庭服务师信息
+	 * @param apply
+	 */
+	void updateApplyOrederManInfoById(AuthenticationApply apply);
+
 }

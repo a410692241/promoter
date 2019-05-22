@@ -2,34 +2,29 @@ package com.linayi.controller.goods;
 
 import com.google.gson.Gson;
 import com.linayi.controller.BaseController;
-import com.linayi.dao.account.AccountMapper;
 import com.linayi.entity.account.AdminAccount;
 import com.linayi.entity.correct.Correct;
 import com.linayi.entity.correct.SupermarketGoodsVersion;
 import com.linayi.entity.goods.*;
 import com.linayi.entity.supermarket.Supermarket;
-import com.linayi.entity.user.User;
 import com.linayi.enums.OperatorType;
-import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
-import com.linayi.service.account.AccountService;
 import com.linayi.service.correct.CorrectService;
 import com.linayi.service.correct.SupermarketGoodsVersionService;
 import com.linayi.service.goods.*;
-import com.linayi.service.goods.impl.SupermarketGoodsServiceImpl;
-import com.linayi.service.user.UserService;
 import com.linayi.util.PageResult;
 import com.linayi.util.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/goods/goods")

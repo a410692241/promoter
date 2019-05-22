@@ -11,6 +11,7 @@ import com.linayi.dao.order.OrdersGoodsMapper;
 import com.linayi.dao.order.OrdersMapper;
 import com.linayi.dao.procurement.ProcurementTaskMapper;
 import com.linayi.dao.promoter.OpenMemberInfoMapper;
+import com.linayi.dao.promoter.OpenOrderManInfoMapper;
 import com.linayi.dao.promoter.PromoterOrderManMapper;
 import com.linayi.dao.supermarket.SupermarketMapper;
 import com.linayi.dao.user.ShoppingCarMapper;
@@ -24,6 +25,7 @@ import com.linayi.entity.order.OrdersGoods;
 import com.linayi.entity.order.OrdersSku;
 import com.linayi.entity.procurement.ProcurementTask;
 import com.linayi.entity.promoter.OpenMemberInfo;
+import com.linayi.entity.promoter.OpenOrderManInfo;
 import com.linayi.entity.promoter.PromoterOrderMan;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.entity.user.ReceiveAddress;
@@ -45,6 +47,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -86,6 +89,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OpenMemberInfoService openMemberInfoService;
     @Autowired
+    private OpenOrderManInfoMapper openOrderManInfoMapper;
+    @Autowired
     private SupermarketService supermarketService;
     @Autowired
     private CommunityGoodsService communityGoodsService;
@@ -117,12 +122,14 @@ public class OrderServiceImpl implements OrderService {
                 addressType = "CUSTOMER";
             }
         }
+        boolean isVIP = false;
         if("MINE".equals(addressType)){
             openMemberInfo.setUserId(userId);
             openMemberInfo.setEndTime(new Date());
             List<OpenMemberInfo> openMemberInfos = openMemberInfoMapper.getMemberInfo(openMemberInfo);
             if (openMemberInfos != null && openMemberInfos.size() > 0){
                 openMemberInfo = openMemberInfos.get(0);
+                isVIP = true;
                     //是会员
                     Integer freeTimes = openMemberInfo.getFreeTimes();
                     if (freeTimes != null && freeTimes > 0){
@@ -159,6 +166,12 @@ public class OrderServiceImpl implements OrderService {
             }
         }
         Orders order = generateOrders(userId, payWay, remark, amount, saveAmount, extraFee, serviceFee, num, receiveAddress, smallCommunity,receiveAddressId,addressType);
+        if (isVIP){
+            Integer openOrderManInfoId = openMemberInfo.getOpenOrderManInfoId();
+            OpenOrderManInfo openOrderManInfo = openOrderManInfoMapper.getOpenOrderManInfoById(openOrderManInfoId);
+            order.setPromoterId(openOrderManInfo.getPromoterId());
+            order.setOrderManId(openOrderManInfo.getOrderManId());
+        }
         // 插入订单
         ordersMapper.insert(order);
         MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(userId);
@@ -249,7 +262,7 @@ public class OrderServiceImpl implements OrderService {
 
         Calendar cl = Calendar.getInstance();
         cl.setTime(new Date());
-        cl.add(Calendar.DAY_OF_WEEK, 1);
+        cl.add(Calendar.HOUR_OF_DAY, 12);
         //预计送达时间
         Date deliveryTime = cl.getTime();
         order.setArriveTime(deliveryTime);
@@ -440,7 +453,11 @@ public class OrderServiceImpl implements OrderService {
                     shoppingCar.setGoodsName(goodsName);
                     shoppingCar.setGoodsSkuId(Integer.parseInt(goodsSku.getGoodsSkuId() + ""));
                     shoppingCar.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
-                    shoppingCar.setStatus(procurementTaskList.get(0).getProcureStatus());
+                    if("PROCURING".equals(ordersGoods.getStatus())){
+                        shoppingCar.setStatus(ordersGoods.getStatus());
+                    }else {
+                        shoppingCar.setStatus(procurementTaskList.get(0).getProcureStatus());
+                    }
                     Integer minPrice;
                     Integer maxPrice;
                     String minPriceSupermarketName;
@@ -668,9 +685,18 @@ public class OrderServiceImpl implements OrderService {
                     ProcurementTask procurementTask = new ProcurementTask();
                     procurementTask.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
                     List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskListAsc(procurementTask);
-                    total += ordersGoods.getQuantity() * procurementTaskList.get(0).getPrice();
+                    for (int i = 0; i < procurementTaskList.size(); i++) {
+                        if(!"PROCURING".equals(procurementTaskList.get(i).getProcureStatus())){
+                            int qunatity = procurementTaskList.get(i).getActualQuantity();
+                            if(i == procurementTaskList.size() - 1){
+                                qunatity = procurementTaskList.get(i).getQuantity();
+                            }
+                            total += qunatity * procurementTaskList.get(i).getPrice();
+                        }
+                    }
+
                 }
-                o.setOrderGoodsTotalPrice(total + o.getServiceFee());
+                o.setOrderGoodsTotalPrice(total + o.getServiceFee() + o.getExtraFee());
             }
 //            OrdersSku ordersSku = ordersMapper.selectSkuIdByordersId(o.getOrdersId());
 //            o.setGoodsSkuId(ordersSku.getGoodsSkuId());
@@ -728,7 +754,9 @@ public class OrderServiceImpl implements OrderService {
             ProcurementTask procurementTask = new ProcurementTask();
             procurementTask.setOrdersGoodsId(o.getOrdersGoodsId());
             List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskListAsc(procurementTask);
+            Integer sum = procurementTaskList.stream().mapToInt(ProcurementTask::getActualQuantity).sum();
             o.setProcurementTaskId(procurementTaskList.get(0).getProcurementTaskId());
+            o.setProcureQuantity(sum);
             String procureStatus = o.getProcureStatus();
             if ("BOUGHT".equals(procureStatus)){
                 o.setProcureStatus("FINISHED");
@@ -755,14 +783,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public Integer updateOrderById(Orders orders) {
-        Orders order = ordersMapper.getOrderById(orders.getOrdersId());
-        if (order.getCommunityStatus().equals("CANCELED")){
-            return 0;
-        }
-            if ("CANCELED".equals(orders.getCommunityStatus())){
-                orders.setUserStatus("CANCELED");
-            }
+//        Orders order = ordersMapper.getOrderById(orders.getOrdersId());
+//        if (order.getCommunityStatus().equals("CANCELED")){
+//            return 0;
+//        }
+//            if ("CANCELED".equals(orders.getCommunityStatus())){
+//                orders.setUserStatus("CANCELED");
+//            }
         return ordersMapper.updateOrderById(orders);
     }
 
@@ -837,36 +866,33 @@ public class OrderServiceImpl implements OrderService {
         return sgList;
     }
 
+    @Transactional
     @Override
     public void buySecondHeigh(ProcurementTask procurementTask) {
+        Integer supermarketId = procurementTask.getSupermarketId();
         OrdersGoods ordersGoods = new OrdersGoods();
         procurementTask = procurementTaskMapper.getProcurementById(procurementTask.getProcurementTaskId());
-        ProcurementTask procurementTask2 = new ProcurementTask();
-        procurementTask2.setOrdersGoodsId(procurementTask.getOrdersGoodsId());
-        List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskListAsc(procurementTask2);
-        ProcurementTask procurementTask1 = procurementTaskList.get(0);
-        ProcurementTask procurementTask3 = procurementTaskList.get(procurementTaskList.size() - 1);
         ordersGoods.setOrdersId(Long.parseLong(procurementTask.getOrdersId() + ""));
         ordersGoods.setGoodsSkuId(procurementTask.getGoodsSkuId());
         List<OrdersGoods> ordersGoodsList = ordersGoodsMapper.query(ordersGoods);
         List<Map> list = JSON.parseArray(ordersGoodsList.get(0).getSupermarketList(), Map.class);
-        Integer supermarketId = procurementTask3.getSupermarketId();
+
 
         Map s = list.stream().filter(item -> item.get("supermarket_id") == supermarketId).collect(Collectors.toList()).stream().findFirst().orElse(null);
-        int i = list.indexOf(s);
-        Map<String,Object> map = new HashMap<>();
-        map = list.get(i+1);
+//        int i = list.indexOf(s);
+//        Map<String,Object> map = new HashMap<>();
+//        map = list.get(i);
 
-        Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(Integer.parseInt(map.get("supermarket_id") + ""));
-        procurementTask.setQuantity(procurementTask1.getQuantity() - procurementTask1.getProcureQuantity());
+//        Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(procurementTask.getSupermarketId());
+        procurementTask.setQuantity(procurementTask.getQuantity() - procurementTask.getProcureQuantity());
         procurementTask.setProcurementTaskId(null);
         procurementTask.setProcureStatus("PROCURING");
-        procurementTask.setPrice(Integer.parseInt(map.get("price") + ""));
-        procurementTask.setCreateTime(new Date());
+        procurementTask.setPrice(Integer.parseInt(s.get("price") + ""));
         procurementTask.setActualQuantity(0);
         procurementTask.setProcureQuantity(0);
-        procurementTask.setUserId(supermarket.getProcurerId());
-        procurementTask.setSupermarketId(Integer.parseInt(map.get("supermarket_id") + ""));
+        procurementTask.setReceiveStatus("WAIT_OUT");
+//        procurementTask.setUserId(supermarket.getProcurerId());
+        procurementTask.setSupermarketId(supermarketId);
         procurementTaskMapper.insert(procurementTask);
     }
 

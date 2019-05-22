@@ -306,7 +306,7 @@
                 AND create_time = #{createTime}
             </if>
         </where>
-        order by create_time DESC
+        order by procurement_task_id DESC
     </select>
 
     <select id="getProcurementTaskStatus" resultType="com.linayi.entity.procurement.ProcurementTask">
@@ -467,7 +467,7 @@
               p.actual_quantity>0
          AND
               p.receive_status='WAIT_RECEIVE'
-         GROUP BY p.goods_sku_id
+         GROUP BY p.goods_sku_id,p.price
     </select>
 
     <select id="getProcurements" resultType="com.linayi.entity.procurement.ProcurementTask">
@@ -515,7 +515,7 @@
         <if test="procureStatus != null and procureStatus == 'FINISHED'">
             ,pt.procure_out_time procureOutTime
         </if>
-        FROM supermarket s left join procurement_task pt on s.procurer_id = #{userId} and pt.supermarket_id = s.supermarket_id left join goods_sku gs on gs.goods_sku_id = pt.goods_sku_id
+        FROM supermarket s left join procurement_task pt on s.procurer_id = #{userId} and pt.supermarket_id = s.supermarket_id left join goods_sku gs on gs.goods_sku_id = pt.goods_sku_id left join orders o on o.orders_id = pt.orders_id
         <where>
             <if test="procureStatus != null and procureStatus == 'PROCURING'">
                 pt.procure_status = #{procureStatus} and pt.receive_status = 'WAIT_OUT'
@@ -531,6 +531,9 @@
             </if>
             <if test="createTime != null">
                 and pt.create_time &lt;= #{createTime}
+            </if>
+            <if test="true">
+                and o.user_status != 'CANCELED'
             </if>
         </where>
         GROUP BY
@@ -557,30 +560,31 @@
 
     <select id="getProcurementsList" resultType="com.linayi.entity.procurement.ProcurementTask">
       SELECT
-  		procurement_task_id,
-  		orders_id,
-  		supermarket_id,
-  		goods_sku_id,
-  		price,
-  		quantity,
-  		actual_quantity,
-  		receive_status,
-  		procure_status,
-  		community_id,
-  		user_id,
-  		update_time,
-  		create_time,
-  		procure_time,
-  		receive_time,
-  		procure_quantity,
-		receive_quantity,
-		box_quantity,
-    	box_status,
-    	delivery_box_id
+  		p.procurement_task_id,
+  		p.orders_id,
+  		p.supermarket_id,
+  		p.goods_sku_id,
+  		p.price,
+  		p.quantity,
+  		p.actual_quantity,
+  		p.receive_status,
+  		p.procure_status,
+  		p.community_id,
+  		p.user_id,
+  		p.update_time,
+  		p.create_time,
+  		p.procure_time,
+  		p.receive_time,
+  		p.procure_quantity,
+		p.receive_quantity,
+		p.box_quantity,
+    	p.box_status,
+    	p.delivery_box_id
   	FROM
-  		procurement_task
+  		procurement_task p left join orders o on p.orders_id = o.orders_id
   	WHERE
-  	    procurement_task_id in (${procurementTaskIdList})
+  	    p.procurement_task_id in (${procurementTaskIdList})
+  	    and o.user_status != 'CANCELED'
   	    order by create_time asc
     </select>
 
@@ -621,7 +625,7 @@
      WHERE
         pt.receive_status=#{receiveStatus}
      AND
-        pt.actual_quantity > 0 GROUP BY gs.goods_sku_id
+        pt.actual_quantity > 0 GROUP BY gs.goods_sku_id,pt.price
       order by pt.procure_out_time
   </select>
 
@@ -667,11 +671,11 @@
        and
           receive_status='RECEIVED_FLOW'
   </update>
-    <!--流转中心任务 查询出已收货的商品列表 List<ProcurementTask> getDeliverGoodsList(ProcurementTask procurTask)-->
+    <!--流转中心任务 查询出已发货的商品列表 List<ProcurementTask> getDeliverGoodsList(ProcurementTask procurTask)-->
     <select id="getDeliverGoodsList" resultType="com.linayi.entity.procurement.ProcurementTask">
     SELECT
         SUM(pt.actual_quantity) totalProcureQuantity,gs.goods_sku_id,gs.full_name ,c.community_id communityId,c.name communityName,
-        gs.image,pt.price,SUM(pt.price*pt.actual_quantity) totalPrice,pt.flow_out_time
+        gs.image,pt.price,SUM(pt.price*pt.actual_quantity) totalPrice,max(pt.flow_out_time) flowOutTime
      FROM
         procurement_task pt JOIN goods_sku gs ON pt.goods_sku_id=gs.goods_sku_id
                             join community c on c.community_id=pt.community_id

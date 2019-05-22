@@ -7,6 +7,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 		$scope.edit = edit;
 		$scope.remove = remove;
 		$scope.list = list;
+        $scope.binding = binding;
 		$scope.search={
 				communityId:"",
 				ordersId:"",
@@ -14,7 +15,8 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 				userStatus:"",
 				communityStatus:"",
 				createTimeStart:"",
-				createTimeEnd:""
+				createTimeEnd:"",
+				supermarketId:""
 		}
 		$scope.list();
 	}
@@ -46,7 +48,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 				{name:'orderGoodsTotalPrice',label:'订单实际金额(元)',sortable:false,formatter:function( value, row, rowObject ){
 						return value / 100;
 					}},
-				{name:'communityStatus',label:'订单状态',sortable:false,formatter:function( value, row, rowObject ){
+				{name:'communityStatus',label:'订单流转状态',sortable:false,formatter:function( value, row, rowObject ){
 					 switch (value) {
 						 case 'PROCURING':
 							 return '采买中';
@@ -72,6 +74,24 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 					default:
 						break;
 					}
+					}},
+				{name:'userStatus',label:'订单用户端状态',sortable:false,formatter:function( value, row, rowObject ){
+						switch (value) {
+							case 'IN_PROGRESS':
+								return '待收货';
+								break;
+							case 'CANCELED':
+								return '已取消';
+								break;
+							case 'CONFIRM_RECEIVE':
+								return '确认收货';
+								break;
+							case 'FINISHED':
+								return '已完成';
+								break;
+							default:
+								break;
+						}
 					}},
 				{name:'mobile',label:'手机号码',sortable:false},
 				{name:'address',label:'送货地址',sortable:false},
@@ -139,11 +159,14 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 							return "<img src="+cellValue+" height=60 width=100>";
 						}},
 		            {name:'fullName',label:'商品',sortable:false,width:30},
-		            {name:'supermarketName',label:'超市',sortable:false,width:30},
-		            {name:'price',label:'超市价格(元)',sortable:false,width:30,formatter:function( cellValue, options, rowObject ){
+		            {name:'quantity',label:'下单数量',sortable:false,width:30},
+		            {name:'procureQuantity',label:'已采买总数量',sortable:false,width:30},
+		            {name:'supermarketName',label:'当前采买超市',sortable:false,width:30},
+		            {name:'price',label:'当前超市采买价格(元)',sortable:false,width:30,formatter:function( cellValue, options, rowObject ){
 		            	return cellValue ? cellValue / 100 : "";
 		            },editable:true,edittype:"text"},
-		            {name:'quantity',label:'数量',sortable:false,width:30},
+		            // {name:'quantity',label:'数量',sortable:false,width:30},
+		            // {name:'procureQuantity',label:'采买数量',sortable:false,width:30},
 		            {name:'procureStatus',label:'采买状态',sortable:false,width:30,formatter:function(value,row,rowObject){
 		            	switch (value) {
 							// case 'WAIT_PROCURE':
@@ -224,8 +247,9 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 
     /**保存*/
     function save( $modalInstance, ordersId, $scope){
+		messager.confirm("确认修改？",function( $modalInstance1 ){
          try{
-			 var data = {ordersId: ordersId,communityStatus:$scope.search.communityStatus};
+			 var data = {ordersId: ordersId,userStatus:$scope.search.userStatus};
 			 $.ajax({
 				 url:urls.ms+"/smallCommunity/saveOrders.do",
 				 data :data,
@@ -236,9 +260,10 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 					 $scope.$apply(function(){
 						 if( data.respCode == "S" ){
 							 $("#communityLocationList").trigger("reloadGrid");
-							 $scope.search.communityStatus = '';
+							 $scope.search.userStatus = '';
 							 list();
 							 $modalInstance.close();
+							 $modalInstance1.close();
 						 }else{
 							 toaster.error( "",data.data,3000 );
 						 }
@@ -269,8 +294,8 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
                 e : e.msg ? //
                     e.msg : "出错了",3000 );
         }
-    }
-
+		});
+	}
 	// /**
 	//  * 改价
 	//  */
@@ -381,7 +406,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 	// 						e.msg : "出错了",3000 );
 	// 	}
     // }
-
+    var supermarketId;
     /** 查看 */
     function show( procurementTaskId) {
 		var url = urls.ms + "/order/orderSku/orderSupermarketList.do?";
@@ -395,7 +420,12 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 			data: {"procurementTaskId": procurementTaskId},
 			dataType: "JSON",
 			success: function (data) {
-				if (data.procureStatus != "PROCURING") {
+				$scope.procurement={
+					ordersId:data.ordersId
+				}
+				var procurementTaskId = data.procurementTaskId;
+
+				if (data.procureStatus == "FINISHED") {
 					templateform.open({
 						title: "超市比价",
 						backdrop: true,
@@ -403,14 +433,14 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 						url: url,
 						scope: $scope,
 						buttons: [{
-							text: "购买次最低价",
+							text: "继续购买",
 							iconCls: 'fa fa-check',
 							handle: function ($modalInstance, data, $scope) {
 								$.ajax({
 									url: urls.ms + "/order/orderSku/buySecondHeigh.do",
 									async: false,
 									type: "post",
-									data: {"procurementTaskId": procurementTaskId},
+									data: {"procurementTaskId": procurementTaskId,"supermarketId":supermarketId},
 									dataType: "JSON",
 									success: function (data) {
 										$("#correctList").trigger("reloadGrid");
@@ -418,6 +448,8 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 										$modalInstance.close();
 										if (data.data == "success"){
 											toaster.success("", "操作成功", 3000);
+										} else if(data.data == "no_supermarketId"){
+											toaster.error( "","请选择超市",3000 );
 										} else {
 											toaster.error( "","操作失败",3000 );
 										}
@@ -470,6 +502,9 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 
 	}
 
+    function binding(){
+        supermarketId = $("#supermarketId").val();
+    }
 
     // 初始化
     init();

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.linayi.dao.promoter.OpenOrderManInfoMapper">
+<sql id="base_column">
+  open_order_man_info_id, promoter_id, order_man_id, identity, order_man_level, start_time, end_time, update_time, create_time
+</sql>
   <insert id="insert" parameterType="com.linayi.entity.promoter.OpenOrderManInfo" useGeneratedKeys="true" keyProperty="openOrderManInfoId">
     insert into open_order_man_info (open_order_man_info_id, promoter_id, order_man_id, 
       identity, order_man_level, start_time, 
@@ -11,4 +14,8 @@
       #{endTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
+  <select id="getOpenOrderManInfoById" resultType="com.linayi.entity.promoter.OpenOrderManInfo">
+    select <include refid="base_column"/> from open_order_man_info
+    where open_order_man_info_id = #{openOrderManInfoId}
+  </select>
 </mapper>

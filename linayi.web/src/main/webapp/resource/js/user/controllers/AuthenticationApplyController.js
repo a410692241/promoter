@@ -10,6 +10,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 		$scope.audit = audit;
 		$scope.batchDisable = batchDisable;
 		$scope.disable = disable;
+		$scope.identity=identity;
 		$scope.search={
 				userId:"",
 				nickname:"",
@@ -73,6 +74,8 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 			            		return "配送员";
 			            	}else if(cellvalue == "SPOKESMAN"){
 								return "代言人";
+							}else if(cellvalue == "ORDER_MAN"){
+								return "下单员";
 							}
 			            	return ""; 
 			            }},
@@ -249,12 +252,16 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 			url:url
 		});
 	}
-	
+	    	
+	var identity;
+    
+    function identity() {
+    	identity = $("#identity").val();
+	}
+
 	/**审核*/
     function audit(rowId){
-    	console.log(rowId)
     	var rowData = $("#AuthenticationApplyList").jqGrid("getRowData",rowId);
-    	console.log(rowData);
     	var realName = rowData.realName;
     	var mobile = rowData.mobile;
     	var idCardFront = rowData.idCardFront;
@@ -279,7 +286,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 						url : urls.ms + "/user/authentication/authenticationAudit.do",
 						async : false,
 						type : "post",
-						data : {"userId":userId,"realName":realName,"mobile":mobile,"idCardFront":idCardFront,"idCardBack":idCardBack,"status":'AUDIT_SUCCESS',"applyId":applyId,"authenticationType":authenticationType,"smallCommunityId":smallCommunityId,"supermarketId":supermarketId},
+						data : {"identity":identity,"userId":userId,"realName":realName,"mobile":mobile,"idCardFront":idCardFront,"idCardBack":idCardBack,"status":'AUDIT_SUCCESS',"applyId":applyId,"authenticationType":authenticationType,"smallCommunityId":smallCommunityId,"supermarketId":supermarketId},
 						dataType : "JSON",
 						success:function(data){
 							list();
@@ -325,6 +332,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 		});
     	
     }
+    
 	
 	//批量禁用
 	function batchDisable(){

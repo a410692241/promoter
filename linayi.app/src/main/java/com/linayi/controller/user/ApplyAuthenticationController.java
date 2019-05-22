@@ -71,7 +71,7 @@ public class ApplyAuthenticationController extends BaseController{
 		//判断对象和数组是否为null
 		if(apply != null && file.length==2){
 			Object responseData = authenticationApplyService.applyDeliverer(apply,file);
-			return responseData;
+			return responseData; 
 		}
 		return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
 	}
@@ -82,6 +82,22 @@ public class ApplyAuthenticationController extends BaseController{
 		authenticationApply.setUserId(getUserId());
 		Object responseData = authenticationApplyService.applySpokesman(authenticationApply,file);
 		return responseData;
+	}
+	
+	@RequestMapping("/applyOrderMan.do")
+	@ResponseBody
+	public Object applyOrderMan(String realName, String mobile, String address, MultipartFile[] file) {
+		AuthenticationApply apply = new AuthenticationApply();
+		apply.setAddress(address);
+		apply.setUserId(getUserId());
+		apply.setRealName(realName);
+		apply.setMobile(mobile);
+		//判断对象和数组是否为null
+		if(apply != null && file.length==2){
+			Object responseData = authenticationApplyService.applyOrderMan(apply,file);
+			return responseData;
+		}
+		return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
 	}
 
 

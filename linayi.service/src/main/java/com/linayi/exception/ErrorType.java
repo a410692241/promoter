@@ -52,6 +52,7 @@ public enum ErrorType {
     NOT_ORDER_MAN(2021,"你不是下单员!"),
     NOT_MODIFY(2008,"订单已取消，不能更改状态!"),
     TIME_SEQUENCE_ERROR(2022,"结束时间要大于开始时间!"),
+    ORDER_CANCELED(2024,"存在订单已经取消，请重新采买!"),
     NOT_MEMBER(2023,"您还不是会员，请先成为会员再来下单!");
 
 

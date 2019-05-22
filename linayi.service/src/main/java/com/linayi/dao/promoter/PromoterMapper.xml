@@ -18,4 +18,29 @@
            AND pom.`identity`='LEGAL_MAN'
            GROUP BY p.`promoter_id`
     </select>
+
+    <select id="getPromoterById" resultType="com.linayi.entity.promoter.Promoter">
+        select
+            promoter_id,name,mobile,qq,email,promoter_level,promoter_type,update_time,create_time
+        from
+            promoter
+        where
+            promoter_id=#{promoterId}
+    </select>
+    
+    <select id="getPromoterListByType" resultType="com.linayi.entity.promoter.Promoter">
+    	SELECT 
+    		promoter_id,
+    		name,
+    		mobile,
+    		qq,
+    		email,
+    		promoter_level,
+    		update_time,
+    		create_time,
+    		promoter_type 
+    	FROM 
+    		promoter 
+    	WHERE promoter_type = #{promoterType}
+    </select>
 </mapper>
