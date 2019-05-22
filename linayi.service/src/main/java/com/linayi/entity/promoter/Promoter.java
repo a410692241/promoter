@@ -15,6 +15,8 @@ public class Promoter {
 
     private String promoterLevel;
 
+    private String promoterType;
+
     private Date updateTime;
 
     private Date createTime;
@@ -65,6 +67,14 @@ public class Promoter {
 
     public void setPromoterLevel(String promoterLevel) {
         this.promoterLevel = promoterLevel == null ? null : promoterLevel.trim();
+    }
+
+    public String getPromoterType() {
+        return promoterType;
+    }
+
+    public void setPromoterType(String promoterType) {
+        this.promoterType = promoterType;
     }
 
     public Date getUpdateTime() {
