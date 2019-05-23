@@ -766,4 +766,56 @@
         </where>
         order by o.create_time desc
     </select>
+
+    <update id="updateProcurementTaskCanceled">
+        update procurement_task
+        <set>
+            <if test="supermarketId != null">
+                supermarket_id = #{supermarketId},
+            </if>
+            <if test="procureStatus != null">
+                procure_status = 'CANCELED'
+            </if>
+            <if test="ordersGoodsId != null">
+                orders_goods_id = #{ordersGoodsId},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="actualQuantity != null">
+                actual_quantity = #{actualQuantity},
+            </if>
+            <if test="boxQuantity != null">
+                box_quantity = #{boxQuantity},
+            </if>
+            <if test="procureQuantity !=null">
+                procure_quantity=#{procureQuantity},
+            </if>
+            <if test="receiveStatus != null">
+                receive_status = #{receiveStatus},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="boxNo != null">
+                box_no=#{boxNo},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="procureTime != null">
+                procure_time = #{procureTime},
+            </if>
+            <if test="procureOutTime != null">
+                procure_out_time = #{procureOutTime}
+            </if>
+        </set>
+        where orders_id = #{ordersId} and procure_status = #{procureStatus}
+    </update>
 </mapper>

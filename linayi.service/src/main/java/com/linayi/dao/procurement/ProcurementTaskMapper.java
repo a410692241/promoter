@@ -127,5 +127,11 @@ public interface ProcurementTaskMapper {
      * @return
      */
     List<ProcurementTask> getProcurementsByRECEIVEDFLOWThree(ProcurementTask procurementTask);
+
+    /**
+     * 采买任务改取消状态
+     * @param procurementTask
+     */
+    void updateProcurementTaskCanceled(ProcurementTask procurementTask);
 }
 
