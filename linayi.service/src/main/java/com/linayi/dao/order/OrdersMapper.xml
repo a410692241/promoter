@@ -284,7 +284,7 @@
         o.remark, o.quantity, o.amount, o.user_status, o.community_status, o.community_id, o.update_time, o.create_time from orders o
             <if test="userId != null">
                 join order_man_member omm on omm.member_id = #{userId}
-                where o.user_id = #{userId} and omm.create_time <![CDATA[ <= ]]> o.create_time
+                where o.user_id = #{userId} and omm.create_time <![CDATA[ <= ]]> o.create_time and o.address_type != 'CUSTOMER'
             </if>
             <if test="receiveAddressId != null">
                 where o.receive_address_id = #{receiveAddressId} AND o.address_type = 'CUSTOMER' AND o.user_id = #{orderManId}
