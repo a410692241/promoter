@@ -62,13 +62,13 @@
       and user_status NOT IN ('REFUNDED','REFUSED')
     </if>
     <if test="userStatus == 'FINISHED'">
-      and userStatus = 'FINISHED'
+      and user_status = 'FINISHED'
     </if>
      <if test="userStatus == 'IN_PROGRESS'">
-      and userStatus != 'CANCELED' and userStatus != 'FINISHED'
+      and user_status != 'CANCELED' and user_status != 'FINISHED'
     </if>
      <if test="userStatus == 'CANCELED'">
-      and user_Status = 'CANCELED'
+      and user_status = 'CANCELED'
     </if>
      <if test="userStatus == 'REFUND'">
       and user_status IN ('REFUSED','REFUNDED')
