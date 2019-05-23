@@ -261,15 +261,9 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
     	console.log(identity);
 	}
     
-    var pre;
     function promoterType(){
 		var promoterType = $("#promoterType").val();
-    	console.log(promoterType);
     	if(!(promoterType =="" || promoterType == null)){
-    		if(pre == promoterType){
-    			return;
-    		}
-    		pre = promoterType;
     		$.ajax({
     			type : 'post',  
     	        url : urls.ms + "/promoter/promoter/getPromoterListByType.do",
@@ -318,6 +312,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 						data : {"promoterId":$("#part").val(),"identity":identity,"userId":userId,"realName":realName,"mobile":mobile,"idCardFront":idCardFront,"idCardBack":idCardBack,"status":'AUDIT_SUCCESS',"applyId":applyId,"authenticationType":authenticationType,"smallCommunityId":smallCommunityId,"supermarketId":supermarketId},
 						dataType : "JSON",
 						success:function(data){
+							identity = '';
 							if(data.respCode === "S"){
 								list();
 								$("#correctList").trigger("reloadGrid");
