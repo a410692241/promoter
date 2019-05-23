@@ -653,7 +653,7 @@
      WHERE
         pt.receive_status=#{receiveStatus}
      AND
-        pt.actual_quantity > 0 GROUP BY gs.goods_sku_id,c.community_id
+        pt.actual_quantity > 0 GROUP BY gs.goods_sku_id,c.community_id,pt.price
       order by c.community_id
   </select>
     <!--流转中心任务 对收货的商品进行发货操作
@@ -685,7 +685,7 @@
         pt.receive_status='RECEIVED')
      AND
         pt.actual_quantity > 0
-      GROUP BY gs.goods_sku_id,c.community_id
+      GROUP BY gs.goods_sku_id,c.community_id,pt.price
       order by pt.flow_out_time desc
   </select>
 
