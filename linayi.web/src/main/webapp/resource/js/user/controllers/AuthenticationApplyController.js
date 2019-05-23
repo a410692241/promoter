@@ -76,7 +76,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 			            	}else if(cellvalue == "SPOKESMAN"){
 								return "代言人";
 							}else if(cellvalue == "ORDER_MAN"){
-								return "下单员";
+								return "家庭服务师";
 							}
 			            	return ""; 
 			            }},
@@ -354,7 +354,11 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 						validStart:rowData.validStart,
 						userId:rowData.userId,
 						address:rowData.address,
-						supermarketName:rowData.supermarketName
+						supermarketName:rowData.supermarketName,
+						authenticationType:rowData.authenticationType
+				}
+				if(rowData.authenticationType == '家庭服务师'){
+					$scope.apply1.orderMan = "true";
 				}
 			}
 		},function( $modalInstance,data, $scope ){

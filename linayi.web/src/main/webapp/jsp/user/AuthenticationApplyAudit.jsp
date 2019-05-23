@@ -57,9 +57,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-
 <form class="form-horizontal ng-pristine ng-valid" role="form">
-	<input type="hidden" ng-model="apply1.applyId" />
 	<div class="row">
 		<div class="form-group col-lg-6 col-xs-6 col-sm-12">
 			<label class="col-sm-4 no-padding-right" style="text-align: right;">真实姓名：</label>
@@ -95,7 +93,8 @@
 				</span>
 			</div>
 		</div>
-		<div class="form-group col-lg-12 col-xs-12 col-sm-12">
+		<div class="form-group col-lg-12 col-xs-12 col-sm-12"
+			ng-show="apply1.orderMan">
 			<label for="inputEmail3"
 				class="col-sm-2 control-label no-padding-right">部门类型:</label>
 			<div class="col-sm-10">
@@ -104,21 +103,20 @@
 					<option value="PROMOTER">推广商</option>
 					<option value="COMMUNITY">服务商</option>
 				</select>
-				
+
 			</div>
 		</div>
-		
-		<div class="form-group col-lg-12 col-xs-12 col-sm-12" id="partDiv" hidden="true">
+		<div class="form-group col-lg-12 col-xs-12 col-sm-12" id="partDiv"
+			hidden="true">
 			<label for="inputEmail3"
 				class="col-sm-2 control-label no-padding-right">部门:</label>
 			<div class="col-sm-10">
 				<select id="part">
-
 				</select>
 			</div>
 		</div>
-		
-		<div class="form-group col-lg-12 col-xs-12 col-sm-12">
+		<div class="form-group col-lg-12 col-xs-12 col-sm-12"
+			ng-show="apply1.orderMan">
 			<label for="inputEmail3"
 				class="col-sm-2 control-label no-padding-right">家庭服务师级别:</label>
 			<div class="col-sm-10">
@@ -129,25 +127,4 @@
 				</select>
 			</div>
 		</div>
-		<!-- 		<div
-			class="form-group form-group-margin form-group col-lg-12 col-xs-12 col-sm-12">
-			<div class="input-group">
-				<span class="input-group-addon">部门类型</span> <select id="bindingType"
-					ng-click="bindingType()">
-					<option value="PROMOTER">推广商</option>
-					<option value="COMMUNITY">服务商</option>
-				</select>
-			</div>
-		</div>
-		<div
-			class="form-group form-group-margin form-group col-lg-12 col-xs-12 col-sm-12">
-			<div class="input-group">
-				<span class="input-group-addon">家庭服务师级别</span> <select id="identity"
-					ng-click="identity()">
-					<option value="ORDER_MAN">普通级别</option>
-					<option value="LEGAL_MAN">主管级别</option>
-				</select>
-			</div>
-		</div> -->
-	</div>
 </form>
