@@ -318,10 +318,17 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 						data : {"promoterId":$("#part").val(),"identity":identity,"userId":userId,"realName":realName,"mobile":mobile,"idCardFront":idCardFront,"idCardBack":idCardBack,"status":'AUDIT_SUCCESS',"applyId":applyId,"authenticationType":authenticationType,"smallCommunityId":smallCommunityId,"supermarketId":supermarketId},
 						dataType : "JSON",
 						success:function(data){
-							list();
-							$("#correctList").trigger("reloadGrid");
-							$modalInstance.close();
-							toaster.success( "","操作成功",3000 );
+							if(data.respCode === "S"){
+								list();
+								$("#correctList").trigger("reloadGrid");
+								$modalInstance.close();
+								toaster.success( "","操作成功",3000 );
+							}else{
+								list();
+								$("#correctList").trigger("reloadGrid");
+								$modalInstance.close();
+								toaster.error( "",data.errorMsg,3000 );
+							}
 						}
 					})
 				}
