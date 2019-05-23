@@ -373,6 +373,14 @@ public class OrderServiceImpl implements OrderService {
         if(communityName != null && "community".equals(communityName)){
             orders.setCommunityId(userId);
             ordersList = ordersMapper.getProcureOrderList(orders);
+            if(ordersList != null && ordersList.size() > 0){
+                for (Orders orders1 : ordersList) {
+                    Integer serviceFee = orders1.getServiceFee();
+                    if(serviceFee != null && serviceFee >0){
+                        orders1.setAmount(orders1.getAmount() - serviceFee);
+                    }
+                }
+            }
         }else {
             ordersList = ordersMapper.getOrderList(orders);
         }
@@ -493,7 +501,8 @@ public class OrderServiceImpl implements OrderService {
                     }
                     //社区端订单详情查看
                     if("community".equals(type)){
-                        shoppingCar.setQuantity(procurementTaskList.get(0).getActualQuantity());
+                        Integer sum = procurementTaskList.stream().mapToInt(ProcurementTask::getActualQuantity).sum();
+                        shoppingCar.setQuantity(sum);
                     }else {
                         shoppingCar.setQuantity(ordersGoods.getQuantity());
                     }
