@@ -56,6 +56,9 @@ public class AuthenticationApplyController {
 	@ResponseBody
 	public Object authenticationApplyAudit(AuthenticationApply apply) {
 		try {
+			if("undefined".equals(apply.getIdentity()) || "".equals(apply.getIdentity())){
+				return new ResponseData(ErrorType.ERROR_ONE).toString();
+			}
 			authenticationApplyService.updateAuthenticationApplyAndUserInfo(apply);
 			return new ResponseData("S").toString();
 		} catch (NullPointerException e) {
