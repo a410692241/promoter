@@ -135,10 +135,10 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 	@Transactional
 	@Override
 	public void updateAuthenticationApplyAndUserInfo(AuthenticationApply apply) {
-		if("下单员".equals(apply.getAuthenticationType())){
+		if("家庭服务师".equals(apply.getAuthenticationType())){
 			promoterOrderManService.applyOrderManInWeb(apply.getStatus(), apply.getApplyId(), apply.getUserId(), apply.getPromoterId(), apply.getIdentity());
 		}
-		if("AUDIT_SUCCESS".equals(apply.getStatus())&&!"下单员".equals(apply.getAuthenticationType())){
+		if("AUDIT_SUCCESS".equals(apply.getStatus())&&!"家庭服务师".equals(apply.getAuthenticationType())){
 			if("价格分享员".equals(apply.getAuthenticationType())){
 				AuthenticationApply authenticationApply = new AuthenticationApply();
 				authenticationApply.setApplyId(apply.getApplyId());
@@ -238,7 +238,7 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				}
 
 			}
-		}else if("AUDIT_FAIL".equals(apply.getStatus())&&!"下单员".equals(apply.getAuthenticationType())){
+		}else if("AUDIT_FAIL".equals(apply.getStatus())&&!"家庭服务师".equals(apply.getAuthenticationType())){
 			AuthenticationApply authenticationApply = new AuthenticationApply();
 			authenticationApply.setApplyId(apply.getApplyId());
 			authenticationApply.setStatus(apply.getStatus());
