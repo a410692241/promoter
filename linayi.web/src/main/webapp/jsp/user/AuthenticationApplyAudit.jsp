@@ -1,3 +1,4 @@
+
 <%-- <%@page import="com.alibaba.fastjson.JSONObject"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8" isELIgnored="false"%>
@@ -100,7 +101,7 @@
 			<div class="col-sm-10">
 				<select id="promoterType" ng-click="promoterType()">
 					<option value="">请选择部门类型</option>
-					<option value="PROMOTER">推广商</option>
+<%--					<option value="PROMOTER">推广商</option>--%>
 					<option value="COMMUNITY">服务商</option>
 				</select>
 
