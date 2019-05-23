@@ -649,7 +649,7 @@
       <if test="orderManId != null">
           join order_man_member omm on omm.order_man_id = #{orderManId} and o.user_id = omm.member_id
       </if>
-      where o.create_time <![CDATA[ >= ]]> omm.create_time
+      where o.create_time <![CDATA[ >= ]]> omm.create_time and o.address_type != 'CUSTOMER'
       <if test="createTimeStart != null and createTimeStart != ''">
           AND o.create_time <![CDATA[ >= ]]> #{createTimeStart}
       </if>
@@ -660,7 +660,7 @@
   <select id="getOrdersByUserIdAndOrderManId" resultMap="BaseResultMap">
       select o.orders_id ordersId,o.amount amount from orders o
       join order_man_member omm on  o.user_id = omm.member_id
-      where o.create_time <![CDATA[ >= ]]> omm.create_time
+      where o.create_time <![CDATA[ >= ]]> omm.create_time and o.address_type != 'CUSTOMER'
       <if test="createTimeStart != null and createTimeStart != ''">
           AND o.create_time <![CDATA[ >= ]]> #{createTimeStart}
       </if>
