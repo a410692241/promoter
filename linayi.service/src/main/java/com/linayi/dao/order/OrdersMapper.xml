@@ -62,7 +62,7 @@
       and user_status NOT IN ('REFUNDED','REFUSED')
     </if>
     <if test="userStatus == 'FINISHED'">
-      and (user_status = 'FINISHED' or community_status = 'DELIVER_FINISHED')
+      and (user_status = 'FINISHED' or community_status = 'DELIVER_FINISHED') and user_status != 'CANCELED'
     </if>
      <if test="userStatus == 'IN_PROGRESS'">
       and user_status != 'CANCELED' and user_status != 'FINISHED' and community_status != 'DELIVER_FINISHED'

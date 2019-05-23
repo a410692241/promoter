@@ -51,7 +51,7 @@
 
 	<select id="selectAuthenticationApplyList" resultType="com.linayi.entity.user.AuthenticationApply">
 		select
-		`apply_id`,`user_id`,`authentication_type`,`real_name`,`mobile`,`id_card_front`,`id_card_back`,`status`,`create_time`,`update_time`,`small_community_id`,`supermarket_id`,`address`
+		`apply_id`,`user_id`,`authentication_type`,`real_name`,`mobile`,`id_card_front`,`id_card_back`,`status`,`create_time`,`update_time`,`small_community_id`,`supermarket_id`,`address`,`promoter_id`,`identity`
 		from `authentication_apply`
 		<where>
 			<if test="applyId!=null and applyId!=''">
@@ -121,7 +121,9 @@
 		area_code,
 		small_community_id,
 		supermarket_id supermarketId,
-		address
+		address,
+		promoter_id promoterId,
+		identity
 		from
 		authentication_apply
 		WHERE
