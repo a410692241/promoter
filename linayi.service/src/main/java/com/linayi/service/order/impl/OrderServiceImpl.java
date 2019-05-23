@@ -693,9 +693,9 @@ public class OrderServiceImpl implements OrderService {
                     for (int i = 0; i < procurementTaskList.size(); i++) {
                         if(!"PROCURING".equals(procurementTaskList.get(i).getProcureStatus())){
                             int qunatity = procurementTaskList.get(i).getActualQuantity();
-                            if(i == procurementTaskList.size() - 1){
-                                qunatity = procurementTaskList.get(i).getQuantity();
-                            }
+//                            if(i == procurementTaskList.size() - 1){
+//                                qunatity = procurementTaskList.get(i).getQuantity();
+//                            }
                             total += qunatity * procurementTaskList.get(i).getPrice();
                         }
                     }
