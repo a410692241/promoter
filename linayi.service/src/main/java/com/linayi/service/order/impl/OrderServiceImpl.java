@@ -450,6 +450,9 @@ public class OrderServiceImpl implements OrderService {
                     ShoppingCar shoppingCar = new ShoppingCar();
                     GoodsSku goodsSku = goodsSkuMapper.getGoodsById(ordersGoods.getGoodsSkuId());
                     String goodsName = getGoodsName(goodsSku);
+                    if("NO_NORMAL".equals(goodsName)){
+                        goodsName = goodsSku.getFullName();
+                    }
                     shoppingCar.setGoodsName(goodsName);
                     shoppingCar.setGoodsSkuId(Integer.parseInt(goodsSku.getGoodsSkuId() + ""));
                     shoppingCar.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
@@ -614,6 +617,8 @@ public class OrderServiceImpl implements OrderService {
                     goodsName.append(" ").append(attributeMap.get(attrName));
                 }
             }
+        }else{
+            return "NO_NORMAL";
         }
         return goodsName.toString();
     }
