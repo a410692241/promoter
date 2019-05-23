@@ -176,8 +176,8 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 							// 	return '缺货';
 							case 'PRICE_HIGH':
 								return '价高未买';
-							// case 'BOUGHT':
-							// 	return '已买';
+							case 'CANCELED':
+								return '已取消';
 							// case 'WAIT_DEAL':
 							// 	return '待处理';
 							case 'LACK':

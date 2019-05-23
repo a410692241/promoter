@@ -26,4 +26,10 @@ public interface OrdersGoodsMapper {
     List<OrdersGoods> getNoProcumentTaskOrders();
 
     OrdersGoods getOrdersGoods(Integer goodsSkuId, long ordersId);
+
+    /**
+     * 进行中的改成已完成
+     * @param ordersGoods
+     */
+    void updateOrdersGoodsCanceled(OrdersGoods ordersGoods);
 }

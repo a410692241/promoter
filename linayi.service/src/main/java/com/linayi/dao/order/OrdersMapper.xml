@@ -65,7 +65,7 @@
       and user_status = 'FINISHED'
     </if>
      <if test="userStatus == 'IN_PROGRESS'">
-      and user_status != 'CANCELED' and user_status != 'FINISHED'
+      and user_status != 'CANCELED' and user_status != 'FINISHED' and community_status != 'DELIVER_FINISHED'
     </if>
      <if test="userStatus == 'CANCELED'">
       and user_status = 'CANCELED'

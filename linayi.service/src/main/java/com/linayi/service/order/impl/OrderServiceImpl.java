@@ -522,7 +522,7 @@ public class OrderServiceImpl implements OrderService {
                 //已取消：CANCELED
                 if("CANCELED".equals(userStatus)){
                     orders2.setStatus("CANCELED");
-                }if("FINISHED".equals(userStatus)){
+                }else if("FINISHED".equals(userStatus)){
                     orders2.setStatus("FINISHED");
                 }else {
                     if("RECEIVED".equals(communityStatus) || "PACKED".equals(communityStatus)){
@@ -786,12 +786,23 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public Integer updateOrderById(Orders orders) {
 //        Orders order = ordersMapper.getOrderById(orders.getOrdersId());
-//        if (order.getCommunityStatus().equals("CANCELED")){
+//        if (order.getCommunityStatus() != null && order.getCommunityStatus().equals("CANCELED")){
 //            return 0;
 //        }
-//            if ("CANCELED".equals(orders.getCommunityStatus())){
-//                orders.setUserStatus("CANCELED");
-//            }
+//
+//        if ("CANCELED".equals(orders.getCommunityStatus())){
+//            orders.setUserStatus("CANCELED");
+//        }
+        OrdersGoods ordersGoods = new OrdersGoods();
+        ordersGoods.setOrdersId(orders.getOrdersId());
+        ordersGoods.setProcureStatus("PROCURING");
+        ordersGoodsMapper.updateOrdersGoodsCanceled(ordersGoods);
+
+        ProcurementTask procurementTask = new ProcurementTask();
+        procurementTask.setOrdersId(orders.getOrdersId());
+        procurementTask.setProcureStatus("PROCURING");
+        procurementTaskMapper.updateProcurementTaskCanceled(procurementTask);
+
         return ordersMapper.updateOrderById(orders);
     }
 
