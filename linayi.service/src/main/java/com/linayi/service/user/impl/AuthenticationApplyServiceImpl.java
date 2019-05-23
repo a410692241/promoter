@@ -135,7 +135,7 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 	@Transactional
 	@Override
 	public void updateAuthenticationApplyAndUserInfo(AuthenticationApply apply) {
-		if("下单员".equals(apply.getAuthenticationType())){
+		if("家庭服务师".equals(apply.getAuthenticationType())){
 			promoterOrderManService.applyOrderManInWeb(apply.getStatus(), apply.getApplyId(), apply.getUserId(), apply.getPromoterId(), apply.getIdentity());
 		}
 		if("AUDIT_SUCCESS".equals(apply.getStatus())&&!"家庭服务师".equals(apply.getAuthenticationType())){
