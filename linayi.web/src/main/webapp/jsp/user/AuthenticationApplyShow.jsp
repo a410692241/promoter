@@ -75,7 +75,6 @@
 						</span>
 					</div>
 				</div>
-
 				<div class="col-sm-6">
 					<div class="form-group">
 						<label>身份证正面</label> <span class="input-icon icon-right"> <img
@@ -84,7 +83,6 @@
 						</span>
 					</div>
 				</div>
-
 				<div class="col-sm-6">
 					<div class="form-group">
 						<label>身份证反面</label> <span class="input-icon icon-right"> <img

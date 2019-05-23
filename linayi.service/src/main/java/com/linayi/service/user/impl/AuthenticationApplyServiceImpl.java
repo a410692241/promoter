@@ -109,7 +109,7 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 			apply.setAuthenticationType("DELIVERER");
 		}else if("代言人".equals(authenticationType)){
 			apply.setAuthenticationType("SPOKESMAN");
-		}else if("下单员".equals(authenticationType)){
+		}else if("家庭服务师".equals(authenticationType)){
 			apply.setAuthenticationType("ORDER_MAN");
 		}
 		List<AuthenticationApply> list = authenticationApplyMapper.selectAuthenticationApplyList(apply);
