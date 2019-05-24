@@ -390,7 +390,6 @@ public class CorrectServiceImpl implements CorrectService {
             correctResp = corrects.subList(fromIndex, toIndex);
         }
         PageResult<Correct> page = new PageResult<>(correctResp, corrects.size());*/
-        System.out.println("QQQQQQQQQQQQ");
         return correctMapper.queryPage(correct);
     }
 
