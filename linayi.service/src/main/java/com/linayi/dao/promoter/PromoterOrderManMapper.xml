@@ -39,7 +39,7 @@
       <if test="promoterId != null">
         AND pom.promoter_id = #{promoterId}
       </if>
-      order by pom.create_time
+      order by pom.create_time DESC
     </where>
   </select>
   <!--  通过下单员Id获取PromoterOrderMan  PromoterOrderMan getPromoterOrderManByOrderManId(Integer orderManId); -->
