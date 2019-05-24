@@ -27,7 +27,7 @@ public class UserController {
     @RequestMapping("/list.do")
     @ResponseBody
     public Object userList(User user) {
-        List<User> list = userService.selectUserList(user);
+        List<User> list = userService.selectUserListByWeb(user);
         PageResult<User> pageResult = new PageResult<User>(list, user.getTotal());
         return pageResult;
     }

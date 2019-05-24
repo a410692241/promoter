@@ -10,12 +10,14 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 		$scope.audit = audit;
 		$scope.batchDisable = batchDisable;
 		$scope.disable = disable;
+		$scope.identity=identity;
+		$scope.promoterType=promoterType;
 		$scope.search={
 				userId:"",
 				nickname:"",
 				sex:"",
 				mobile:"",
-				userType:"",
+				userType:""
 		};
 		$scope.checkUserId = new Set();
 		$scope.list();
@@ -34,7 +36,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 		};
 	}
 
-	/**列表查询*/
+	/** 列表查询 */
 	function list(){
 		var $grid = $("#AuthenticationApplyList");
 		if( $grid[0].grid ){
@@ -73,6 +75,8 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 			            		return "配送员";
 			            	}else if(cellvalue == "SPOKESMAN"){
 								return "代言人";
+							}else if(cellvalue == "ORDER_MAN"){
+								return "家庭服务师";
 							}
 			            	return ""; 
 			            }},
@@ -109,7 +113,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 		});
 	}
 
-	/**禁用或者启用*/
+	/** 禁用或者启用 */
 	function disable( id , valid ){
 		var text = valid == 10 ? "启用" : "禁用"
 			messager.confirm("确认"+ text + "?",function( $modalInstance ){
@@ -132,7 +136,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 			});
 	}
 
-	/**新增，编辑*/
+	/** 新增，编辑 */
 	function edit( id ){
 		var title = '新增';
 		var url = urls.ms + "/jsp/user/UserEdit.do";
@@ -146,7 +150,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 		}
 		if( id ){
 			title = '编辑'
-				//获取次id的用户信息
+				// 获取次id的用户信息
 				$.ajax({
 					url : urls.ms + "/user/user/get.do",
 					async : false,
@@ -181,7 +185,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 		});
 	}
 
-	/**保存*/
+	/** 保存 */
 	function save( $modalInstance,data, $scope ){
 		try{
 			console.log(data)
@@ -217,7 +221,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 		}
 	}
 
-	/**查看*/
+	/** 查看 */
 	function show( id ){
     	console.log(id)
     	var rowData = $("#AuthenticationApplyList").jqGrid("getRowData",id);
@@ -235,7 +239,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 		});
 	}
 	
-	/**查看*/
+	/** 查看 */
 	function edit( id ){
 		var url = urls.ms + "/user/authentication/edit.do?";
 		if( id ){
@@ -249,12 +253,38 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 			url:url
 		});
 	}
-	
-	/**审核*/
+	    	
+	var identity;
+    
+    function identity() {
+    	identity = $("#identity").val();
+    	console.log(identity);
+	}
+    
+    function promoterType(){
+		var promoterType = $("#promoterType").val();
+    	if(!(promoterType =="" || promoterType == null)){
+    		$.ajax({
+    			type : 'post',  
+    	        url : urls.ms + "/promoter/promoter/getPromoterListByType.do",
+    	        data:{"promoterType":promoterType},
+    	        dataType : 'json',  
+    		    success:function(data){
+    		    	$("#partDiv").show();
+    		    	$("#part").empty();
+    		        for(var i in data.data){             
+    		        	$("#part").append("<option value=" + data.data[i].promoterId+ ">" + data.data[i].name + "</option>");
+    		        }
+    		    }
+    		});
+    	}else{
+    		$("#partDiv").hide();
+    	}
+    }
+
+	/** 审核 */
     function audit(rowId){
-    	console.log(rowId)
     	var rowData = $("#AuthenticationApplyList").jqGrid("getRowData",rowId);
-    	console.log(rowData);
     	var realName = rowData.realName;
     	var mobile = rowData.mobile;
     	var idCardFront = rowData.idCardFront;
@@ -279,13 +309,21 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 						url : urls.ms + "/user/authentication/authenticationAudit.do",
 						async : false,
 						type : "post",
-						data : {"userId":userId,"realName":realName,"mobile":mobile,"idCardFront":idCardFront,"idCardBack":idCardBack,"status":'AUDIT_SUCCESS',"applyId":applyId,"authenticationType":authenticationType,"smallCommunityId":smallCommunityId,"supermarketId":supermarketId},
+						data : {"promoterId":$("#part").val(),"identity":identity,"userId":userId,"realName":realName,"mobile":mobile,"idCardFront":idCardFront,"idCardBack":idCardBack,"status":'AUDIT_SUCCESS',"applyId":applyId,"authenticationType":authenticationType,"smallCommunityId":smallCommunityId,"supermarketId":supermarketId},
 						dataType : "JSON",
 						success:function(data){
-							list();
-							$("#correctList").trigger("reloadGrid");
-							$modalInstance.close();
-							toaster.success( "","操作成功",3000 );
+							identity = '';
+							if(data.respCode === "S"){
+								list();
+								$("#correctList").trigger("reloadGrid");
+								$modalInstance.close();
+								toaster.success( "","操作成功",3000 );
+							}else{
+								list();
+								$("#correctList").trigger("reloadGrid");
+								$modalInstance.close();
+								toaster.error( "",data.errorMsg,3000 );
+							}
 						}
 					})
 				}
@@ -297,7 +335,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 						url : urls.ms + "/user/authentication/authenticationAudit.do",
 						async : false,
 						type : "post",
-						data : {"userId":userId,"realName":realName,"mobile":mobile,"idCardFront":idCardFront,"idCardBack":idCardBack,"status":'AUDIT_FAIL',"applyId":applyId,"authenticationType":authenticationType,"smallCommunityId":smallCommunityId},
+						data : {"identity":identity,"userId":userId,"realName":realName,"mobile":mobile,"idCardFront":idCardFront,"idCardBack":idCardBack,"status":'AUDIT_FAIL',"applyId":applyId,"authenticationType":authenticationType,"smallCommunityId":smallCommunityId},
 						dataType : "JSON",
 						success:function(data){
 							list();
@@ -309,7 +347,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 				}
 			}],
 			onOpen:function( $modalInstance, data ,$scope){
-				//获取数据
+				// 获取数据
 				$scope.apply1 = {
 				    	realName:rowData.realName,
 				    	mobile:rowData.mobile,
@@ -318,15 +356,20 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 						validStart:rowData.validStart,
 						userId:rowData.userId,
 						address:rowData.address,
-						supermarketName:rowData.supermarketName
+						supermarketName:rowData.supermarketName,
+						authenticationType:rowData.authenticationType
+				}
+				if(rowData.authenticationType == '家庭服务师'){
+					$scope.apply1.orderMan = "true";
 				}
 			}
 		},function( $modalInstance,data, $scope ){
 		});
     	
     }
+    
 	
-	//批量禁用
+	// 批量禁用
 	function batchDisable(){
 		messager.confirm("确认禁用 ?",function( $modalInstance ){
 			var s = $scope.checkUserId;
@@ -426,6 +469,6 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 
 	}
 
-	//初始化
+	// 初始化
 	init();
 });

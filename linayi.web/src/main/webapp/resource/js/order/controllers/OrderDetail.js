@@ -29,10 +29,11 @@ app.controller('orderDetailCtrl', function($scope) {
             colModel : [
                 {name:'procurementTaskId',label:'采买任务编号',sortable:false,width:10},
                 {name:'supermarketName',label:'超市名称',sortable:false,width:20},
-                {name:'price',label:'超市价格',sortable:false,width:30,formatter:function( cellValue, options, rowObject ){
+                {name:'price',label:'超市价格(元)',sortable:false,width:30,formatter:function( cellValue, options, rowObject ){
                         return cellValue ? cellValue / 100 : "";
                     },editable:true,edittype:"text"},
-                {name:'procureStatus',label:'状态',sortable:false,width:20,formatter:function(value,row,rowObject){
+                {name:'procureQuantity',label:'实际采买数量',sortable:false,width:30},
+                {name:'procureStatus',label:'采买状态',sortable:false,width:20,formatter:function(value,row,rowObject){
                         switch (value) {
                             case 'LACK':
                                 return '缺货';

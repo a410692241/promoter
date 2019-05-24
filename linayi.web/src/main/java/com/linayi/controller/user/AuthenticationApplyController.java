@@ -1,9 +1,12 @@
 package com.linayi.controller.user;
 
 import com.linayi.entity.user.AuthenticationApply;
+import com.linayi.exception.ErrorType;
 import com.linayi.service.user.AuthenticationApplyService;
 import com.linayi.util.ImageUtil;
 import com.linayi.util.PageResult;
+import com.linayi.util.ResponseData;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,19 +27,19 @@ public class AuthenticationApplyController {
 	private AuthenticationApplyService authenticationApplyService;
 
 
-    @RequestMapping("/list.do")
-    @ResponseBody
-    public Object authenticationApplyList(AuthenticationApply apply) {
-    	List<AuthenticationApply> list = authenticationApplyService.selectAuthenticationApplyList(apply);
-    	if (list != null && list.size() > 0) {
+	@RequestMapping("/list.do")
+	@ResponseBody
+	public Object authenticationApplyList(AuthenticationApply apply) {
+		List<AuthenticationApply> list = authenticationApplyService.selectAuthenticationApplyList(apply);
+		if (list != null && list.size() > 0) {
 			for (AuthenticationApply authenticationApply : list) {
 				authenticationApply.setIdCardBack(ImageUtil.dealToShow(authenticationApply.getIdCardBack()));
 				authenticationApply.setIdCardFront(ImageUtil.dealToShow(authenticationApply.getIdCardFront()));
 			}
 		}
-    	PageResult<AuthenticationApply> pageResult = new PageResult<AuthenticationApply>(list, apply.getTotal());
-        return pageResult;
-    }
+		PageResult<AuthenticationApply> pageResult = new PageResult<AuthenticationApply>(list, apply.getTotal());
+		return pageResult;
+	}
 
 	@RequestMapping("/show.do")
 	public ModelAndView showAuthenticationApply(AuthenticationApply apply) {
@@ -49,12 +52,19 @@ public class AuthenticationApplyController {
 		return mv;
 	}
 
-    @RequestMapping("/authenticationAudit.do")
-    @ResponseBody
-    public Object authenticationApplyAudit(AuthenticationApply apply) {
-    	authenticationApplyService.updateAuthenticationApplyAndUserInfo(apply);
-    	return 0;
-    }
-
-
+	@RequestMapping(value = "/authenticationAudit.do",produces = {"text/html;charset=utf-8"})
+	@ResponseBody
+	public Object authenticationApplyAudit(AuthenticationApply apply) {
+		try {
+			if("undefined".equals(apply.getIdentity()) || "".equals(apply.getIdentity())){
+				return new ResponseData(ErrorType.ERROR_ONE).toString();
+			}
+			authenticationApplyService.updateAuthenticationApplyAndUserInfo(apply);
+			return new ResponseData("S").toString();
+		} catch (NullPointerException e) {
+			return new ResponseData(ErrorType.ERROR_ONE).toString();
+		} catch (Exception e) {
+			return new ResponseData(ErrorType.ERROR_TWO).toString();
+		}
+	}
 }

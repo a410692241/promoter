@@ -28,7 +28,7 @@ where `employee_id` =#{employeeId}
     <select id="selectUserByuserId" resultType="com.linayi.entity.user.User">
  		select
 `user_id`,`nickname`,`is_sharer`,`is_procurer`,`head_image`,`birthday`,`sex`,`mobile`,`qq`,
-`email`,`real_name`,`create_time`,`update_time`,default_receive_address_id,is_flow,is_order_man from `user`
+`email`,`real_name`,`create_time`,`update_time`,default_receive_address_id,is_flow,is_order_man,is_member from `user`
 where user_id=#{userId}
  	</select>
 
@@ -87,7 +87,9 @@ where user_id=#{userId}
     </select>
     <select id="selectUserList" resultType="com.linayi.entity.user.User">
         select
-        `user_id`,`nickname`,`head_image`,`sex`,`mobile`,`qq`,`email`,`real_name`,`create_time`,`update_time` from `user`
+          `user_id`,`nickname`,`head_image`,`sex`,`mobile`,`qq`,`email`,`real_name`,`create_time`,`update_time`
+        from
+          `user`
         <where>
             <if test="userId!=null and userId!=''">
                 and user_id=#{userId}
@@ -125,6 +127,50 @@ where user_id=#{userId}
             </if>-->
         </where>
         order by user_id desc
+    </select>
+    <select id="selectUserListByWeb" resultType="com.linayi.entity.user.User">
+        select
+        u.`user_id`,u.`nickname`,u.`head_image`,u.`sex`,acc.`mobile`,u.`qq`,u.`email`,u.`real_name`,u.`create_time`,u.`update_time`
+        from
+        `user` u join account acc on u.user_id=acc.user_id
+        <where>
+            and acc.user_type='USER'
+            <if test="userId!=null and userId!=''">
+                and u.user_id=#{userId}
+            </if>
+            <if test="nickname!=null and nickname!=''">
+                and u.nickname=#{nickname}
+            </if>
+            <if test="sex!=null and sex!=''">
+                and u.sex=#{sex}
+            </if>
+            <if test="mobile!=null and mobile!=''">
+                and acc.mobile=#{mobile}
+            </if>
+            <if test="qq!=null and qq!=''">
+                and u.qq=#{qq}
+            </if>
+            <if test="email!=null and email!=''">
+                and u.email=#{email}
+            </if>
+            <if test="realName!=null and realName!=''">
+                and u.real_name=#{realName}
+            </if>
+            <if test="createTimeStart!=null ">
+                <![CDATA[
+                and u.`create_time` >= #{createTimeStart}
+                ]]>
+            </if>
+            <if test="createTimeEnd!=null ">
+                <![CDATA[
+                and u.`create_time` <= #{createTimeEnd}
+                ]]>
+            </if>
+            <!--<if test="createTimeEnd!=null ">
+            	and create_time - #{createTimeEnd} &lt;0
+            </if>-->
+        </where>
+        order by u.user_id desc
     </select>
     <update id="updateUserByuserId" parameterType="com.linayi.entity.user.User">
         update `user`

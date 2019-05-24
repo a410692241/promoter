@@ -122,12 +122,11 @@ public class ProcurementController extends BaseController {
 			ProcurementTask procurementTask = pvu.transObj(ProcurementTask.class);
 			Integer userId = getUserId();
 			procurementTask.setUserId(userId);
-			procurementService.updateProcurmentStatus(procurementTask);
-			return new ResponseData("success");
+			return procurementService.updateProcurmentStatus(procurementTask);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new ResponseData("F", ErrorType.SYSTEM_ERROR.getErrorMsg());
+		return new ResponseData(ErrorType.SYSTEM_ERROR);
 	}
 
 	/**
@@ -300,7 +299,7 @@ public class ProcurementController extends BaseController {
         }
     }
     /**
-     * 流转中心任务 获取未发货的商品列表
+     * 流转中心任务 获取发货的商品列表
      * @param param
      * @return
      */

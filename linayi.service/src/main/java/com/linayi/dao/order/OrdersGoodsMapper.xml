@@ -223,4 +223,34 @@ WHERE
 	AND p.goods_sku_id IS NULL
 	AND o.procure_status = 'WAIT_PROCURE'
   </select>
+  <update id="updateOrdersGoodsCanceled">
+    update orders_goods
+    <set>
+      <if test="supermarketId != null">
+        supermarket_id = #{supermarketId},
+      </if>
+      <if test="procureStatus != null">
+        procure_status = 'FINISHED'
+      </if>
+      <if test="price != null">
+        price = #{price},
+      </if>
+      <if test="quantity != null">
+        quantity = #{quantity},
+      </if>
+      <if test="actualQuantity != null">
+        actual_quantity = #{actualQuantity},
+      </if>
+      <if test="supermarketList != null">
+        supermarket_list = #{supermarketList},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime}
+      </if>
+    </set>
+    where orders_id = #{ordersId} and procure_status = #{procureStatus}
+  </update>
 </mapper>

@@ -17,6 +17,7 @@ import com.linayi.entity.order.Orders;
 import com.linayi.entity.order.OrdersGoods;
 import com.linayi.entity.procurement.ProcurementTask;
 import com.linayi.entity.supermarket.Supermarket;
+import com.linayi.exception.ErrorType;
 import com.linayi.service.community.CommunityService;
 import com.linayi.service.community.CommunitySupermarketService;
 import com.linayi.service.order.OrderService;
@@ -202,13 +203,17 @@ public class ProcurementServiceImpl implements ProcurementService {
 
 	@Transactional
 	@Override
-	public void updateProcurmentStatus(ProcurementTask procurTask) {
+	public ResponseData updateProcurmentStatus(ProcurementTask procurTask) {
 		Integer quantity = procurTask.getQuantity();
 		String status = procurTask.getStatus();
 		String procurementTaskIdList = procurTask.getProcurementTaskIdList();
+		String[] split = procurementTaskIdList.split(",");
 		List<ProcurementTask> procurementTaskList = null;
 		if (procurementTaskIdList != null){
 			procurementTaskList = procurementTaskMapper.getProcurementsList(procurementTaskIdList);
+			if (procurementTaskList.size() < split.length){
+				return new ResponseData(ErrorType.ORDER_CANCELED);
+			}
 		}
 		Date procureTime = new Date();
 		if ("PRICE_HIGH".equals(status)){
@@ -261,15 +266,42 @@ public class ProcurementServiceImpl implements ProcurementService {
 				}
 			}
 		}
+		return new ResponseData("success");
 	}
 
 	private void updateOrders(ProcurementTask procurementTask){
+		if(procurementTask.getQuantity() == procurementTask.getActualQuantity()){
+			//要采买的数量等于实际采买数量
+			OrdersGoods ordersGoods = new OrdersGoods();
+			ordersGoods.setOrdersId(procurementTask.getOrdersId());
+			ordersGoods.setGoodsSkuId(procurementTask.getGoodsSkuId());
+			List<OrdersGoods> ordersGoodsList = ordersGoodsMapper.query(ordersGoods);
+			ordersGoods = ordersGoodsList.get(0);
+			updateOrdersStatus(procurementTask,ordersGoods);
+		}else {
+			OrdersGoods ordersGoods = new OrdersGoods();
+			ordersGoods.setOrdersId(procurementTask.getOrdersId());
+			ordersGoods.setGoodsSkuId(procurementTask.getGoodsSkuId());
+			List<OrdersGoods> ordersGoodsList = ordersGoodsMapper.query(ordersGoods);
+			ordersGoods = ordersGoodsList.get(0);
+			String supermarketList = ordersGoods.getSupermarketList();
+			List<Map> list = JSON.parseArray(supermarketList, Map.class);
+			ProcurementTask procurementTask1 = new ProcurementTask();
+			procurementTask1.setOrdersId(procurementTask.getOrdersId());
+			procurementTask1.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
+			List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurementTask1);
+			if (list.size() == procurementTaskList.size()){
+				//已经是最后一家
+				updateOrdersStatus(procurementTask,ordersGoods);
+			}
+		}
+	}
 
-		OrdersGoods ordersGoods = new OrdersGoods();
-		ordersGoods.setOrdersId(procurementTask.getOrdersId());
-		ordersGoods.setGoodsSkuId(procurementTask.getGoodsSkuId());
-		List<OrdersGoods> ordersGoodsList = ordersGoodsMapper.query(ordersGoods);
-		ordersGoods = ordersGoodsList.get(0);
+	/**
+	 * 改变订单的状态
+	 * @param procurementTask
+	 */
+	private void updateOrdersStatus(ProcurementTask procurementTask,OrdersGoods ordersGoods) {
 		ordersGoods.setUpdateTime(new Date());
 		ordersGoods.setProcureStatus("FINISHED");
 		ordersGoodsMapper.updateOrdersGoodsById(ordersGoods);
@@ -458,9 +490,10 @@ public class ProcurementServiceImpl implements ProcurementService {
 		procurementTask.setOrdersGoodsId(procurement.getOrdersGoodsId());
 		procurementTask.setProcurementTaskId(null);
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurementTask);
-		Integer supermarketId = procurementTaskList.get(0).getSupermarketId();
+		List<Integer> procurementTaskIds = new ArrayList<>();
 		for (ProcurementTask task : procurementTaskList) {
 			task.setSupermarketName(supermarketMapper.selectSupermarketBysupermarketId(task.getSupermarketId()).getName());
+			procurementTaskIds.add(task.getSupermarketId());
 		}
 		Collections.reverse(procurementTaskList);
 		OrdersGoods ordersGoods = new OrdersGoods();
@@ -469,14 +502,17 @@ public class ProcurementServiceImpl implements ProcurementService {
 		OrdersGoods ordersGoods1 = ordersGoodsList.get(0);
 		String sL = ordersGoods1.getSupermarketList();
 		List<Map> list = JSON.parseArray(sL, Map.class);
-		Map map = list.stream().filter(item -> item.get("supermarket_id") == supermarketId).collect(Collectors.toList()).stream().findFirst().orElse(null);
-		int i = list.indexOf(map);
-		for (int i1 = i + 1; i1 < list.size(); i1++) {
+		for (int i1 = 0; i1 < list.size(); i1++) {
 			Map map1 = list.get(i1);
+			int supermarket_id = Integer.parseInt(map1.get("supermarket_id") + "");
+			if(procurementTaskIds.contains(supermarket_id)){
+				continue;
+			}
 			Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(Integer.parseInt(map1.get("supermarket_id") + ""));
 			ProcurementTask procurementTask1 = new ProcurementTask();
 			procurementTask1.setSupermarketName(supermarket.getName());
 			procurementTask1.setPrice(Integer.parseInt(map1.get("price") + ""));
+			procurementTask1.setProcureQuantity(0);
 			procurementTaskList.add(procurementTask1);
 		}
 		return procurementTaskList;
@@ -647,8 +683,10 @@ public class ProcurementServiceImpl implements ProcurementService {
 		ordersGoods.setOrdersGoodsId(procurementTask2.getOrdersGoodsId());
 		List<OrdersGoods> ordersGoodsList = ordersGoodsMapper.getOrdersGoodsByOrdersGoods(ordersGoods);
 		String procureStatus = ordersGoodsList.get(0).getProcureStatus();
-		if ("FINISHED".equals(procureStatus)){
-			procurementTask2.setProcureStatus("PROCURING");
+		if ("PROCURING".equals(procureStatus) && !"PROCURING".equals(procurementTask2.getProcureStatus())){
+			procurementTask2.setProcureStatus("FINISHED");
+		}else {
+			procurementTask2.setOrdersId(null);
 		}
 		return procurementTask2;
 	}
@@ -791,5 +829,10 @@ public class ProcurementServiceImpl implements ProcurementService {
 		workbook.write(fOut);
 		fOut.flush();
 		fOut.close();
+	}
+
+	@Override
+	public List<ProcurementTask> getProcurements(ProcurementTask procurementTask) {
+		return procurementTaskMapper.getProcurementTaskList(procurementTask);
 	}
 }
