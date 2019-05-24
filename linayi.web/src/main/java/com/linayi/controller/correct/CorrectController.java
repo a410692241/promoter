@@ -4,7 +4,6 @@ import com.linayi.controller.BaseController;
 import com.linayi.entity.account.AdminAccount;
 import com.linayi.entity.correct.Correct;
 import com.linayi.entity.correct.SupermarketGoodsVersion;
-import com.linayi.entity.goods.SupermarketGoods;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.enums.CorrectStatus;
 import com.linayi.enums.OperatorType;
@@ -14,24 +13,26 @@ import com.linayi.exception.ErrorType;
 import com.linayi.service.correct.CorrectService;
 import com.linayi.service.correct.SupermarketGoodsVersionService;
 import com.linayi.service.goods.SupermarketGoodsService;
+import com.linayi.util.DateUtil;
 import com.linayi.util.PageResult;
 import com.linayi.util.ResponseData;
-import com.sun.org.apache.xalan.internal.xsltc.dom.DOMBuilder;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
+import java.io.OutputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -252,107 +253,94 @@ public class CorrectController extends BaseController {
      * excel 导出
      */
     @RequestMapping(value = "/exportShareRecord.do", method = RequestMethod.GET)
-    public void exportExcel(Correct correct) {
-        List<Correct> correctPageResult = correctService.getList(correct);
+    public void exportExcel(Correct correct , HttpServletRequest request, HttpServletResponse response) {
+        List<Correct> list = correctService.page(correct);
+
         try {
-            getRequest().setCharacterEncoding("UTF-8");//设置request的编码方式，防止中文乱码
-            String fileName = null;
-            fileName = "分享纠错";//设置导出的文件名称
-            String contentType = "application/vnd.ms-excel";//定义导出文件的格式的字符串
-            String recommendedName = new String(fileName.getBytes(), "iso_8859_1");//设置文件名称的编码格式
-            getResponse().setContentType(contentType);//设置导出文件格式
-            getResponse().setHeader("Content-Disposition", "attachment; filename=" + recommendedName + ".xls");
-            getResponse().setCharacterEncoding("utf-8");
-            getResponse().resetBuffer();
-            //利用输出输入流导出文件
-            ServletOutputStream sos = getResponse().getOutputStream();
-            String tempsb = "";
-            if (null != correctPageResult) {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                StringBuilder tableHtml = new StringBuilder("<table><tr><td>真实姓名</td><td>手机号</td><td>状态</td><td>商品</td><td>超市</td>" +
-                        "<td>类型</td><td>价格（元）</td><td>价格类型</td><td>有效开始时间</td><td>有效结束时间</td><td>创建时间</td></tr>");
-                for (Correct cre : correctPageResult) {
-                    //用户相关信息
-                    if (cre.getUser() != null) {
-                        tableHtml = tableHtml.append("<tr><td>" + cre.getUser().getRealName() + "</td>");
-                        tableHtml = tableHtml.append("<td>" + cre.getUser().getMobile() + "</td>");
-                    } else {
-                        tableHtml = tableHtml.append("<tr><td>" + " " + "</td>");
-                        tableHtml = tableHtml.append("<td>" + " " + "</td>");
-                    }
+            // 只是让浏览器知道要保存为什么文件而已，真正的文件还是在流里面的数据，你设定一个下载类型并不会去改变流里的内容。
+            //而实际上只要你的内容正确，文件后缀名之类可以随便改，就算你指定是下载excel文件，下载时我也可以把他改成pdf等。
+            response.setContentType("application/vnd.ms-excel");
+            // 传递中文参数编码
+            String codedFileName = java.net.URLEncoder.encode("分拣商品信息","UTF-8");
+            response.setHeader("content-disposition", "attachment;filename=" + codedFileName + ".xls");
+            // 定义一个工作薄
+            Workbook workbook = new HSSFWorkbook();
+            // 创建一个sheet页
+            Sheet sheet = workbook.createSheet("分享纠错信息");
+            // 创建一行
+            Row row = sheet.createRow(0);
+            // 在本行赋值 以0开始
 
-                    // 商品信息
-                    if (cre.getGoodsSku() != null) {
-                        // 商品状态
-                        if ("WAIT_AUDIT".equals(cre.getGoodsSku().getStatus())) {
-                            tableHtml = tableHtml.append("<td>" + "待审核" + "</td>");
-                        } else if ("AUDIT_SUCCESS".equals(cre.getGoodsSku().getStatus())) {
-                            tableHtml = tableHtml.append("<td>" + "审核通过" + "</td>");
-                        } else if ("RECALL".equals(cre.getGoodsSku().getStatus())) {
-                            tableHtml = tableHtml.append("<td>" + "撤回" + "</td>");
-                        } else if ("AUDIT_FAIL".equals(cre.getGoodsSku().getStatus())) {
-                            tableHtml = tableHtml.append("<td>" + "审核不通过" + "</td>");
-                        } else if ("AFFECTED".equals(cre.getGoodsSku().getStatus())) {
-                            tableHtml = tableHtml.append("<td>" + "已生效" + "</td>");
-                        } else if ("EXPIRED".equals(cre.getGoodsSku().getStatus())) {
-                            tableHtml = tableHtml.append("<td>" + "已过期" + "</td>");
-                        }
-                        // 商品名
-                        tableHtml = tableHtml.append("<td>" + cre.getGoodsSku().getFullName() + "</td>");
-                    } else {
-                        tableHtml = tableHtml.append("<td>" + " " + "</td>");
-                        tableHtml = tableHtml.append("<td>" + " " + "</td>");
-                    }
-
-                    //商戶信息
-//                    if (cre.getSupermarket() != null) {
-                    // 超市
-                    tableHtml = tableHtml.append("<td>" + cre.getSupermarket().getName() + "</td>");
-//                    }
-
-                    // 纠错类型
-                    if ("SHARE".equals(cre.getType())) {
-                        tableHtml = tableHtml.append("<td>" + "分享" + "</td>");
-                    } else if ("CORRECT".equals(cre.getType())) {
-                        tableHtml = tableHtml.append("<td>" + "纠错" + "</td>");
-                    } else {
-                        tableHtml = tableHtml.append("<td>" + " " + "</td>");
-                    }
-
-                    // 价格
-
-                    tableHtml = tableHtml.append("<td>" + ((double) (cre.getPrice()) / 100) + "</td>");
-                    // 价格类型
-                    if ("NORMAL".equals(cre.getPriceType())) {
-                        tableHtml = tableHtml.append("<td>" + "正常价" + "</td>");
-                    } else if ("PROMOTION".equals(cre.getPriceType())) {
-                        tableHtml = tableHtml.append("<td>" + "促销价" + "</td>");
-                    } else if ("DEAL".equals(cre.getPriceType())) {
-                        tableHtml = tableHtml.append("<td>" + "处理价" + "</td>");
-                    } else if ("MEMBER".equals(cre.getPriceType())) {
-                        tableHtml = tableHtml.append("<td>" + "会员价" + "</td>");
-                    } else {
-                        tableHtml = tableHtml.append("<td>" + " " + "</td>");
-                    }
-
-                    // 有效开始时间
-                    tableHtml = tableHtml.append("<td>" + simpleDateFormat.format(cre.getStartTime()) + "</td>");
-                    // 有效结束时间
-                    tableHtml = tableHtml.append("<td>" + simpleDateFormat.format(cre.getEndTime()) + "</td>");
-                    // 创建时间
-                    if (cre.getSupermarket() != null) {
-                        tableHtml = tableHtml.append("<td>" + simpleDateFormat.format(cre.getSupermarket().getCreateTime()) + "</td></tr>");
-                    } else {
-                        tableHtml = tableHtml.append("<td>" + " " + "</td></tr>");
-                    }
+            row.createCell(0).setCellValue("分享纠错编号");
+            row.createCell(1).setCellValue("分享人");
+            row.createCell(2).setCellValue("手机号");
+            row.createCell(3).setCellValue("状态");
+            row.createCell(4).setCellValue("商品名");
+            row.createCell(5).setCellValue("超市");
+            row.createCell(6).setCellValue("分享类型");
+            row.createCell(7).setCellValue("价格（元）");
+            row.createCell(8).setCellValue("价格类型");
+            row.createCell(9).setCellValue("有效开始时间");
+            row.createCell(10).setCellValue("有效结束时间");
+            row.createCell(11).setCellValue("创建时间");
+            // 定义样式
+            CellStyle cellStyle = workbook.createCellStyle();
+            // 格式化日期
+            //cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("yyyy-MM-dd"));
+            String pattern = "yyyy-MM-dd HH:mm:ss";
+            // 遍历输出
+            for (int i = 1; i <= list.size(); i++) {
+                Correct correct1 = list.get(i - 1);
+                if("WAIT_AUDIT".equals(correct1.getStatus())){
+                    correct1.setStatus("待审核");
+                }else if("AUDIT_SUCCESS".equals(correct1.getStatus())){
+                    correct1.setStatus("审核通过");
+                }else if("AUDIT_SUCCESS".equals(correct1.getStatus())){
+                    correct1.setStatus("审核通过");
+                }else if("RECALL".equals(correct1.getStatus())){
+                    correct1.setStatus("撤回");
+                }else if("AUDIT_FAIL".equals(correct1.getStatus())){
+                    correct1.setStatus("审核不通过");
+                }else if("AFFECTED".equals(correct1.getStatus())){
+                    correct1.setStatus("已生效");
+                }else if("EXPIRED".equals(correct1.getStatus())){
+                    correct1.setStatus("已过期");
                 }
-                if (!StringUtils.isEmpty(tableHtml)) {
-                    tempsb = "<meta http-equiv=\"content-type\" content=\"application/ms-excel; charset=UTF-8\"/>" + tableHtml.toString().replaceAll("null", "") + "</table>";
+
+                if("SHARE".equals(correct1.getType())){
+                    correct1.setType("分享");
+                }else if("CORRECT".equals(correct1.getType())){
+                    correct1.setType("纠错");
                 }
+
+                if("NORMAL".equals(correct1.getPriceType())){
+                    correct1.setPriceType("正常价");
+                }else if("PROMOTION".equals(correct1.getPriceType())){
+                    correct1.setPriceType("促销价");
+                }else if("DEAL".equals(correct1.getPriceType())){
+                    correct1.setPriceType("处理价");
+                }else if("MEMBER".equals(correct1.getPriceType())){
+                    correct1.setPriceType("会员价");
+                }
+
+                row = sheet.createRow(i);
+                row.createCell(0).setCellValue(correct1.getCorrectId());
+                row.createCell(1).setCellValue(correct1.getRealName());
+                row.createCell(2).setCellValue(correct1.getMobile());
+                row.createCell(3).setCellValue(correct1.getStatus());
+                row.createCell(4).setCellValue(correct1.getFullName());
+                row.createCell(5).setCellValue(correct1.getName());
+                row.createCell(6).setCellValue(correct1.getType());
+                row.createCell(7).setCellValue(correct1.getPrice()/100.00);
+                row.createCell(8).setCellValue(correct1.getPriceType());
+                row.createCell(9).setCellValue(DateUtil.date2String(correct1.getStartTime(),pattern));
+                row.createCell(10).setCellValue(DateUtil.date2String(correct1.getEndTime(),pattern));
+                row.createCell(11).setCellValue(DateUtil.date2String(correct1.getCreateTime(),pattern));
             }
-            sos.write(tempsb.getBytes("utf-8"));
-            sos.flush();
-            sos.close();
+            OutputStream fOut = response.getOutputStream();
+            workbook.write(fOut);
+            fOut.flush();
+            fOut.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
