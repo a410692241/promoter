@@ -261,7 +261,7 @@ public class CorrectController extends BaseController {
             //而实际上只要你的内容正确，文件后缀名之类可以随便改，就算你指定是下载excel文件，下载时我也可以把他改成pdf等。
             response.setContentType("application/vnd.ms-excel");
             // 传递中文参数编码
-            String codedFileName = java.net.URLEncoder.encode("分拣商品信息","UTF-8");
+            String codedFileName = java.net.URLEncoder.encode("分享纠错信息","UTF-8");
             response.setHeader("content-disposition", "attachment;filename=" + codedFileName + ".xls");
             // 定义一个工作薄
             Workbook workbook = new HSSFWorkbook();

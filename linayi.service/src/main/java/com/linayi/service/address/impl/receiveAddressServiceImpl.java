@@ -37,6 +37,7 @@ public class receiveAddressServiceImpl implements ReceiveAddressService {
             ReceiveAddress receiveAddress = new ReceiveAddress();
             receiveAddress.setReceiveAddressId(userDB.getDefaultReceiveAddressId());
             receiveAddress.setUserId(userDB.getUserId());
+            receiveAddress.setAddressType("MINE");
             ReceiveAddress receiveAddressDB = receiveAddressMapper.query(receiveAddress).stream().findFirst().orElse(null);
             if(receiveAddressDB != null){
                 setAreaName(receiveAddressDB);
