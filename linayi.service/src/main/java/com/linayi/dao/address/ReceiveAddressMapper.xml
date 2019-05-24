@@ -133,6 +133,9 @@
         <if test="createTime != null">
             and create_time = #{createTime,jdbcType=TIMESTAMP}
         </if>
+        <if test="addressType !=null">
+            and address_type = #{addressType,jdbcType=VARCHAR}
+        </if>
     </sql>
 
     <!--
@@ -477,7 +480,7 @@
         <include refid="Base_Column_List"/>
         from receive_address
         <where>
-        and status = 'NORMAL' and
+        and status = 'NORMAL' and address_type='MINE' and
             <include refid="Base_Select_User"></include>
 
         </where>
