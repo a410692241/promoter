@@ -68,16 +68,6 @@
 			<label class="col-sm-4 no-padding-right" style="text-align: right;">联系电话：</label>
 			<div class="col-sm-8">{{apply1.mobile}}</div>
 		</div>
-		<div class="form-group col-lg-6 col-xs-6 col-sm-12"
-			ng-show="apply1.address">
-			<label class="col-sm-4 no-padding-right" style="text-align: right;">详细地址：</label>
-			<div class="col-sm-8">{{apply1.address}}</div>
-		</div>
-		<div class="form-group col-lg-6 col-xs-6 col-sm-12"
-			ng-show="apply1.supermarketName">
-			<label class="col-sm-4 no-padding-right" style="text-align: right;">超市名称：</label>
-			<div class="col-sm-8">{{apply1.supermarketName}}</div>
-		</div>
 		<div class="form-group col-lg-6 col-xs-6 col-sm-12">
 			<label class="col-sm-4 no-padding-right" style="text-align: right;">身份证正面：</label>
 			<div class="col-sm-8">
@@ -94,6 +84,16 @@
 				</span>
 			</div>
 		</div>
+		<div class="form-group col-lg-6 col-xs-6 col-sm-12"
+			ng-show="apply1.address">
+			<label class="col-sm-4 no-padding-right" style="text-align: right;">详细地址：</label>
+			<div class="col-sm-8">{{apply1.address}}</div>
+		</div>
+		<div class="form-group col-lg-6 col-xs-6 col-sm-12"
+			ng-show="apply1.supermarketName">
+			<label class="col-sm-4 no-padding-right" style="text-align: right;">超市名称：</label>
+			<div class="col-sm-8">{{apply1.supermarketName}}</div>
+		</div>
 		<div class="form-group col-lg-12 col-xs-12 col-sm-12"
 			ng-show="apply1.orderMan">
 			<label for="inputEmail3"
@@ -101,7 +101,7 @@
 			<div class="col-sm-10">
 				<select id="promoterType" ng-click="promoterType()">
 					<option value="">请选择部门类型</option>
-<%--					<option value="PROMOTER">推广商</option>--%>
+					<%--					<option value="PROMOTER">推广商</option>--%>
 					<option value="COMMUNITY">服务商</option>
 				</select>
 
