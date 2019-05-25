@@ -56,8 +56,10 @@ public class AuthenticationApplyController {
 	@ResponseBody
 	public Object authenticationApplyAudit(AuthenticationApply apply) {
 		try {
-			if("undefined".equals(apply.getIdentity()) || "".equals(apply.getIdentity())){
-				return new ResponseData(ErrorType.ERROR_ONE).toString();
+			if("家庭服务师".equals(apply.getAuthenticationType())&&"AUDIT_SUCCESS".equals(apply.getStatus())){
+				if("undefined".equals(apply.getIdentity()) || "".equals(apply.getIdentity())){
+					return new ResponseData(ErrorType.ERROR_ONE).toString();
+				}
 			}
 			authenticationApplyService.updateAuthenticationApplyAndUserInfo(apply);
 			return new ResponseData("S").toString();
