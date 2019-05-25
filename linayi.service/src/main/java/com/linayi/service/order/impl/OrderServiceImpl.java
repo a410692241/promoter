@@ -771,6 +771,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrdersSku> getGoodsOrderSku(OrdersSku ordersSku) {
+        ordersSku.setCurrentPage(null);
+        ordersSku.setPageSize(null);
         List<OrdersSku> ordersSkuList = ordersMapper.getGoodsOrderSku(ordersSku);
         for (OrdersSku o : ordersSkuList) {
             o.setImage(ImageUtil.dealToShow(o.getImage()));
