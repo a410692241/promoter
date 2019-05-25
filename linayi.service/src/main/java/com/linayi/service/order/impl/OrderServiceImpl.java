@@ -650,6 +650,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrdersGoods> ordersGoods = ordersGoodsMapper.getOrdersGoodsByOrdersId(orders.getOrdersId());
         User user = userMapper.selectUserByuserId(orders.getUserId());
         Integer receiveAddressId = user.getDefaultReceiveAddressId();
+
         ReceiveAddress receiveAddress = receiveAddressMapper.getReceiveAddressByReceiveAddressId(receiveAddressId);
         Integer smallComunityId = receiveAddress.getAddressOne();
         SmallCommunity smallCommunity = new SmallCommunity();
@@ -668,12 +669,20 @@ public class OrderServiceImpl implements OrderService {
                 }
 
                 ShoppingCar shoppingCar = new ShoppingCar();
-                shoppingCar.setGoodsSkuId(ordersGood.getGoodsSkuId());
-                shoppingCar.setQuantity(ordersGood.getQuantity());
-                shoppingCar.setReceiveAddressId(receiveAddressId);
-                shoppingCar.setSelectStatus("SELECTED");
                 shoppingCar.setUserId(orders.getUserId());
-                shoppingCarMapper.insert(shoppingCar);
+                shoppingCar.setGoodsSkuId(ordersGood.getGoodsSkuId());
+                shoppingCar.setReceiveAddressId(receiveAddressId);
+                ShoppingCar shopCar = shoppingCarMapper.getShopCar(shoppingCar);
+                if(shopCar == null){
+                    shoppingCar.setGoodsSkuId(ordersGood.getGoodsSkuId());
+                    shoppingCar.setQuantity(ordersGood.getQuantity());
+                    shoppingCar.setSelectStatus("SELECTED");
+                    shoppingCarMapper.insert(shoppingCar);
+                }else {
+                    shopCar.setQuantity(shopCar.getQuantity() + ordersGood.getQuantity());
+                    shoppingCarMapper.updateShopCar(shopCar);
+                }
+
             }
         }
         return "success";
