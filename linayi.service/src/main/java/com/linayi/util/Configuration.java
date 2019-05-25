@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 public class Configuration {
 
 	private static Configuration configuration;
-	private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
+	private static Logger logger = LoggerFactory.getLogger(Configuration.class);
 	/**如果需要在项目所在目录下加载配置文件，请在项目所在目录添加名字为：项目根目录名称+.properties 的配置文件*/
 	private static String fileName = "system.properties";
 	private static String postfix = ".properties";

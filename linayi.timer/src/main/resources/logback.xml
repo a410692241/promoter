@@ -1,38 +1,37 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<configuration scan="true"  scanPeriod="60 seconds">
+<?xml version="1.0" encoding="GBK"?>
+<configuration scan="true" scanPeriod="60 seconds">
 	<contextName>RestAPI</contextName>
 	<property name="LOG_PATH" value="D:/data/logs"/>
-	<!--è®¾ç½®ç³»ç»Ÿæ—¥å¿—ç›®å½•-->
-	<property name="APPDIR" value="timer"/>
+	<!--ÉèÖÃÏµÍ³ÈÕÖ¾Ä¿Â¼-->
+	<property name="APPDIR" value="app"/>
 
-	<property scope="system" name="SYSTEM_NAME" value="linayi" />
-	<!-- %mè¾“å‡ºçš„ä¿¡æ¯,%pæ—¥å¿—çº§åˆ«,%tçº¿ç¨‹å,%dæ—¥æœŸ,%cç±»çš„å…¨å,,,, -->
+	<property scope="system" name="SYSTEM_NAME" value="linayi"/>
+	<!-- %mÊä³öµÄÐÅÏ¢,%pÈÕÖ¾¼¶±ð,%tÏß³ÌÃû,%dÈÕÆÚ,%cÀàµÄÈ«Ãû,,,, -->
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
-			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-			<!-- è®¾ç½®å­—ç¬¦é›† -->
-			<charset>UTF-8</charset>
+			<pattern>%d{HH:mm:ss} %green([%-21thread]) %highlight(%-5level) %magenta(%-50logger{50}) : %msg%n</pattern>
+			<!-- ÉèÖÃ×Ö·û¼¯ -->
+			<charset>GBK</charset>
 		</encoder>
 	</appender>
-
 	<appender name="FILEERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<!-- æ­£åœ¨è®°å½•çš„æ—¥å¿—æ–‡ä»¶çš„è·¯å¾„åŠæ–‡ä»¶å -->
+		<!-- ÕýÔÚ¼ÇÂ¼µÄÈÕÖ¾ÎÄ¼þµÄÂ·¾¶¼°ÎÄ¼þÃû -->
 		<file>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/log_error.log</file>
-		<!-- æ—¥å¿—è®°å½•å™¨çš„æ»šåŠ¨ç­–ç•¥ï¼ŒæŒ‰æ—¥æœŸï¼ŒæŒ‰å¤§å°è®°å½• -->
+		<!-- ÈÕÖ¾¼ÇÂ¼Æ÷µÄ¹ö¶¯²ßÂÔ£¬°´ÈÕÆÚ£¬°´´óÐ¡¼ÇÂ¼ -->
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/error/log-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
 			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
 				<maxFileSize>5000MB</maxFileSize>
 			</timeBasedFileNamingAndTriggeringPolicy>
 		</rollingPolicy>
-		<!-- è¿½åŠ æ–¹å¼è®°å½•æ—¥å¿— -->
+		<!-- ×·¼Ó·½Ê½¼ÇÂ¼ÈÕÖ¾ -->
 		<append>true</append>
-		<!-- æ—¥å¿—æ–‡ä»¶çš„æ ¼å¼ -->
+		<!-- ÈÕÖ¾ÎÄ¼þµÄ¸ñÊ½ -->
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-			<charset>utf-8</charset>
+			<pattern>%d{HH:mm:ss} [%-21thread] %-5level %-50logger{50} : %msg%n</pattern>
+			<charset>GBK</charset>
 		</encoder>
-		<!-- æ­¤æ—¥å¿—æ–‡ä»¶åªè®°å½•infoçº§åˆ«çš„ -->
+		<!-- ´ËÈÕÖ¾ÎÄ¼þÖ»¼ÇÂ¼info¼¶±ðµÄ -->
 		<filter class="ch.qos.logback.classic.filter.LevelFilter">
 			<level>error</level>
 			<onMatch>ACCEPT</onMatch>
@@ -40,60 +39,31 @@
 		</filter>
 	</appender>
 
-	<appender name="FILEWARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/log_warn.log</file>
+	<appender name="FILECONSOLE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- ÕýÔÚ¼ÇÂ¼µÄÈÕÖ¾ÎÄ¼þµÄÂ·¾¶¼°ÎÄ¼þÃû -->
+		<file>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/log_console.log</file>
+		<!-- ÈÕÖ¾¼ÇÂ¼Æ÷µÄ¹ö¶¯²ßÂÔ£¬°´ÈÕÆÚ£¬°´´óÐ¡¼ÇÂ¼ -->
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/warn/log-warn-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<fileNamePattern>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/console/log-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
 			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
 				<maxFileSize>5000MB</maxFileSize>
 			</timeBasedFileNamingAndTriggeringPolicy>
 		</rollingPolicy>
-		<!-- è¿½åŠ æ–¹å¼è®°å½•æ—¥å¿— -->
+		<!-- ×·¼Ó·½Ê½¼ÇÂ¼ÈÕÖ¾ -->
 		<append>true</append>
-		<!-- æ—¥å¿—æ–‡ä»¶çš„æ ¼å¼ -->
+		<!-- ÈÕÖ¾ÎÄ¼þµÄ¸ñÊ½ -->
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-			<pattern>===%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger Line:%-3L - %msg%n</pattern>
-			<charset>utf-8</charset>
+			<pattern>%d{HH:mm:ss} [%-21thread] %-5level %-50logger{50} : %msg%n</pattern>
+			<charset>GBK</charset>
 		</encoder>
-		<filter class="ch.qos.logback.classic.filter.LevelFilter">
-			<level>warn</level>
-			<onMatch>ACCEPT</onMatch>
-			<onMismatch>DENY</onMismatch>
-		</filter>
 	</appender>
 
+	<logger name="springfox.documentation" level="OFF"/>
+	<logger name="org.mybatis.spring" level="OFF"/>
 
-	<appender name="FILEINFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<!-- æ­£åœ¨è®°å½•çš„æ—¥å¿—æ–‡ä»¶çš„è·¯å¾„åŠæ–‡ä»¶å -->
-		<file>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/log_info.log</file>
-		<!-- æ—¥å¿—è®°å½•å™¨çš„æ»šåŠ¨ç­–ç•¥ï¼ŒæŒ‰æ—¥æœŸï¼ŒæŒ‰å¤§å°è®°å½• -->
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/info/log-info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-				<maxFileSize>5000MB</maxFileSize>
-			</timeBasedFileNamingAndTriggeringPolicy>
-		</rollingPolicy>
-		<append>true</append>
-		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-			<pattern>===%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger Line:%-3L - %msg%n</pattern>
-			<charset>utf-8</charset>
-		</encoder>
-		<filter class="ch.qos.logback.classic.filter.LevelFilter">
-			<level>info</level>
-			<onMatch>ACCEPT</onMatch>
-			<onMismatch>DENY</onMismatch>
-		</filter>
-	</appender>
-	<!--dev-->
 	<root level="DEBUG">
-	<appender-ref ref="STDOUT"/>
-	</root>
-
-	<!--production-->
-	<!--<root level="INFO">-->
+		<appender-ref ref="STDOUT"/>
 		<!--<appender-ref ref="FILEERROR"/>-->
-		<!--<appender-ref ref="FILEWARN"/>-->
-		<!--<appender-ref ref="FILEINFO"/>-->
-		<!--<appender-ref ref="STDOUT"/>-->
-	<!--</root>-->
+		<!--<appender-ref ref="FILECONSOLE"/>-->
+	</root>
 </configuration>
