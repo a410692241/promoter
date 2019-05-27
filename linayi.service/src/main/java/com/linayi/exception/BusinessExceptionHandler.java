@@ -48,8 +48,7 @@ public class BusinessExceptionHandler implements HandlerExceptionResolver {
         } catch (IOException e) {
             log.error("与客户端通讯异常:" + e.getMessage(), e);
         }
-
-        log.debug("异常:" + ex.getMessage(), ex);
+        log.error("异常:" + ex.getMessage(), ex);
         return mv;
     }
 }  

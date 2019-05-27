@@ -150,6 +150,7 @@ app.controller('orderCtrl', function($scope,toaster,orderService,messager,templa
 			$goodsList.jqGrid({
 				url : urls.ms+"/order/orderSku/list.do?longTime=" + longTime,
 				async:false,
+				rowNum:1000,
 				postData:{
 					"ordersId":order.ordersId
 				},

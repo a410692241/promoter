@@ -296,4 +296,17 @@ public class GoodsSkuController extends BaseController {
 
     }
 
+    @RequestMapping("/goodsDirectOrder.do")
+    public Object goodsDirectOrder(@RequestBody GoodsSku goodsSku){
+        try {
+            Integer userId = getUserId();
+            goodsSku.setUserId(userId);
+            Map<String, Object> map = goodsSkuService.goodsDirectOrder(goodsSku);
+            return new ResponseData(map);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ResponseData("F",ErrorType.SYSTEM_ERROR.getErrorMsg());
+    }
+
 }

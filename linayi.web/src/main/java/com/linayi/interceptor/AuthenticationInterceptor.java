@@ -4,6 +4,8 @@ import com.linayi.service.redis.RedisService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -25,7 +27,7 @@ public class AuthenticationInterceptor {
 	private HttpServletResponse response;
 	@Resource
 	private RedisService redisService;
-	
+	private Logger logger = LoggerFactory.getLogger(getClass());
 	/**不拦截路径*/
 	private List<String> urlList ;
 
@@ -40,9 +42,9 @@ public class AuthenticationInterceptor {
 	public Object around(ProceedingJoinPoint point) throws Throwable {
 
 		Object invokeResult = null;
-
 		//获取路径
 		String requestURL = request.getRequestURL().toString();
+		logger.info(requestURL);
 		//判断是否为拦截路径
 		for (String string : urlList) {
 			if (requestURL.endsWith(string)) {
