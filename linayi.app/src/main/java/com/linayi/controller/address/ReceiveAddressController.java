@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -63,6 +64,14 @@ public class ReceiveAddressController extends BaseController {
     @Transactional
     public Object addReceiveAddress(@RequestBody Map<String, Object> param) {
         try {
+            //新增地址之前 检查用户拥有多少地址
+            User user = new User();
+            user.setUserId(getUserId());
+            List<ReceiveAddress> receiveAddressList = receiveAddressService.queryAddress(user);
+            if(receiveAddressList.size()>=3){
+                return new ResponseData(ErrorType.RECEIVEADDTOOMUCH);
+            }
+
             ParamValidUtil<ReceiveAddress> pa = new ParamValidUtil<>(param);
             pa.Exist("addressOne", "addressTwo", "receiverName");
             ReceiveAddress receiveAddress = pa.transObj(ReceiveAddress.class);
@@ -186,7 +195,7 @@ public class ReceiveAddressController extends BaseController {
 
     /**
      * 根据收货地址id修改收货地址信息
-     * @param param
+     * @param
      * @return
      */
     @RequestMapping("/modifyReceivingAddress.do")

@@ -201,6 +201,7 @@ public class receiveAddressServiceImpl implements ReceiveAddressService {
     @Override
     @Transactional
 	public void modifyReceivingAddress(ReceiveAddress receiveAddress){
+        receiveAddress.setUpdateTime(new Date());
         receiveAddressMapper.modifyReceivingAddress(receiveAddress);
     }
 }
