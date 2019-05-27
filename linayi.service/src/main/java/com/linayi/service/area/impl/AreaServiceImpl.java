@@ -1,13 +1,17 @@
 package com.linayi.service.area.impl;
 
+import com.linayi.dao.account.AccountMapper;
 import com.linayi.dao.area.AreaMapper;
 import com.linayi.dao.area.SmallCommunityMapper;
 import com.linayi.dao.community.CommunityMapper;
 import com.linayi.dao.goods.GoodsSkuMapper;
 import com.linayi.entity.area.Area;
 import com.linayi.entity.area.SmallCommunity;
+import com.linayi.entity.area.SmallCommunityFullName;
 import com.linayi.entity.community.Community;
 import com.linayi.service.area.AreaService;
+import com.linayi.service.order.OrderService;
+import com.linayi.util.CheckUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +28,8 @@ public class AreaServiceImpl implements AreaService {
     private SmallCommunityMapper smallCommunityMapper;
     @Autowired
     private CommunityMapper communityMapper;
+    @Autowired
+    private OrderService orderService;
 
     @Override
     public Map<String, List<Area>> getArea() {
@@ -112,15 +118,15 @@ public class AreaServiceImpl implements AreaService {
 
         //建立上下级数据关系
         Map<String, List<Area>> map = areas.stream().collect(Collectors.groupingBy(Area::getParent));
-        resultProvinceList.parallelStream().forEach(item ->{
+        resultProvinceList.parallelStream().forEach(item -> {
             String code = item.getCode();
             item.setChild(map.get(code));
         });
-        CodeShiList.parallelStream().forEach(item->{
+        CodeShiList.parallelStream().forEach(item -> {
             String code = item.getCode();
             item.setChild(map.get(code));
         });
-        quList.parallelStream().forEach(item->{
+        quList.parallelStream().forEach(item -> {
             String code = item.getCode();
             item.setChild(map.get(code));
         });
@@ -172,23 +178,51 @@ public class AreaServiceImpl implements AreaService {
         Map<String, List<Area>> map = areas.stream().collect(Collectors.groupingBy(Area::getParent));
         //获取省集合
         List<Area> provinceList = areaList.stream().filter(area -> area.getLevel() == 1).collect(Collectors.toList());
-        provinceList.parallelStream().forEach(item->{
+        provinceList.parallelStream().forEach(item -> {
             String code = item.getCode();
             item.setChild(map.get(code));
         });
         //获取市集合
         List<Area> shiList = areaList.stream().filter(area -> area.getLevel() == 2).collect(Collectors.toList());
-        shiList.parallelStream().forEach(item->{
+        shiList.parallelStream().forEach(item -> {
             String code = item.getCode();
             item.setChild(map.get(code));
         });
         //获取区集合
         List<Area> quList = areaList.stream().filter(area -> area.getLevel() == 3).collect(Collectors.toList());
-        quList.parallelStream().forEach(item->{
+        quList.parallelStream().forEach(item -> {
             String code = item.getCode();
             item.setChild(map.get(code));
         });
         return provinceList;
+    }
+
+    @Override
+    public List<SmallCommunityFullName> getSmallCommunityByKey(String key) {
+        List<SmallCommunityFullName> smallCommunityFullNames = new ArrayList<>();
+        //防止初始化小区列表加载过慢
+        if (CheckUtil.isNullEmpty(key)) {
+            return smallCommunityFullNames;
+        }
+        SmallCommunity smallCommunity = new SmallCommunity();
+        smallCommunity.setName(key);
+        //模糊查询关键字的小区列表
+        List<SmallCommunity> smallCommunityList = smallCommunityMapper.getSmallCommunityList(smallCommunity);
+        smallCommunityList.stream().forEach(item -> {
+            SmallCommunityFullName smallCommunityFullName = new SmallCommunityFullName();
+            smallCommunityFullName.setSmallCommunityId(item.getSmallCommunityId());
+
+            //设置小区省市区全名
+            String areaCode = item.getAreaCode();
+            String name = item.getName();
+            String areaName = orderService.getAreaNameByAreaCode(areaCode);
+            smallCommunityFullName.setFullName(areaName + name);
+
+            //设置小区的名字
+            smallCommunityFullName.setName(name);
+            smallCommunityFullNames.add(smallCommunityFullName);
+        });
+        return smallCommunityFullNames;
     }
 }
 
