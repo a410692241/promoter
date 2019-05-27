@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -23,7 +25,7 @@ public class AuthenticationInterceptor {
 
     @Resource
     private RedisService redisService;
-
+	private Logger logger = LoggerFactory.getLogger(getClass());
 	private final static List<String> notNeedCheckTokenMethods = new ArrayList<>();
 	static {
 		notNeedCheckTokenMethods.add("/account/account/login.do");
@@ -44,8 +46,11 @@ public class AuthenticationInterceptor {
     @Around("execution(* com.linayi.controller..*.*(..))")
     public Object around(ProceedingJoinPoint point) throws Throwable {
 
+//		logger.debug("访问接口:", point.getan);
     	boolean needCheck;
-    	if(notNeedCheckTokenMethods.contains(getMethodName())){
+		String methodName = getMethodName();
+		logger.info(getRequest().getRequestURL().toString());
+		if(notNeedCheckTokenMethods.contains(methodName)){
     		needCheck = false;
     	}else{
     		needCheck = true;
