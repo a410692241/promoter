@@ -197,4 +197,10 @@ public class receiveAddressServiceImpl implements ReceiveAddressService {
 	        }
 		return listReceiveAddress;
 	}
+
+    @Override
+    @Transactional
+	public void modifyReceivingAddress(ReceiveAddress receiveAddress){
+        receiveAddressMapper.modifyReceivingAddress(receiveAddress);
+    }
 }

@@ -183,4 +183,21 @@ public class ReceiveAddressController extends BaseController {
             return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
         }
     }
+
+    /**
+     * 根据收货地址id修改收货地址信息
+     * @param param
+     * @return
+     */
+    @RequestMapping("/modifyReceivingAddress.do")
+    public ResponseData modifyReceivingAddress(@RequestBody ReceiveAddress address){
+        try {
+            receiveAddressService.modifyReceivingAddress(address);
+            return new ResponseData("success");
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseData(ErrorType.SYSTEM_ERROR);
+        }
+    }
+
 }

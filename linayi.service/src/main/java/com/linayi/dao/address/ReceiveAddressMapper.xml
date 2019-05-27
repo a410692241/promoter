@@ -658,4 +658,29 @@ select `code` from `area` where name=#{name}
             </if>
         </where>
     </select>
+    <update id="modifyReceivingAddress" parameterType="com.linayi.entity.user.ReceiveAddress">
+        UPDATE receive_address
+      <set>
+        <if test="receiverName != null">
+            receiver_name=#{receiverName},
+        </if>
+        <if test="sex != null">
+            sex=#{sex},
+        </if>
+        <if test="mobile != null">
+            mobile=#{mobile},
+        </if>
+        <if test="addressOne != null">
+            address_one=#{addressOne},
+        </if>
+        <if test="addressTwo != null">
+            address_two=#{addressTwo},
+        </if>
+        <if test="updateTime != null">
+            update_time=#{updateTime}
+        </if>
+      </set>
+        WHERE
+        receive_address_id=#{receiveAddressId}
+    </update>
 </mapper>

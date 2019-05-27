@@ -32,4 +32,5 @@ public interface ReceiveAddressService {
 	 * @return
 	 */
 	List<ReceiveAddress> getListReceiveAddressByUserIdAndAdderssType(ReceiveAddress receiveAddress);
+    void modifyReceivingAddress(ReceiveAddress receiveAddress);
 }
