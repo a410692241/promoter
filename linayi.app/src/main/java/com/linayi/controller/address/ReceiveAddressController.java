@@ -68,7 +68,7 @@ public class ReceiveAddressController extends BaseController {
             User user = new User();
             user.setUserId(getUserId());
             List<ReceiveAddress> receiveAddressList = receiveAddressService.queryAddress(user);
-            if(receiveAddressList.size()>=3){
+            if(receiveAddressList.size()>=2){
                 return new ResponseData(ErrorType.RECEIVEADDTOOMUCH);
             }
 
