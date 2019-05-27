@@ -235,7 +235,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
             }).success(function (data) {
                 list();
                 modalInstance.close();
-                if (data.success) {
+                if (data.search("成功")!=-1) {
                     toaster.success("", data.msg, 3000);
                 } else {
                     toaster.error("", data.msg, 3000);
