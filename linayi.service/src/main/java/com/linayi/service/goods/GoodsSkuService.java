@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public interface GoodsSkuService {
 
@@ -176,4 +177,10 @@ public interface GoodsSkuService {
 	 * @return
 	 */
 	List<GoodsSku> getSpecialPrice(GoodsSku goodsSku);
+
+	/**
+	 * 直接下单
+	 * @param goodsSku
+	 */
+	Map<String, Object> goodsDirectOrder(GoodsSku goodsSku);
 }
