@@ -13,6 +13,7 @@ import com.linayi.entity.user.User;
 import com.linayi.service.promoter.PromoterOrderManService;
 import com.linayi.service.user.UserService;
 import com.linayi.util.DateUtil;
+import com.linayi.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,7 +65,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         if(user.getHeadImage() == null) {
             currentPromoterOrderMan.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
         }else {
-            String headImage = user.getHeadImage();
+            String headImage = ImageUtil.dealToShow(user.getHeadImage());
             currentPromoterOrderMan.setHeadImage(headImage);
         }
 
@@ -99,7 +100,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             if(user.getHeadImage() == null) {
                 orderMan.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
             }else {
-                String headImage = user.getHeadImage();
+                String headImage = ImageUtil.dealToShow(user.getHeadImage());
                 orderMan.setHeadImage(headImage);
             }
 
@@ -136,7 +137,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             if(user.getHeadImage() == null) {
                 member.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
             }else {
-                String headImage = user.getHeadImage();
+                String headImage = ImageUtil.dealToShow(user.getHeadImage());
                 member.setHeadImage(headImage);
             }
             // 获取会员的订单数、订单总金额

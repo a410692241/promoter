@@ -235,7 +235,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
             }).success(function (data) {
                 list();
                 modalInstance.close();
-                if (data.success) {
+                if (data.search("成功")!=-1) {
                     toaster.success("", data.msg, 3000);
                 } else {
                     toaster.error("", data.msg, 3000);
@@ -318,11 +318,11 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
             }],
             onOpen: function ($modalInstance, data, $scope) {
                 //获取数据
-                var goodsSku_name = rowData["goodsSku.fullName"];
-                var user_nickname = rowData["user.realName"];
+                var fullName = rowData["fullName"];
+                var realName = rowData["realName"];
                 $scope.correct = {
-                    goodsSku_name: goodsSku_name,
-                    user_nickname: user_nickname,
+                    fullName: fullName,
+                    realName: realName,
                     user: rowData.user,
                     price: rowData.price + "元",
                     priceType: rowData.priceType,
