@@ -50,6 +50,8 @@ public interface OrderService {
 
     List<Orders> getOrderAll(Orders orders);
 
+    String getAreaNameByAreaCode(String areaCode);
+
     /**
      * 根据订单id获取订单详情
      * @param ordersSku

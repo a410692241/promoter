@@ -733,7 +733,8 @@ public class OrderServiceImpl implements OrderService {
      * @param areaCode
      * @return
      */
-    private String getAreaNameByAreaCode(String areaCode) {
+    @Override
+    public String getAreaNameByAreaCode(String areaCode) {
         //获取街道名
         String streetName = areaMapper.getNameByCode(areaCode);
         //获取省市区区名

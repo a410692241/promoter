@@ -231,4 +231,12 @@ public class PromoterVo {
 		public Integer currentPage;
 	}
 
+	@Setter
+	@Getter
+	@ApiModel("搜索配送小区")
+	public static class SearchSmallCommunityByKey {
+		@ApiModelProperty(value = "小区搜索框查询的关键字",required = true,example = "中航")
+		public String key;
+	}
+
 }
