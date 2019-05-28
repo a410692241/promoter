@@ -10,6 +10,7 @@ import com.linayi.entity.community.Community;
 import com.linayi.service.area.AreaService;
 import com.linayi.service.order.OrderService;
 import com.linayi.util.CheckUtil;
+import com.linayi.util.PageResult;
 import com.linayi.vo.promoter.PromoterVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -196,14 +197,14 @@ public class AreaServiceImpl implements AreaService {
     }
 
     @Override
-    public List<SmallCommunityFullName> getSmallCommunityByKey(PromoterVo.SearchSmallCommunityByKey searchSmallCommunityByKey) {
+    public PageResult<SmallCommunityFullName> getSmallCommunityByKey(PromoterVo.SearchSmallCommunityByKey searchSmallCommunityByKey) {
         String key = searchSmallCommunityByKey.getKey();
         Integer currentPage = searchSmallCommunityByKey.getCurrentPage();
         Integer pageSize = searchSmallCommunityByKey.getPageSize();
         List<SmallCommunityFullName> smallCommunityFullNames = new ArrayList<>();
         //防止初始化小区列表加载过慢
         if (CheckUtil.isNullEmpty(key)) {
-            return smallCommunityFullNames;
+            return  new PageResult<>(smallCommunityFullNames,0);
         }
         SmallCommunity smallCommunity = new SmallCommunity();
         smallCommunity.setName(key);
@@ -225,10 +226,11 @@ public class AreaServiceImpl implements AreaService {
             smallCommunityFullName.setName(name);
             smallCommunityFullNames.add(smallCommunityFullName);
 
-            //设置分页信息
-            smallCommunityFullName.setTotal(smallCommunity.getTotal());
         });
-        return smallCommunityFullNames;
+        Integer total = smallCommunity.getTotal();
+        PageResult<SmallCommunityFullName> goodsSkuPageResult = new PageResult<>(smallCommunityFullNames, smallCommunity);
+//        goodsSkuPageResult.setTotalPage(smallCommunity.getTotal()/pageSize);
+        return goodsSkuPageResult;
     }
 }
 
