@@ -146,6 +146,7 @@ public class OrderServiceImpl implements OrderService {
         //获取所有的购物车
         List<ShoppingCar> shoppingCars = getShoppingCars(userId, receiveAddressId);
         if (shoppingCars == null){
+            shoppingCars = new ArrayList<>();
             ShoppingCar shoppingCar = new ShoppingCar();
             shoppingCar.setQuantity(Integer.valueOf(param.get("quantity") + ""));
             shoppingCar.setGoodsSkuId(Integer.valueOf(param.get("goodsSkuId") + ""));
