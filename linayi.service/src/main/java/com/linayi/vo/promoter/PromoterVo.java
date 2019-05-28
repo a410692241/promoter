@@ -233,9 +233,9 @@ public class PromoterVo {
 
 	@Setter
 	@Getter
-	@ApiModel("搜索配送小区")
+	@ApiModel("搜索")
 	public static class SearchSmallCommunityByKey {
-		@ApiModelProperty(value = "小区搜索框查询的关键字",required = true,example = "中航")
+		@ApiModelProperty(value = "搜索框查询的关键字",required = true,example = "中航")
 		public String key;
 		@ApiModelProperty(value = "每页大小",example = "10")
 		public Integer pageSize;

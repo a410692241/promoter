@@ -39,6 +39,10 @@ public class SupermarketController {
     }
 
 
+    /**通过超市名字获取超市列表
+     * @param search
+     * @return
+     */
     @RequestMapping("getSupermarketByKey.do")
     @ResponseBody
     public Object getSupermarketByKey(@RequestBody PromoterVo.SearchSmallCommunityByKey search) {
