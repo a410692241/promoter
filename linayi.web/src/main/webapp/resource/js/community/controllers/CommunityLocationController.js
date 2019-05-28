@@ -53,7 +53,7 @@ app.controller('communityLocationCtrl', function($scope,toaster,communityLocatio
 					var opts = "";
 					if($scope.search.communityId == ""){
 						opts = opts + "<a href='javascript:void(0);' ng-click='edit( "+rowObject.smallCommunityId+","+rowObject.supermarketId+")' class='btn btn-primary fa fa-edit btn-sm td-compile'>查看/编辑</a> ";
-						opts = opts + "<a href='javascript:void(0);' ng-click='remove( "+rowObject.smallCommunityId+")' class='btn btn-primary fa fa-remove btn-sm td-compile'>删除</a> ";
+						//opts = opts + "<a href='javascript:void(0);' ng-click='remove( "+rowObject.smallCommunityId+")' class='btn btn-primary fa fa-remove btn-sm td-compile'>删除</a> ";
 					}
 					if($scope.search.communityId != ""){
 						if(rowObject.type == "bind"){
@@ -318,6 +318,6 @@ app.controller('communityLocationCtrl', function($scope,toaster,communityLocatio
     }
 
 
-    //初始化
+    //初始化+
     init();
 });

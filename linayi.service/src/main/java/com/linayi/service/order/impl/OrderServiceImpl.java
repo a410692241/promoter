@@ -97,7 +97,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public ResponseData addOrder(Map<String, Object> param) throws Exception {
+    public ResponseData addOrder(Map<String, Object> param){
         Integer userId = (Integer) param.get("userId");
         User user = userMapper.selectUserByuserId(userId);
         Integer receiveAddressId = user.getDefaultReceiveAddressId();
@@ -146,7 +146,11 @@ public class OrderServiceImpl implements OrderService {
         //获取所有的购物车
         List<ShoppingCar> shoppingCars = getShoppingCars(userId, receiveAddressId);
         if (shoppingCars == null){
-            throw new Exception();
+            shoppingCars = new ArrayList<>();
+            ShoppingCar shoppingCar = new ShoppingCar();
+            shoppingCar.setQuantity(Integer.valueOf(param.get("quantity") + ""));
+            shoppingCar.setGoodsSkuId(Integer.valueOf(param.get("goodsSkuId") + ""));
+            shoppingCars.add(shoppingCar);
         }
 
         //获取收货地址
@@ -192,7 +196,9 @@ public class OrderServiceImpl implements OrderService {
             GoodsSku goodsSku = goodsSkuMapper.getGoodsById(car.getGoodsSkuId());
             goodsSku.setSoldNum(goodsSku.getSoldNum() == null ? 0 : goodsSku.getSoldNum() + car.getQuantity());
             goodsSkuMapper.update(goodsSku);
-            shoppingCarMapper.deleteCarById(Integer.parseInt(car.getShoppingCarId() + ""));
+            if(car.getShoppingCarId() != null){
+                shoppingCarMapper.deleteCarById(Integer.parseInt(car.getShoppingCarId() + ""));
+            }
         }
         return new ResponseData("success");
     }

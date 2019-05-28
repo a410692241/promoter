@@ -60,7 +60,7 @@ app.controller('supermarketCtrl', function($scope,toaster,supermarketService,mes
 					var opts = "";
 					opts = opts + "<a href='javascript:void(0);' ng-click='show( "+rowObject.supermarketId+" )' class='btn btn-primary fa fa-eye btn-sm td-compile'>查看</a> ";
 					opts = opts + "<a href='javascript:void(0);' ng-click='edit( "+rowObject.supermarketId+" )' class='btn btn-primary fa fa-edit btn-sm td-compile'>编辑</a> ";
-					opts = opts + "<a href='javascript:void(0);' ng-click='remove( "+rowObject.supermarketId+" )' class='btn btn-primary fa fa-remove btn-sm td-compile'>删除</a> ";
+					//opts = opts + "<a href='javascript:void(0);' ng-click='remove( "+rowObject.supermarketId+" )' class='btn btn-primary fa fa-remove btn-sm td-compile'>删除</a> ";
             		return opts;
 	             }}
 			]
