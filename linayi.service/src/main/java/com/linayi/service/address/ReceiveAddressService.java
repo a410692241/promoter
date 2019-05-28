@@ -32,4 +32,10 @@ public interface ReceiveAddressService {
 	 * @return
 	 */
 	List<ReceiveAddress> getListReceiveAddressByUserIdAndAdderssType(ReceiveAddress receiveAddress);
+
+    /**
+     * 根据地址ID修改收货地址信息
+     * @param receiveAddress
+     */
+    void modifyReceivingAddress(ReceiveAddress receiveAddress);
 }
