@@ -41,7 +41,7 @@ public class AreaController {
     @PostMapping("/getSmallCommunityByKey.do")
     public Object getSmallCommunityByKey(@RequestBody PromoterVo.SearchSmallCommunityByKey search) {
         try {
-            return new ResponseData(areaService.getSmallCommunityByKey(search.getKey())).toString();
+            return new ResponseData(areaService.getSmallCommunityByKey(search)).toString();
         } catch (BusinessException e) {
             return new ResponseData(e.getErrorType()).toString();
         } catch (Exception e) {

@@ -4,9 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.linayi.entity.area.Area;
-import com.linayi.entity.area.SmallCommunity;
 import com.linayi.entity.area.SmallCommunityFullName;
-import com.linayi.exception.ErrorType;
+import com.linayi.vo.promoter.PromoterVo;
 
 public interface AreaService {
 	/**
@@ -53,5 +52,5 @@ public interface AreaService {
      * @param key
      * @return
      */
-    List<SmallCommunityFullName> getSmallCommunityByKey(String key);
+    List<SmallCommunityFullName> getSmallCommunityByKey(PromoterVo.SearchSmallCommunityByKey key);
 }
