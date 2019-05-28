@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/correct/correct")
 public class CorrectController extends BaseController {
 
 	@Autowired
