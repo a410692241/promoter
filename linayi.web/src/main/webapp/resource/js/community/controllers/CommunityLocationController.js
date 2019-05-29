@@ -49,11 +49,14 @@ app.controller('communityLocationCtrl', function($scope,toaster,communityLocatio
 						return cellvalue = "未绑定";
 					}
 				}},
-	            {label:"操作",name:"opt",width:170,sortable:false,formatter:function(cellvalue, options, rowObject){
+				{name:'createTime',label:'创建时间',sortable:false,formatter:function( cellvalue, options, rowObject ){
+						return cellvalue ? new Date( cellvalue ).format("yyyy-MM-dd hh:mm:ss") : "";
+					}},
+				{label:"操作",name:"opt",width:170,sortable:false,formatter:function(cellvalue, options, rowObject){
 					var opts = "";
 					if($scope.search.communityId == ""){
 						opts = opts + "<a href='javascript:void(0);' ng-click='edit( "+rowObject.smallCommunityId+","+rowObject.supermarketId+")' class='btn btn-primary fa fa-edit btn-sm td-compile'>查看/编辑</a> ";
-						//opts = opts + "<a href='javascript:void(0);' ng-click='remove( "+rowObject.smallCommunityId+")' class='btn btn-primary fa fa-remove btn-sm td-compile'>删除</a> ";
+						// opts = opts + "<a href='javascript:void(0);' ng-click='remove( "+rowObject.smallCommunityId+")' class='btn btn-primary fa fa-remove btn-sm td-compile'>删除</a> ";
 					}
 					if($scope.search.communityId != ""){
 						if(rowObject.type == "bind"){
