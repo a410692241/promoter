@@ -220,7 +220,7 @@ public class AreaServiceImpl implements AreaService {
             String areaCode = item.getAreaCode();
             String name = item.getName();
             String areaName = orderService.getAreaNameByAreaCode(areaCode);
-            smallCommunityFullName.setFullName(areaName + name);
+            smallCommunityFullName.setFullName(areaName);
 
             //设置小区的名字
             smallCommunityFullName.setName(name);
