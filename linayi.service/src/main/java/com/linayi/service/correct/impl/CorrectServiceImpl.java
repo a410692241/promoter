@@ -315,6 +315,8 @@ public class CorrectServiceImpl implements CorrectService {
             param.setCorrectId(correct.getCorrectId());
             param.setStatus(correct.getStatus());
             param.setUpdateTime(now);
+            param.setAuditTime(now);
+            param.setAuditerId(correct.getUserId());
             correctMapper.updateCorrect(param);
 
             //插入correct_log表
