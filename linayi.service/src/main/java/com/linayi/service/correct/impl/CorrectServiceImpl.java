@@ -30,10 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -570,8 +567,17 @@ public class CorrectServiceImpl implements CorrectService {
         //再次判断是否审核通过
         if (CorrectStatus.AFFECTED.toString().equals(corrects.getStatus())) {
             Date now = new Date();
+            //设置过期时间为前一天的18点
+            Date endTime = corrects.getEndTime();
+            Calendar ca = Calendar.getInstance();
+            ca.setTime(endTime);
+            ca.set(Calendar.HOUR_OF_DAY,18);
+            ca.set(Calendar.MINUTE,0);
+            ca.set(Calendar.SECOND,0);
+            ca.add(Calendar.DAY_OF_MONTH, -1);
+            endTime = ca.getTime();
             //判断是否已过期
-            if (now.after(corrects.getEndTime())) {
+            if (now.after(endTime)) {
                 //删除旧超市商品价格表
                 supermarketGoodsMapper.deleteSupermarketGoods(corrects.getSupermarketId(), corrects.getGoodsSkuId());
                 //修改状态为过期
@@ -587,6 +593,7 @@ public class CorrectServiceImpl implements CorrectService {
                 correctLog.setOperatorType(OperatorType.ADMIN.toString());
                 correctLog.setCreateTime(now);
                 correctLogMapper.insert(correctLog);
+                System.out.println("changeCorrectId:" + corrects.getCorrectId());
                 //调整商品的最高价和最低价
                 List<Integer> communityIdList = communitySupermarketService.getCommunityIdBysupermarketId(corrects.getSupermarketId());
                 for (Integer communityId : communityIdList) {
