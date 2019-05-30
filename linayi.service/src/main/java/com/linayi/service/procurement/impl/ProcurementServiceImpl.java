@@ -539,7 +539,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		Community community1 = communityMapper.getCommunity(community);
 		procurementTask1.setGoodsSkuName(goodsSku.getFullName());
 		procurementTask1.setCommunityName(community1.getName());
-		procurementTask1.setImage(goodsSku.getImage());
+		procurementTask1.setImage(ImageUtil.dealToShow(goodsSku.getImage()));
 		procurementTask1.setTotalPrice(getpriceString(procurementTask1.getQuantity() * procurementTask1.getPrice()));
 		return procurementTask1;
 	}
