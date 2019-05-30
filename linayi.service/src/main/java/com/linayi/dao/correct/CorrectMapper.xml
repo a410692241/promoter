@@ -348,6 +348,8 @@
         c.start_time,
         c.end_time,
         c.create_time,
+        c.actual_end_time,
+        c.actual_start_time,
         s.name name
         FROM
         correct c

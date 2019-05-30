@@ -124,6 +124,22 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
                     }
                 },
                 {
+                    name: 'actualStartTime',
+                    label: '实际开始时间',
+                    sortable: false,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return cellvalue ? new Date(cellvalue).format("yyyy-MM-dd HH:mm:ss") : "";
+                    }
+                },
+                {
+                    name: 'actualEndTime',
+                    label: '实际结束时间',
+                    sortable: false,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return cellvalue ? new Date(cellvalue).format("yyyy-MM-dd HH:mm:ss") : "";
+                    }
+                },
+                {
                     name: 'createTime',
                     label: '创建时间',
                     sortable: false,
