@@ -19,6 +19,8 @@
         <result property="actualEndTime" column="actual_end_time"/>
         <result property="type" column="type"/>
         <result property="mobile" column="mobile"/>
+        <result property="auditerId" column=" uditer_id"/>
+        <result property="auditTime" column="audit_time"/>
         <result property="updateTime" column="update_time"/>
         <result property="createTime" column="create_time"/>
         <association property="user" resultMap="com.linayi.dao.user.UserMapper.BaseResultMap"/>
@@ -348,6 +350,10 @@
         c.start_time,
         c.end_time,
         c.create_time,
+        c.actual_end_time,
+        c.actual_start_time,
+        c.update_time,
+        c.audit_time,
         s.name name
         FROM
         correct c
@@ -467,6 +473,12 @@
             </if>
             <if test="updateTime !=null ">
                 `update_time` = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="auditTime !=null ">
+                `audit_time` = #{auditTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="auditerId !=null ">
+                `auditer_id` = #{auditerId,jdbcType=TIMESTAMP},
             </if>
         </trim>
         where `correct_id` = #{correctId}

@@ -1,10 +1,8 @@
 package com.linayi.service.area.impl;
 
-import com.linayi.dao.account.AccountMapper;
 import com.linayi.dao.area.AreaMapper;
 import com.linayi.dao.area.SmallCommunityMapper;
 import com.linayi.dao.community.CommunityMapper;
-import com.linayi.dao.goods.GoodsSkuMapper;
 import com.linayi.entity.area.Area;
 import com.linayi.entity.area.SmallCommunity;
 import com.linayi.entity.area.SmallCommunityFullName;
@@ -12,13 +10,14 @@ import com.linayi.entity.community.Community;
 import com.linayi.service.area.AreaService;
 import com.linayi.service.order.OrderService;
 import com.linayi.util.CheckUtil;
+import com.linayi.util.PageResult;
+import com.linayi.vo.promoter.PromoterVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class AreaServiceImpl implements AreaService {
@@ -198,14 +197,19 @@ public class AreaServiceImpl implements AreaService {
     }
 
     @Override
-    public List<SmallCommunityFullName> getSmallCommunityByKey(String key) {
+    public PageResult<SmallCommunityFullName> getSmallCommunityByKey(PromoterVo.SearchSmallCommunityByKey searchSmallCommunityByKey) {
+        String key = searchSmallCommunityByKey.getKey();
+        Integer currentPage = searchSmallCommunityByKey.getCurrentPage();
+        Integer pageSize = searchSmallCommunityByKey.getPageSize();
         List<SmallCommunityFullName> smallCommunityFullNames = new ArrayList<>();
         //防止初始化小区列表加载过慢
-        if (CheckUtil.isNullEmpty(key)) {
-            return smallCommunityFullNames;
-        }
         SmallCommunity smallCommunity = new SmallCommunity();
+        if (CheckUtil.isNullEmpty(key)) {
+            return  new PageResult<>(smallCommunityFullNames,smallCommunity);
+        }
         smallCommunity.setName(key);
+        smallCommunity.setCurrentPage(currentPage);
+        smallCommunity.setPageSize(pageSize);
         //模糊查询关键字的小区列表
         List<SmallCommunity> smallCommunityList = smallCommunityMapper.getSmallCommunityList(smallCommunity);
         smallCommunityList.stream().forEach(item -> {
@@ -216,13 +220,16 @@ public class AreaServiceImpl implements AreaService {
             String areaCode = item.getAreaCode();
             String name = item.getName();
             String areaName = orderService.getAreaNameByAreaCode(areaCode);
-            smallCommunityFullName.setFullName(areaName + name);
+            smallCommunityFullName.setFullName(areaName);
 
             //设置小区的名字
             smallCommunityFullName.setName(name);
             smallCommunityFullNames.add(smallCommunityFullName);
+
         });
-        return smallCommunityFullNames;
+        PageResult<SmallCommunityFullName> goodsSkuPageResult = new PageResult<>(smallCommunityFullNames, smallCommunity);
+//        goodsSkuPageResult.setTotalPage(smallCommunity.getTotal()/pageSize);
+        return goodsSkuPageResult;
     }
 }
 

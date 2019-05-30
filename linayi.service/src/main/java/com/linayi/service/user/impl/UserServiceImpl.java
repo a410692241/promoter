@@ -21,6 +21,7 @@ import com.linayi.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -119,6 +120,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Object addEmployee(Account account) {
         Date date = new Date();
         Integer accountId = account.getAccountId();

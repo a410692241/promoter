@@ -55,6 +55,7 @@ public interface ReceiveAddressMapper {
 
     Area queryArea(String code);
 
+
     Area queryAreaParent(String parent);
 
     String selectAreaCodebyName(String name);
@@ -80,4 +81,5 @@ public interface ReceiveAddressMapper {
      * @return
      */
     List<ReceiveAddress> getAddressListByPromoter(ReceiveAddress receiveAddress);
+    void modifyReceivingAddress(ReceiveAddress receiveAddress);
 }
