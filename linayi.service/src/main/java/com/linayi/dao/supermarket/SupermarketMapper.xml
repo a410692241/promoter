@@ -137,7 +137,7 @@
 				and supermarket_id=#{supermarketId}
 			</if>
 			<if test="name!=null and name!=''">
-				and  name like concat (#{name},'%')
+				and  name like concat ('%',#{name},'%')
 			</if>
 			<if test="areaCode!=null and areaCode!=''">
 				and area_code=#{areaCode}

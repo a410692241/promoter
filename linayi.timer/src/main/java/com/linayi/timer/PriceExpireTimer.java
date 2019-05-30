@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
+
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -24,8 +26,14 @@ public class PriceExpireTimer extends QuartzJobBean implements Job {
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         logger.info("PriceExpireTimerMethod:START");
         Correct correct = new Correct();
+        Calendar ca = Calendar.getInstance();
+        ca.set(Calendar.HOUR_OF_DAY,0);
+        ca.set(Calendar.MINUTE,0);
+        ca.set(Calendar.SECOND,0);
+        ca.add(Calendar.DAY_OF_MONTH, 2);
+        Date endTime = ca.getTime();
         correct.setStatus(CorrectStatus.AFFECTED.toString());
-        correct.setEndTime(new Date());
+        correct.setEndTime(endTime);
         //查询审核通过的数据
         List<Correct> list = correctService.getCorrectExpire(correct);
         System.out.println("priceExpire totalNums=" + list.size());

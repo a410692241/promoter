@@ -203,10 +203,10 @@ public class AreaServiceImpl implements AreaService {
         Integer pageSize = searchSmallCommunityByKey.getPageSize();
         List<SmallCommunityFullName> smallCommunityFullNames = new ArrayList<>();
         //防止初始化小区列表加载过慢
-        if (CheckUtil.isNullEmpty(key)) {
-            return  new PageResult<>(smallCommunityFullNames,0);
-        }
         SmallCommunity smallCommunity = new SmallCommunity();
+        if (CheckUtil.isNullEmpty(key)) {
+            return  new PageResult<>(smallCommunityFullNames,smallCommunity);
+        }
         smallCommunity.setName(key);
         smallCommunity.setCurrentPage(currentPage);
         smallCommunity.setPageSize(pageSize);
@@ -220,14 +220,13 @@ public class AreaServiceImpl implements AreaService {
             String areaCode = item.getAreaCode();
             String name = item.getName();
             String areaName = orderService.getAreaNameByAreaCode(areaCode);
-            smallCommunityFullName.setFullName(areaName + name);
+            smallCommunityFullName.setFullName(areaName);
 
             //设置小区的名字
             smallCommunityFullName.setName(name);
             smallCommunityFullNames.add(smallCommunityFullName);
 
         });
-        Integer total = smallCommunity.getTotal();
         PageResult<SmallCommunityFullName> goodsSkuPageResult = new PageResult<>(smallCommunityFullNames, smallCommunity);
 //        goodsSkuPageResult.setTotalPage(smallCommunity.getTotal()/pageSize);
         return goodsSkuPageResult;

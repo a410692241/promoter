@@ -314,6 +314,7 @@ public class CorrectServiceImpl implements CorrectService {
             Correct param = new Correct();
             param.setCorrectId(correct.getCorrectId());
             param.setStatus(correct.getStatus());
+            param.setUpdateTime(now);
             correctMapper.updateCorrect(param);
 
             //插入correct_log表
@@ -570,6 +571,7 @@ public class CorrectServiceImpl implements CorrectService {
             //设置过期时间为前一天的18点
             Date endTime = corrects.getEndTime();
             Calendar ca = Calendar.getInstance();
+            ca.setTime(endTime);
             ca.set(Calendar.HOUR_OF_DAY,18);
             ca.set(Calendar.MINUTE,0);
             ca.set(Calendar.SECOND,0);
@@ -592,6 +594,7 @@ public class CorrectServiceImpl implements CorrectService {
                 correctLog.setOperatorType(OperatorType.ADMIN.toString());
                 correctLog.setCreateTime(now);
                 correctLogMapper.insert(correctLog);
+                System.out.println("changeCorrectId:" + corrects.getCorrectId());
                 //调整商品的最高价和最低价
                 List<Integer> communityIdList = communitySupermarketService.getCommunityIdBysupermarketId(corrects.getSupermarketId());
                 for (Integer communityId : communityIdList) {
