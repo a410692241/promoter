@@ -65,4 +65,11 @@ public interface CorrectMapper {
      */
     List<Correct> selectCorrectListByGoodsName(Correct correct);
 
+    /**
+     * 获取纠错表其它超市价格
+     * @param correct
+     * @return
+     */
+    List<Correct> getOtherPrice(Integer goodsSkuId);
+
 }
