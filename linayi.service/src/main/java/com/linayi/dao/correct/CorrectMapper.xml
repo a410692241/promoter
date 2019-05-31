@@ -354,6 +354,8 @@
         c.actual_start_time,
         c.update_time,
         c.audit_time,
+        c.auditer_id,
+        (select round(((max(price)-min(price))/min(price)*100),2)  from correct where goods_sku_id=c.goods_sku_id and (status='AFFECTED'  or status='AUDIT_SUCCESS' or status='WAIT_AUDIT') group by goods_sku_id) spreadRate,
         s.name name
         FROM
         correct c
@@ -554,6 +556,21 @@
             </if>
         </where>
         ORDER BY c.create_time desc
+    </select>
+
+    <!--获取纠错表其它超市价格-->
+    <select id="getOtherPrice" resultType="com.linayi.entity.correct.Correct">
+        SELECT
+              s.name name,
+              c.price,
+              (case c.status when 'AFFECTED' then '已生效'  when 'WAIT_AUDIT' then '待审核'  when 'AUDIT_SUCCESS'  then '审核通过'  end) status
+
+        FROM
+              correct c join supermarket s ON c.supermarket_id=s.supermarket_id
+        WHERE
+             c.goods_sku_id=#{goodsSkuId}
+        AND
+             c.status in ('WAIT_AUDIT','AUDIT_SUCCESS','AFFECTED')
     </select>
 
 </mapper>

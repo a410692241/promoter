@@ -6,6 +6,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
     function init() {
         $scope.list = list;
         $scope.show = show;
+        $scope.otherPrice = otherPrice;
         $scope.edit = edit;
         $scope.audit = audit;
         $scope.batchAudit = batchAudit;
@@ -38,9 +39,9 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
             colModel: [
                 {name: 'correctId', label: '主键', sortable: false, hidden: true},
                 {name: 'realName', label: '真实姓名', sortable: false},
-                {name: 'mobile', label: '手机号', sortable: false},
+                {name: 'mobile', label: '手机号', width: 200, sortable: false},
                 {
-                    name: 'status', label: '状态', sortable: false, formatter: function (cellvalue, options, rowObject) {
+                    name: 'status', label: '状态',width: 100, sortable: false, formatter: function (cellvalue, options, rowObject) {
                         switch (cellvalue) {
                             case "WAIT_AUDIT":
                                 return "待审核";
@@ -80,10 +81,19 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
                 {
                     name: 'price',
                     label: '分享价格(元)',
-                    width: 130,
+                    width: 160,
                     sortable: false,
                     formatter: function (cellvalue, options, rowObject) {
                         return cellvalue / 100;
+                    }
+                },
+                {
+                    name: 'spreadRate',
+                    label: '价差率',
+                    width: 150,
+                    sortable: false,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return   cellvalue>100? "<a style='color: red;text-decoration:none;font-weight: bold;' href='javascript:void(0);' ng-click='otherPrice( " + rowObject.goodsSkuId + " )' class='btn-sm td-compile'>"+cellvalue +"%"+"</a>":"<a style='font-weight: bold;' href='javascript:void(0);' ng-click='otherPrice( " + rowObject.goodsSkuId + " )' class='btn-sm td-compile'>"+cellvalue+"%"+"</a>";
                     }
                 },
                 {
@@ -110,6 +120,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
                 {
                     name: 'startTime',
                     label: '有效开始时间',
+                    width: 166,
                     sortable: false,
                     formatter: function (cellvalue, options, rowObject) {
                         return cellvalue ? new Date(cellvalue).format("yyyy-MM-dd HH:mm:ss") : "";
@@ -118,6 +129,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
                 {
                     name: 'endTime',
                     label: '有效结束时间',
+                    width: 166,
                     sortable: false,
                     formatter: function (cellvalue, options, rowObject) {
                         return cellvalue ? new Date(cellvalue).format("yyyy-MM-dd HH:mm:ss") : "";
@@ -127,6 +139,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
                     name: 'actualStartTime',
                     label: '实际开始时间',
                     sortable: false,
+                    width: 166,
                     formatter: function (cellvalue, options, rowObject) {
                         return cellvalue ? new Date(cellvalue).format("yyyy-MM-dd HH:mm:ss") : "";
                     }
@@ -134,6 +147,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
                 {
                     name: 'actualEndTime',
                     label: '实际结束时间',
+                    width: 166,
                     sortable: false,
                     formatter: function (cellvalue, options, rowObject) {
                         return cellvalue ? new Date(cellvalue).format("yyyy-MM-dd HH:mm:ss") : "";
@@ -150,7 +164,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
                 {
                     label: "操作",
                     name: "opt",
-                    width: 300,
+                    width: 260,
                     sortable: false,
                     formatter: function (cellvalue, options, rowObject) {
                         var opts = "";
@@ -399,6 +413,26 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
             }
         }, function (modalInstance, data) {
             ;
+            $scope.correct = data.data;
+        });
+    }
+
+
+    //查看其它价格
+    function otherPrice(goodsSkuId) {
+        var url = urls.ms + "/correct/correct/getOtherPrice.do?";
+        if (goodsSkuId) {
+            url = url + $.param({goodsSkuId: goodsSkuId});
+        }
+        templateform.open({
+            title: "其它价格",
+            url: url,
+            scope: $scope,
+            buttons: [],
+            onOpen: function ($modalInstance, data, $scope) {
+
+            }
+        }, function (modalInstance, data) {
             $scope.correct = data.data;
         });
     }
