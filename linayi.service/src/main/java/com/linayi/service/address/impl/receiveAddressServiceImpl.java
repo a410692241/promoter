@@ -200,6 +200,12 @@ public class receiveAddressServiceImpl implements ReceiveAddressService {
     @Override
     @Transactional
 	public void modifyReceivingAddress(ReceiveAddress receiveAddress){
+        if("1".equals(receiveAddress.getSex())){
+            receiveAddress.setSex("MALE");
+        }
+        if("0".equals(receiveAddress.getSex())){
+            receiveAddress.setSex("FEMALE");
+        }
         receiveAddress.setUpdateTime(new Date());
         receiveAddressMapper.modifyReceivingAddress(receiveAddress);
     }
