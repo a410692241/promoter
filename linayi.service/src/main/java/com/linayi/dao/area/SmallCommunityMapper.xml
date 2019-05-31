@@ -261,4 +261,17 @@
 		WHERE
 			deliverer_id=#{delivererId}
 	</select>
+
+	<select id="getBindedSmallCommunityList" resultType="com.linayi.entity.area.SmallCommunity">
+		SELECT
+		small_community_id,area_code, name,
+		community_id,status,create_time, update_time,deliverer_id
+		FROM
+		small_community
+		where
+			name LIKE concat('%',#{name},'%') AND status="NORMAL"
+			AND COMMUNITY_ID IS NOT NULL
+		ORDER BY small_community_id DESC
+	</select>
+
 </mapper>

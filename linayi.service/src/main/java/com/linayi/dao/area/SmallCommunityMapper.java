@@ -71,4 +71,6 @@ public interface SmallCommunityMapper {
       * @return
      */
   List<SmallCommunity> getDeliverer(Integer delivererId);
+
+    List<SmallCommunity> getBindedSmallCommunityList(SmallCommunity smallCommunity);
 }

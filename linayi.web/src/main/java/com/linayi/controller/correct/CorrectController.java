@@ -24,6 +24,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -447,6 +448,20 @@ public class CorrectController extends BaseController {
             return new ResponseData(ErrorType.SYSTEM_ERROR);
 
         }
+
+    }
+
+    //获取纠错表其它超市价格
+    @RequestMapping("/getOtherPrice.do")
+    public String getOtherPrice(Integer goodsSkuId, ModelMap modelMap){
+
+
+        List<Correct> otherPrice = correctService.getOtherPrice(goodsSkuId);
+
+
+        modelMap.addAttribute("otherPrice",otherPrice);
+
+        return "/jsp/goods/otherPrice";
 
     }
 

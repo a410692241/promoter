@@ -430,6 +430,8 @@ public class CorrectServiceImpl implements CorrectService {
     }
 
 
+
+
     @Override
     public Correct selectByCorrectId(Long correctId) {
         Correct correct = correctMapper.selectByPrimaryKey(correctId);
@@ -673,6 +675,13 @@ public class CorrectServiceImpl implements CorrectService {
             }
         }
         return correctList;
+    }
+
+    @Override
+    public List<Correct> getOtherPrice(Integer goodsSkuId) {
+
+
+        return correctMapper.getOtherPrice(goodsSkuId);
     }
 
 }
