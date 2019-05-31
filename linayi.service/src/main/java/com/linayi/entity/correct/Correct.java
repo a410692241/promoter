@@ -247,6 +247,16 @@ public class Correct extends BaseEntity {
 
     private String correctType;//按钮类型
 
+    private Double spreadRate;
+
+    public Double getSpreadRate() {
+        return spreadRate;
+    }
+
+    public void setSpreadRate(Double spreadRate) {
+        this.spreadRate = spreadRate;
+    }
+
     public List<String> getStatusList() {
         return statusList;
     }
