@@ -56,7 +56,8 @@ public enum ErrorType {
     NOT_MEMBER(2023,"您还不是会员，请先成为会员再来下单!"),
 	ERROR_ONE(2025,"请输入部门类型以及家庭服务师级别!"),
 	ERROR_TWO(2026,"请勿重复申请!"),
-    RECEIVEADDTOOMUCH(2027,"您只能拥有两个收货地址，不能新增!");
+    RECEIVEADDTOOMUCH(2027,"您只能拥有两个收货地址，不能新增!"),
+    NO_PRICE(2028,"该商品暂无价格，加入购物车失败!");
 
     // 错误编码
     private int errorCode;
