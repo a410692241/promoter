@@ -416,17 +416,47 @@
             <if test="memberLevel=='NORMAL' or  memberLevel=='NOT_MEMBER'">
                 and cg.min_price_normal IS NOT NULL
                 GROUP BY gs.goods_sku_id
-                ORDER BY ((cg.max_price_normal-cg.min_price_normal)/cg.min_price_normal) DESC
+              <choose>
+                <when test="orderBy!=null and orderBy=='minPriceOrder'">
+                    ORDER BY cg.min_price_normal asc
+                </when>
+                <when test="orderBy!=null and orderBy=='maxPriceOrder'">
+                    ORDER BY cg.min_price_normal desc
+                </when>
+                <when test="orderBy!=null and orderBy=='spreadRateOrder'">
+                    ORDER BY ((cg.max_price_normal-cg.min_price_normal)/cg.min_price_normal) DESC
+                </when>
+              </choose>
             </if>
             <if test="memberLevel!=null and memberLevel=='SENIOR'">
                 and cg.min_price_senior IS NOT NULL
                 GROUP BY gs.goods_sku_id
-                ORDER BY ((cg.max_price_senior-cg.min_price_senior)/cg.min_price_senior) DESC
+                <choose>
+                <when test="orderBy!=null and orderBy=='minPriceOrder'">
+                    ORDER BY cg.min_price_senior asc
+                </when>
+                <when test="orderBy!=null and orderBy=='maxPriceOrder'">
+                    ORDER BY cg.min_price_senior desc
+                </when>
+                <when test="orderBy!=null and orderBy=='spreadRateOrder'">
+                    ORDER BY ((cg.max_price_senior-cg.min_price_senior)/cg.min_price_senior) DESC
+                </when>
+                </choose>
             </if>
             <if test="memberLevel!=null and memberLevel=='SUPER'">
                 and cg.min_price_super IS NOT NULL
                 GROUP BY gs.goods_sku_id
-                ORDER BY ((cg.max_price_super-cg.min_price_super)/cg.min_price_super) DESC
+                <choose>
+                    <when test="orderBy!=null and orderBy=='minPriceOrder'">
+                        ORDER BY cg.min_price_super asc
+                    </when>
+                    <when test="orderBy!=null and orderBy=='maxPriceOrder'">
+                        ORDER BY cg.min_price_super desc
+                    </when>
+                    <when test="orderBy!=null and orderBy=='spreadRateOrder'">
+                        ORDER BY ((cg.max_price_super-cg.min_price_super)/cg.min_price_super) DESC
+                    </when>
+                </choose>
             </if>
         </where>
     </select>
@@ -578,7 +608,7 @@
                 and cg.community_id=#{communityId}
             </if>
             <if test="brandName!=null and brandName!=''">
-                and b.name=#{brandName}
+                and b.name like concat('%',#{brandName},'%')
             </if>
             <if test="fullName!=null and fullName!=''">
                 and gs.full_name like concat('%',#{fullName},'%')

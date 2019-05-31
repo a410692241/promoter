@@ -36,6 +36,9 @@ public class ShopCarController extends BaseController {
             shoppingCar.setSelectStatus("NOT_SELECTED");
             try {
                 String s = shopCarService.addShopCar(shoppingCar);
+                if("no_price".equals(s)){
+                    return new ResponseData(ErrorType.NO_PRICE);
+                }
                 return new ResponseData(s);
             } catch (Exception e) {
                 e.printStackTrace();
