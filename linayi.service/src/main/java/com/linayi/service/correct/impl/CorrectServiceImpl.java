@@ -100,7 +100,16 @@ public class CorrectServiceImpl implements CorrectService {
         }
 
         //插入correct表
-        correct.setStatus(CorrectStatus.WAIT_AUDIT.toString());
+        //判断分享纠错价格是否是所有生效价格的最低价，是：状态为待审核，否：为审核通过；
+        SupermarketGoods supermarketGoods = new SupermarketGoods();
+        supermarketGoods.setGoodsSkuId(correct.getGoodsSkuId());
+        List<SupermarketGoods> supermarketGoodsList = supermarketGoodsMapper.getSupermarketGoods(supermarketGoods);
+        if (supermarketGoodsList.size() == 0 || correct.getPrice() < supermarketGoodsList.get(0).getPrice()){
+            correct.setStatus(CorrectStatus.WAIT_AUDIT.toString());
+        }else{
+            correct.setStatus(CorrectStatus.AUDIT_SUCCESS.toString());
+        }
+
         correct.setCreateTime(now);
         correct.setUpdateTime(now);
         correct.setType(CorrectType.SHARE.toString());
@@ -179,7 +188,16 @@ public class CorrectServiceImpl implements CorrectService {
 
 
         //插入correct表
-        correct.setStatus(CorrectStatus.WAIT_AUDIT.toString());
+        //判断分享纠错价格是否是所有生效价格的最低价，是：状态为待审核，否：为审核通过；
+        SupermarketGoods supermarketGoods = new SupermarketGoods();
+        supermarketGoods.setGoodsSkuId(correct.getGoodsSkuId());
+        List<SupermarketGoods> supermarketGoodsList = supermarketGoodsMapper.getSupermarketGoods(supermarketGoods);
+        if (supermarketGoodsList.size() == 0 || correct.getPrice() < supermarketGoodsList.get(0).getPrice()){
+            correct.setStatus(CorrectStatus.WAIT_AUDIT.toString());
+        }else{
+            correct.setStatus(CorrectStatus.AUDIT_SUCCESS.toString());
+        }
+
         correct.setCreateTime(now);
         correct.setUpdateTime(now);
         correct.setType(CorrectType.CORRECT.toString());
