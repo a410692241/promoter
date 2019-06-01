@@ -617,7 +617,7 @@ select `code` from `area` where name=#{name}
 	List<ReceiveAddress> getListReceiveAddressByUserIdAndAdderssType(ReceiveAddress receiveAddress);  -->
 	<select id="getListReceiveAddressByUserIdAndAdderssType" resultType="com.linayi.entity.user.ReceiveAddress">
 		select
-			receive_address_id,receiver_name,address_one,address_two,mobile,sex
+			receive_address_id,receiver_name,address_one,address_two,mobile
 		from
 			receive_address
 		where
