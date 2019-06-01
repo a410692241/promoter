@@ -97,7 +97,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public ResponseData addOrder(Map<String, Object> param) throws Exception {
+    public ResponseData addOrder(Map<String, Object> param){
         Integer userId = (Integer) param.get("userId");
         User user = userMapper.selectUserByuserId(userId);
         Integer receiveAddressId = user.getDefaultReceiveAddressId();
@@ -146,7 +146,11 @@ public class OrderServiceImpl implements OrderService {
         //获取所有的购物车
         List<ShoppingCar> shoppingCars = getShoppingCars(userId, receiveAddressId);
         if (shoppingCars == null){
-            throw new Exception();
+            shoppingCars = new ArrayList<>();
+            ShoppingCar shoppingCar = new ShoppingCar();
+            shoppingCar.setQuantity(Integer.valueOf(param.get("quantity") + ""));
+            shoppingCar.setGoodsSkuId(Integer.valueOf(param.get("goodsSkuId") + ""));
+            shoppingCars.add(shoppingCar);
         }
 
         //获取收货地址
@@ -192,7 +196,9 @@ public class OrderServiceImpl implements OrderService {
             GoodsSku goodsSku = goodsSkuMapper.getGoodsById(car.getGoodsSkuId());
             goodsSku.setSoldNum(goodsSku.getSoldNum() == null ? 0 : goodsSku.getSoldNum() + car.getQuantity());
             goodsSkuMapper.update(goodsSku);
-            shoppingCarMapper.deleteCarById(Integer.parseInt(car.getShoppingCarId() + ""));
+            if(car.getShoppingCarId() != null){
+                shoppingCarMapper.deleteCarById(Integer.parseInt(car.getShoppingCarId() + ""));
+            }
         }
         return new ResponseData("success");
     }
@@ -650,6 +656,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrdersGoods> ordersGoods = ordersGoodsMapper.getOrdersGoodsByOrdersId(orders.getOrdersId());
         User user = userMapper.selectUserByuserId(orders.getUserId());
         Integer receiveAddressId = user.getDefaultReceiveAddressId();
+
         ReceiveAddress receiveAddress = receiveAddressMapper.getReceiveAddressByReceiveAddressId(receiveAddressId);
         Integer smallComunityId = receiveAddress.getAddressOne();
         SmallCommunity smallCommunity = new SmallCommunity();
@@ -668,12 +675,20 @@ public class OrderServiceImpl implements OrderService {
                 }
 
                 ShoppingCar shoppingCar = new ShoppingCar();
-                shoppingCar.setGoodsSkuId(ordersGood.getGoodsSkuId());
-                shoppingCar.setQuantity(ordersGood.getQuantity());
-                shoppingCar.setReceiveAddressId(receiveAddressId);
-                shoppingCar.setSelectStatus("SELECTED");
                 shoppingCar.setUserId(orders.getUserId());
-                shoppingCarMapper.insert(shoppingCar);
+                shoppingCar.setGoodsSkuId(ordersGood.getGoodsSkuId());
+                shoppingCar.setReceiveAddressId(receiveAddressId);
+                ShoppingCar shopCar = shoppingCarMapper.getShopCar(shoppingCar);
+                if(shopCar == null){
+                    shoppingCar.setGoodsSkuId(ordersGood.getGoodsSkuId());
+                    shoppingCar.setQuantity(ordersGood.getQuantity());
+                    shoppingCar.setSelectStatus("SELECTED");
+                    shoppingCarMapper.insert(shoppingCar);
+                }else {
+                    shopCar.setQuantity(shopCar.getQuantity() + ordersGood.getQuantity());
+                    shoppingCarMapper.updateShopCar(shopCar);
+                }
+
             }
         }
         return "success";
@@ -724,7 +739,8 @@ public class OrderServiceImpl implements OrderService {
      * @param areaCode
      * @return
      */
-    private String getAreaNameByAreaCode(String areaCode) {
+    @Override
+    public String getAreaNameByAreaCode(String areaCode) {
         //获取街道名
         String streetName = areaMapper.getNameByCode(areaCode);
         //获取省市区区名
@@ -762,6 +778,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrdersSku> getGoodsOrderSku(OrdersSku ordersSku) {
+        ordersSku.setCurrentPage(null);
+        ordersSku.setPageSize(null);
         List<OrdersSku> ordersSkuList = ordersMapper.getGoodsOrderSku(ordersSku);
         for (OrdersSku o : ordersSkuList) {
             o.setImage(ImageUtil.dealToShow(o.getImage()));

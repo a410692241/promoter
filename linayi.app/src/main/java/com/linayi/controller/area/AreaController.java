@@ -1,16 +1,17 @@
 package com.linayi.controller.area;
 
 import com.linayi.entity.area.Area;
+import com.linayi.entity.promoter.Promoter;
 import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.area.AreaService;
 import com.linayi.util.ParamValidUtil;
 import com.linayi.util.ResponseData;
+import com.linayi.vo.promoter.PromoterVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -34,6 +35,18 @@ public class AreaController {
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+        }
+    }
+
+    @PostMapping("/getSmallCommunityByKey.do")
+    public Object getSmallCommunityByKey(@RequestBody PromoterVo.SearchSmallCommunityByKey search) {
+        try {
+            return new ResponseData(areaService.getSmallCommunityByKey(search)).toString();
+        } catch (BusinessException e) {
+            return new ResponseData(e.getErrorType());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseData(e);
         }
     }
 

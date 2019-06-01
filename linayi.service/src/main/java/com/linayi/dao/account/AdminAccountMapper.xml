@@ -233,4 +233,10 @@
         update `admin_account` set `password`=#{password} where account_id=#{accountId}
     </update>
 
+    <select id="getAdminAccountByKey" resultType="com.linayi.entity.account.AdminAccount">
+        select `account_id`, `user_name`, `mobile`, `user_type`, `user_id`, `incorrect_times`, `status`, `creator_account_id`, `create_time`, `last_login_time`, `update_time`
+        from `admin_account`
+        where `account_id`=#{accountId}
+    </select>
+
 </mapper>

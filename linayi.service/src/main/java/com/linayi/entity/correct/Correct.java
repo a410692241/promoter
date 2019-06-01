@@ -214,6 +214,18 @@ public class Correct extends BaseEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
+    /**
+     * [审核人id]
+     */
+    private Integer auditerId;
+
+    /**
+     * [审核时间]
+     */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date auditTime;
+
+
     private AdminAccount adminAccount;
 
     /**
@@ -234,6 +246,16 @@ public class Correct extends BaseEntity {
     private List<String> statusList;
 
     private String correctType;//按钮类型
+
+    private Double spreadRate;
+
+    public Double getSpreadRate() {
+        return spreadRate;
+    }
+
+    public void setSpreadRate(Double spreadRate) {
+        this.spreadRate = spreadRate;
+    }
 
     public List<String> getStatusList() {
         return statusList;
@@ -499,6 +521,22 @@ public class Correct extends BaseEntity {
 
     public void setCorrectType(String correctType) {
         this.correctType = correctType;
+    }
+
+    public Date getAuditTime() {
+        return auditTime;
+    }
+
+    public void setAuditTime(Date auditTime) {
+        this.auditTime = auditTime;
+    }
+
+    public Integer getAuditerId() {
+        return auditerId;
+    }
+
+    public void setAuditerId(Integer auditerId) {
+        this.auditerId = auditerId;
     }
 
     @Override

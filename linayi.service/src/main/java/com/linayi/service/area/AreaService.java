@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.linayi.entity.area.Area;
-import com.linayi.exception.ErrorType;
+import com.linayi.entity.area.SmallCommunityFullName;
+import com.linayi.util.PageResult;
+import com.linayi.vo.promoter.PromoterVo;
 
 public interface AreaService {
 	/**
@@ -46,4 +48,10 @@ public interface AreaService {
      * @return 获取所有的地区
      */
     List<Area> getAreaMap();
+
+    /**通过名字获取模糊搜索的小区
+     * @param key
+     * @return
+     */
+    PageResult<SmallCommunityFullName> getSmallCommunityByKey(PromoterVo.SearchSmallCommunityByKey key);
 }

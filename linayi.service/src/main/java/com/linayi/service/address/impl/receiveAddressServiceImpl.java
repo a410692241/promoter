@@ -37,7 +37,6 @@ public class receiveAddressServiceImpl implements ReceiveAddressService {
             ReceiveAddress receiveAddress = new ReceiveAddress();
             receiveAddress.setReceiveAddressId(userDB.getDefaultReceiveAddressId());
             receiveAddress.setUserId(userDB.getUserId());
-            receiveAddress.setAddressType("MINE");
             ReceiveAddress receiveAddressDB = receiveAddressMapper.query(receiveAddress).stream().findFirst().orElse(null);
             if(receiveAddressDB != null){
                 setAreaName(receiveAddressDB);
@@ -197,4 +196,17 @@ public class receiveAddressServiceImpl implements ReceiveAddressService {
 	        }
 		return listReceiveAddress;
 	}
+
+    @Override
+    @Transactional
+	public void modifyReceivingAddress(ReceiveAddress receiveAddress){
+        if("1".equals(receiveAddress.getSex())){
+            receiveAddress.setSex("MALE");
+        }
+        if("0".equals(receiveAddress.getSex())){
+            receiveAddress.setSex("FEMALE");
+        }
+        receiveAddress.setUpdateTime(new Date());
+        receiveAddressMapper.modifyReceivingAddress(receiveAddress);
+    }
 }

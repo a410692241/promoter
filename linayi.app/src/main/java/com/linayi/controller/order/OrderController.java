@@ -45,7 +45,6 @@ public class OrderController extends BaseController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return new ResponseData("F",ErrorType.SYSTEM_ERROR.getErrorMsg());
     }
     @RequestMapping("/getOrderList.do")

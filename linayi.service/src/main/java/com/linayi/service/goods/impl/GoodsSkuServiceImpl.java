@@ -1,10 +1,21 @@
 package com.linayi.service.goods.impl;
 
+import com.linayi.dao.address.ReceiveAddressMapper;
+import com.linayi.dao.area.SmallCommunityMapper;
 import com.linayi.dao.community.CommunityMapper;
 import com.linayi.dao.goods.*;
+import com.linayi.dao.promoter.OpenMemberInfoMapper;
+import com.linayi.dao.promoter.PromoterOrderManMapper;
 import com.linayi.dao.supermarket.SupermarketMapper;
+import com.linayi.dao.user.UserMapper;
+import com.linayi.entity.area.SmallCommunity;
 import com.linayi.entity.goods.*;
+import com.linayi.entity.promoter.OpenMemberInfo;
+import com.linayi.entity.promoter.PromoterOrderMan;
 import com.linayi.entity.supermarket.Supermarket;
+import com.linayi.entity.user.ReceiveAddress;
+import com.linayi.entity.user.ShoppingCar;
+import com.linayi.entity.user.User;
 import com.linayi.enums.CategoryLevel;
 import com.linayi.enums.MemberLevel;
 import com.linayi.enums.PriceOrderType;
@@ -13,6 +24,7 @@ import com.linayi.exception.ErrorType;
 import com.linayi.service.community.CommunityService;
 import com.linayi.service.goods.*;
 import com.linayi.service.promoter.OpenMemberInfoService;
+import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.util.*;
 import com.linayi.vo.promoter.PromoterVo;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -88,6 +100,20 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
     private CommunityService communityService;
     @Resource
     private OpenMemberInfoService openMemberInfoService;
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
+    private ReceiveAddressMapper receiveAddressMapper;
+    @Autowired
+    private SmallCommunityMapper smallCommunityMapper;
+    @Autowired
+    private PromoterOrderManMapper promoterOrderManMapper;
+    @Autowired
+    private OpenMemberInfoMapper openMemberInfoMapper;
+    @Autowired
+    private CommunityGoodsService communityGoodsService;
+    @Autowired
+    private SupermarketService supermarketService;
     private RestHighLevelClient esClient = RestClientFactory.getHighLevelClient();
 
     @Override
@@ -740,7 +766,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		try {
 			//判断条形码是否存在
 			String barcode = goodsSku.getBarcode().trim();
-			GoodsSku goods = new GoodsSku();
+			GoodsSku goods = new GoodsSku();  
 			int len = 13 - barcode.length();
 			for (int i = 0; i < len; i++){
 				barcode = "0" + barcode;
@@ -1097,4 +1123,92 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		}
 		return differenceRankingList;
 	}
+
+    @Override
+    public Map<String, Object> goodsDirectOrder(GoodsSku goods) {
+        Map<String, Object> result = new HashMap<>();
+        User user = userMapper.selectUserByuserId(goods.getUserId());
+        Integer receiveAddressId = user.getDefaultReceiveAddressId();
+        ReceiveAddress receiveAddress = receiveAddressMapper.getReceiveAddressByReceiveAddressId(receiveAddressId);
+        Integer smallComunityId = receiveAddress.getAddressOne();
+        SmallCommunity smallCommunity = new SmallCommunity();
+        smallCommunity.setSmallCommunityId(smallComunityId);
+        smallCommunity = smallCommunityMapper.getSmallCommunity(smallCommunity);
+        Integer communityId = smallCommunity.getCommunityId();
+        // 总价
+        Integer totalPrice = ConstantUtil.SERVICE_FEE + ConstantUtil.ADDITIONAL_FEES;
+        //比价优惠
+        Integer offerPrice = 0;
+
+        //服务费
+        result.put("serviceFee", getpriceString(ConstantUtil.SERVICE_FEE));
+
+        //判断是否为下单员
+        PromoterOrderMan promoterOrderMan = promoterOrderManMapper.getPromoterOrderManByOrderManId(goods.getUserId());
+        OpenMemberInfo openMemberInfo = new OpenMemberInfo();
+        String addressType = "MINE";
+        if (promoterOrderMan != null){
+            //下单员
+            if (receiveAddress.getAddressType() != null &&"CUSTOMER".equals(receiveAddress.getAddressType())){
+                //给顾客下单
+                addressType = "CUSTOMER";
+            }
+        }
+        if("MINE".equals(addressType)){
+            openMemberInfo.setUserId(goods.getUserId());
+            openMemberInfo.setEndTime(new Date());
+            List<OpenMemberInfo> openMemberInfos = openMemberInfoMapper.getMemberInfo(openMemberInfo);
+            if (openMemberInfos != null && openMemberInfos.size() > 0){
+                openMemberInfo = openMemberInfos.get(0);
+                //是会员
+                Integer freeTimes = openMemberInfo.getFreeTimes();
+                if (freeTimes != null && freeTimes > 0){
+                    totalPrice = 0 + ConstantUtil.ADDITIONAL_FEES;
+                    result.put("serviceFee", getpriceString(0));
+                }
+            }
+        }
+
+        // 附加费用
+        result.put("additionalFees",getpriceString(ConstantUtil.ADDITIONAL_FEES));
+
+        // 预计送达时间
+        Calendar cl = Calendar.getInstance();
+        cl.setTime(new Date());
+        cl.add(Calendar.HOUR_OF_DAY,12);
+        Date deliveryTime = cl.getTime();
+        result.put("deliveryTime",deliveryTime);
+        // 共多少件
+        Integer totalPipce = 0;
+        MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(goods.getUserId());
+        List<Object> shopCarlist = new ArrayList<>();
+        ShoppingCar shoppingCar = new ShoppingCar();
+        totalPipce += goods.getQuantity();
+        GoodsSku goodsSku = goodsSkuMapper.getGoodsById(Integer.valueOf(goods.getGoodsSkuId() + ""));
+        shoppingCar.setGoodsSkuImage(ImageUtil.dealToShow(goodsSku.getImage()));
+        shoppingCar.setGoodsName(goodsSku.getFullName());
+        CommunityGoods communityGoods = new CommunityGoods();
+        communityGoods.setCommunityId(communityId);
+        communityGoods.setGoodsSkuId(Integer.valueOf(goodsSku.getGoodsSkuId() + ""));
+        communityGoods = communityGoodsService.getCommunityGoods(communityGoods);
+        Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketIdAndPriceByLevel(currentMemberLevel, communityGoods);
+        Integer minPrice = idAndPriceByLevel[0];
+        Integer maxPrice = idAndPriceByLevel[2];
+        shoppingCar.setQuantity(goods.getQuantity());
+        shoppingCar.setMinPrice(getpriceString(minPrice));
+        shoppingCar.setMaxPrice(getpriceString(maxPrice));
+        shoppingCar.setMaxSupermarketName(supermarketService.getSupermarketById(idAndPriceByLevel[3]).getName());
+        shoppingCar.setMinSupermarketName(supermarketService.getSupermarketById(idAndPriceByLevel[1]).getName());
+        shoppingCar.setSpreadRate(NumberUtil.formatDouble((maxPrice - minPrice) * 100 / Double.parseDouble(minPrice + "")) + "%");
+        offerPrice += (maxPrice - minPrice) * shoppingCar.getQuantity();
+        shoppingCar.setHeJiPrice(getpriceString(shoppingCar.getQuantity() * minPrice));
+            totalPrice += shoppingCar.getQuantity() * minPrice;
+        shopCarlist.add(shoppingCar);
+        result.put("shopCars",shopCarlist);
+
+        result.put("offerPrice",getpriceString(offerPrice));
+        result.put("totalPrice",getpriceString(totalPrice));
+        result.put("totalPipce",totalPipce);
+        return result;
+    }
 }

@@ -88,6 +88,7 @@
                                 </span>
                     </div>
                 </div>
+
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label ng-show="correct.type==='SHARE'">分享</label><label
@@ -102,23 +103,23 @@
                     </div>
                 </div>
                 <div ng-show="correct.type!=='SHARE'">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label ng-show="correct.type==='SHARE'">分享</label><label
-                                ng-show="correct.type!=='SHARE'">纠错</label><label>上传图片</label>
-                            <span class="input-icon icon-right">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label ng-show="correct.type==='SHARE'">分享</label><label
+                            ng-show="correct.type!=='SHARE'">纠错</label><label>上传图片</label>
+                        <span class="input-icon icon-right">
                                <img style="width: 100%;height:230px" ng-src="{{correct.parentImage}}">
                             </span>
-                        </div>
                     </div>
                 </div>
+            </div>
                 <div ng-show="correct.type==='SHARE'">
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label ng-show="correct.type==='SHARE'">分享</label><label
                                 ng-show="correct.type!=='SHARE'">纠错</label><label>上传图片</label>
                             <span class="input-icon icon-right">
-                               <img style="width: 100%;height:460px" ng-src="{{correct.parentImage}}">
+                               <img style="width: 100%;height:460px" ng-src="{{correct.image}}">
                             </span>
                         </div>
                     </div>

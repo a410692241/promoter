@@ -6,15 +6,15 @@
 	<input  type="hidden" ng-model="correct.correctId"/>
 <div class="row">
 	<div class="form-group col-lg-6 col-xs-6 col-sm-12">
-	   <label class="col-sm-4 no-padding-right" style="text-align: right;">商品：</label>
+	   <label class="col-sm-4 no-padding-right" style="text-align: right;">商品</label>
 	   <div class="col-sm-8">
-	   		{{correct.goodsSku_name}}
+	   		{{correct.fullName}}
 	   </div>
 	</div>
 	<div class="form-group col-lg-6 col-xs-6 col-sm-12">
 	   <label class="col-sm-4 no-padding-right" style="text-align: right;">分享员：</label>
 	   <div class="col-sm-8">
-	   		{{correct.user_nickname}}
+	   		{{correct.realName}}
 	   </div>
 	</div>
 	<div class="form-group col-lg-6 col-xs-6 col-sm-12">

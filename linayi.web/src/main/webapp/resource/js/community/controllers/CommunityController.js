@@ -172,7 +172,7 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
 	             {label:"操作",name:"opt",width:300,sortable:false,formatter:function(cellvalue, options, rowObject){
 					var opts = "";
 					opts = opts + "<a href='javascript:void(0);' ng-click='edit( "+rowObject.communityId+" )' class='btn btn-primary fa fa-edit btn-sm td-compile'>修改</a> ";
-					opts = opts + "<a href='javascript:void(0);' ng-click='remove( "+rowObject.communityId+" )' class='btn btn-primary fa fa-edit btn-sm td-compile'>删除</a> ";
+					//opts = opts + "<a href='javascript:void(0);' ng-click='remove( "+rowObject.communityId+" )' class='btn btn-primary fa fa-edit btn-sm td-compile'>删除</a> ";
 					opts = opts + "<a href='javascript:void(0);' ng-click='showCommunityLocation( "+rowObject.communityId+" )' class='btn btn-primary fa fa-edit btn-sm td-compile'>绑定小区</a> ";
 					opts = opts + "<a href='javascript:void(0);' ng-click='openBindSupermarket( "+rowObject.communityId+")' class='btn btn-primary fa fa-edit btn-sm td-compile'>绑定超市</a> ";
 					opts = opts + "<a href='javascript:void(0);' ng-click='communityInfo( "+rowObject.communityId+")' class='btn btn-primary fa fa-edit btn-sm td-compile'>查看</a> ";

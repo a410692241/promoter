@@ -30,6 +30,28 @@
 						</span>
 					</div>
 				</div>
+				<div class="col-sm-6" ng-show="apply1.image">
+					<div class="form-group">
+						<label>代言人图片</label> <span class="input-icon icon-right"> <img
+							style="width: 100%; height: 350px" ng-src="{{apply1.image}}">
+						</span>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label>身份证正面</label> <span class="input-icon icon-right"> <img
+							style="width: 100%; height: 350px"
+							ng-src="{{apply1.idCardFront}}">
+						</span>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label>身份证反面</label> <span class="input-icon icon-right"> <img
+							style="width: 100%; height: 350px" ng-src="{{apply1.idCardBack}}">
+						</span>
+					</div>
+				</div>
 				<div class="col-sm-6" ng-show="apply1.address">
 					<div class="form-group">
 						<label>详细地址</label> <span class="input-icon icon-right"> <input
@@ -65,28 +87,6 @@
 					<div class="form-group">
 						<label>格言</label> <span class="input-icon icon-right"> <input
 							type="text" disabled ng-model="apply1.motto" class="form-control">
-						</span>
-					</div>
-				</div>
-				<div class="col-sm-6" ng-show="apply1.image">
-					<div class="form-group">
-						<label>代言人图片</label> <span class="input-icon icon-right"> <img
-							style="width: 100%; height: 350px" ng-src="{{apply1.image}}">
-						</span>
-					</div>
-				</div>
-				<div class="col-sm-6">
-					<div class="form-group">
-						<label>身份证正面</label> <span class="input-icon icon-right"> <img
-							style="width: 100%; height: 350px"
-							ng-src="{{apply1.idCardFront}}">
-						</span>
-					</div>
-				</div>
-				<div class="col-sm-6">
-					<div class="form-group">
-						<label>身份证反面</label> <span class="input-icon icon-right"> <img
-							style="width: 100%; height: 350px" ng-src="{{apply1.idCardBack}}">
 						</span>
 					</div>
 				</div>

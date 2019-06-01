@@ -1,100 +1,69 @@
 <?xml version="1.0" encoding="GBK"?>
-<configuration scan="true"  scanPeriod="60 seconds">
-	<contextName>RestAPI</contextName>
-	<property name="LOG_PATH" value="D:/data/logs"/>
-	<!--设置系统日志目录-->
-	<property name="APPDIR" value="app"/>
+<configuration scan="true" scanPeriod="60 seconds">
+    <contextName>RestAPI</contextName>
+    <property name="LOG_PATH" value="D:/data/logs"/>
+    <!--设置系统日志目录-->
+    <property name="APPDIR" value="app"/>
 
-	<property scope="system" name="SYSTEM_NAME" value="linayi" />
-	<!-- %m输出的信息,%p日志级别,%t线程名,%d日期,%c类的全名,,,, -->
-	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-			<!-- 设置字符集 -->
-			<charset>GBK</charset>
-		</encoder>
-	</appender>
+    <property scope="system" name="SYSTEM_NAME" value="linayi"/>
+    <!-- %m输出的信息,%p日志级别,%t线程名,%d日期,%c类的全名,,,, -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss} %green([%-21thread]) %highlight(%-5level) %magenta(%-50logger{50}) : %msg%n</pattern>
+            <!-- 设置字符集 -->
+            <charset>GBK</charset>
+        </encoder>
+    </appender>
+    <appender name="FILEERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 正在记录的日志文件的路径及文件名 -->
+        <file>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/log_error.log</file>
+        <!-- 日志记录器的滚动策略，按日期，按大小记录 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/error/log-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>5000MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <!-- 追加方式记录日志 -->
+        <append>true</append>
+        <!-- 日志文件的格式 -->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{HH:mm:ss} [%-21thread] %-5level %-50logger{50} : %msg%n</pattern>
+            <charset>GBK</charset>
+        </encoder>
+        <!-- 此日志文件只记录info级别的 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>error</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
 
-	<appender name="FILEERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<!-- 正在记录的日志文件的路径及文件名 -->
-		<file>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/log_error.log</file>
-		<!-- 日志记录器的滚动策略，按日期，按大小记录 -->
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/error/log-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-				<maxFileSize>5000MB</maxFileSize>
-			</timeBasedFileNamingAndTriggeringPolicy>
-		</rollingPolicy>
-		<!-- 追加方式记录日志 -->
-		<append>true</append>
-		<!-- 日志文件的格式 -->
-		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-			<charset>GBK</charset>
-		</encoder>
-		<!-- 此日志文件只记录info级别的 -->
-		<filter class="ch.qos.logback.classic.filter.LevelFilter">
-			<level>error</level>
-			<onMatch>ACCEPT</onMatch>
-			<onMismatch>DENY</onMismatch>
-		</filter>
-	</appender>
+    <appender name="FILECONSOLE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 正在记录的日志文件的路径及文件名 -->
+        <file>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/log_console.log</file>
+        <!-- 日志记录器的滚动策略，按日期，按大小记录 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/console/log-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>5000MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <!-- 追加方式记录日志 -->
+        <append>true</append>
+        <!-- 日志文件的格式 -->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{HH:mm:ss} [%-21thread] %-5level %-50logger{50} : %msg%n</pattern>
+            <charset>GBK</charset>
+        </encoder>
+    </appender>
 
-	<appender name="FILEWARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/log_warn.log</file>
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/warn/log-warn-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-				<maxFileSize>5000MB</maxFileSize>
-			</timeBasedFileNamingAndTriggeringPolicy>
-		</rollingPolicy>
-		<!-- 追加方式记录日志 -->
-		<append>true</append>
-		<!-- 日志文件的格式 -->
-		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-			<pattern>===%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger Line:%-3L - %msg%n</pattern>
-			<charset>GBK</charset>
-		</encoder>
-		<filter class="ch.qos.logback.classic.filter.LevelFilter">
-			<level>warn</level>
-			<onMatch>ACCEPT</onMatch>
-			<onMismatch>DENY</onMismatch>
-		</filter>
-	</appender>
+    <logger name="springfox.documentation" level="OFF"/>
+    <logger name="org.mybatis.spring" level="OFF"/>
 
-
-	<appender name="FILEINFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<!-- 正在记录的日志文件的路径及文件名 -->
-		<file>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/log_info.log</file>
-		<!-- 日志记录器的滚动策略，按日期，按大小记录 -->
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${LOG_PATH}/${SYSTEM_NAME}/${APPDIR}/info/log-info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-				<maxFileSize>5000MB</maxFileSize>
-			</timeBasedFileNamingAndTriggeringPolicy>
-		</rollingPolicy>
-		<append>true</append>
-		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-			<pattern>===%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger Line:%-3L - %msg%n</pattern>
-			<charset>GBK</charset>
-		</encoder>
-		<filter class="ch.qos.logback.classic.filter.LevelFilter">
-			<level>info</level>
-			<onMatch>ACCEPT</onMatch>
-			<onMismatch>DENY</onMismatch>
-		</filter>
-	</appender>
-	<!--dev-->
-	<root level="DEBUG">
-		<appender-ref ref="STDOUT"/>
-	</root>
-
-	<!--production-->
-	<!--<root level="INFO">-->
-		<!--&lt;!&ndash;production&ndash;&gt;-->
-		<!--<appender-ref ref="FILEERROR"/>-->
-		<!--<appender-ref ref="FILEWARN"/>-->
-		<!--<appender-ref ref="FILEINFO"/>-->
-		<!--<appender-ref ref="STDOUT"/>-->
-	<!--</root>-->
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT"/>
+        <!--<appender-ref ref="FILEERROR"/>-->
+        <!--<appender-ref ref="FILECONSOLE"/>-->
+    </root>
 </configuration>
