@@ -44,4 +44,6 @@ public interface AdminAccountMapper {
     void resetAdminPassword(Account account);
 
     AdminAccount selectAdminIdByUserId(int employeeId);
+
+    AdminAccount getAdminAccountByKey(Integer accountId);
 }

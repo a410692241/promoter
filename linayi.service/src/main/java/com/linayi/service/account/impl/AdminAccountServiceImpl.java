@@ -132,7 +132,11 @@ public class AdminAccountServiceImpl implements AdminAccountService{
 					adminAccount.setAccountId(admin.getAccountId());
                     adminAccount.setPassword(null);
                     adminAccount.setUserId(admin.getUserId());
-                    //放入返回的数据
+					AdminAccount accountByKey = adminAccountMapper.getAdminAccountByKey(adminAccount.getAccountId());
+					if("DISABLED".equals(accountByKey.getStatus())){
+						throw new BusinessException(ErrorType.USER_IS_DISABLED);
+					}
+					//放入返回的数据
 					map.put("AdminAccount", adminAccount);
 					request.getSession().setAttribute("loginAccount",adminAccount);
 					}
