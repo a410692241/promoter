@@ -124,7 +124,7 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 					totalSum += price;
 				}
 				//服务费
-				totalSum += orders1.getServiceFee();
+				totalSum += 1000;
 			}
 		} else {
 			orderManMember.setNumberOfOrders(0);
