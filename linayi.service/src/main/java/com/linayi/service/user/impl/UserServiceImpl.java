@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Throwable.class)
     public Object addEmployee(Account account) {
         Date date = new Date();
         Integer accountId = account.getAccountId();
