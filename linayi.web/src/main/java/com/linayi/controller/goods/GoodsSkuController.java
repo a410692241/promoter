@@ -484,4 +484,10 @@ public class GoodsSkuController extends BaseController{
             return new ResponseData(ErrorType.SYSTEM_ERROR);
         }
     }
+
+    @RequestMapping("/exportDifferenceRanking.do")
+    @ResponseBody
+    public void exportDifferenceRanking(GoodsSku goodsSku, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        goodsService.exportDifferenceRanking(goodsSku,request,response);
+    }
 }

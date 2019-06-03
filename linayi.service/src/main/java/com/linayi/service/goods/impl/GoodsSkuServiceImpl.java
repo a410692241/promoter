@@ -767,7 +767,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		try {
 			//判断条形码是否存在
 			String barcode = goodsSku.getBarcode().trim();
-			GoodsSku goods = new GoodsSku();  
+			GoodsSku goods = new GoodsSku();
 			int len = 13 - barcode.length();
 			for (int i = 0; i < len; i++){
 				barcode = "0" + barcode;
@@ -1219,6 +1219,49 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
     public List<GoodsSku> getBackstageDifferenceRanking(GoodsSku goodsSku) {
 
         return goodsSkuMapper.getBackstageDifferenceRanking(goodsSku);
+    }
+
+    @Override
+    public void exportDifferenceRanking(GoodsSku goodsSku, HttpServletRequest request, HttpServletResponse response)throws Exception {
+        // 只是让浏览器知道要保存为什么文件而已，真正的文件还是在流里面的数据，你设定一个下载类型并不会去改变流里的内容。
+        //而实际上只要你的内容正确，文件后缀名之类可以随便改，就算你指定是下载excel文件，下载时我也可以把他改成pdf等。
+        response.setContentType("application/vnd.ms-excel");
+        // 传递中文参数编码
+        String codedFileName = java.net.URLEncoder.encode("商品价差排行信息","UTF-8");
+        response.setHeader("content-disposition", "attachment;filename=" + codedFileName + ".xls");
+        List<GoodsSku> goodsLists = goodsSkuMapper.getBackstageDifferenceRanking(goodsSku);
+        // 定义一个工作薄
+        Workbook workbook = new HSSFWorkbook();
+        // 创建一个sheet页
+        Sheet sheet = workbook.createSheet("商品价差排行信息");
+        // 创建一行
+        Row row = sheet.createRow(0);
+        // 在本行赋值 以0开始
+
+        row.createCell(0).setCellValue("商品编号");
+        row.createCell(1).setCellValue("商品全名");
+        row.createCell(2).setCellValue("最高价(元)");
+        row.createCell(3).setCellValue("最低价(元)");
+        row.createCell(4).setCellValue("价差率");
+        // 定义样式
+        CellStyle cellStyle = workbook.createCellStyle();
+        // 格式化日期
+        //cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("yyyy-MM-dd"));
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        // 遍历输出
+        for (int i = 1; i <= goodsLists.size(); i++) {
+            GoodsSku goods = goodsLists.get(i - 1);
+            row = sheet.createRow(i);
+            row.createCell(0).setCellValue(goods.getGoodsSkuId());
+            row.createCell(1).setCellValue(goods.getFullName());
+            row.createCell(2).setCellValue(goods.getMaxPrice()/100);
+            row.createCell(3).setCellValue(goods.getMinPrice()/100);
+            row.createCell(4).setCellValue(goods.getSpreadRate()+"%");
+        }
+        OutputStream  fOut = response.getOutputStream();
+        workbook.write(fOut);
+        fOut.flush();
+        fOut.close();
     }
 
 

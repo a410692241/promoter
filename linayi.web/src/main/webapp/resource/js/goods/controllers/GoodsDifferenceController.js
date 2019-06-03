@@ -10,13 +10,11 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 		$scope.audit = audit;
 		$scope.batchDisable = batchDisable;
 		$scope.disable = disable;
-/*		$scope.search={
-				userId:"",
-				nickname:"",
-				sex:"",
-				mobile:"",
-				userType:"",
-		};*/
+		$scope.exportData = exportData;
+		$scope.search={
+			goodsSkuId:'',
+			name:''
+		};
 		$scope.checkUserId = new Set();
 		$scope.list();
 		$scope.user = {
@@ -30,7 +28,6 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 				address : '',
 				age : '',
 				authenticationRemark :'',
-				mobile:''
 /*				supermarketGoodsId : '',
 				supermarketId : '',
 				name : '',
@@ -388,6 +385,29 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 		},function( $modalInstance,data, $scope ){
 			save( $modalInstance,data, $scope );
 		});
+
+	}
+
+
+	//导出数据
+	function exportData() {
+		var goodsSkuId = $scope.search.goodsSkuId;
+		var name = $scope.search.name;
+		var data = '';
+		if (goodsSkuId === undefined || goodsSkuId == '') {
+			goodsSkuId = null;
+		} else {
+			data += '&goodsSkuId=' + goodsSkuId;
+		}
+		if (name === undefined || name == '') {
+			name = null;
+		} else {
+			data += '&name=' + name;
+		}
+
+		location.href = urls.ms + "/goods/goods/exportDifferenceRanking.do?" + data.replace("&", "");
+		toaster.success("", "导出成功!", 1000);
+
 
 	}
 
