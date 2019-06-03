@@ -558,9 +558,10 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 		goodsSku.setCommunityId(communityId);
 		goodsSku.setMemberLevel(memberLevel.toString());
 		List<GoodsSku> goodsSkuList = goodsSkuMapper.getGoodsListBybrandIdcategoryIdGoodsName(goodsSku);
-
 		if(goodsSkuList.size()>0) {
-			setMemberPrice(memberLevel,goodsSkuList);
+            for (GoodsSku sku : goodsSkuList) {
+                sku.setImage(ImageUtil.dealToShow(sku.getImage()));
+            }
 		}
 		return goodsSkuList;
 	}
@@ -1211,4 +1212,14 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
         result.put("totalPipce",totalPipce);
         return result;
     }
+
+
+    //后台价差排行
+    @Override
+    public List<GoodsSku> getBackstageDifferenceRanking(GoodsSku goodsSku) {
+
+        return goodsSkuMapper.getBackstageDifferenceRanking(goodsSku);
+    }
+
+
 }

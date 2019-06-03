@@ -119,6 +119,16 @@ public class GoodsSku extends BaseEntity {
 
     private  String isRecommend; //是否是推荐商品
 
+    private String orderBy; //按什么排序
+
+    public String getOrderBy() {
+        return orderBy;
+    }
+
+    public void setOrderBy(String orderBy) {
+        this.orderBy = orderBy;
+    }
+
     private  List<Long> goodsSkuIdList; //用于存放goodsSkuId集合
 
     public List<Long> getGoodsSkuIdList() {
