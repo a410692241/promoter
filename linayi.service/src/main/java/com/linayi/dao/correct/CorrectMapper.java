@@ -74,9 +74,16 @@ public interface CorrectMapper {
 
     /**
      * 通过超市id获取待审核纠错任务和商品信息
-     * @param supermarketId
+     * @param correct
      * @return
      */
     List<Correct> getWaitAuditCorrectBySupermerketId(Correct correct);
+
+    /**
+     * 获取审核历史列表
+     * @param correct
+     * @return
+     */
+    List<Correct> getCorrectByAuditerId(Correct correct);
 
 }

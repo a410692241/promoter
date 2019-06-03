@@ -69,10 +69,18 @@ public interface CorrectService {
 
     /**
      * 采价员查看待审核纠错记录（指定一家超市）
-     * @param supermarketId
+     * @param correct
      * @return
      */
     List<Correct> getWaitAuditCorrect(Correct correct);
+
+    /**
+     * 获取审核历史列表
+     * @param correct
+     * @return
+     */
+    List<Correct> getCorrectByAuditerId(Correct correct);
+
 
 //    void updatePriceForAdmin(Correct correct);
 }

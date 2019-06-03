@@ -726,4 +726,9 @@ public class CorrectServiceImpl implements CorrectService {
         return correctList;
     }
 
+    @Override
+    public List<Correct> getCorrectByAuditerId(Correct correct) {
+        return correctMapper.getCorrectByAuditerId(correct);
+    }
+
 }

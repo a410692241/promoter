@@ -280,5 +280,31 @@ public class CorrectController extends BaseController {
 
 	}
 
+	@RequestMapping("/audithistory.do")
+	@ResponseBody
+	public Object auditHistory(@RequestBody Correct correct){
+//		try {
+			if(correct.getPageSize() == null){
+				correct.setPageSize(8);
+			}
+
+			Integer userId = getUserId();
+			correct.setUserId(userId);
+			List<Correct> correctList = correctService.getCorrectByAuditerId(correct);
+			Integer totalPage = (int) Math.ceil(Double.valueOf(correct.getTotal())/Double.valueOf(correct.getPageSize()));
+			if(totalPage <= 0){
+				totalPage++;
+			}
+			Map<String , Object> map = new HashMap<>();
+			map.put("data", correctList);
+			map.put("totalPage", totalPage);
+			map.put("currentPage",correct.getCurrentPage() );
+
+			return new ResponseData(map);
+//		} catch (Exception e) {
+//			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+//		}
+	}
+
 
 }
