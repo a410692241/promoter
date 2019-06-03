@@ -58,7 +58,8 @@ public enum ErrorType {
 	ERROR_TWO(2026,"请勿重复申请!"),
     RECEIVEADDTOOMUCH(2027,"您只能拥有两个收货地址，不能新增!"),
     NO_PRICE(2028,"该商品暂无价格，加入购物车失败!"),
-    USER_IS_DISABLED(2029,"该用户已禁用!");
+    USER_IS_DISABLED(2029,"该用户已禁用!"),
+    NOT_PROCURER_NO_AUDIT(2030,"您不是驻点员，不能进行审核！");
 
     // 错误编码
     private int errorCode;

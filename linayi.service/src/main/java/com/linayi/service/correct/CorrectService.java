@@ -67,5 +67,12 @@ public interface CorrectService {
      */
     List<Correct> getOtherPrice(Integer goodsSkuId);
 
+    /**
+     * 采价员查看待审核纠错记录（指定一家超市）
+     * @param supermarketId
+     * @return
+     */
+    List<Correct> getWaitAuditCorrect(Correct correct);
+
 //    void updatePriceForAdmin(Correct correct);
 }

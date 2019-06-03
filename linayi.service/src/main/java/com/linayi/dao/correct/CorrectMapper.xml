@@ -573,4 +573,15 @@
              c.status in ('WAIT_AUDIT','AUDIT_SUCCESS','AFFECTED')
     </select>
 
+    <select id="getWaitAuditCorrectBySupermerketId"  resultType="com.linayi.entity.correct.Correct">
+        SELECT
+          c.correct_id,c.goods_sku_id,c.supermarket_id,c.price,c.create_time,g.full_name,g.image goodsImage
+        FROM
+          correct c join goods_sku g on c.goods_sku_id = g.goods_sku_id
+        WHERE
+          c.supermarket_id = #{supermarketId}
+        AND
+          c.status = 'WAIT_AUDIT'
+    </select>
+
 </mapper>

@@ -702,4 +702,26 @@ public class CorrectServiceImpl implements CorrectService {
         return correctMapper.getOtherPrice(goodsSkuId);
     }
 
+    //采价员查看待审核纠错记录（指定一家超市）
+    @Override
+    public List<Correct> getWaitAuditCorrect(Correct correct) {
+        //TODO
+        //获取采价员绑定的超市id
+        Supermarket supermarket = supermarketService.getSupermarketByProcurerId(correct.getUserId());
+
+        if(supermarket == null){
+            throw new BusinessException(ErrorType.NOT_PROCURER_NO_AUDIT);
+        }
+        correct.setSupermarketId(supermarket.getSupermarketId());
+        //获取待审核列表
+       List<Correct> correctList = correctMapper.getWaitAuditCorrectBySupermerketId(correct);
+
+       //图片处理
+        for(Correct currentCorrect:correctList){
+            String Image = ImageUtil.dealToShow(currentCorrect.getGoodsImage());
+            currentCorrect.setGoodsImage(Image);
+        }
+        return correctList;
+    }
+
 }

@@ -72,4 +72,11 @@ public interface CorrectMapper {
      */
     List<Correct> getOtherPrice(Integer goodsSkuId);
 
+    /**
+     * 通过超市id获取待审核纠错任务和商品信息
+     * @param supermarketId
+     * @return
+     */
+    List<Correct> getWaitAuditCorrectBySupermerketId(Correct correct);
+
 }
