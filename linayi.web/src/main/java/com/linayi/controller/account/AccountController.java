@@ -117,7 +117,6 @@ public class AccountController {
     @ResponseBody
     @RequestMapping("/getRoleList.do")
     public Object getRole() {
-        System.out.println("3333333");
         return accountService.selectRole();
     }
 

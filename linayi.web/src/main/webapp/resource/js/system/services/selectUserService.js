@@ -115,7 +115,7 @@ app.service('selectUserService', [function() {
     }
 
     function getPrivilegesList( options ){
-        options.url = urls.ms+'/account/getPrivilegesList.do';
+        options.url = urls.ms+'/accountMenu/getModelMenus.do';
         ajax( options );
     }
 
