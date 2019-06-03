@@ -191,4 +191,7 @@ public interface GoodsSkuService {
 	 * @return
 	 */
 	List<GoodsSku> getBackstageDifferenceRanking(GoodsSku goodsSku);
+
+	//导出价差排行
+	void exportDifferenceRanking(GoodsSku goodsSku, HttpServletRequest request, HttpServletResponse response) throws Exception;
 }

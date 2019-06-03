@@ -49,6 +49,7 @@
 						<a ng-click="list()" class="btn btn-primary form-group-margin"
 							href="javascript:void(0);"> <i class="fa fa-search"></i>搜索
 						</a>
+						<a ng-click="exportData()" class="btn btn-primary form-group-margin" href="javascript:void(0);"></i>导出列表</a>
 					</form>
 					<!-- 表格 -->
 					<table id="GoodsDifferenceList" style="width: 100%"></table>

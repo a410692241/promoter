@@ -162,8 +162,10 @@
                 $('#tj').removeAttr("disabled");
                 if(data.respCode == "S"){
                     alert("修改成功！");
+                    window.location.href=urls.testMs+"/login.jsp"
                 }else{
                     alert(data.data);
+
                 }
             },
             error:function(){
