@@ -8,6 +8,7 @@ import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.account.AccountService;
 import com.linayi.service.account.AdminAccountService;
+import com.linayi.util.MD5Util;
 import com.linayi.util.ResponseData;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,13 +21,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 @Controller
 @RequestMapping("/account")
 public class AccountController {
-    @Resource
-    private AccountService accountService;
+    @Resource private AccountService accountService;
     @Resource
     private AdminAccountService adminAccountService;
 
@@ -133,6 +134,20 @@ public class AccountController {
     @RequestMapping("/getRoleListByUser.do")
     public Object selectSameURole(Integer accountId) {
         return null;
+    }
+
+    //修改密码
+    @ResponseBody
+    @RequestMapping("/modifyPassword.do")
+    public ResponseData modifyPsd(HttpSession session,String oldPassword,String newPassword){
+        try{
+            adminAccountService.modifyPsd(oldPassword,newPassword,session);
+        }catch (BusinessException e){
+            return new ResponseData(ErrorType.ACCOUNT_OR_PASSWORD_ERROR);
+        }catch (Exception e){
+            return new ResponseData(ErrorType.SYSTEM_ERROR);
+        }
+        return new ResponseData("操作成功");
     }
 
     /*@ResponseBody
