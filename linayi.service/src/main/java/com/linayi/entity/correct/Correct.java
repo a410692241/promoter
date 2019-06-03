@@ -225,6 +225,12 @@ public class Correct extends BaseEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date auditTime;
 
+    /**
+     * [审核类型]
+     * USER或者ADMIN
+     */
+    private String auditType;
+
 
     private AdminAccount adminAccount;
 
@@ -537,6 +543,14 @@ public class Correct extends BaseEntity {
 
     public void setAuditerId(Integer auditerId) {
         this.auditerId = auditerId;
+    }
+
+    public String getAuditType() {
+        return auditType;
+    }
+
+    public void setAuditType(String auditType) {
+        this.auditType = auditType;
     }
 
     @Override

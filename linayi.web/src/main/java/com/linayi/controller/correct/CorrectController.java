@@ -96,6 +96,7 @@ public class CorrectController extends BaseController {
         try {
             AdminAccount adminaccount = (AdminAccount) session.getAttribute("loginAccount");
             correct.setUserId(adminaccount.getAccountId());
+            correct.setAuditType(OperatorType.ADMIN.toString());
             correctService.audit(correct);
             return new ResponseData("success").toString();
         } catch (BusinessException e) {

@@ -21,6 +21,7 @@
         <result property="mobile" column="mobile"/>
         <result property="auditerId" column=" uditer_id"/>
         <result property="auditTime" column="audit_time"/>
+        <result property="auditType" column="audit_type"/>
         <result property="updateTime" column="update_time"/>
         <result property="createTime" column="create_time"/>
         <association property="user" resultMap="com.linayi.dao.user.UserMapper.BaseResultMap"/>
@@ -481,6 +482,9 @@
             </if>
             <if test="auditerId !=null ">
                 `auditer_id` = #{auditerId,jdbcType=TIMESTAMP},
+            </if>
+            <if test="auditType !=null ">
+                `audit_type` = #{auditType,jdbcType=VARCHAR},
             </if>
         </trim>
         where `correct_id` = #{correctId}

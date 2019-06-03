@@ -239,7 +239,7 @@ public class CorrectController extends BaseController {
 	@RequestMapping("/waitauditcorrect.do")
 	@ResponseBody
 	public Object WaitAuditCorrect(@RequestBody Correct correct){
-//		try {
+		try {
 			if(correct.getPageSize() == null){
 				correct.setPageSize(8);
 			}
@@ -257,9 +257,27 @@ public class CorrectController extends BaseController {
 			map.put("currentPage",correct.getCurrentPage() );
 
 			return new ResponseData(map);
-//		} catch (Exception e) {
-//			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
-//		}
+		} catch (Exception e) {
+			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+		}
+	}
+
+	@RequestMapping("/auditprice.do")
+	@ResponseBody
+	public Object auditPrice(@RequestBody Correct correct){
+		try {
+			correct.setUserId(getUserId());
+			correct.setAuditType(OperatorType.USER.toString());
+			correctService.audit(correct);
+
+			return new ResponseData("审核成功！").toString();
+		}catch (BusinessException e) {
+			return new ResponseData(e.getErrorType()).toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+		}
+
 	}
 
 
