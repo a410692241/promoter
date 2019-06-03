@@ -51,6 +51,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 /*			postData:$scope.search,*/
 			pager : "#GoodsDifferenceListPager",
 			multiselect :true,
+			rownumWidth: 100,
 			colModel : [
 			            {name:'goodsSkuId',label:'商品ID',width:80},
 			            {name:'fullName',label:'商品名称',sortable:false,width:200},
