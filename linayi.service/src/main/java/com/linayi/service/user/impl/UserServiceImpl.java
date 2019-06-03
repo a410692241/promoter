@@ -152,6 +152,7 @@ public class UserServiceImpl implements UserService {
             }catch (Exception e){
                 return new ResponseData(ErrorType.ACCOUNT_ERROR).toString();
             }
+            try {
             account.setCreateTime(date);
             Employee employee = new Employee();
             employee.setEmail(account.getEmail());
@@ -167,7 +168,10 @@ public class UserServiceImpl implements UserService {
             account.setStatus(EnabledDisabled.ENABLED.name());
             account.setUserType("EMPLOYEE");
             account.setPassword(MD5Util.MD5(account.getPassword()));
-            adminAccountMapper.insertAccountAdmin(account);
+                adminAccountMapper.insertAccountAdmin(account);
+            }catch (Exception e){
+                return new ResponseData(ErrorType.MOBILE_SAME);
+            }
         }
         return new ResponseData(account).toString();
     }

@@ -290,9 +290,7 @@ app.controller('selectUserCtrl', function($scope,toaster,selectUserService,messa
 							toaster.success("","操作成功！",3000);
 							$modalInstance.close();
 						}else{
-							$scope.$apply(function(){
-								toaster.error( "",data.msg,3000 );
-							});
+								toaster.error( "",data.data,3000 );
 						}
 					}
 				} )
@@ -321,16 +319,15 @@ app.controller('selectUserCtrl', function($scope,toaster,selectUserService,messa
 							toaster.success("","操作成功！",3000);
 							$modalInstance.close();
 						}else{
-							$scope.$apply(function(){
-								toaster.error( "",data.msg,3000 );
+								toaster.success( "","手机号已存在",3000 );
 								$state.reload();
-							});
 						}
 					}
 				} )
 			}catch (e) {
 				console.error( e );
-				toaster.error( "",e.msg ? e.msg : "出错了",3000 );
+				alert("2");
+				toaster.error( "","手机号已存在",3000 );
 			}
 		});
 	}
