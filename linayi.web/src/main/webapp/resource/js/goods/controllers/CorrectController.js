@@ -266,9 +266,9 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
                 list();
                 modalInstance.close();
                 if (data.search("成功")!=-1) {
-                    toaster.success("", data.msg, 3000);
+                    toaster.success("", "操作成功", 3000);
                 } else {
-                    toaster.error("", data.msg, 3000);
+                    toaster.error("", "操作失败", 3000);
                 }
             });
         });
