@@ -32,7 +32,7 @@
                             ng-show="correct.type!=='SHARE'">纠错</label><label>员</label>
                         <span class="input-icon icon-right">
                                 <input type="text"
-                                       ng-model="correct.user.nickname"
+                                       ng-model="correct.user.realName"
                                        class="form-control"readonly="readonly">
                                 <i class="glyphicon glyphicon-user blue"></i>
                             </span>

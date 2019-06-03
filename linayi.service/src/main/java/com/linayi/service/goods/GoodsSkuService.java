@@ -183,4 +183,12 @@ public interface GoodsSkuService {
 	 * @param goodsSku
 	 */
 	Map<String, Object> goodsDirectOrder(GoodsSku goodsSku);
+
+
+	/**
+	 * 后台价差排行
+	 * @param goodsSku
+	 * @return
+	 */
+	List<GoodsSku> getBackstageDifferenceRanking(GoodsSku goodsSku);
 }

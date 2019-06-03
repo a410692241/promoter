@@ -469,4 +469,19 @@ public class GoodsSkuController extends BaseController{
             return new ResponseData(ErrorType.SYSTEM_ERROR);
         }
     }
+
+
+
+    //后台价差排行
+    @RequestMapping("/getBackstageDifference.do")
+    @ResponseBody
+    public Object getBackstageDifferenceRanking(GoodsSku goodsSku) {
+        try {
+            List<GoodsSku> goodsSkus = goodsService.getBackstageDifferenceRanking(goodsSku);
+            PageResult<GoodsSku>  pageResult = new PageResult<>(goodsSkus,goodsSku.getTotal());
+            return pageResult;
+        }catch (Exception e){
+            return new ResponseData(ErrorType.SYSTEM_ERROR);
+        }
+    }
 }
