@@ -23,27 +23,28 @@
         open_member_info_id, user_id, member_level, start_time, end_time, free_times,order_man_id, create_time,open_order_man_info_id
     </sql>
     <select id="getMemberInfo" resultType="com.linayi.entity.promoter.OpenMemberInfo">
-        select <include refid="base_column"/> from open_member_info
+        select omi.open_member_info_id, omi.user_id, omi.member_level, omi.start_time, omi.end_time, omi.free_times,omi.order_man_id, omi.create_time,omi.open_order_man_info_id from open_member_info omi left join user u on omi.user_id = u.user_id
         <where>
             <if test="openMemberInfoId != null">
-                open_member_info_id = #{openMemberInfoId}
+                omi.open_member_info_id = #{openMemberInfoId}
             </if>
             <if test="userId != null">
-                AND user_id = #{userId}
+                AND omi.user_id = #{userId}
             </if>
             <if test="memberLevel != null">
-                AND member_level = #{memberLevel}
+                AND omi.member_level = #{memberLevel}
             </if>
             <if test="startTime != null">
-                AND start_time = #{startTime}
+                AND omi.start_time = #{startTime}
             </if>
             <if test="endTime != null">
-                AND end_time <![CDATA[ >= ]]> #{endTime}
+                AND omi.end_time <![CDATA[ >= ]]> #{endTime}
             </if>
             <if test="orderManId != null">
-                AND order_man_id = #{orderManId}
+                AND omi.order_man_id = #{orderManId}
             </if>
         </where>
+        and u.is_member = 'TRUE'
         ORDER BY create_time DESC
     </select>
     <update id="updateById" parameterType="com.linayi.entity.promoter.OpenMemberInfo" >
