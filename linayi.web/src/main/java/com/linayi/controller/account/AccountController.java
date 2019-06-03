@@ -141,8 +141,9 @@ public class AccountController {
     public ResponseData modifyPsd(HttpSession session,String oldPassword,String newPassword){
         try{
             adminAccountService.modifyPsd(oldPassword,newPassword,session);
+            session.removeAttribute("loginAccount");
         }catch (BusinessException e){
-            return new ResponseData(ErrorType.ACCOUNT_OR_PASSWORD_ERROR);
+            return new ResponseData(ErrorType.ACCOUNT_OR_OLDPASSWORD_ERROR);
         }catch (Exception e){
             return new ResponseData(ErrorType.SYSTEM_ERROR);
         }
