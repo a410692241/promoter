@@ -46,6 +46,7 @@ public enum ErrorType {
     NOT_YOUR_CORRECT(2015,"不是您的分享/纠错申请，不能撤回!"),
     JUST_CORRECT_MINE(2016,"生效价格不是您分享的，不能申请纠错!"),
     OPERATION_FAIL(2017,"操作失败!"),
+    OPERATION_SUCCESS(2027,"操作成功!"),
     BRAND_ERROR(2018,"brandSame"),
     NO_PROCURE_GOODS(2019,"没有采买到任何商品，装箱失败!"),
     HAVE_OPEN_Promoter(2020,"此手机号已开通了会员!"),

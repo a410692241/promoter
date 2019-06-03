@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.linayi.entity.account.Account;
 import com.linayi.entity.account.AdminAccount;
@@ -42,5 +43,7 @@ public interface AdminAccountService {
     Object updateAdminStatus(Account account);
 
     void resetAdminPassword(Account account);
+
+    void modifyPsd(String oldPassword, String newPassword, HttpSession session);
 
 }
