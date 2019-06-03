@@ -721,6 +721,7 @@ public class CorrectServiceImpl implements CorrectService {
         for(Correct currentCorrect:correctList){
             String Image = ImageUtil.dealToShow(currentCorrect.getGoodsImage());
             currentCorrect.setGoodsImage(Image);
+            currentCorrect.setSupermarkerName(supermarket.getName());
         }
         return correctList;
     }
