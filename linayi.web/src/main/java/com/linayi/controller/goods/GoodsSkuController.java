@@ -2,6 +2,9 @@ package com.linayi.controller.goods;
 
 import com.google.gson.Gson;
 import com.linayi.controller.BaseController;
+import com.linayi.dao.goods.GoodsSkuMapper;
+import com.linayi.dao.goods.SkuClickNumMapper;
+import com.linayi.dao.goods.SupermarketGoodsMapper;
 import com.linayi.entity.account.AdminAccount;
 import com.linayi.entity.correct.Correct;
 import com.linayi.entity.correct.SupermarketGoodsVersion;
@@ -14,6 +17,7 @@ import com.linayi.service.correct.SupermarketGoodsVersionService;
 import com.linayi.service.goods.*;
 import com.linayi.util.PageResult;
 import com.linayi.util.ResponseData;
+import org.elasticsearch.search.aggregations.pipeline.movavg.models.EwmaModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +57,10 @@ public class GoodsSkuController extends BaseController{
     private GoodsAttrValueService goodsAttrValueService;
     @Autowired
     private AttributeValueService attributeValueService;
+    @Autowired
+    private SkuClickNumService skuClickNumService;
+    @Autowired
+    private GoodsSkuMapper goodsSkuMapper;
 
     /**
      * 添加商品页面的入口
@@ -466,6 +474,46 @@ public class GoodsSkuController extends BaseController{
             goodsService.removedRecommend(goodsSku);
             return new ResponseData("success");
         }catch (Exception e){
+            return new ResponseData(ErrorType.SYSTEM_ERROR);
+        }
+    }
+
+
+
+    //后台价差排行
+    @RequestMapping("/getBackstageDifference.do")
+    @ResponseBody
+    public Object getBackstageDifferenceRanking(GoodsSku goodsSku) {
+        try {
+            List<GoodsSku> goodsSkus = goodsService.getBackstageDifferenceRanking(goodsSku);
+            PageResult<GoodsSku>  pageResult = new PageResult<>(goodsSkus,goodsSku.getTotal());
+            return pageResult;
+        }catch (Exception e){
+            return new ResponseData(ErrorType.SYSTEM_ERROR);
+        }
+    }
+
+    @RequestMapping("/exportDifferenceRanking.do")
+    @ResponseBody
+    public void exportDifferenceRanking(GoodsSku goodsSku, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        goodsService.exportDifferenceRanking(goodsSku,request,response);
+    }
+
+    /**获取点击量排行商品
+     * @param skuClickNum
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/getSkuListByClickNum.do")
+    @ResponseBody
+    public Object getSkuListByClickNum(SkuClickNum skuClickNum) throws Exception {
+        try {
+            //获取倒序goodsSkuId集合
+            List<Integer> skuIdsByClientNum = skuClickNumService.getSkuIdsByClientNum(skuClickNum);
+            List<GoodsSku> goodsList = goodsService.getGoodsSkuBySkuIdList(skuIdsByClientNum);
+            return new ResponseData(goodsList);
+        } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseData(ErrorType.SYSTEM_ERROR);
         }
     }

@@ -1,5 +1,5 @@
 'use strict';
-app.service('selectUserService', [function() {
+app.service('selectUService', [function() {
     function ajax( options ){
         $.ajax({
             url:options.url,
@@ -115,7 +115,7 @@ app.service('selectUserService', [function() {
     }
 
     function getPrivilegesList( options ){
-        options.url = urls.ms+'/account/getPrivilegesList.do';
+        options.url = urls.ms+'/accountMenu/getModelMenus.do';
         ajax( options );
     }
 
