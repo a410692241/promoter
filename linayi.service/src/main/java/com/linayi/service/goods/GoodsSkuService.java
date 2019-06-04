@@ -194,4 +194,10 @@ public interface GoodsSkuService {
 
 	//导出价差排行
 	void exportDifferenceRanking(GoodsSku goodsSku, HttpServletRequest request, HttpServletResponse response) throws Exception;
+
+	/**获取点击量排行商品
+	 * @param skuIdsByClientNum
+	 * @return
+	 */
+    List<GoodsSku> getGoodsSkuBySkuIdList(List<Integer> skuIdsByClientNum);
 }

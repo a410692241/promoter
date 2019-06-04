@@ -1264,5 +1264,20 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
         fOut.close();
     }
 
-
+    @Override
+    public List<GoodsSku> getGoodsSkuBySkuIdList(List<Integer> skuIdsByClientNum) {
+        List<Long> skuIdsLong = new ArrayList<>();
+        skuIdsByClientNum.forEach(item -> {
+            long l = Long.parseLong(item + "");
+            skuIdsLong.add(l);
+        });
+        if (skuIdsByClientNum.size() == 0) {
+            return new ArrayList<GoodsSku>();
+        }
+        //附加其他内容(商品名,商品...)
+        GoodsSku goodsSku = new GoodsSku();
+        goodsSku.setGoodsSkuIdList(skuIdsLong);
+        List<GoodsSku> goodsList = goodsSkuMapper.getGoodsList(goodsSku);
+        return goodsList;
+    }
 }

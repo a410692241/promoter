@@ -499,24 +499,18 @@ public class GoodsSkuController extends BaseController{
         goodsService.exportDifferenceRanking(goodsSku,request,response);
     }
 
+    /**获取点击量排行商品
+     * @param skuClickNum
+     * @return
+     * @throws Exception
+     */
     @RequestMapping("/getSkuListByClickNum.do")
     @ResponseBody
     public Object getSkuListByClickNum(SkuClickNum skuClickNum) throws Exception {
         try {
             //获取倒序goodsSkuId集合
             List<Integer> skuIdsByClientNum = skuClickNumService.getSkuIdsByClientNum(skuClickNum);
-            List<Long> skuIdsLong = new ArrayList<>();
-            skuIdsByClientNum.forEach(item -> {
-                long l = Long.parseLong(item + "");
-                skuIdsLong.add(l);
-            });
-            if (skuIdsByClientNum.size() == 0) {
-                return new ResponseData(new ArrayList<GoodsSku>());
-            }
-            //附加其他内容(商品名,商品...)
-            GoodsSku goodsSku = new GoodsSku();
-            goodsSku.setGoodsSkuIdList(skuIdsLong);
-            List<GoodsSku> goodsList = goodsSkuMapper.getGoodsList(goodsSku);
+            List<GoodsSku> goodsList = goodsService.getGoodsSkuBySkuIdList(skuIdsByClientNum);
             return new ResponseData(goodsList);
         } catch (Exception e) {
             e.printStackTrace();
