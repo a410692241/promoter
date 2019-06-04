@@ -22,7 +22,7 @@ public enum ErrorType {
     THE_PHONE_NUMBER_HAS_BEEN_REGIST(1904, "该手机号已被注册!"),
     MESSAGE_FAILED_TO_SEND(1905, "短信发送失败!"),
     TOKEN_DISABLED(1906, "accessToken失效!"),
-    ACCOUNT_ERROR(1908,"账号重复"),
+    ACCOUNT_ERROR(1908,"账号或手机号重复"),
     UPDATE_ERROR(1909,"未做修改"),
     UPDATE_STATUS(1910,"修改状态异常"),
     ADD_ERROR(1911,"添加失败!"),
