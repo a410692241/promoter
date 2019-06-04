@@ -18,7 +18,9 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
             goodsSkuId:'',
             fullName:'',
             createTime:'',
-            actualStartTime:''
+            actualStartTime:'',
+            createTimeStart:'',
+            createTimeEnd:''
         };
     }
 
@@ -376,6 +378,8 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
         var fullName = $scope.search.fullName;
         var createTime = $scope.search.createTime;
         var actualStartTime = $scope.search.actualStartTime;
+        var createTimeStart = $scope.search.createTimeStart;
+        var createTimeEnd = $scope.search.createTimeEnd;
         var data = '';
 
         if (goodsSkuId === undefined || goodsSkuId == '') {
@@ -390,15 +394,27 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
         } else {
             data += '&fullName=' + fullName;
         }
+        if (createTimeStart === undefined || createTimeStart == '') {
+            createTimeStart = null;
 
-        if (!(createTime === null || createTime == '')) {
-            createTime = new Date($scope.search.createTime).format("yyyy-MM-dd") + " 00:00:00";
-            data += '&createTime=' + createTime;
+        } else {
+            data += '&createTimeStart=' + createTimeStart;
         }
-        if (!(actualStartTime === null || actualStartTime == '')) {
-            actualStartTime = new Date($scope.search.actualStartTime).format("yyyy-MM-dd") + " 00:00:00";
-            data += '&actualStartTime=' + actualStartTime;
+        if (createTimeEnd === undefined || createTimeEnd == '') {
+            createTimeEnd = null;
+
+        } else {
+            data += '&createTimeEnd=' + createTimeEnd;
         }
+
+        // if (!(createTime === null || createTime == '')) {
+        //     createTime = new Date($scope.search.createTime).format("yyyy-MM-dd") + " 00:00:00";
+        //     data += '&createTime=' + createTime;
+        // }
+        // if (!(actualStartTime === null || actualStartTime == '')) {
+        //     actualStartTime = new Date($scope.search.actualStartTime).format("yyyy-MM-dd") + " 00:00:00";
+        //     data += '&actualStartTime=' + actualStartTime;
+        // }
 
         window.location.href = urls.ms + "/goods/goods/exportAffectedPriceData.do?" + data.replace("&", "");
         toaster.success("", "导出成功!", 1000);
