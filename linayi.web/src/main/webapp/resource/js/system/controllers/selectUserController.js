@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('selectUserCtrl', function ($scope, toaster, selectUserService, messager, templateform, $q) {
+app.controller('selectUCtrl', function ($scope, toaster, selectUserService, messager, templateform, $q) {
 
     function init() {
         $scope.show = show;

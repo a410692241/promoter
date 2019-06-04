@@ -218,6 +218,9 @@
     <select id="selectByName" resultType="com.linayi.entity.account.Account" parameterType="String">
         select * from `admin_account` where `user_name` = #{userName}
     </select>
+    <select id="selectByMobile" resultType="com.linayi.entity.account.Account" parameterType="String">
+        select * from `admin_account` where `mobile` = #{mobile}
+    </select>
 
     <insert id="insertAccountAdmin" parameterType="com.linayi.entity.account.Account" useGeneratedKeys="true"
             keyProperty="accountId">
