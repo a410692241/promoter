@@ -137,14 +137,15 @@ public class ProcurementServiceImpl implements ProcurementService {
 
 	private void getQueryTime(ProcurementTask procurementTask) {
 		//根据时间断查询
-		//采买时间12:00-17:00  查下单时间8:00-13:00及之前的   查询
-		boolean nowBetween1 = getNowBetween(12, 16);
+		//采买时间09:00-13:00  查下单时间09:00及之前的   查询
+		boolean nowBetween1 = getNowBetween(9, 13);
 		if (nowBetween1) {
-			Date fix = getDateFix(null,13);
+			Date fix = getDateFix(null,9);
 			procurementTask.setCreateTime(fix);
 		}
-		//采买时间17:00-20:00  查下单时间13:00-18:00及之前的   查询
-		boolean nowBetween2 = getNowBetween(17, 32);
+
+		//采买时间18:00-09:00  查下单时间18:00及之前的   查询
+		boolean nowBetween2 = getNowBetween(18, 33);
 		if (nowBetween2) {
 			Date now = new Date();
 			Calendar cl = Calendar.getInstance();
@@ -152,7 +153,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 			int hour = cl.get(Calendar.HOUR_OF_DAY);
 			int i = hour % 24;
 			Date fix;
-			if(i >= 0 || i < 8){
+			if(i >= 0 && i < 9){
 				fix = getDateFix(-1,18);
 			}else {
 				fix = getDateFix(null,18);
@@ -160,10 +161,10 @@ public class ProcurementServiceImpl implements ProcurementService {
 			procurementTask.setCreateTime(fix);
 		}
 
-		//采买时间08:00-11:00  查下单时间18:00-8:00及之前的   查询
-		boolean nowBetween3 = getNowBetween(8, 11);
+		//采买时间13:00-18:00  查下单时间13:00及之前的   查询
+		boolean nowBetween3 = getNowBetween(13, 18);
 		if (nowBetween3) {
-			Date fix = getDateFix(null,8);
+			Date fix = getDateFix(null,13);
 			procurementTask.setCreateTime(fix);
 		}
 	}
@@ -174,15 +175,14 @@ public class ProcurementServiceImpl implements ProcurementService {
 		Calendar cl = Calendar.getInstance();
 		cl.setTime(now);
 		int hour = cl.get(Calendar.HOUR_OF_DAY);
-		if(to == 32){
+		if(to == 33){
 			if(hour >= from || hour < to % 24){
 				return true;
 			}
 		}else {
-			if(hour >= from && hour <= to){
+			if(hour >= from && hour < to){
 				return true;
 			}
-
 		}
 		return false;
 	}

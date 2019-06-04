@@ -1,5 +1,5 @@
 'use strict';
-app.service('selectUserService', [function() {
+app.service('selectUService', [function() {
     function ajax( options ){
         $.ajax({
             url:options.url,
