@@ -2,6 +2,7 @@ package com.linayi.dao.correct;
 
 import java.util.List;
 
+import com.linayi.entity.goods.SupermarketGoods;
 import org.apache.ibatis.annotations.Param;
 
 import com.linayi.entity.correct.Correct;
@@ -67,7 +68,7 @@ public interface CorrectMapper {
 
     /**
      * 获取纠错表其它超市价格
-     * @param correct
+     * @param goodsSkuId
      * @return
      */
     List<Correct> getOtherPrice(Integer goodsSkuId);
@@ -85,5 +86,12 @@ public interface CorrectMapper {
      * @return
      */
     List<Correct> getCorrectByAuditerId(Correct correct);
+
+    /**
+     * 获取商品已生效最低价列表
+     * @param correct
+     * @return
+     */
+    List<Correct> getAffectedMinPrice(Correct correct);
 
 }

@@ -4,6 +4,7 @@ import com.linayi.controller.BaseController;
 import com.linayi.entity.account.AdminAccount;
 import com.linayi.entity.correct.Correct;
 import com.linayi.entity.correct.SupermarketGoodsVersion;
+import com.linayi.entity.goods.SupermarketGoods;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.enums.CorrectStatus;
 import com.linayi.enums.OperatorType;
@@ -465,5 +466,35 @@ public class CorrectController extends BaseController {
         return "/jsp/goods/otherPrice";
 
     }
+
+    //获取商品生效最低价列表
+    @RequestMapping("/getaffectedminprice.do")
+    @ResponseBody
+    public Object getAffectedMinPrice(Correct correct){
+        try {
+            List<Correct> correctList = correctService.getAffectedMinPrice(correct);
+
+            PageResult<Correct> page = new PageResult<>(correctList, correct.getTotal());
+
+            return page;
+        }catch (Exception e) {
+            return new ResponseData(ErrorType.SYSTEM_ERROR);
+
+        }
+    }
+
+    //获取商品所有超级价格
+    @RequestMapping("/getSupermarketPrice.do")
+    public String getSupermarketPrice(SupermarketGoods supermarketGoods, ModelMap modelMap){
+
+        List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getOtherPrice(supermarketGoods);
+
+        modelMap.addAttribute("supermarketPrice",supermarketGoodsList);
+
+        return "/jsp/goods/supermarketPrice";
+
+    }
+
+
 
 }

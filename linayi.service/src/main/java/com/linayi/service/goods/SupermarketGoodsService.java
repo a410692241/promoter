@@ -41,4 +41,11 @@ public interface SupermarketGoodsService {
 	 * @return
 	 */
 	public Supermarket getCorrectTypeBySupermarketIdAndgoodsSkuId(Long goodsSkuId,Integer supermarketId);
+
+	/**
+	 * 获取超市商品表其它超市价格
+	 * @param supermarketGoods
+	 * @return
+	 */
+	List<SupermarketGoods> getOtherPrice(SupermarketGoods supermarketGoods);
 }

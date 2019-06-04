@@ -1,6 +1,7 @@
 package com.linayi.service.correct;
 
 import com.linayi.entity.correct.Correct;
+import com.linayi.entity.goods.SupermarketGoods;
 import com.linayi.util.PageResult;
 
 import java.util.List;
@@ -81,6 +82,12 @@ public interface CorrectService {
      */
     List<Correct> getCorrectByAuditerId(Correct correct);
 
+    /**
+     * 获取商品已生效最低价列表
+     * @param correct
+     * @return
+     */
+    List<Correct> getAffectedMinPrice(Correct correct);
 
 //    void updatePriceForAdmin(Correct correct);
 }

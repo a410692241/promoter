@@ -731,4 +731,9 @@ public class CorrectServiceImpl implements CorrectService {
         return correctMapper.getCorrectByAuditerId(correct);
     }
 
+    @Override
+    public List<Correct> getAffectedMinPrice(Correct correct) {
+        return correctMapper.getAffectedMinPrice(correct);
+    }
+
 }

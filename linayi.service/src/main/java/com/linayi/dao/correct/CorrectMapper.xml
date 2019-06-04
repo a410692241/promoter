@@ -577,9 +577,24 @@
              c.status in ('WAIT_AUDIT','AUDIT_SUCCESS','AFFECTED')
     </select>
 
+    <!--获取纠错表其它超市价格-->
+    <select id="getOtherPriceByAffected" resultType="com.linayi.entity.correct.Correct">
+        SELECT
+              s.name name,
+              c.price,
+              (case c.status when 'AFFECTED' then '已生效'  when 'WAIT_AUDIT' then '待审核'  when 'AUDIT_SUCCESS'  then '审核通过'  end) status
+
+        FROM
+              correct c join supermarket s ON c.supermarket_id=s.supermarket_id
+        WHERE
+             c.goods_sku_id=#{goodsSkuId}
+        AND
+             c.status in ('WAIT_AUDIT','AUDIT_SUCCESS','AFFECTED')
+    </select>
+
     <select id="getWaitAuditCorrectBySupermerketId"  resultType="com.linayi.entity.correct.Correct">
         SELECT
-          c.correct_id,c.goods_sku_id,c.supermarket_id,c.price,c.create_time,g.full_name,g.image goodsImage,
+          c.correct_id,c.goods_sku_id,c.supermarket_id,c.price,c.create_time,g.full_WHEREg.image goodsImage,
           (select round(((max(price)-min(price))/min(price)*100),2)  from correct where goods_sku_id=c.goods_sku_id and (status='AFFECTED'  or status='AUDIT_SUCCESS' or status='WAIT_AUDIT') group by goods_sku_id) spreadRate
         FROM
           correct c join goods_sku g on c.goods_sku_id = g.goods_sku_id
@@ -600,4 +615,31 @@
         AND
           c.audit_type = 'USER'
     </select>
+
+    <select id="getAffectedMinPrice"  resultType="com.linayi.entity.correct.Correct">
+        SELECT
+          sg.goods_sku_id,g.full_name,min(sg.price) minprice,sg.price,
+          (SELECT ss.name FROM supermarket_goods sgood LEFT JOIN supermarket ss ON sgood.supermarket_id=ss.supermarket_id  WHERE sgood.goods_sku_id=sg.goods_sku_id ORDER BY sgood.price LIMIT 0,1) name,
+          (SELECT round(((max(price)-min(price))/min(price)*100),2)  from supermarket_goods WHERE goods_sku_id=sg.goods_sku_id) spreadRate,c.actual_start_time,c.create_time
+        FROM
+          supermarket_goods sg
+        LEFT JOIN correct c ON sg.correct_id = c.correct_id
+        LEFT JOIN goods_sku g ON sg.goods_sku_id=g.goods_sku_id
+        <where>
+            1=1
+            <if test="fullName !=null and fullName != '' ">
+                AND g.full_name like concat('%',#{fullName},'%')
+            </if>
+            <if test="goodsSkuId !=null and goodsSkuId != '' ">
+                AND sg.goods_sku_id = #{goodsSkuId}
+            </if>
+        </where>
+        GROUP BY
+          sg.goods_sku_id
+        ORDER BY
+          sg.correct_id DESC
+    </select>
+
+
+
 </mapper>
