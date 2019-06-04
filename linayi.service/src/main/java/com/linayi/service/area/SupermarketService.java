@@ -17,4 +17,6 @@ public interface SupermarketService {
      * @return
      */
     PageResult<SupermarketFullName> getSupermarketByKey(PromoterVo.SearchSmallCommunityByKey search);
+
+    Supermarket getSupermarketByProcureId(Integer userId);
 }

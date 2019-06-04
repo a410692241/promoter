@@ -70,4 +70,9 @@ public class SupermarketByAreaCodeServiceImpl implements SupermarketService {
 		PageResult<SupermarketFullName> pageResult = new PageResult<>(supermarketFullNameList, supermarket);
 		return pageResult;
 	}
+
+	@Override
+	public Supermarket getSupermarketByProcureId(Integer userId) {
+		return supermarketMapper.getSupermarketByProcurerId(userId);
+	}
 }
