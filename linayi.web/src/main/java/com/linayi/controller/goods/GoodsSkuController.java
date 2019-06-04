@@ -2,6 +2,9 @@ package com.linayi.controller.goods;
 
 import com.google.gson.Gson;
 import com.linayi.controller.BaseController;
+import com.linayi.dao.goods.GoodsSkuMapper;
+import com.linayi.dao.goods.SkuClickNumMapper;
+import com.linayi.dao.goods.SupermarketGoodsMapper;
 import com.linayi.entity.account.AdminAccount;
 import com.linayi.entity.correct.Correct;
 import com.linayi.entity.correct.SupermarketGoodsVersion;
@@ -14,6 +17,7 @@ import com.linayi.service.correct.SupermarketGoodsVersionService;
 import com.linayi.service.goods.*;
 import com.linayi.util.PageResult;
 import com.linayi.util.ResponseData;
+import org.elasticsearch.search.aggregations.pipeline.movavg.models.EwmaModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +57,10 @@ public class GoodsSkuController extends BaseController{
     private GoodsAttrValueService goodsAttrValueService;
     @Autowired
     private AttributeValueService attributeValueService;
+    @Autowired
+    private SkuClickNumService skuClickNumService;
+    @Autowired
+    private GoodsSkuMapper goodsSkuMapper;
 
     /**
      * 添加商品页面的入口
@@ -489,5 +497,30 @@ public class GoodsSkuController extends BaseController{
     @ResponseBody
     public void exportDifferenceRanking(GoodsSku goodsSku, HttpServletRequest request, HttpServletResponse response) throws Exception {
         goodsService.exportDifferenceRanking(goodsSku,request,response);
+    }
+
+    @RequestMapping("/getSkuListByClickNum.do")
+    @ResponseBody
+    public Object getSkuListByClickNum(SkuClickNum skuClickNum) throws Exception {
+        try {
+            //获取倒序goodsSkuId集合
+            List<Integer> skuIdsByClientNum = skuClickNumService.getSkuIdsByClientNum(skuClickNum);
+            List<Long> skuIdsLong = new ArrayList<>();
+            skuIdsByClientNum.forEach(item -> {
+                long l = Long.parseLong(item + "");
+                skuIdsLong.add(l);
+            });
+            if (skuIdsByClientNum.size() == 0) {
+                return new ResponseData(new ArrayList<GoodsSku>());
+            }
+            //附加其他内容(商品名,商品...)
+            GoodsSku goodsSku = new GoodsSku();
+            goodsSku.setGoodsSkuIdList(skuIdsLong);
+            List<GoodsSku> goodsList = goodsSkuMapper.getGoodsList(goodsSku);
+            return new ResponseData(goodsList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseData(ErrorType.SYSTEM_ERROR);
+        }
     }
 }

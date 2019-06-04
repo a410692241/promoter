@@ -2,12 +2,14 @@ package com.linayi.controller.goods;
 
 
 import com.linayi.controller.BaseController;
+import com.linayi.dao.goods.SkuClickNumMapper;
 import com.linayi.entity.account.Account;
 import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.goods.GoodsSkuService;
+import com.linayi.service.goods.SkuClickNumService;
 import com.linayi.service.goods.SupermarketGoodsService;
 import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.util.PageResult;
@@ -34,6 +36,8 @@ public class GoodsSkuController extends BaseController {
     private SupermarketGoodsService supermarketGoodsService;
     @Autowired
     private SupermarketService supermarketService;
+    @Autowired
+    private SkuClickNumService skuClickNumService;
 
     @RequestMapping("/upload.do")
     @ResponseBody
@@ -63,7 +67,9 @@ public class GoodsSkuController extends BaseController {
     @ResponseBody
     public Object showOtherSupermarketPrice(@RequestBody Map<String, Object> param) {
         try {
-            Map<String, Object> map = supermarketGoodsService.getPriceSupermarketByGoodsSkuId(super.getUserId(), (Integer) param.get("goodsSkuId"));
+            Integer goodsSkuId = (Integer) param.get("goodsSkuId");
+            Map<String, Object> map = supermarketGoodsService.getPriceSupermarketByGoodsSkuId(super.getUserId(), goodsSkuId);
+            skuClickNumService.updateClickNum(goodsSkuId);
             return new ResponseData(map);
         } catch (Exception e) {
             return new ResponseData(ErrorType.SYSTEM_ERROR);

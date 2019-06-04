@@ -276,6 +276,7 @@
             <if test="createTimeEnd != null and createTimeEnd != ''">
                 and gs.create_time <![CDATA[ <= ]]> #{createTimeEnd}
             </if>
+
         </where>
         order by gs.goods_sku_id desc
     </select>
@@ -365,6 +366,12 @@
             </if>
             <if test="createTimeEnd != null and createTimeEnd != ''">
                 and gs.create_time <![CDATA[ <= ]]> #{createTimeEnd}
+            </if>
+            <if test="goodsSkuIdList != null and goodsSkuIdList.size() > 0">
+                AND gs.goods_sku_id in
+                <foreach collection="goodsSkuIdList" index="index" item="item1" open="(" separator="," close=")">
+                    ${item1}
+                </foreach>
             </if>
         </where>
         order by gs.goods_sku_id desc
