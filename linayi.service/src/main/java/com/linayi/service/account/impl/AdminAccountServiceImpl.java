@@ -130,7 +130,7 @@ public class AdminAccountServiceImpl implements AdminAccountService{
 			account1.setAccountId(adminAccount.getAccountId());
 			adminAccountMapper.resetAdminPassword(account1);
 		}else{
-			throw new BusinessException(ErrorType.ACCOUNT_OR_PASSWORD_ERROR);
+			throw new BusinessException(ErrorType.ACCOUNT_OR_OLDPASSWORD_ERROR);
 		}
 	}
 
