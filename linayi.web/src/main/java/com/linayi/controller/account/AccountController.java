@@ -143,7 +143,7 @@ public class AccountController {
             adminAccountService.modifyPsd(oldPassword,newPassword,session);
             session.removeAttribute("loginAccount");
         }catch (BusinessException e){
-            return new ResponseData(ErrorType.ACCOUNT_OR_OLDPASSWORD_ERROR);
+            return new ResponseData(e.getErrorType());
         }catch (Exception e){
             return new ResponseData(ErrorType.SYSTEM_ERROR);
         }
