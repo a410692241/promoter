@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('selectUCtrl', function ($scope, toaster, selectUserService, messager, templateform, $q) {
+app.controller('selectUCtrl', function ($scope, toaster, selectUService, messager, templateform, $q) {
 
     function init() {
         $scope.show = show;
@@ -160,7 +160,7 @@ app.controller('selectUCtrl', function ($scope, toaster, selectUserService, mess
                     roleIdList[i] = $("#selectRoleList").jqGrid("getRowData", rowIdList[i]).roleId - 0;
                 }
                 localStorage.getItem("roleId");
-                selectUserService.fenpeiRole({
+                selectUService.fenpeiRole({
                     data: {
                         accountId: id,
                         roleId: localStorage.getItem("roleId")

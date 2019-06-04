@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('selectRoleCtrl', function($scope,toaster,selectUserService,messager,templateform,$q) {
+app.controller('selectRoleCtrl', function($scope,toaster,selectUService,messager,templateform,$q) {
 
 	function init(){
 		$scope.show = show;
