@@ -5,7 +5,7 @@ app.controller('selectUserCtrl', function($scope,toaster,selectUserService,messa
 	function init(){
 		 $scope.show = show;
 		$scope.edit = edit;
-		$scope.add = add;
+		/*$scope.add = add;*/
 		$scope.remove = remove;
 		$scope.list = list;
 		$scope.resetPWD = resetPWD;
@@ -301,7 +301,7 @@ app.controller('selectUserCtrl', function($scope,toaster,selectUserService,messa
 		});
     }
     //新增
-	function add( id ){
+	/*function add( id ){
 		var url = urls.ms + "/employee/addUser.do?";
 		if( id ){
 			url = url + $.param( {employeeId:id} );
@@ -330,7 +330,7 @@ app.controller('selectUserCtrl', function($scope,toaster,selectUserService,messa
 				toaster.error( "","手机号已存在",3000 );
 			}
 		});
-	}
+	}*/
 
 	function update( id ){
 		var url = urls.ms + "/employee/update.do?";
