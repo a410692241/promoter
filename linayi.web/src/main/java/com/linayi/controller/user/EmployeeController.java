@@ -45,7 +45,6 @@ public class EmployeeController {
 
 
     //添加和修改员工用户信息
-    @Transactional(rollbackFor = Throwable.class)
     @RequestMapping("/addUser.do")
     @ResponseBody
     public Object addEmployee(Account account) {
