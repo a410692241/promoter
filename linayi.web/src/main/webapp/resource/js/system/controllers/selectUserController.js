@@ -188,7 +188,7 @@ app.controller('selectUCtrl', function ($scope, toaster, selectUService, message
     //分配权限
     function fenpeiPrivilege(id) {
         //获取权限树
-        selectUserService.getPrivilegesList({
+        selectUService.getPrivilegesList({
             data: {
                 userId: id
             },
@@ -210,7 +210,7 @@ app.controller('selectUCtrl', function ($scope, toaster, selectUService, message
 
             }
         }, function (modalInstance, data, scope) {
-            selectUserService.addUserPrivilege({
+            selectUService.addUserPrivilege({
                 data: {
                     userId: id,
                     privilageList: scope.privilageList
@@ -281,7 +281,7 @@ app.controller('selectUCtrl', function ($scope, toaster, selectUService, message
     //启用、禁用
     function cancelFrozen(id, status) {
         messager.confirm("确认" + (status == 1000 ? "启用" : "禁用") + "?", function (modalInstance) {
-            selectUserService.cancelFrozen({
+            selectUService.cancelFrozen({
                 "data": {accountId: id, status: status},
                 "success": function (data) {
                     if (data.respCode === "S") {
@@ -303,7 +303,7 @@ app.controller('selectUCtrl', function ($scope, toaster, selectUService, message
     //重置密码
     function resetPWD(id) {
         messager.confirm("确认重置密码？", function (modalInstance) {
-            selectUserService.resetPWD({
+            selectUService.resetPWD({
                 "data": {accountId: id},
                 "success": function (data) {
                     if (data.respCode === "S") {
@@ -325,7 +325,7 @@ app.controller('selectUCtrl', function ($scope, toaster, selectUService, message
     //删除
     function remove(id) {
         messager.confirm("确认删除？", function (modalInstance) {
-            selectUserService.remove({
+            selectUService.remove({
                 "data": {accountId: id},
                 "success": function (data) {
                     if (data.respCode === "S") {
@@ -355,7 +355,7 @@ app.controller('selectUCtrl', function ($scope, toaster, selectUService, message
             url: url
         }, function ($modalInstance, data, scope) {
             try {
-                selectUserService.save({
+                selectUService.save({
                     data: scope.selectUser,
                     success: function (data) {
                         if (data.respCode === "S") {
@@ -378,7 +378,7 @@ app.controller('selectUCtrl', function ($scope, toaster, selectUService, message
 
     //查看
     function show(id) {
-        selectUserService.getById({
+        selectUService.getById({
             data: {userId: id},
             then: function (data) {
                 templateform.open({
@@ -435,7 +435,7 @@ app.controller('selectUCtrl', function ($scope, toaster, selectUService, message
             size: "xs",
             ngTemplate: true,
         }, function (modalInstance, data, scope) {
-            selectUserService.addRole({
+            selectUService.addRole({
                 data: $scope.role,
                 success: function (data) {
                     ;
@@ -456,7 +456,7 @@ app.controller('selectUCtrl', function ($scope, toaster, selectUService, message
 
     function deleteRole(id) {
         messager.confirm("确认删除？", function (modalInstance) {
-            selectUserService.deleteRole({
+            selectUService.deleteRole({
                 "data": {roleId: id},
                 "success": function (data) {
                     if (data.success) {

@@ -130,7 +130,7 @@ app.controller('selectRoleCtrl', function($scope,toaster,selectUService,messager
 				for( var i = 0; i < rowIdList.length; i++ ){
 					roleIdList[i] = $("#selectRoleList").jqGrid("getRowData",rowIdList[i]).roleId - 0;
 				}
-				selectUserService.fenpeiRole( {
+				selectUService.fenpeiRole( {
 					data:{
 						accountId:id,
 						roleIdList:roleIdList,
@@ -158,7 +158,7 @@ app.controller('selectRoleCtrl', function($scope,toaster,selectUService,messager
 	//分配权限
 	function fenpeiPrivilege( id ){
 		//获取权限树
-		selectUserService.getPrivilegesList({
+		selectUService.getPrivilegesList({
 			data:{
 				roleId:id
 			},
@@ -180,7 +180,7 @@ app.controller('selectRoleCtrl', function($scope,toaster,selectUService,messager
 
 			}
 		},function( modalInstance,data,scope ){
-			selectUserService.addUserPrivilege({
+			selectUService.addUserPrivilege({
 				data:{
 					roleId:id,
 					privilageList:scope.privilageList
@@ -206,7 +206,7 @@ app.controller('selectRoleCtrl', function($scope,toaster,selectUService,messager
 	//启用、禁用
 	function cancelFrozen(roleMenuId,status){
 		messager.confirm("确认"+(status == 1000 ? "启用":"禁用")+"?",function( modalInstance ){
-			selectUserService.cancelFrozen({
+			selectUService.cancelFrozen({
 				"data":{roleMenuId:roleMenuId,status:status},
 				"success":function( data ){
 					if( data.respCode==="S" ){
@@ -228,7 +228,7 @@ app.controller('selectRoleCtrl', function($scope,toaster,selectUService,messager
 	//重置密码
 	function resetPWD( id ){
 		messager.confirm("确认重置密码？",function( modalInstance ){
-			selectUserService.resetPWD({
+			selectUService.resetPWD({
 				"data":{accountId:id},
 				"success":function( data ){
 					if( data.respCode==="S" ){
@@ -251,7 +251,7 @@ app.controller('selectRoleCtrl', function($scope,toaster,selectUService,messager
 	function remove( roleMenuId ){
 		/*;*/
 		messager.confirm("确认删除？",function( modalInstance ){
-			selectUserService.remove({
+			selectUService.remove({
 				"data":{roleMenuId:roleMenuId},
 				"success":function( data ){
 					if( data.respCode==="S" ){
@@ -281,7 +281,7 @@ app.controller('selectRoleCtrl', function($scope,toaster,selectUService,messager
 			url:url
 		},function( $modalInstance,data,scope ){
 			try{
-				selectUserService.save( {
+				selectUService.save( {
 					data:scope.selectUser,
 					success:function( data ){
 						if( data.respCode==="S" ){
@@ -316,7 +316,7 @@ app.controller('selectRoleCtrl', function($scope,toaster,selectUService,messager
 					dataName:"user",
 					url:urls.ms + "/jsp/user/UserShow.jsp"
 				},function( modalInstance,data ){
-					selectUserService.save( {
+					selectUService.save( {
 						data:data,
 						success:function( data ){
 							if( data.success ){
@@ -361,7 +361,7 @@ app.controller('selectRoleCtrl', function($scope,toaster,selectUService,messager
 			size:"xs",
 			ngTemplate:true,
 		},function( modalInstance,data,scope ){
-			selectUserService.addRole( {
+			selectUService.addRole( {
 				data:$scope.role,
 				success:function( data ){
 					;
@@ -382,7 +382,7 @@ app.controller('selectRoleCtrl', function($scope,toaster,selectUService,messager
 
 	function deleteRole( id ){
 		messager.confirm("确认删除？",function( modalInstance ){
-			selectUserService.deleteRole({
+			selectUService.deleteRole({
 				"data":{roleId:id},
 				"success":function( data ){
 					if( data.success ){
