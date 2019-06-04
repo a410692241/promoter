@@ -15,8 +15,10 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
         $scope.save = save;
          list();
         $scope.search = {
-            status: "",
-            priceType: ""
+            goodsSkuId:'',
+            fullName:'',
+            createTime:'',
+            actualStartTime:''
         };
     }
 
@@ -370,82 +372,35 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
     }
 
     function exportData() {
-        var realName = $scope.search.realName;
-        var mobile = $scope.search.mobile;
-        var status = $scope.search.status;
-        var priceType = $scope.search.priceType;
-        var name = $scope.search.name;
-        var createTimeStart = $scope.search.createTimeStart;
-        var createTimeEnd = $scope.search.createTimeEnd;
-        var startTime = $scope.search.startTime;
-        var endTime = $scope.search.endTime;
+        var goodsSkuId = $scope.search.goodsSkuId;
+        var fullName = $scope.search.fullName;
+        var createTime = $scope.search.createTime;
+        var actualStartTime = $scope.search.actualStartTime;
         var data = '';
-        var sum = 0;
-        if (realName === undefined || realName == '') {
-            realName = null;
-            sum++;
-        } else {
-            data += '&realName=' + realName;
-        }
-        if (priceType === undefined || priceType == '') {
-            priceType = null;
-            sum++;
-        } else {
-            data += '&priceType=' + priceType;
-        }
-        if (mobile === undefined || mobile == '') {
-            mobile = null;
-            sum++;
-        } else {
-            data += '&mobile=' + mobile;
-        }
-        if (status === undefined || status == '') {
-            status = null;
-            sum++;
-        } else {
-            data += '&status=' + status;
-        }
-        if (name === undefined || name == '') {
-            name = null;
-            sum++;
+
+        if (goodsSkuId === undefined || goodsSkuId == '') {
+            goodsSkuId = null;
 
         } else {
-            data += '&name=' + name;
+            data += '&goodsSkuId=' + goodsSkuId;
         }
-        if (createTimeStart === undefined || createTimeStart == '') {
-            createTimeStart = null;
-            sum++;
+        if (fullName === undefined || fullName == '') {
+            fullName = null;
+
         } else {
-            data += '&createTimeStart=' + createTimeStart;
-        }
-        if (createTimeEnd === undefined || createTimeEnd == '') {
-            createTimeEnd = null;
-            sum++;
-        } else {
-            data += '&createTimeEnd=' + createTimeEnd;
-        }
-        if (startTime === undefined || startTime == '') {
-            startTime = null;
-            sum++;
-        }
-        if (endTime === undefined || endTime == '') {
-            endTime = null;
-            sum++;
+            data += '&fullName=' + fullName;
         }
 
-        if (sum == 8) {
-            toaster.error("", "请输入搜索条件后导出!", 3000);
-            return;
+        if (!(createTime === null || createTime == '')) {
+            createTime = new Date($scope.search.createTime).format("yyyy-MM-dd") + " 00:00:00";
+            data += '&createTime=' + createTime;
         }
-        if (!(startTime === null || startTime == '')) {
-            startTime = new Date($scope.search.startTime).format("yyyy-MM-dd") + " 00:00:00";
-            data += '&startTime=' + startTime;
+        if (!(actualStartTime === null || actualStartTime == '')) {
+            actualStartTime = new Date($scope.search.actualStartTime).format("yyyy-MM-dd") + " 00:00:00";
+            data += '&actualStartTime=' + actualStartTime;
         }
-        if (!(endTime === null || endTime == '')) {
-            endTime = new Date($scope.search.endTime).format("yyyy-MM-dd") + " 00:00:00";
-            data += '&endTime=' + endTime;
-        }
-        window.location.href = urls.ms + "/correct/correct/exportShareRecord.do?" + data.replace("&", "");
+
+        window.location.href = urls.ms + "/goods/goods/exportAffectedPriceData.do?" + data.replace("&", "");
         toaster.success("", "导出成功!", 1000);
 
     }

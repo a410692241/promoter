@@ -22,48 +22,7 @@
             </div>
             <div class="widget-body">
                 <form class="form-inline" id="correct">
-                    <%--<div class="form-group form-group-margin">--%>
-                        <%--<div class="input-group">--%>
-                            <%--<span class="input-group-addon">真实姓名</span>--%>
-                            <%--<input ng-model="search.realName" type="text" class="form-control">--%>
-                        <%--</div>--%>
-                    <%--</div>--%>
-                    <%--<div class="form-group form-group-margin">--%>
-                        <%--<div class="input-group">--%>
-                            <%--<span class="input-group-addon">手机号</span>--%>
-                            <%--<input ng-model="search.mobile" type="text" class="form-control">--%>
-                        <%--</div>--%>
-                    <%--</div>--%>
-                    <%--<div class="form-group form-group-margin">--%>
-                        <%--<div class="input-group">--%>
-                            <%--<span class="input-group-addon">纠错状态</span>--%>
-                            <%--<ui-select on-select="search.status=$item.code;"--%>
-                                       <%--ng-init='options=<cl:getByEnum enumName="com.linayi.enums.CorrectStatus" nameWithCode="getCorrectTypeName;name"/>;--%>
-                                   <%--options.splice(0,0,{"name":"全部","code":""});'--%>
-                                       <%--ng-model="temp" style="min-width: 178px">--%>
-                                <%--<ui-select-match>{{$select.selected.name}}</ui-select-match>--%>
-                                <%--<ui-select-choices--%>
-                                        <%--repeat="item in options | filter:{name: $select.search}">--%>
-                                    <%--<span ng-bind-html="item.name | highlight: $select.search"></span>--%>
-                                <%--</ui-select-choices>--%>
-                            <%--</ui-select>--%>
-                        <%--</div>--%>
-                    <%--</div>--%>
-                    <%--<div class="form-group form-group-margin">--%>
-                        <%--<div class="input-group">--%>
-                            <%--<span class="input-group-addon">价格类型</span>--%>
-                            <%--<ui-select on-select="search.priceType=$item.code;"--%>
-                                       <%--ng-init='options=<cl:getByEnum enumName="com.linayi.enums.PriceType" nameWithCode="getPriceTypeName;name"/>;--%>
-                                   <%--options.splice(0,0,{"name":"全部","code":""});'--%>
-                                       <%--ng-model="temp" style="min-width: 178px">--%>
-                                <%--<ui-select-match>{{$select.selected.name}}</ui-select-match>--%>
-                                <%--<ui-select-choices--%>
-                                        <%--repeat="item in options | filter:{name: $select.search}">--%>
-                                    <%--<span ng-bind-html="item.name | highlight: $select.search"></span>--%>
-                                <%--</ui-select-choices>--%>
-                            <%--</ui-select>--%>
-                        <%--</div>--%>
-                    <%--</div>--%>
+
                     <div class="form-group form-group-margin">
                         <div class="input-group">
                             <span class="input-group-addon">商品ID</span>
@@ -76,31 +35,7 @@
                     </div>
                 </div>
 
-              <%--      <div class="form-group form-group-margin">
-                        <div class="input-group">
-                            <span class="input-group-addon">有效开始时间</span>
-                            <input ng-model="search.startTim" datetimepicker type="text" class="form-control" style="min-width: 150px">
-                        </div>
-                    </div>
-                    <div class="form-group form-group-margin">
-                        <div class="input-group">
-                            <span class="input-group-addon">有效结束时间</span>
-                            <input ng-model="search.endTim" datetimepicker type="text" class="form-control" style="min-width: 150px">
-                        </div>
-                    </div>--%>
-                    <%--<div class="form-group form-group-margin">--%>
-                        <%--<div class="input-group">--%>
-                            <%--<span class="input-group-addon">创建时间</span> <input type="text"--%>
-                                                                               <%--class="form-control" datetimepicker--%>
-                                                                               <%--ng-model="search.createTimeStart"/>--%>
-                        <%--</div>--%>
 
-                        <%--至--%>
-                        <%--<div class="input-group">--%>
-                            <%--<input type="text" class="form-control" datetimepicker--%>
-                                   <%--ng-model="search.createTimeEnd"/>--%>
-                        <%--</div>--%>
-                    <%--</div>--%>
 
                     <a ng-click="list()" class="btn btn-primary form-group-margin" href="javascript:void(0);">
                         <i class="fa fa-search"></i>搜索

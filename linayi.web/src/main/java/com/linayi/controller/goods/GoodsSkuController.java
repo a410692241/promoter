@@ -469,4 +469,11 @@ public class GoodsSkuController extends BaseController{
             return new ResponseData(ErrorType.SYSTEM_ERROR);
         }
     }
+
+
+    @RequestMapping("/exportAffectedPriceData.do")
+    @ResponseBody
+    public void exportAffectedPriceData(Correct correct, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        goodsService.exportAffectedPriceData(correct,request,response);
+    }
 }
