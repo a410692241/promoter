@@ -1,5 +1,6 @@
 package com.linayi.controller.area;
 
+import com.linayi.controller.BaseController;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
@@ -17,7 +18,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("area/Supermarket")
-public class SupermarketController {
+public class SupermarketController extends BaseController {
 
     @Autowired
     private SupermarketService supermarketService;
@@ -38,6 +39,19 @@ public class SupermarketController {
         }
     }
 
+
+    @RequestMapping("getSupermarketByProcureId.do")
+    @ResponseBody
+    public Object getSupermarketByProcureId() {
+        try {
+            Integer userId = getUserId();
+            Supermarket supermarket = supermarketService.getSupermarketByProcureId(userId);
+            return new ResponseData(supermarket);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+    }
 
     /**通过超市名字获取超市列表
      * @param search
