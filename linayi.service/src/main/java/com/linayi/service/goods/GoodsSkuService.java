@@ -1,5 +1,6 @@
 package com.linayi.service.goods;
 
+import com.linayi.entity.correct.Correct;
 import com.linayi.entity.goods.Attribute;
 import com.linayi.entity.goods.GoodsAttrValue;
 import com.linayi.entity.goods.GoodsSku;
