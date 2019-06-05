@@ -128,4 +128,12 @@ public interface GoodsSkuMapper {
 	 * @return
 	 */
 	List<Long> getGoodsSukIdByCommunityId(Integer communityId);
+
+
+	/**
+	 * 后台价差排行
+	 * @param goodsSku
+	 * @return
+	 */
+	List<GoodsSku> getBackstageDifferenceRanking(GoodsSku goodsSku);
 }

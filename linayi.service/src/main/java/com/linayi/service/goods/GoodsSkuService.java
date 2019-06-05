@@ -1,6 +1,5 @@
 package com.linayi.service.goods;
 
-import com.linayi.entity.correct.Correct;
 import com.linayi.entity.goods.Attribute;
 import com.linayi.entity.goods.GoodsAttrValue;
 import com.linayi.entity.goods.GoodsSku;
@@ -184,6 +183,23 @@ public interface GoodsSkuService {
 	 * @param goodsSku
 	 */
 	Map<String, Object> goodsDirectOrder(GoodsSku goodsSku);
+
+
+	/**
+	 * 后台价差排行
+	 * @param goodsSku
+	 * @return
+	 */
+	List<GoodsSku> getBackstageDifferenceRanking(GoodsSku goodsSku);
+
+	//导出价差排行
+	void exportDifferenceRanking(GoodsSku goodsSku, HttpServletRequest request, HttpServletResponse response) throws Exception;
+
+	/**获取点击量排行商品
+	 * @param skuIdsByClientNum
+	 * @return
+	 */
+    List<GoodsSku> getGoodsSkuBySkuIdList(List<Integer> skuIdsByClientNum);
 
 	public void exportAffectedPriceData(Correct correct, HttpServletRequest request, HttpServletResponse response) throws Exception;
 }

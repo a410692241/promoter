@@ -9,26 +9,14 @@
 
 </head>
 <body>
-<input type="hidden" id="procurementTaskId" value="${procurementTaskId}">
-<div class="row" ng-controller="orderDetailCtrl">
-    <div class="col-xs-12 col-md-12">
 
-
-        <!-- 表格 -->
-        <table id="orderSupermarketList" style="width: 100%"></table>
-        <%--<!-- 分页 -->
-        <div id="correctPager"></div>--%>
-
-        <!--消息框 -->
-    </div>
-</div>
 <%--超市选择--%>
-<div class="input-group form-group form-group-margin" style="width: 100%;" ng-show="procurement.ordersId">
-    <table border="3" style="width: 100%;border-color: #2dc3e8;">
+
+    <table border="3" style="width: 100%;border-color: #00adee;">
         <tr>
             <th style="width: 10%; text-align: center;">序号</th>
             <th style="width: 40%; height: 40px; text-align: center;">超市</th>
-            <th style="width: 25%; text-align: center;">价格</th>
+            <th style="width: 25%; text-align: center;">价格(元)</th>
             <th style="width: 25%; text-align: center;">状态</th>
         </tr>
         <c:forEach items="${otherPrice}" var="otherPrice" varStatus="status">
@@ -40,6 +28,6 @@
         </tr>
         </c:forEach>
     </table>
-</div>
+
 </body>
 </html>

@@ -31,11 +31,9 @@ public interface AdminAccountMapper {
      */
     Account selectAccountByaccountId(Integer accountId);
 
-    /**
-     * @param mobile
-     * @return accountId
-     */
-    Account selectByName(String mobile);
+    Account selectByName(String userName);
+
+    Account selectByMobile(String mobile);
 
     void insertAccountAdmin(Account account);
 

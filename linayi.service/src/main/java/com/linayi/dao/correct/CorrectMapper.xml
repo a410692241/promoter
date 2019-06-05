@@ -356,7 +356,7 @@
         c.update_time,
         c.audit_time,
         c.auditer_id,
-        (select round(((max(price)-min(price))/min(price)*100),2)  from correct where goods_sku_id=c.goods_sku_id and (status='AFFECTED'  or status='AUDIT_SUCCESS' or status='WAIT_AUDIT') group by goods_sku_id) spreadRate,
+        IFNULL((select round(((IFNULL(max(price),0)-IFNULL(min(price),0))/IFNULL(min(price),0)*100),2)  from correct where goods_sku_id=c.goods_sku_id and (status='AFFECTED'  or status='AUDIT_SUCCESS' or status='WAIT_AUDIT') group by goods_sku_id),0) spreadRate,
         s.name name
         FROM
         correct c
@@ -575,6 +575,7 @@
              c.goods_sku_id=#{goodsSkuId}
         AND
              c.status in ('WAIT_AUDIT','AUDIT_SUCCESS','AFFECTED')
+        ORDER BY  c.price asc
     </select>
 
     <!--获取纠错表其它超市价格-->

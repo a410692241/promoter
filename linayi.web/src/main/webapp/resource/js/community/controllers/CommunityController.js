@@ -175,7 +175,7 @@ app.controller('communityCtrl', function($scope,toaster,communityService,message
 					//opts = opts + "<a href='javascript:void(0);' ng-click='remove( "+rowObject.communityId+" )' class='btn btn-primary fa fa-edit btn-sm td-compile'>删除</a> ";
 					opts = opts + "<a href='javascript:void(0);' ng-click='showCommunityLocation( "+rowObject.communityId+" )' class='btn btn-primary fa fa-edit btn-sm td-compile'>绑定小区</a> ";
 					opts = opts + "<a href='javascript:void(0);' ng-click='openBindSupermarket( "+rowObject.communityId+")' class='btn btn-primary fa fa-edit btn-sm td-compile'>绑定超市</a> ";
-					opts = opts + "<a href='javascript:void(0);' ng-click='communityInfo( "+rowObject.communityId+")' class='btn btn-primary fa fa-edit btn-sm td-compile'>查看</a> ";
+					//opts = opts + "<a href='javascript:void(0);' ng-click='communityInfo( "+rowObject.communityId+")' class='btn btn-primary fa fa-edit btn-sm td-compile'>查看</a> ";
 					opts = opts + "<a href='javascript:void(0);' ng-click='updateCommunityPrice( "+rowObject.communityId+")' class='btn btn-primary fa fa-edit btn-sm td-compile'>更新价格</a> ";
 						 return opts;
 	             }}
