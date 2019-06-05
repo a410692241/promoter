@@ -38,6 +38,13 @@
 
                     <div class="form-group form-group-margin">
                         <div class="input-group">
+                            <span class="input-group-addon">超市名</span>
+                            <input ng-model="search.name" type="text" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group form-group-margin">
+                        <div class="input-group">
                             <span class="input-group-addon">实际开始时间</span> <input type="text"
                                                                                class="form-control" datetimepicker
                                                                                ng-model="search.createTimeStart"/>

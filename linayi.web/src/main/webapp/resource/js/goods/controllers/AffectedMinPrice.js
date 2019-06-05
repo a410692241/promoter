@@ -17,6 +17,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
         $scope.search = {
             goodsSkuId:'',
             fullName:'',
+            name:'',
             createTime:'',
             actualStartTime:'',
             createTimeStart:'',
@@ -376,6 +377,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
     function exportData() {
         var goodsSkuId = $scope.search.goodsSkuId;
         var fullName = $scope.search.fullName;
+        var name = $scope.search.name;
         var createTime = $scope.search.createTime;
         var actualStartTime = $scope.search.actualStartTime;
         var createTimeStart = $scope.search.createTimeStart;
@@ -393,6 +395,12 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
 
         } else {
             data += '&fullName=' + fullName;
+        }
+        if (name === undefined || name == '') {
+            name = null;
+
+        } else {
+            data += '&name=' + name;
         }
         if (createTimeStart === undefined || createTimeStart == '') {
             createTimeStart = null;

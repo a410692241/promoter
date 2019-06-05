@@ -643,6 +643,11 @@
         </where>
         GROUP BY
           sg.goods_sku_id
+        HAVING
+          1=1
+        <if test="name != null and name != ''">
+        AND name LIKE concat('%',#{name},'%')
+        </if>
         ORDER BY
         c.actual_start_time DESC
     </select>
