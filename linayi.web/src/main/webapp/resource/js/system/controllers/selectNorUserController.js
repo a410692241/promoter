@@ -290,14 +290,13 @@ app.controller('selectUserCtrl', function($scope,toaster,selectUserService,messa
 							toaster.success("","操作成功！",3000);
 							$modalInstance.close();
 						}else{
-							console.log( "33333333333");
-								toaster.error( "","账户名或手机号已存在",3000 );
+								toaster.error( "",data.data,3000 );
 						}
 					}
 				} )
 			}catch (e) {
 				console.log( e );
-				toaster.error( "","账户名或手机号已存在",3000 );
+				toaster.error( "",e.msg ? e.msg : "出错了",3000 );
 			}
 		});
     }
