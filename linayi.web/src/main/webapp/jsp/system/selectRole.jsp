@@ -11,6 +11,7 @@
 <script type="text/javascript">
 //列表查询
 function listUserRoleList(){
+	var item_selected = new Array();
 	var selectRoleId = -1;
 	var $grid = $("#selectRoleList");
 	$grid.jqGrid({
@@ -31,11 +32,39 @@ function listUserRoleList(){
 			}}, 
 		],
 		loadComplete:function( rows ){
-			checkPrivilege( rows,${param.accountId} );  
+			checkPrivilege( rows,${param.accountId} );
+		},
+		onSelectAll: function (presentation, status) {
+			for (var index = 0; index < presentation.length; index++) {
+				var row = $(this).jqGrid('getRowData', presentation[index]);
+				if (status) {
+					if (item_selected.toString().indexOf(row.roleId) < 0) {
+						item_selected.push(row.roleId);
+					}
+				} else {
+					for (var i = 0; i < item_selected.length; i++) {
+						if (item_selected[i] == row.roleId) {
+							item_selected.splice(i, 1);
+						}
+					}
+				}
+			}
+			console.log(item_selected);
+			localStorage.setItem("roleList",item_selected);
 		},
 		onSelectRow: function (rowId,status) {
 			var row = $(this).jqGrid("getRowData",rowId);
-			localStorage.setItem("roleId",row.roleId);
+			if (status) {
+				item_selected.push(row.roleId);
+			} else {
+				for (var i = 0; i < item_selected.length; i++) {
+					if (item_selected[i] == row.roleId) {
+						item_selected.splice(i, 1);
+					}
+				}
+			}
+			console.log(item_selected);
+			localStorage.setItem("roleList",item_selected);
 		},
 		ondblClickRow:function(rowid, iRow, iCol, e){
 			var row = $(this).jqGrid("getRowData",rowid);

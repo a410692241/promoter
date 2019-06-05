@@ -3,6 +3,7 @@ package com.linayi.entity.account;
 import com.linayi.entity.BaseEntity;
 
 import java.util.Date;
+import java.util.List;
 
 public class Account extends BaseEntity {
     private Integer accountId;
@@ -60,6 +61,34 @@ public class Account extends BaseEntity {
     private String qq;
 
     private Integer roleId;
+
+    private String roleList;
+
+    private List<Long> accountRoleIdList;
+
+    public List<Long> getAccountRoleIdList() {
+        return accountRoleIdList;
+    }
+
+    public void setAccountRoleIdList(List<Long> accountRoleIdList) {
+        this.accountRoleIdList = accountRoleIdList;
+    }
+
+    public String getRoleList() {
+        return roleList;
+    }
+
+    public void setRoleList(String roleList) {
+        this.roleList = roleList;
+    }
+
+    public String getInitMobile() {
+        return initMobile;
+    }
+
+    public void setInitMobile(String initMobile) {
+        this.initMobile = initMobile;
+    }
 
     public Integer getAccountRoleId() {
         return accountRoleId;
