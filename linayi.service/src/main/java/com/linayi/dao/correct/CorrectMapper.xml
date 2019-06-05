@@ -335,7 +335,7 @@
     -->
     <select id="queryPage" resultType="com.linayi.entity.correct.Correct"
             parameterType="com.linayi.entity.correct.Correct">
-    select
+        select
         c.correct_id,
         c.goods_sku_id,
         c.user_type userType,
@@ -370,8 +370,8 @@
             like concat('%', #{mobile},'%')
         </if>
         <if test="realName !=null and realName != ''">
-          and  IF(c.user_type='USER',uu.real_name,u.user_name)
-           like concat('%', #{realName},'%')
+            and  IF(c.user_type='USER',uu.real_name,u.user_name)
+            like concat('%', #{realName},'%')
         </if>
         <if test="name!=null and name!=''">
             and s.name like concat(#{name},'%')
@@ -573,5 +573,117 @@
              c.status in ('WAIT_AUDIT','AUDIT_SUCCESS','AFFECTED')
         ORDER BY  c.price asc
     </select>
+
+    <select id="selectByAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from correct
+        where 1=1
+        <if test="correctId != null">
+            and correct_id=#{correctId,jdbcType=BIGINT}
+        </if>
+        <if test="supermarketId != null">
+            and supermarket_id=#{supermarketId,jdbcType=INTEGER}
+        </if>
+        <if test="goodsSkuId != null">
+            and goods_sku_id=#{goodsSkuId,jdbcType=INTEGER}
+        </if>
+        <if test="price != null">
+            and price=#{price,jdbcType=INTEGER}
+        </if>
+        <if test="startTime != null">
+            and start_time=#{startTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="endTime != null">
+            and end_time=#{endTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="userId != null">
+            and user_id=#{userId,jdbcType=INTEGER}
+        </if>
+        <if test="parentId != null">
+            and parent_id=#{parentId,jdbcType=BIGINT}
+        </if>
+        <if test="image != null">
+            and image=#{image,jdbcType=VARCHAR}
+        </if>
+        <if test="priceType != null">
+            and price_type=#{priceType,jdbcType=VARCHAR}
+        </if>
+        <if test="status != null">
+            and `status`=#{status,jdbcType=VARCHAR}
+        </if>
+        <if test="actualStartTime != null">
+            and actual_start_time=#{actualStartTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="actualEndTime != null">
+            and actual_end_time=#{actualEndTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="type != null">
+            and `type`=#{type,jdbcType=VARCHAR}
+        </if>
+        <if test="updateTime != null">
+            and update_time=#{updateTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="createTime != null">
+            and create_time=#{createTime,jdbcType=TIMESTAMP}
+        </if>
+    </select>
+
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.linayi.entity.correct.Correct">
+        <!--@mbg.generated-->
+        update correct
+        <set>
+            <if test="supermarketId != null">
+                supermarket_id = #{supermarketId,jdbcType=INTEGER},
+            </if>
+            <if test="goodsSkuId != null">
+                goods_sku_id = #{goodsSkuId,jdbcType=INTEGER},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=INTEGER},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId,jdbcType=BIGINT},
+            </if>
+            <if test="image != null">
+                image = #{image,jdbcType=VARCHAR},
+            </if>
+            <if test="priceType != null">
+                price_type = #{priceType,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                `status` = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="actualStartTime != null">
+                actual_start_time = #{actualStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="actualEndTime != null">
+                actual_end_time = #{actualEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="type != null">
+                `type` = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="userType != null">
+                user_type = #{userType,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where correct_id = #{correctId,jdbcType=BIGINT}
+    </update>
 
 </mapper>

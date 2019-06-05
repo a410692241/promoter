@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.linayi.dao.correct.CorrectLogMapper">
+
+  <resultMap id="BaseResultMap" type="com.linayi.entity.correct.CorrectLog">
+    <!--@mbg.generated-->
+    <id column="correct_log_id" jdbcType="BIGINT" property="correctLogId" />
+    <result column="correct_id" jdbcType="BIGINT" property="correctId" />
+    <result column="operation" jdbcType="VARCHAR" property="operation" />
+    <result column="operator_id" jdbcType="INTEGER" property="operatorId" />
+    <result column="operator_type" jdbcType="VARCHAR" property="operatorType" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+
   <insert id="insert" parameterType="com.linayi.entity.correct.CorrectLog">
     insert into correct_log ( correct_id, operation,
       operator_id, operator_type, create_time
@@ -52,4 +63,52 @@
       </if>
     </trim>
   </insert>
+
+  <select id="selectByAll" resultMap="BaseResultMap">
+    select
+    correct_log_id,correct_id,operation,operator_id,operator_type,create_time
+    from correct_log
+    where 1=1
+    <if test="correctLogId != null">
+      and correct_log_id=#{correctLogId,jdbcType=BIGINT}
+    </if>
+    <if test="correctId != null">
+      and correct_id=#{correctId,jdbcType=BIGINT}
+    </if>
+    <if test="operation != null">
+      and `operation`=#{operation,jdbcType=VARCHAR}
+    </if>
+    <if test="operatorId != null">
+      and operator_id=#{operatorId,jdbcType=INTEGER}
+    </if>
+    <if test="operatorType != null">
+      and operator_type=#{operatorType,jdbcType=VARCHAR}
+    </if>
+    <if test="createTime != null">
+      and create_time=#{createTime,jdbcType=TIMESTAMP}
+    </if>
+  </select>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.linayi.entity.correct.CorrectLog">
+    <!--@mbg.generated-->
+    update correct_log
+    <set>
+      <if test="correctId != null">
+        correct_id = #{correctId,jdbcType=BIGINT},
+      </if>
+      <if test="operation != null">
+        `operation` = #{operation,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorId != null">
+        operator_id = #{operatorId,jdbcType=INTEGER},
+      </if>
+      <if test="operatorType != null">
+        operator_type = #{operatorType,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where correct_log_id = #{correctLogId,jdbcType=BIGINT}
+  </update>
 </mapper>

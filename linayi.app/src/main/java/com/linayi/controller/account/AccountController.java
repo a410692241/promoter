@@ -203,7 +203,6 @@ public class AccountController extends BaseController {
      */
     @RequestMapping("/bindMobile.do")
     @ResponseBody
-    @Transactional
     public Object bindMobile(@RequestBody Map<String, Object> param) {
         try {
             Integer accountId = getAccountId();
@@ -263,5 +262,5 @@ public class AccountController extends BaseController {
             return new ResponseData(ErrorType.SYSTEM_ERROR);
         }
     }
-  
+
 }

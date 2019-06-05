@@ -1,30 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.linayi.dao.order.SelfOrderMessageMapper" >
-  <resultMap id="BaseResultMap" type="com.linayi.entity.order.SelfOrderMessage" >
-    <id column="message_id" property="messageId" jdbcType="BIGINT" />
-    <result column="self_order_id" property="selfOrderId" jdbcType="BIGINT" />
-    <result column="status" property="status" jdbcType="VARCHAR" />
-    <result column="user_id" property="userId" jdbcType="INTEGER" />
-     <result column="view_status" property="viewStatus" jdbcType="VARCHAR" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-  </resultMap>
+	<sql id="Base_Column_List">
+	message_id,
+	self_order_id,
+	`status`,
+	user_id,
+	view_status,
+	update_time,
+	create_time
+</sql>
+	<resultMap id="BaseResultMap" type="com.linayi.entity.order.SelfOrderMessage" >
+		<id column="message_id" property="messageId" jdbcType="BIGINT" />
+		<result column="self_order_id" property="selfOrderId" jdbcType="BIGINT" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="view_status" property="viewStatus" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
 
-  <!-- 将消息发送给每个超市的采买员 -->
-  <insert id="sendBuyerMessage"  parameterType="com.linayi.entity.order.SelfOrderMessage"
-          useGeneratedKeys="true"
-          keyProperty="id">
+	<!-- 将消息发送给每个超市的采买员 -->
+	<insert id="sendBuyerMessage"  parameterType="com.linayi.entity.order.SelfOrderMessage"
+			useGeneratedKeys="true"
+			keyProperty="id">
         INSERT INTO self_order_message (
 			self_order_id,status,user_id,update_time,create_time
 		) VALUES (
 			#{selfOrderId},#{status},#{userId},#{updateTime},#{createTime}
 		)
   </insert>
-  
-  
-  <!-- 通过用户id查询自定义下单消息表 -->
-  <select id="selectByUserId" resultType="com.linayi.entity.order.SelfOrderMessage">
+
+
+	<!-- 通过用户id查询自定义下单消息表 -->
+	<select id="selectByUserId" resultType="com.linayi.entity.order.SelfOrderMessage">
 	SELECT
 		som.message_id,
 		som.self_order_id,
@@ -40,11 +49,11 @@
     	self_order_message som join self_order so on som.self_order_id=so.self_order_id
     WHERE
    		som.user_id=#{userId}
-   	ORDER BY 
+   	ORDER BY
    	 	som.create_time DESC
   </select>
 
-<update id="updateSelfOrderMessageStatusByPrimaryKey">
+	<update id="updateSelfOrderMessageStatusByPrimaryKey">
 update
 	self_order_message
 set
@@ -55,7 +64,7 @@ where
 	message_id=#{messageId}
 </update>
 
-<select id="selectSelfOrderMessageBySelfOrderId" resultType="com.linayi.entity.order.SelfOrderMessage">
+	<select id="selectSelfOrderMessageBySelfOrderId" resultType="com.linayi.entity.order.SelfOrderMessage">
 SELECT
 	message_id,
 	self_order_id,
@@ -68,5 +77,62 @@ FROM
 WHERE
 	self_order_id=#{selfOrderId}
 </select>
+	<insert id="insert">
+	 INSERT INTO `wherebuy`.`self_order_message` ( `message_id`, `self_order_id`, `status`, `user_id`, `view_status`, `update_time`, `create_time` )
+	VALUES (#{messageId} ,#{selfOrderId} ,#{status} ,#{userId} ,#{viewStatus} ,#{updateTime} ,#{createTime} )
+	</insert>
 
+	<update id="updateByPrimaryKey" parameterType="com.linayi.entity.order.SelfOrderMessage">
+		<!--@mbg.generated-->
+		update self_order_message
+		<set>
+			<if test="selfOrderId != null">
+				self_order_id = #{selfOrderId,jdbcType=BIGINT},
+			</if>
+			<if test="status != null">
+				`status` = #{status,jdbcType=VARCHAR},
+			</if>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=INTEGER},
+			</if>
+			<if test="viewStatus != null">
+				view_status = #{viewStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where message_id = #{messageId,jdbcType=BIGINT}
+	</update>
+
+	<select id="selectByAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from self_order_message
+		where 1=1
+		<if test="messageId != null">
+			and message_id=#{messageId,jdbcType=BIGINT}
+		</if>
+		<if test="selfOrderId != null">
+			and self_order_id=#{selfOrderId,jdbcType=BIGINT}
+		</if>
+		<if test="status != null">
+			and `status`=#{status,jdbcType=VARCHAR}
+		</if>
+		<if test="userId != null">
+			and user_id=#{userId,jdbcType=INTEGER}
+		</if>
+		<if test="viewStatus != null">
+			and view_status=#{viewStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="updateTime != null">
+			and update_time=#{updateTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="createTime != null">
+			and create_time=#{createTime,jdbcType=TIMESTAMP}
+		</if>
+	</select>
 </mapper>

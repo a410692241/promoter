@@ -213,6 +213,9 @@
             <if test="receiveAddressId != null">
                 receive_address_id = #{receiveAddressId,jdbcType=INTEGER},
             </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER} ,
+            </if>
             <if test="receiverName != null">
                 receiver_name = #{receiverName,jdbcType=VARCHAR},
             </if>
@@ -470,7 +473,7 @@
         <include refid="Base_Column_List"/>
         from receive_address
         <where>
-        	and status = 'NORMAL'
+            and status = 'NORMAL'
             <include refid="Base_Query_Where"></include>
         </where>
     </select>
@@ -480,21 +483,21 @@
         <include refid="Base_Column_List"/>
         from receive_address
         <where>
-        and status = 'NORMAL' and address_type='MINE' and
+            and status = 'NORMAL' and address_type='MINE' and
             <include refid="Base_Select_User"></include>
 
         </where>
     </select>
 
-<select id="querySmallComunity" resultType="com.linayi.entity.area.SmallCommunity" parameterType="Integer">
+    <select id="querySmallComunity" resultType="com.linayi.entity.area.SmallCommunity" parameterType="Integer">
 select * from `small_community` where `small_community_id` =#{smallCommunityId}
 </select>
 
-<select id="queryArea" parameterType="String" resultType="com.linayi.entity.area.Area">
+    <select id="queryArea" parameterType="String" resultType="com.linayi.entity.area.Area">
 select * from `area` where `code` =#{code}
 </select>
 
-<select id="queryAreaParent" parameterType="String" resultType="com.linayi.entity.area.Area">
+    <select id="queryAreaParent" parameterType="String" resultType="com.linayi.entity.area.Area">
 select * from `area` where `code` =#{parent}
 </select>
 
@@ -515,7 +518,7 @@ select * from `area` where `code` =#{parent}
                 receive_address_id = #{receiveAddressId}
             </if>
             <if test="userId != null">
-               AND user_id = #{userId}
+                AND user_id = #{userId}
             </if>
             <if test="receiverName != null">
                 AND receiver_name = #{receiverName}
@@ -588,7 +591,7 @@ select * from `area` where `code` =#{parent}
         <include refid="Base_Update_Column"/>
         where `receive_address_id` = #{receiveAddressId}
     </update>
-<select id="selectAreaCodebyName" parameterType="String" resultType="String">
+    <select id="selectAreaCodebyName" parameterType="String" resultType="String">
 select `code` from `area` where name=#{name}
 </select>
     <select id="queryTotal" resultType="long">
@@ -602,8 +605,8 @@ select `code` from `area` where name=#{name}
             #{receiveAddressId}
         </foreach>
     </delete>
-	<!--删除默认收货地址 Integer removedReceiveAddress(ReceiveAddress receiveAddress);  -->
-	<update id="removedReceiveAddress">
+    <!--删除默认收货地址 Integer removedReceiveAddress(ReceiveAddress receiveAddress);  -->
+    <update id="removedReceiveAddress">
 		update
 			receive_address
 		set
@@ -613,9 +616,9 @@ select `code` from `area` where name=#{name}
 		and
 			receive_address_id = #{receiveAddressId}
 	</update>
-	<!-- 通过用户ID和地址类型获取收货地址列表
-	List<ReceiveAddress> getListReceiveAddressByUserIdAndAdderssType(ReceiveAddress receiveAddress);  -->
-	<select id="getListReceiveAddressByUserIdAndAdderssType" resultType="com.linayi.entity.user.ReceiveAddress">
+    <!-- 通过用户ID和地址类型获取收货地址列表
+    List<ReceiveAddress> getListReceiveAddressByUserIdAndAdderssType(ReceiveAddress receiveAddress);  -->
+    <select id="getListReceiveAddressByUserIdAndAdderssType" resultType="com.linayi.entity.user.ReceiveAddress">
 		select
 			receive_address_id,receiver_name,address_one,address_two,mobile,sex
 		from
@@ -628,7 +631,7 @@ select `code` from `area` where name=#{name}
 			address_type='CUSTOMER'
 		ORDER BY create_time DESC
 	</select>
-	<select id="getReceiveAddressById" resultType="com.linayi.entity.user.ReceiveAddress">
+    <select id="getReceiveAddressById" resultType="com.linayi.entity.user.ReceiveAddress">
         select
 			receive_address_id,receiver_name,address_one,address_two
 		from
@@ -644,10 +647,10 @@ select `code` from `area` where name=#{name}
 		where
 			receive_address_id=#{ReceiveAddressId}
     </select>
-	<select id="getAddressListByPromoter" resultType="com.linayi.entity.user.ReceiveAddress">
+    <select id="getAddressListByPromoter" resultType="com.linayi.entity.user.ReceiveAddress">
         select ra.receive_address_id receiveAddressId  from  receive_address ra
         <if test="promoterId != null">
-        join promoter_order_man pom on pom.promoter_id = #{promoterId} and ra.user_id =  pom.order_man_id
+            join promoter_order_man pom on pom.promoter_id = #{promoterId} and ra.user_id =  pom.order_man_id
         </if>
         <where>
             <if test="promoterId == null and userId != null">
@@ -660,26 +663,26 @@ select `code` from `area` where name=#{name}
     </select>
     <update id="modifyReceivingAddress" parameterType="com.linayi.entity.user.ReceiveAddress">
         UPDATE receive_address
-      <set>
-        <if test="receiverName != null">
-            receiver_name=#{receiverName},
-        </if>
-        <if test="sex != null">
-            sex=#{sex},
-        </if>
-        <if test="mobile != null">
-            mobile=#{mobile},
-        </if>
-        <if test="addressOne != null">
-            address_one=#{addressOne},
-        </if>
-        <if test="addressTwo != null">
-            address_two=#{addressTwo},
-        </if>
-        <if test="updateTime != null">
-            update_time=#{updateTime}
-        </if>
-      </set>
+        <set>
+            <if test="receiverName != null">
+                receiver_name=#{receiverName},
+            </if>
+            <if test="sex != null">
+                sex=#{sex},
+            </if>
+            <if test="mobile != null">
+                mobile=#{mobile},
+            </if>
+            <if test="addressOne != null">
+                address_one=#{addressOne},
+            </if>
+            <if test="addressTwo != null">
+                address_two=#{addressTwo},
+            </if>
+            <if test="updateTime != null">
+                update_time=#{updateTime}
+            </if>
+        </set>
         WHERE
         receive_address_id=#{receiveAddressId}
     </update>

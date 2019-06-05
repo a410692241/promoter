@@ -72,4 +72,10 @@ public interface CorrectMapper {
      */
     List<Correct> getOtherPrice(Integer goodsSkuId);
 
+    int updateByPrimaryKeySelective(Correct record);
+
+
+    List<Correct> selectByAll(Correct correct);
+
+
 }
