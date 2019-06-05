@@ -595,7 +595,7 @@
 
     <select id="getWaitAuditCorrectBySupermerketId"  resultType="com.linayi.entity.correct.Correct">
         SELECT
-          c.correct_id,c.goods_sku_id,c.supermarket_id,c.price,c.create_time,g.full_WHEREg.image goodsImage,
+          c.correct_id,c.goods_sku_id,c.supermarket_id,c.price,c.create_time,g.full_name,g.image goodsImage,
           (select round(((max(price)-min(price))/min(price)*100),2)  from correct where goods_sku_id=c.goods_sku_id and (status='AFFECTED'  or status='AUDIT_SUCCESS' or status='WAIT_AUDIT') group by goods_sku_id) spreadRate
         FROM
           correct c join goods_sku g on c.goods_sku_id = g.goods_sku_id
