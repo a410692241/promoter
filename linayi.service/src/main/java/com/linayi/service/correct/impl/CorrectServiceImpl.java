@@ -745,9 +745,9 @@ public class CorrectServiceImpl implements CorrectService {
         //TODO
         //获取采价员绑定的超市id
 //        Supermarket supermarket = supermarketService.getSupermarketByProcurerId(correct.getUserId());
-        if(correct.getSupermarket() == null){
-            throw new BusinessException(ErrorType.NOT_PROCURER_NO_AUDIT);
-        }
+//        if(correct.getSupermarket() == null){
+//            throw new BusinessException(ErrorType.NOT_PROCURER_NO_AUDIT);
+//        }
         correct.setSupermarketId(correct.getSupermarket().getSupermarketId());
         //获取待审核列表
        List<Correct> correctList = correctMapper.getWaitAuditCorrectBySupermerketId(correct);

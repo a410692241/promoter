@@ -250,7 +250,12 @@ public class CorrectController extends BaseController {
 			Integer userId = getUserId();
 			correct.setUserId(userId);
 			Supermarket supermarket = supermarketService.getSupermarketByProcurerId(userId);
+
+			if(supermarket == null){
+				throw new BusinessException(ErrorType.NOT_PROCURER_NO_AUDIT);
+			}
 			correct.setSupermarket(supermarket);
+
 			List<Correct> correctList = correctService.getWaitAuditCorrect(correct);
 			Integer totalPage = (int) Math.ceil(Double.valueOf(correct.getTotal())/Double.valueOf(correct.getPageSize()));
 			if(totalPage <= 0){
@@ -263,6 +268,8 @@ public class CorrectController extends BaseController {
 			map.put("currentPage",correct.getCurrentPage() );
 
 			return new ResponseData(map);
+		}catch (BusinessException e) {
+			return new ResponseData(e.getErrorType()).toString();
 		} catch (Exception e) {
 			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
 		}
