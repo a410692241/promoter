@@ -1,6 +1,7 @@
 package com.linayi.controller.account;
 
 import com.alibaba.fastjson.JSON;
+import com.linayi.dao.role.RoleEnumMapper;
 import com.linayi.entity.account.Account;
 import com.linayi.entity.account.AdminAccount;
 import com.linayi.entity.account.TreeNodeBO;
@@ -19,9 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 @Controller
@@ -30,7 +34,6 @@ public class AccountController {
     @Resource private AccountService accountService;
     @Resource
     private AdminAccountService adminAccountService;
-
 
     /**
      * 员工登录
@@ -124,8 +127,35 @@ public class AccountController {
     @Transactional(rollbackFor = Throwable.class)
     @ResponseBody
     @RequestMapping("/addUserRole.do")
-    public Object addUserRole(Account account) {
-        return accountService.insertAccountRole(account);
+    public Object addUserRole(HttpServletRequest request) {
+        ServletInputStream input = null;
+        try {
+            input = request.getInputStream();
+            System.out.println(input);
+            int nRead = 1;
+            int nTotalRead = 0;
+            byte[] bytes = new byte[10240];
+            while (nRead > 0) {
+                nRead = input.read(bytes, nTotalRead, bytes.length - nTotalRead);
+                if (nRead > 0)
+                    nTotalRead = nTotalRead + nRead;
+            }
+            String inputs = new String(bytes, 0, nTotalRead, "utf-8");
+            String sub = inputs.substring(inputs.indexOf("=")+1,inputs.indexOf("&"));
+            String substring = inputs.substring(inputs.lastIndexOf("=")+1);
+            Account account = new Account();
+            account.setAccountId(Integer.parseInt(sub));
+            account.setRoleList(substring);
+            return accountService.insertAccountRole(account);
+        } catch (Exception e) {
+            return new ResponseData(ErrorType.SYSTEM_ERROR);
+        }finally {
+            try {
+                input.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     //这是获取权限的暂时不做因为没表 还有树状图问题
@@ -143,7 +173,7 @@ public class AccountController {
             adminAccountService.modifyPsd(oldPassword,newPassword,session);
             session.removeAttribute("loginAccount");
         }catch (BusinessException e){
-            return new ResponseData(ErrorType.ACCOUNT_OR_OLDPASSWORD_ERROR);
+            return new ResponseData(e.getErrorType());
         }catch (Exception e){
             return new ResponseData(ErrorType.SYSTEM_ERROR);
         }

@@ -122,12 +122,15 @@ public class AdminAccountServiceImpl implements AdminAccountService{
 		AdminAccount adminAccount = (AdminAccount) session.getAttribute("loginAccount");
 		Account account = selectAdminAccountByaccountId(adminAccount.getAccountId());
 		if(account.getPassword().equals(MD5Util.MD5(oldPassword))){
+			if(newPassword.equals(oldPassword)){
+				throw new BusinessException(ErrorType.PASSWORDCONSISTENCY);
+			}
 			Account account1 = new Account();
 			account1.setPassword(MD5Util.MD5(newPassword));
 			account1.setAccountId(adminAccount.getAccountId());
 			adminAccountMapper.resetAdminPassword(account1);
 		}else{
-			throw new BusinessException(ErrorType.ACCOUNT_OR_PASSWORD_ERROR);
+			throw new BusinessException(ErrorType.ACCOUNT_OR_OLDPASSWORD_ERROR);
 		}
 	}
 

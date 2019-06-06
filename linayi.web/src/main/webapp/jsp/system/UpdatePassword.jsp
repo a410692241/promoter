@@ -145,10 +145,6 @@
             alert("再次输入新密码！");
             return false;
         }
-        if(newPassword==oldPassword){
-            alert("你修改的密码与原密码一致，无须修改！");
-            return false;
-        }
         if(newPassword != confirmPwd ){
             alert("两次输入的密码不一致！");
             return false;
