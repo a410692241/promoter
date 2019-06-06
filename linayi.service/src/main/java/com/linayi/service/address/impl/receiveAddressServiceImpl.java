@@ -33,7 +33,7 @@ public class receiveAddressServiceImpl implements ReceiveAddressService {
     @Override
     public ReceiveAddress getDefaultReceiveAddress(User user) {
         User userDB = userMapper.selectUserByuserId(user.getUserId());
-        if (userDB != null) {
+        if (userDB != null && userDB.getDefaultReceiveAddressId()!=null) {
             ReceiveAddress receiveAddress = new ReceiveAddress();
             receiveAddress.setReceiveAddressId(userDB.getDefaultReceiveAddressId());
             receiveAddress.setUserId(userDB.getUserId());

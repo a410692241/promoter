@@ -1,9 +1,6 @@
 package com.linayi.dao.role;
 
-import com.linayi.entity.account.Account;
-import com.linayi.entity.account.Menu;
-import com.linayi.entity.account.Role;
-import com.linayi.entity.account.Role_menu;
+import com.linayi.entity.account.*;
 
 
 import java.util.List;
@@ -34,6 +31,9 @@ public interface RoleEnumMapper {
 
     void insertAccountRole(Account account);
 
+    List<AccountRole> selectAccountRole(Account account);
+
+    void deleteAccountRoleByAccountRoleId(Account account);
     /*void updateRoleMenu(Role_menu rm);
 
     void insertRoleMenu(Role_menu rm);*/

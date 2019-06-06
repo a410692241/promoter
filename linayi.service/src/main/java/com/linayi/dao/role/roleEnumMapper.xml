@@ -23,18 +23,24 @@
 	<select id="selectRole" resultType="com.linayi.entity.account.Role">
         select `role_name` , `role_id`, `status` from `role`
     </select>
-	<select id="selectIdbyRoleName" parameterType="String">
+	<select id="selectIdbyRoleName" parameterType="java.lang.String" resultType="com.linayi.entity.account.Role">
         select `role_id` from `role` where `role_name`=#{roleName}
     </select>
 	<insert id="insertAccountRole" parameterType="com.linayi.entity.account.Account">
         insert into `account_role` (`account_id`,`role_id`) values(#{accountId},#{roleId})
     </insert>
-	<select id="selectByAccountId" parameterType="Integer" resultType="Integer">
-    select `account_role_id` from `account_role` where `account_id` = #{accountId}
-    </select>
-	<select id="selectByAr" parameterType="Integer" resultType="Integer">
-        select `account_id` from `account_role` where `account_role_id` = #{accountRoleId}
-    </select>
+	<select id="selectAccountRole" parameterType="com.linayi.entity.account.Account" resultType="com.linayi.entity.account.AccountRole">
+		select `account_role_id`, `account_id`, `role_id`  from `account_role` where `account_id`=#{accountId}
+	</select>
+
+	<delete id="deleteAccountRoleByAccountRoleId">
+		delete from `account_role` where `account_role_id` in
+		<foreach item="status" index="index" collection="accountRoleIdList"
+				 open="(" separator="," close=")">
+			#{status}
+		</foreach>
+	</delete>
+
 
 	<!--<update id="updateRoleMenu" parameterType="com.linayi.entity.account.Role_menu">
 		update `role_menu` set `role_id`=#{roleId} , `menu_id` =#{menuId} where `role_id` in

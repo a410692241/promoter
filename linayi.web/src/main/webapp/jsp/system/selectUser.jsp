@@ -9,7 +9,7 @@
 <script type="text/javascript" src="resource/js/system/services/selectUserService.js"></script>
 </head>
 <body>
-<div class="row" ng-controller="selectUserCtrl">
+<div class="row" ng-controller="selectUCtrl">
     <div class="col-xs-12 col-md-12">
         <div class="widget">
             <div class="widget-header ">
