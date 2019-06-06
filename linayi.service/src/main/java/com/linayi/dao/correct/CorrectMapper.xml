@@ -604,7 +604,7 @@
         AND
           c.status = 'WAIT_AUDIT'
         ORDER BY
-          c.create_time
+          c.create_time DESC
     </select>
 
     <select id="getCorrectByAuditerId"  resultType="com.linayi.entity.correct.Correct">
