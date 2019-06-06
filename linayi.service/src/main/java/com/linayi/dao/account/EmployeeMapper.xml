@@ -13,7 +13,9 @@
     select * from `employee` where `employee_id`=#{employeeId}
   </select>
   <update id="updateEmployee" parameterType="com.linayi.entity.account.Employee">
-update `employee` set `nickname`=#{nickname},`mobile`=#{mobile},`qq`=#{qq},`email`=#{email},`real_name`=#{realName} where `employee_id`=#{employeeId}
+  update `employee` set
+  `nickname`=#{nickname},`mobile`=#{mobile},`qq`=#{qq},`email`=#{email},`real_name`=#{realName}, `update_time`=#{updateTime}
+  where `employee_id`=#{employeeId}
   </update>
   <insert id="insertSelective" parameterType="com.linayi.entity.account.Employee">
     insert into employee
