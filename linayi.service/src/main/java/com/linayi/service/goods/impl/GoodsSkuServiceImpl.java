@@ -1309,7 +1309,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
         row.createCell(1).setCellValue("商品名");
         row.createCell(2).setCellValue("超市名");
         row.createCell(3).setCellValue("最低价（元）");
-        row.createCell(4).setCellValue("差价率");
+        row.createCell(4).setCellValue("差价率（%）");
         row.createCell(5).setCellValue("实际开始时间");
         row.createCell(6).setCellValue("创建时间");
 
