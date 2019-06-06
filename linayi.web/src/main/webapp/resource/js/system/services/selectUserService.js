@@ -90,7 +90,8 @@ app.service('selectUService', [function() {
     }
 
     function fenpeiRole( options ){
-        options.url = urls.ms + '/account/addUserRole.do?accountId='+options.data.accountId+'&roleId='+options.data.roleId;
+        console.log(options.data);
+        options.url = urls.ms + '/account/addUserRole.do';
         options.contentType = "application/json";
         ajax( options );
     }
