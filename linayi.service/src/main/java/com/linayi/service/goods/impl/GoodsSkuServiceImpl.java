@@ -9,6 +9,7 @@ import com.linayi.dao.promoter.PromoterOrderManMapper;
 import com.linayi.dao.supermarket.SupermarketMapper;
 import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.area.SmallCommunity;
+import com.linayi.entity.correct.Correct;
 import com.linayi.entity.goods.*;
 import com.linayi.entity.promoter.OpenMemberInfo;
 import com.linayi.entity.promoter.PromoterOrderMan;
@@ -22,6 +23,7 @@ import com.linayi.enums.PriceOrderType;
 import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.community.CommunityService;
+import com.linayi.service.correct.CorrectService;
 import com.linayi.service.goods.*;
 import com.linayi.service.promoter.OpenMemberInfoService;
 import com.linayi.service.supermarket.SupermarketService;
@@ -114,6 +116,9 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
     private CommunityGoodsService communityGoodsService;
     @Autowired
     private SupermarketService supermarketService;
+    @Autowired
+    private CorrectService correctService;
+
     private RestHighLevelClient esClient = RestClientFactory.getHighLevelClient();
 
     @Override
@@ -1280,4 +1285,57 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
         List<GoodsSku> goodsList = goodsSkuMapper.getGoodsList(goodsSku);
         return goodsList;
     }
+
+    @Override
+    public void exportAffectedPriceData(Correct correct, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        // 只是让浏览器知道要保存为什么文件而已，真正的文件还是在流里面的数据，你设定一个下载类型并不会去改变流里的内容。
+        //而实际上只要你的内容正确，文件后缀名之类可以随便改，就算你指定是下载excel文件，下载时我也可以把他改成pdf等。
+        response.setContentType("application/vnd.ms-excel");
+        // 传递中文参数编码
+        String codedFileName = java.net.URLEncoder.encode("商品生效最低价信息","UTF-8");
+        response.setHeader("content-disposition", "attachment;filename=" + codedFileName + ".xls");
+
+        List<Correct> corrcetList = correctService.getAffectedMinPrice(correct);
+
+        // 定义一个工作薄
+        Workbook workbook = new HSSFWorkbook();
+        // 创建一个sheet页
+        Sheet sheet = workbook.createSheet("商品生效最低价信息");
+        // 创建一行
+        Row row = sheet.createRow(0);
+        // 在本行赋值 以0开始
+
+        row.createCell(0).setCellValue("商品ID");
+        row.createCell(1).setCellValue("商品名");
+        row.createCell(2).setCellValue("超市名");
+        row.createCell(3).setCellValue("最低价（元）");
+        row.createCell(4).setCellValue("差价率");
+        row.createCell(5).setCellValue("实际开始时间");
+        row.createCell(6).setCellValue("创建时间");
+
+        // 定义样式
+        CellStyle cellStyle = workbook.createCellStyle();
+        // 格式化日期
+        //cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("yyyy-MM-dd"));
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        // 遍历输出
+        for (int i = 1; i <= corrcetList.size(); i++) {
+            Correct correct1 = corrcetList.get(i - 1);
+            row = sheet.createRow(i);
+            row.createCell(0).setCellValue(correct1.getGoodsSkuId());
+            row.createCell(1).setCellValue(correct1.getFullName());
+            row.createCell(2).setCellValue(correct1.getName());
+            row.createCell(3).setCellValue(correct1.getPrice()/100.00);
+            row.createCell(4).setCellValue(correct1.getSpreadRate());
+            row.createCell(5).setCellValue(DateUtil.date2String(correct1.getActualStartTime(),pattern));
+            row.createCell(6).setCellValue(DateUtil.date2String(correct1.getCreateTime(),pattern));
+
+
+        }
+        OutputStream  fOut = response.getOutputStream();
+        workbook.write(fOut);
+        fOut.flush();
+        fOut.close();
+    }
+
 }

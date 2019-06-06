@@ -227,6 +227,20 @@
 		supermarket_id=#{supermarketId}
 	</delete>
 
-
+    <!-- 根据超市id商品id获取超市价格表信息 -->
+    <select id="getOtherPrice" resultType="com.linayi.entity.goods.SupermarketGoods">
+        SELECT
+            sg.supermarket_goods_id,
+            sg. supermarket_id,
+            sg.goods_sku_id,
+            sg.price,
+            s.name
+        FROM
+            supermarket_goods sg join supermarket s on sg.supermarket_id=s.supermarket_id
+        <where>
+            goods_sku_id = #{goodsSkuId}
+        </where>
+        ORDER BY sg.price
+    </select>
 
 </mapper>

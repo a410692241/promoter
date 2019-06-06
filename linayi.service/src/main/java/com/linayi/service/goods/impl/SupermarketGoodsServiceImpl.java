@@ -271,4 +271,9 @@ public class SupermarketGoodsServiceImpl implements SupermarketGoodsService {
         return supermarket;
     }
 
+    @Override
+    public List<SupermarketGoods> getOtherPrice(SupermarketGoods supermarketGoods) {
+        return supermarketGoodsMapper.getOtherPrice(supermarketGoods);
+    }
+
 }
