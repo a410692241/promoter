@@ -231,6 +231,12 @@ public class Correct extends BaseEntity {
      */
     private String auditType;
 
+    /**
+     * [响应提示]
+     *
+     */
+    private String resultStr;
+
 
     private AdminAccount adminAccount;
 
@@ -551,6 +557,14 @@ public class Correct extends BaseEntity {
 
     public void setAuditType(String auditType) {
         this.auditType = auditType;
+    }
+
+    public String getResultStr() {
+        return resultStr;
+    }
+
+    public void setResultStr(String resultStr) {
+        this.resultStr = resultStr;
     }
 
     @Override

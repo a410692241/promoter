@@ -346,6 +346,42 @@ public class CorrectServiceImpl implements CorrectService {
             correctLog.setOperatorType(OperatorType.ADMIN.toString());
             correctLog.setCreateTime(now);
             correctLogMapper.insert(correctLog);
+
+            if(CorrectStatus.AUDIT_FAIL.toString().equals(correct.getStatus()) && OperatorType.USER.toString().equals(correct.getAuditType())){
+                if(correct.getParentId() ==null){
+                    Correct param2 = new Correct();
+                    param2.setSupermarketId(correct.getSupermarketId());
+                    param2.setGoodsSkuId(correct.getGoodsSkuId());
+                    List<String> statusList = new ArrayList<>();
+                    statusList.add(CorrectStatus.WAIT_AUDIT.toString());
+                    statusList.add(CorrectStatus.AUDIT_SUCCESS.toString());
+                    statusList.add(CorrectStatus.AFFECTED.toString());
+                    param2.setStatusList(statusList);
+                    Correct currentCorrect = correctMapper.query(param2).stream().findFirst().orElse(null);
+                    if (currentCorrect != null) {
+                        throw new BusinessException(ErrorType.HAVE_MAN_SHARE_ERROR);
+                    }else{
+                        correct.setType(CorrectType.SHARE.toString());
+                    }
+                }
+
+
+                if(correct.getParentId() !=null){
+                    Correct param3 = new Correct();
+                    param3.setCorrectId(correct.getParentId());
+                    Correct currentCorrect2 = correctMapper.query(param3).stream().findFirst().orElse(null);
+                    if (!CorrectStatus.AFFECTED.toString().equals(currentCorrect2.getStatus())) {
+                        throw new BusinessException(ErrorType.HAVE_MAN_CORRECT_ERROR);
+                    }else{
+                        correct.setType(CorrectType.CORRECT.toString());
+                    }
+                }
+
+            }
+
+
+
+
         } else {
             throw new BusinessException(ErrorType.AUDIT_ERROR);
         }
@@ -708,12 +744,11 @@ public class CorrectServiceImpl implements CorrectService {
     public List<Correct> getWaitAuditCorrect(Correct correct) {
         //TODO
         //获取采价员绑定的超市id
-        Supermarket supermarket = supermarketService.getSupermarketByProcurerId(correct.getUserId());
-
-        if(supermarket == null){
+//        Supermarket supermarket = supermarketService.getSupermarketByProcurerId(correct.getUserId());
+        if(correct.getSupermarket() == null){
             throw new BusinessException(ErrorType.NOT_PROCURER_NO_AUDIT);
         }
-        correct.setSupermarketId(supermarket.getSupermarketId());
+        correct.setSupermarketId(correct.getSupermarket().getSupermarketId());
         //获取待审核列表
        List<Correct> correctList = correctMapper.getWaitAuditCorrectBySupermerketId(correct);
 
@@ -721,7 +756,7 @@ public class CorrectServiceImpl implements CorrectService {
         for(Correct currentCorrect:correctList){
             String Image = ImageUtil.dealToShow(currentCorrect.getGoodsImage());
             currentCorrect.setGoodsImage(Image);
-            currentCorrect.setSupermarkerName(supermarket.getName());
+//            currentCorrect.setSupermarkerName(supermarket.getName());
         }
         return correctList;
     }
