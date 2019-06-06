@@ -76,20 +76,20 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
                         return cellvalue ? new Date(cellvalue).format("yyyy-MM-dd HH:mm:ss") : "";
                     }
                 },
-                {
-                    label: "操作",
-                    name: "opt",
-                    width: 260,
-                    sortable: false,
-                    formatter: function (cellvalue, options, rowObject) {
-                        var opts = "";
-
-                        opts = opts + "<a href='javascript:void(0);' ng-click='edit( " + rowObject.correctId + " )' class='btn btn-primary shiny fa fa-edit btn-sm td-compile'>改价</a> ";
-                        /*opts = opts + "<a href='javascript:void(0);' ng-click='cancel( "+rowObject.correctId+" )' class='btn btn-primary shiny fa fa-edit btn-sm td-compile'>撤销</a> ";*/
-
-                        return opts;
-                    }
-                }
+                // {
+                //     label: "操作",
+                //     name: "opt",
+                //     width: 260,
+                //     sortable: false,
+                //     formatter: function (cellvalue, options, rowObject) {
+                //         var opts = "";
+                //
+                //         opts = opts + "<a href='javascript:void(0);' ng-click='edit( " + rowObject.correctId + " )' class='btn btn-primary shiny fa fa-edit btn-sm td-compile'>改价</a> ";
+                //         /*opts = opts + "<a href='javascript:void(0);' ng-click='cancel( "+rowObject.correctId+" )' class='btn btn-primary shiny fa fa-edit btn-sm td-compile'>撤销</a> ";*/
+                //
+                //         return opts;
+                //     }
+                // }
             ],
             //设置页面
             loadComplete: function () {
