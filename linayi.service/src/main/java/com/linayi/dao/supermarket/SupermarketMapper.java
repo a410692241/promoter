@@ -87,4 +87,6 @@ public interface SupermarketMapper {
 	 * @return
 	 */
     Integer getSupermarketCommunityId(Integer userId);
+
+    Integer getSupermarketIdByName(String name);
 }

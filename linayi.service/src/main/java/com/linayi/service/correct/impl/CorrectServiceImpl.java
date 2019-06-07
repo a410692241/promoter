@@ -768,7 +768,17 @@ public class CorrectServiceImpl implements CorrectService {
 
     @Override
     public List<Correct> getAffectedMinPrice(Correct correct) {
-        return correctMapper.getAffectedMinPrice(correct);
+       List<Correct> correctList = correctMapper.getAffectedMinPrice(correct);
+       for(Correct thisCorrect:correctList){
+           Correct currentCorrect = correctMapper.getcorrectTimeByGoodsSkuId(thisCorrect.getGoodsSkuId(), supermarketMapper.getSupermarketIdByName(thisCorrect.getName())).stream().findFirst().orElse(null);
+           if(currentCorrect !=null){
+               thisCorrect.setActualStartTime(currentCorrect.getActualStartTime());
+               thisCorrect.setCreateTime(currentCorrect.getCreateTime());
+               System.out.println("开始时间："+thisCorrect.getActualStartTime());
+           }
+
+       }
+        return correctList;
     }
 
 }
