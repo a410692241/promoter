@@ -297,7 +297,7 @@ public class CorrectController extends BaseController {
 	@RequestMapping("/audithistory.do")
 	@ResponseBody
 	public Object auditHistory(@RequestBody Correct correct){
-//		try {
+		try {
 			if(correct.getPageSize() == null){
 				correct.setPageSize(8);
 			}
@@ -315,9 +315,9 @@ public class CorrectController extends BaseController {
 			map.put("currentPage",correct.getCurrentPage() );
 
 			return new ResponseData(map);
-//		} catch (Exception e) {
-//			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
-//		}
+		} catch (Exception e) {
+			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+		}
 	}
 
 
