@@ -776,8 +776,10 @@ public class CorrectServiceImpl implements CorrectService {
                thisCorrect.setCreateTime(currentCorrect.getCreateTime());
                System.out.println("开始时间："+thisCorrect.getActualStartTime());
            }
-
        }
+        //排序
+        Collections.sort(correctList, (o1, o2) -> (int) (o2.getActualStartTime().compareTo(o1.getActualStartTime())));
+
         return correctList;
     }
 
