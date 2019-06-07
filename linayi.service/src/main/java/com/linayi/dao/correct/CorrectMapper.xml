@@ -624,6 +624,7 @@
     <select id="getAffectedMinPrice"  resultType="com.linayi.entity.correct.Correct">
         SELECT
           sg.goods_sku_id,g.full_name,min(sg.price) price,
+        (SELECT supermarket_goods_id FROM supermarket_goods WHERE goods_sku_id = sg.goods_sku_id ORDER BY price LIMIT 0,1) supermarketGoodsId,
           (SELECT ss.name FROM supermarket_goods sgood LEFT JOIN supermarket ss ON sgood.supermarket_id=ss.supermarket_id  WHERE sgood.goods_sku_id=sg.goods_sku_id ORDER BY sgood.price LIMIT 0,1) name,
           (SELECT round(((max(price)-min(price))/min(price)*100),2)  from supermarket_goods WHERE goods_sku_id=sg.goods_sku_id) spreadRate
         FROM
@@ -653,7 +654,8 @@
         AND name LIKE concat('%',#{name},'%')
         </if>
         ORDER BY
-        c.actual_start_time DESC
+        supermarketGoodsId desc
+
     </select>
 
 
