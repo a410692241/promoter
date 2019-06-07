@@ -765,7 +765,16 @@ public class CorrectServiceImpl implements CorrectService {
 
     @Override
     public List<Correct> getCorrectByAuditerId(Correct correct) {
-        return correctMapper.getCorrectByAuditerId(correct);
+
+        List<Correct> correctList = correctMapper.getCorrectByAuditerId(correct);
+
+        //图片处理
+        for(Correct currentCorrect:correctList){
+            String Image = ImageUtil.dealToShow(currentCorrect.getGoodsImage());
+            currentCorrect.setGoodsImage(Image);
+//            currentCorrect.setSupermarkerName(supermarket.getName());
+        }
+        return correctList;
     }
 
     @Override
