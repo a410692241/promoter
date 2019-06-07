@@ -654,7 +654,7 @@
         AND name LIKE concat('%',#{name},'%')
         </if>
         ORDER BY
-        supermarketGoodsId desc
+        spreadRate desc
 
     </select>
 

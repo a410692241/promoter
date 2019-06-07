@@ -771,7 +771,7 @@ public class CorrectServiceImpl implements CorrectService {
     @Override
     public List<Correct> getAffectedMinPrice(Correct correct) throws ParseException {
         List<Correct> correctList = correctMapper.getAffectedMinPrice(correct);
-        List<Correct> resultList = new ArrayList<Correct>();
+//        List<Correct> resultList = new ArrayList<Correct>();
 
        for(Correct thisCorrect:correctList){
            Correct currentCorrect = correctMapper.getcorrectTimeByGoodsSkuId(thisCorrect.getGoodsSkuId(), supermarketMapper.getSupermarketIdByName(thisCorrect.getName())).stream().findFirst().orElse(null);
@@ -780,24 +780,24 @@ public class CorrectServiceImpl implements CorrectService {
                thisCorrect.setCreateTime(currentCorrect.getCreateTime());
                System.out.println("开始时间："+thisCorrect.getActualStartTime());
 
-               resultList.add(thisCorrect);
-
-               if(!"".equals(correct.getCreateTimeStart()) && correct.getCreateTimeStart() != null && !"".equals(correct.getCreateTimeEnd()) && correct.getCreateTimeEnd() !=null){
-                   SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                   Date startTime=simpleDateFormat.parse(correct.getCreateTimeStart());
-                   Date endTime=simpleDateFormat.parse(correct.getCreateTimeEnd());
-
-                    if( thisCorrect.getActualStartTime().after(endTime) || thisCorrect.getActualStartTime().before(startTime)){
-                        resultList.remove(thisCorrect);
-                    }
-               }
+//               resultList.add(thisCorrect);
+//
+//               if(!"".equals(correct.getCreateTimeStart()) && correct.getCreateTimeStart() != null && !"".equals(correct.getCreateTimeEnd()) && correct.getCreateTimeEnd() !=null){
+//                   SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//                   Date startTime=simpleDateFormat.parse(correct.getCreateTimeStart());
+//                   Date endTime=simpleDateFormat.parse(correct.getCreateTimeEnd());
+//
+//                    if( thisCorrect.getActualStartTime().after(endTime) || thisCorrect.getActualStartTime().before(startTime)){
+//                        resultList.remove(thisCorrect);
+//                    }
+//               }
            }
        }
 
             //排序
 //            Collections.sort(correctList, (o1, o2) -> (int) (o2.getActualStartTime().compareTo(o1.getActualStartTime())));
 
-            return resultList;
+            return correctList;
         }
 
 
