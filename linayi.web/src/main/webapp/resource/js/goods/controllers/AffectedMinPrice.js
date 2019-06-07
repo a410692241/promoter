@@ -42,7 +42,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
             multiselect: true,
             rownumWidth: 100,
             colModel: [
-                {name: 'goodsSkuId', label: '商品id', sortable: false, hidden: false},
+                {name: 'goodsSkuId', label: '商品ID', sortable: false, hidden: false},
                 {name: 'fullName', label: '商品名称', sortable: false},
                 {name: 'name', label: '超市名称', sortable: false, hidden: false},
                 {name: 'price', label: '最低价(元)', sortable: false,
@@ -51,7 +51,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
                     },},
                 {
                     name: 'spreadRate',
-                    label: '价差率',
+                    label: '价差率(%)',
                     width: 150,
                     sortable: false,
                     formatter: function (cellvalue, options, rowObject) {
