@@ -471,16 +471,16 @@ public class CorrectController extends BaseController {
     @RequestMapping("/getaffectedminprice.do")
     @ResponseBody
     public Object getAffectedMinPrice(Correct correct){
-        try {
+//        try {
             List<Correct> correctList = correctService.getAffectedMinPrice(correct);
 
             PageResult<Correct> page = new PageResult<>(correctList, correct.getTotal());
 
             return page;
-        }catch (Exception e) {
-            return new ResponseData(ErrorType.SYSTEM_ERROR);
-
-        }
+//        }catch (Exception e) {
+//            return new ResponseData(ErrorType.SYSTEM_ERROR);
+//
+//        }
     }
 
     //获取商品所有超级价格

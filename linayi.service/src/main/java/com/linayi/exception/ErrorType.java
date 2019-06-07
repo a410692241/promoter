@@ -61,7 +61,7 @@ public enum ErrorType {
     RECEIVEADDTOOMUCH(2027,"您只能拥有两个收货地址，不能新增!"),
     NO_PRICE(2028,"该商品暂无价格，加入购物车失败!"),
     USER_IS_DISABLED(2029,"该用户已禁用!"),
-    NOT_PROCURER_NO_AUDIT(2030,"您不是驻店员，不能进行审核！"),
+    NOT_PROCURER_NO_AUDIT(2030,"请先联系管理员绑定采买超市！"),
     MOBILE_SAME(2031,"手机号等信息已经存在"),
     PASSWORDCONSISTENCY(2032,"不能与原密码一致");
 

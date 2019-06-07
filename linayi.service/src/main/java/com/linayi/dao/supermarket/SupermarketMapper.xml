@@ -303,4 +303,15 @@
 		</where>
   	</select>
 
+	<select id="getSupermarketIdByName" resultType="java.lang.Integer">
+		SELECT
+		supermarket_id
+		FROM
+		supermarket
+		where
+			name=#{name}
+	</select>
+
+
+
 </mapper>
