@@ -785,7 +785,7 @@ public class CorrectServiceImpl implements CorrectService {
                if(!"".equals(correct.getCreateTimeStart()) && correct.getCreateTimeStart() != null && !"".equals(correct.getCreateTimeEnd()) && correct.getCreateTimeEnd() !=null){
                    SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                    Date startTime=simpleDateFormat.parse(correct.getCreateTimeStart());
-                   Date endTime=simpleDateFormat.parse(correct.getCreateTimeStart());
+                   Date endTime=simpleDateFormat.parse(correct.getCreateTimeEnd());
 
                     if( thisCorrect.getActualStartTime().after(endTime) || thisCorrect.getActualStartTime().before(startTime)){
                         resultList.remove(thisCorrect);
