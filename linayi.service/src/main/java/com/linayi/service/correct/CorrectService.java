@@ -4,6 +4,7 @@ import com.linayi.entity.correct.Correct;
 import com.linayi.entity.goods.SupermarketGoods;
 import com.linayi.util.PageResult;
 
+import java.text.ParseException;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -87,7 +88,7 @@ public interface CorrectService {
      * @param correct
      * @return
      */
-    List<Correct> getAffectedMinPrice(Correct correct);
+    List<Correct> getAffectedMinPrice(Correct correct) throws ParseException;
 
 //    void updatePriceForAdmin(Correct correct);
 }
