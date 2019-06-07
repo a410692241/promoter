@@ -24,7 +24,7 @@
 					<form class="form-inline">
 						<div class="form-group form-group-margin">
 							<div class="input-group">
-								<span class="input-group-addon">商品id</span> <input
+								<span class="input-group-addon">商品ID</span> <input
 									ng-model="search.goodsSkuId" type="text" class="form-control">
 							</div>
 						</div>
