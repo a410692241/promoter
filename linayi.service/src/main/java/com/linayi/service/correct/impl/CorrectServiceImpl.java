@@ -30,6 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -767,24 +769,30 @@ public class CorrectServiceImpl implements CorrectService {
     }
 
     @Override
-    public List<Correct> getAffectedMinPrice(Correct correct) {
+    public List<Correct> getAffectedMinPrice(Correct correct) throws ParseException {
         List<Correct> correctList = correctMapper.getAffectedMinPrice(correct);
+//        List<Correct> resultList = new ArrayList<Correct>();
+
        for(Correct thisCorrect:correctList){
            Correct currentCorrect = correctMapper.getcorrectTimeByGoodsSkuId(thisCorrect.getGoodsSkuId(), supermarketMapper.getSupermarketIdByName(thisCorrect.getName())).stream().findFirst().orElse(null);
            if(currentCorrect !=null){
                thisCorrect.setActualStartTime(currentCorrect.getActualStartTime());
                thisCorrect.setCreateTime(currentCorrect.getCreateTime());
                System.out.println("开始时间："+thisCorrect.getActualStartTime());
+
+//               resultList.add(thisCorrect);
+//
+//               if(!"".equals(correct.getCreateTimeStart()) && correct.getCreateTimeStart() != null && !"".equals(correct.getCreateTimeEnd()) && correct.getCreateTimeEnd() !=null){
+//                   SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//                   Date startTime=simpleDateFormat.parse(correct.getCreateTimeStart());
+//                   Date endTime=simpleDateFormat.parse(correct.getCreateTimeEnd());
+//
+//                    if( thisCorrect.getActualStartTime().after(endTime) || thisCorrect.getActualStartTime().before(startTime)){
+//                        resultList.remove(thisCorrect);
+//                    }
+//               }
            }
        }
-//        Iterator<Correct> it = correctList.iterator();
-//        while (it.hasNext()) {
-//            Correct currentCorrect = correctMapper.getcorrectTimeByGoodsSkuId(it.next().getGoodsSkuId(), supermarketMapper.getSupermarketIdByName(it.next().getName())).stream().findFirst().orElse(null);
-//            if (currentCorrect != null) {
-//                it.next().setActualStartTime(currentCorrect.getActualStartTime());
-//                it.next().setCreateTime(currentCorrect.getCreateTime());
-//            }
-//        }
 
             //排序
 //            Collections.sort(correctList, (o1, o2) -> (int) (o2.getActualStartTime().compareTo(o1.getActualStartTime())));

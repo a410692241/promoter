@@ -43,19 +43,19 @@
                         </div>
                     </div>
 
-                    <div class="form-group form-group-margin">
-                        <div class="input-group">
-                            <span class="input-group-addon">实际开始时间</span> <input type="text"
-                                                                               class="form-control" datetimepicker
-                                                                               ng-model="search.createTimeStart"/>
-                        </div>
+                    <%--<div class="form-group form-group-margin">--%>
+                        <%--<div class="input-group">--%>
+                            <%--<span class="input-group-addon">实际开始时间</span> <input type="text"--%>
+                                                                               <%--class="form-control" datetimepicker--%>
+                                                                               <%--ng-model="search.createTimeStart"/>--%>
+                        <%--</div>--%>
 
-                        至
-                        <div class="input-group">
-                            <input type="text" class="form-control" datetimepicker
-                                   ng-model="search.createTimeEnd"/>
-                        </div>
-                    </div>
+                        <%--至--%>
+                        <%--<div class="input-group">--%>
+                            <%--<input type="text" class="form-control" datetimepicker--%>
+                                   <%--ng-model="search.createTimeEnd"/>--%>
+                        <%--</div>--%>
+                    <%--</div>--%>
 
 
 
