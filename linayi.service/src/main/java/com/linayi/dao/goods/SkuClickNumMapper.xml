@@ -98,6 +98,6 @@
     <if test="endTime != null">
       and click_date &lt;= #{endTime}
     </if>
-      order by num desc
+      order by num desc LIMIT 0,#{limitNum}
   </select>
 </mapper>

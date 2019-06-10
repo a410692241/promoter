@@ -19,6 +19,7 @@ public class SkuClickNum {
     private Date startTime;
     @DateTimeFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
     private Date endTime;
+    private Integer limitNum;
 
     /**
     * [点击量]
@@ -63,5 +64,13 @@ public class SkuClickNum {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public Integer getLimitNum() {
+        return limitNum;
+    }
+
+    public void setLimitNum(Integer limitNum) {
+        this.limitNum = limitNum;
     }
 }
