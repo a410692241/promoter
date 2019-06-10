@@ -14,9 +14,10 @@ public interface SkuClickNumService{
      */
     void updateClickNum(Integer goodsSkuId);
 
-    /**获取从多到少的某个日期段的商品id
-     * @param date
+    /**获取点击量从多到少的某个日期段的商品id
+     * 可根据参数设置时间段和前多少个商品
      * @return
+     * @param skuClickNum
      */
     List<Integer> getSkuIdsByClientNum(SkuClickNum skuClickNum);
 }
