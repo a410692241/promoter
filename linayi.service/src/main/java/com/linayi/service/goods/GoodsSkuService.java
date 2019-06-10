@@ -1,5 +1,6 @@
 package com.linayi.service.goods;
 
+import com.linayi.entity.correct.Correct;
 import com.linayi.entity.goods.Attribute;
 import com.linayi.entity.goods.GoodsAttrValue;
 import com.linayi.entity.goods.GoodsSku;
@@ -200,4 +201,6 @@ public interface GoodsSkuService {
 	 * @return
 	 */
     List<GoodsSku> getGoodsSkuBySkuIdList(List<Integer> skuIdsByClientNum);
+
+	public void exportAffectedPriceData(Correct correct, HttpServletRequest request, HttpServletResponse response) throws Exception;
 }

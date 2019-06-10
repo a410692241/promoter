@@ -1,8 +1,10 @@
 package com.linayi.service.correct;
 
 import com.linayi.entity.correct.Correct;
+import com.linayi.entity.goods.SupermarketGoods;
 import com.linayi.util.PageResult;
 
+import java.text.ParseException;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -66,6 +68,27 @@ public interface CorrectService {
      * @return
      */
     List<Correct> getOtherPrice(Integer goodsSkuId);
+
+    /**
+     * 采价员查看待审核纠错记录（指定一家超市）
+     * @param correct
+     * @return
+     */
+    List<Correct> getWaitAuditCorrect(Correct correct);
+
+    /**
+     * 获取审核历史列表
+     * @param correct
+     * @return
+     */
+    List<Correct> getCorrectByAuditerId(Correct correct);
+
+    /**
+     * 获取商品已生效最低价列表
+     * @param correct
+     * @return
+     */
+    List<Correct> getAffectedMinPrice(Correct correct) throws ParseException;
 
 //    void updatePriceForAdmin(Correct correct);
 }

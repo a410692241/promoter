@@ -73,5 +73,12 @@ public interface SupermarketGoodsMapper {
                                    @Param("goodsSkuId") Long goodsSkuId);
 
 	List<SupermarketGoods> getSkuList(SupermarketGoods smg);
+
+    /**
+     * 获取超市商品表其它超市价格
+     * @param supermarketGoods
+     * @return
+     */
+    List<SupermarketGoods> getOtherPrice(SupermarketGoods supermarketGoods);
     
 }

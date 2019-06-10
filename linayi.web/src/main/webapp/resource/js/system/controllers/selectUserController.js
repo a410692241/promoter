@@ -139,13 +139,13 @@ app.controller('selectUCtrl', function ($scope, toaster, selectUService, message
 
 
     //分配角色
-    function fenpeiRole(id, roleId) {
+    function fenpeiRole(id, roleList) {
         var url = urls.ms + "/jsp/system/selectRole.jsp?";
         if (id) {
             url = url + $.param({accountId: id});
         }
-        if (roleId) {
-            url = url + $.param({roleId: localStorage.getItem("roleId")});
+        if (roleList) {
+            url = url + $.param({roleList: localStorage.getItem("roleList")});
         }
 
         templateform.open({
@@ -163,7 +163,7 @@ app.controller('selectUCtrl', function ($scope, toaster, selectUService, message
                 selectUService.fenpeiRole({
                     data: {
                         accountId: id,
-                        roleId: localStorage.getItem("roleId")
+                        roleList: localStorage.getItem("roleList")
                     },
                     success: function (data) {
                         if (data.respCode === "S") {

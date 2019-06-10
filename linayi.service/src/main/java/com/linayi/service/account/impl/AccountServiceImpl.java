@@ -31,6 +31,7 @@ import com.linayi.exception.ErrorType;
 import com.linayi.service.account.AccountService;
 import com.linayi.service.redis.RedisService;
 import com.linayi.service.user.UserService;
+import com.linayi.util.CheckUtil;
 import com.linayi.util.PageResult;
 import com.linayi.util.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,16 +167,30 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Object insertAccountRole(Account account) {
         try {
-            int acc = accountMapper.selectByAccountId(account.getAccountId());
-            int i = accountMapper.selectByAr(acc);
-            if (i == account.getAccountId()) {
-                return new ResponseData(ErrorType.ACCOUNT_AND_ROLEID).toString();
+            List<AccountRole> accountRoles = roleEnumMapper.selectAccountRole(account);
+            String[] split = account.getRoleList().split("%2C");
+            List<Integer> ints = new ArrayList<>();
+            for (String str : split) {
+                ints.add(Integer.valueOf(str));
             }
-            roleEnumMapper.insertAccountRole(account);
-            return new ResponseData("success").toString();
+            if(accountRoles.size() != 0){
+                Account account1 = new Account();
+                List<Long> AccountRoleIdList = new ArrayList<>();
+                for (AccountRole accountRole : accountRoles) {
+                    AccountRoleIdList.add(accountRole.getAccountRoleId());
+                }
+                account1.setAccountRoleIdList(AccountRoleIdList);
+                roleEnumMapper.deleteAccountRoleByAccountRoleId(account1);
+            }
+            for (Integer anInt : ints) {
+                Account account1 = new Account();
+                account1.setAccountId(account.getAccountId());
+                account1.setRoleId(anInt);
+                roleEnumMapper.insertAccountRole(account1);
+            }
+                return new ResponseData("success").toString();
         } catch (Exception e) {
-            roleEnumMapper.insertAccountRole(account);
-            return new ResponseData("success").toString();
+            return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
         }
     }
 
