@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.linayi.entity.account.Account;
 import com.linayi.util.*;
@@ -20,6 +21,7 @@ import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.account.AdminAccountService;
 import com.linayi.service.redis.RedisService;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AdminAccountServiceImpl implements AdminAccountService{
@@ -112,6 +114,24 @@ public class AdminAccountServiceImpl implements AdminAccountService{
 		List<Account> list = adminAccountMapper.selectAdminAccountListJoinUserList(account);
 		PageResult<Account> pageResult = new PageResult<Account>(list, account.getTotal());
 		return pageResult;
+	}
+
+	@Override
+	@Transactional
+	public void modifyPsd(String oldPassword, String newPassword, HttpSession session){
+		AdminAccount adminAccount = (AdminAccount) session.getAttribute("loginAccount");
+		Account account = selectAdminAccountByaccountId(adminAccount.getAccountId());
+		if(account.getPassword().equals(MD5Util.MD5(oldPassword))){
+			if(newPassword.equals(oldPassword)){
+				throw new BusinessException(ErrorType.PASSWORDCONSISTENCY);
+			}
+			Account account1 = new Account();
+			account1.setPassword(MD5Util.MD5(newPassword));
+			account1.setAccountId(adminAccount.getAccountId());
+			adminAccountMapper.resetAdminPassword(account1);
+		}else{
+			throw new BusinessException(ErrorType.ACCOUNT_OR_OLDPASSWORD_ERROR);
+		}
 	}
 
 	/**

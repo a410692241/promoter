@@ -22,7 +22,7 @@ public enum ErrorType {
     THE_PHONE_NUMBER_HAS_BEEN_REGIST(1904, "该手机号已被注册!"),
     MESSAGE_FAILED_TO_SEND(1905, "短信发送失败!"),
     TOKEN_DISABLED(1906, "accessToken失效!"),
-    ACCOUNT_ERROR(1908,"账号重复"),
+    ACCOUNT_ERROR(1908,"账号或手机号重复"),
     UPDATE_ERROR(1909,"未做修改"),
     UPDATE_STATUS(1910,"修改状态异常"),
     ADD_ERROR(1911,"添加失败!"),
@@ -36,6 +36,7 @@ public enum ErrorType {
     SAME_AS_THE_ORIGINAL_PASSWORD(1919,"修改的密码和原密码相同!"),
     THIS_ACCOUNT_IS_NOT_ASSOCIATED_WITH_THE_COMMUNITY(1918,"该账号未关联社区!"),
     ACCOUNT_OR_PASSWORD_ERROR(2000,"密码错误"),
+    ACCOUNT_OR_OLDPASSWORD_ERROR(2030,"旧密码输入错误，请重新输入！"),
     ACCOUNT_AND_ROLEID(2005,"数据库已经存在了这条数据"),
     HAVE_MAN_SHARE_ERROR(2009,"已有人分享，暂时不能分享!"),
     HAVE_MAN_CORRECT_ERROR(2010,"已有人纠错，暂时不能纠错!"),
@@ -46,6 +47,7 @@ public enum ErrorType {
     NOT_YOUR_CORRECT(2015,"不是您的分享/纠错申请，不能撤回!"),
     JUST_CORRECT_MINE(2016,"生效价格不是您分享的，不能申请纠错!"),
     OPERATION_FAIL(2017,"操作失败!"),
+    OPERATION_SUCCESS(2027,"操作成功!"),
     BRAND_ERROR(2018,"brandSame"),
     NO_PROCURE_GOODS(2019,"没有采买到任何商品，装箱失败!"),
     HAVE_OPEN_Promoter(2020,"此手机号已开通了会员!"),
@@ -59,7 +61,11 @@ public enum ErrorType {
     RECEIVEADDTOOMUCH(2027,"您只能拥有两个收货地址，不能新增!"),
     NO_PRICE(2028,"该商品暂无价格，加入购物车失败!"),
     USER_IS_DISABLED(2029,"该用户已禁用!"),
-    NOT_PROCURER_NO_AUDIT(2030,"您不是驻点员，不能进行审核！");
+    NOT_PROCURER_NO_AUDIT(2030,"请先联系管理员绑定采买超市！"),
+    MOBILE_SAME(2031,"手机号等信息已经存在"),
+    PASSWORDCONSISTENCY(2032,"不能与原密码一致");
+
+
 
     // 错误编码
     private int errorCode;

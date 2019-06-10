@@ -17,6 +17,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
         $scope.search = {
             goodsSkuId:'',
             fullName:'',
+            name:'',
             createTime:'',
             actualStartTime:'',
             createTimeStart:'',
@@ -41,7 +42,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
             multiselect: true,
             rownumWidth: 100,
             colModel: [
-                {name: 'goodsSkuId', label: '商品id', sortable: false, hidden: false},
+                {name: 'goodsSkuId', label: '商品ID', sortable: false, hidden: false},
                 {name: 'fullName', label: '商品名称', sortable: false},
                 {name: 'name', label: '超市名称', sortable: false, hidden: false},
                 {name: 'price', label: '最低价(元)', sortable: false,
@@ -50,7 +51,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
                     },},
                 {
                     name: 'spreadRate',
-                    label: '价差率',
+                    label: '价差率(%)',
                     width: 150,
                     sortable: false,
                     formatter: function (cellvalue, options, rowObject) {
@@ -75,20 +76,20 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
                         return cellvalue ? new Date(cellvalue).format("yyyy-MM-dd HH:mm:ss") : "";
                     }
                 },
-                {
-                    label: "操作",
-                    name: "opt",
-                    width: 260,
-                    sortable: false,
-                    formatter: function (cellvalue, options, rowObject) {
-                        var opts = "";
-
-                        opts = opts + "<a href='javascript:void(0);' ng-click='edit( " + rowObject.correctId + " )' class='btn btn-primary shiny fa fa-edit btn-sm td-compile'>改价</a> ";
-                        /*opts = opts + "<a href='javascript:void(0);' ng-click='cancel( "+rowObject.correctId+" )' class='btn btn-primary shiny fa fa-edit btn-sm td-compile'>撤销</a> ";*/
-
-                        return opts;
-                    }
-                }
+                // {
+                //     label: "操作",
+                //     name: "opt",
+                //     width: 260,
+                //     sortable: false,
+                //     formatter: function (cellvalue, options, rowObject) {
+                //         var opts = "";
+                //
+                //         opts = opts + "<a href='javascript:void(0);' ng-click='edit( " + rowObject.correctId + " )' class='btn btn-primary shiny fa fa-edit btn-sm td-compile'>改价</a> ";
+                //         /*opts = opts + "<a href='javascript:void(0);' ng-click='cancel( "+rowObject.correctId+" )' class='btn btn-primary shiny fa fa-edit btn-sm td-compile'>撤销</a> ";*/
+                //
+                //         return opts;
+                //     }
+                // }
             ],
             //设置页面
             loadComplete: function () {
@@ -376,6 +377,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
     function exportData() {
         var goodsSkuId = $scope.search.goodsSkuId;
         var fullName = $scope.search.fullName;
+        var name = $scope.search.name;
         var createTime = $scope.search.createTime;
         var actualStartTime = $scope.search.actualStartTime;
         var createTimeStart = $scope.search.createTimeStart;
@@ -393,6 +395,12 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
 
         } else {
             data += '&fullName=' + fullName;
+        }
+        if (name === undefined || name == '') {
+            name = null;
+
+        } else {
+            data += '&name=' + name;
         }
         if (createTimeStart === undefined || createTimeStart == '') {
             createTimeStart = null;

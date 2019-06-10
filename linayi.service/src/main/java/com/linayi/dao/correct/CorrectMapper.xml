@@ -356,7 +356,7 @@
         c.update_time,
         c.audit_time,
         c.auditer_id,
-        (select round(((max(price)-min(price))/min(price)*100),2)  from correct where goods_sku_id=c.goods_sku_id and (status='AFFECTED'  or status='AUDIT_SUCCESS' or status='WAIT_AUDIT') group by goods_sku_id) spreadRate,
+        IFNULL((select round(((IFNULL(max(price),0)-IFNULL(min(price),0))/IFNULL(min(price),0)*100),2)  from correct where goods_sku_id=c.goods_sku_id and (status='AFFECTED'  or status='AUDIT_SUCCESS' or status='WAIT_AUDIT') group by goods_sku_id),0) spreadRate,
         s.name name
         FROM
         correct c
@@ -575,6 +575,7 @@
              c.goods_sku_id=#{goodsSkuId}
         AND
              c.status in ('WAIT_AUDIT','AUDIT_SUCCESS','AFFECTED')
+        ORDER BY  c.price asc
     </select>
 
     <!--获取纠错表其它超市价格-->
@@ -594,7 +595,7 @@
 
     <select id="getWaitAuditCorrectBySupermerketId"  resultType="com.linayi.entity.correct.Correct">
         SELECT
-          c.correct_id,c.goods_sku_id,c.supermarket_id,c.price,c.create_time,g.full_WHEREg.image goodsImage,
+          c.correct_id,c.parent_id,c.goods_sku_id,c.supermarket_id,c.price,c.create_time,g.full_name,g.image goodsImage,
           (select round(((max(price)-min(price))/min(price)*100),2)  from correct where goods_sku_id=c.goods_sku_id and (status='AFFECTED'  or status='AUDIT_SUCCESS' or status='WAIT_AUDIT') group by goods_sku_id) spreadRate
         FROM
           correct c join goods_sku g on c.goods_sku_id = g.goods_sku_id
@@ -602,6 +603,8 @@
           c.supermarket_id = #{supermarketId}
         AND
           c.status = 'WAIT_AUDIT'
+        ORDER BY
+          c.create_time DESC
     </select>
 
     <select id="getCorrectByAuditerId"  resultType="com.linayi.entity.correct.Correct">
@@ -614,13 +617,16 @@
           c.auditer_id=#{userId}
         AND
           c.audit_type = 'USER'
+        ORDER BY
+          c.audit_time desc
     </select>
 
     <select id="getAffectedMinPrice"  resultType="com.linayi.entity.correct.Correct">
         SELECT
-          sg.goods_sku_id,g.full_name,min(sg.price) minprice,sg.price,
+          sg.goods_sku_id,g.full_name,min(sg.price) price,
+        (SELECT supermarket_goods_id FROM supermarket_goods WHERE goods_sku_id = sg.goods_sku_id ORDER BY price LIMIT 0,1) supermarketGoodsId,
           (SELECT ss.name FROM supermarket_goods sgood LEFT JOIN supermarket ss ON sgood.supermarket_id=ss.supermarket_id  WHERE sgood.goods_sku_id=sg.goods_sku_id ORDER BY sgood.price LIMIT 0,1) name,
-          (SELECT round(((max(price)-min(price))/min(price)*100),2)  from supermarket_goods WHERE goods_sku_id=sg.goods_sku_id) spreadRate,c.actual_start_time,c.create_time
+          (SELECT round(((max(price)-min(price))/min(price)*100),2)  from supermarket_goods WHERE goods_sku_id=sg.goods_sku_id) spreadRate
         FROM
           supermarket_goods sg
         LEFT JOIN correct c ON sg.correct_id = c.correct_id
@@ -642,8 +648,24 @@
         </where>
         GROUP BY
           sg.goods_sku_id
+        HAVING
+          1=1
+        <if test="name != null and name != ''">
+        AND name LIKE concat('%',#{name},'%')
+        </if>
         ORDER BY
-        c.actual_start_time DESC
+        spreadRate desc
+
+    </select>
+
+
+    <select id="getcorrectTimeByGoodsSkuId"  resultType="com.linayi.entity.correct.Correct">
+        select
+          correct_id,actual_start_time,create_time
+        FROM
+          correct
+        where
+          correct_id=(SELECT correct_id from supermarket_goods where goods_sku_id = #{goodsSkuId} and supermarket_id=#{supermarketId} ORDER BY price)
     </select>
 
 

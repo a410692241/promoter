@@ -1,5 +1,5 @@
 'use strict';
-app.service('selectUserService', [function() {
+app.service('selectUService', [function() {
     function ajax( options ){
         $.ajax({
             url:options.url,
@@ -113,7 +113,7 @@ app.service('selectUserService', [function() {
     }
 
     function addRole( options ){
-        options.url = urls.ms+'/roleAction/addRole.do';
+        options.url = urls.ms+'/account/addRole.do';
         ajax( options );
     }
 

@@ -5,7 +5,7 @@ app.controller('selectUserCtrl', function($scope,toaster,selectUserService,messa
 	function init(){
 		 $scope.show = show;
 		$scope.edit = edit;
-		$scope.add = add;
+		/*$scope.add = add;*/
 		$scope.remove = remove;
 		$scope.list = list;
 		$scope.resetPWD = resetPWD;
@@ -290,20 +290,18 @@ app.controller('selectUserCtrl', function($scope,toaster,selectUserService,messa
 							toaster.success("","操作成功！",3000);
 							$modalInstance.close();
 						}else{
-							$scope.$apply(function(){
-								toaster.error( "",data.msg,3000 );
-							});
+								toaster.error( "",data.data,3000 );
 						}
 					}
 				} )
 			}catch (e) {
-				console.error( e );
+				console.log( e );
 				toaster.error( "",e.msg ? e.msg : "出错了",3000 );
 			}
 		});
     }
     //新增
-	function add( id ){
+	/*function add( id ){
 		var url = urls.ms + "/employee/addUser.do?";
 		if( id ){
 			url = url + $.param( {employeeId:id} );
@@ -321,19 +319,18 @@ app.controller('selectUserCtrl', function($scope,toaster,selectUserService,messa
 							toaster.success("","操作成功！",3000);
 							$modalInstance.close();
 						}else{
-							$scope.$apply(function(){
-								toaster.error( "",data.msg,3000 );
+								toaster.success( "","手机号已存在",3000 );
 								$state.reload();
-							});
 						}
 					}
 				} )
 			}catch (e) {
 				console.error( e );
-				toaster.error( "",e.msg ? e.msg : "出错了",3000 );
+				alert("2");
+				toaster.error( "","手机号已存在",3000 );
 			}
 		});
-	}
+	}*/
 
 	function update( id ){
 		var url = urls.ms + "/employee/update.do?";

@@ -101,29 +101,29 @@ public class ProcurementServiceImpl implements ProcurementService {
 	}
 
 
-    @Override
-    public List<ProcurementTask> getCommunityProcurements(ProcurementTask procurementTask) {
+	@Override
+	public List<ProcurementTask> getCommunityProcurements(ProcurementTask procurementTask) {
 
-        String procureStatus = procurementTask.getProcureStatus();
-        if("PROCURING".equals(procureStatus)){
-            getQueryTime(procurementTask);
-        }
+		String procureStatus = procurementTask.getProcureStatus();
+		if("PROCURING".equals(procureStatus)){
+			getQueryTime(procurementTask);
+		}
 
 
-        List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementsList(procurementTask);
-        if (procurementTaskList != null && procurementTaskList.size() > 0){
-            for (ProcurementTask task : procurementTaskList) {
-            	if(task != null){
+		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementsList(procurementTask);
+		if (procurementTaskList != null && procurementTaskList.size() > 0){
+			for (ProcurementTask task : procurementTaskList) {
+				if(task != null){
 					GoodsSku goods = goodsSkuMapper.getGoodsById(task.getGoodsSkuId());
 					if(goods != null){
 						task.setGoodsImage(ImageUtil.dealToShow(goods.getImage()));
 					}
 
 				}
-            }
-        }
-        return procurementTaskList;
-    }
+			}
+		}
+		return procurementTaskList;
+	}
 
 	//采买任务收货详情
 	@Override
@@ -137,14 +137,15 @@ public class ProcurementServiceImpl implements ProcurementService {
 
 	private void getQueryTime(ProcurementTask procurementTask) {
 		//根据时间断查询
-		//采买时间12:00-15:00  查下单时间8:00-13:00及之前的   查询
-		boolean nowBetween1 = getNowBetween(12, 17);
+		//采买时间09:00-13:00  查下单时间09:00及之前的   查询
+		boolean nowBetween1 = getNowBetween(9, 13);
 		if (nowBetween1) {
-			Date fix = getDateFix(null,13);
+			Date fix = getDateFix(null,9);
 			procurementTask.setCreateTime(fix);
 		}
-		//采买时间17:00-20:00  查下单时间13:00-18:00及之前的   查询
-		boolean nowBetween2 = getNowBetween(17, 32);
+
+		//采买时间18:00-09:00  查下单时间18:00及之前的   查询
+		boolean nowBetween2 = getNowBetween(18, 33);
 		if (nowBetween2) {
 			Date now = new Date();
 			Calendar cl = Calendar.getInstance();
@@ -152,7 +153,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 			int hour = cl.get(Calendar.HOUR_OF_DAY);
 			int i = hour % 24;
 			Date fix;
-			if(i >= 0 || i <= 8){
+			if(i >= 0 && i < 9){
 				fix = getDateFix(-1,18);
 			}else {
 				fix = getDateFix(null,18);
@@ -160,10 +161,10 @@ public class ProcurementServiceImpl implements ProcurementService {
 			procurementTask.setCreateTime(fix);
 		}
 
-		//采买时间08:00-11:00  查下单时间18:00-8:00及之前的   查询
-		boolean nowBetween3 = getNowBetween(8, 12);
+		//采买时间13:00-18:00  查下单时间13:00及之前的   查询
+		boolean nowBetween3 = getNowBetween(13, 18);
 		if (nowBetween3) {
-			Date fix = getDateFix(null,8);
+			Date fix = getDateFix(null,13);
 			procurementTask.setCreateTime(fix);
 		}
 	}
@@ -174,15 +175,14 @@ public class ProcurementServiceImpl implements ProcurementService {
 		Calendar cl = Calendar.getInstance();
 		cl.setTime(now);
 		int hour = cl.get(Calendar.HOUR_OF_DAY);
-		if(to == 32){
-			if(hour >= from || hour <= to % 24){
-					return true;
-			}
-		}else {
-			if(hour >= from && hour <= to){
+		if(to == 33){
+			if(hour >= from || hour < to % 24){
 				return true;
 			}
-
+		}else {
+			if(hour >= from && hour < to){
+				return true;
+			}
 		}
 		return false;
 	}
@@ -222,7 +222,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 				for (ProcurementTask procurementTask : procurementTaskList) {
 					procurementTask.setProcureStatus("PRICE_HIGH");
 					procurementTask.setUpdateTime(new Date());
-                    procurementTask.setProcureTime(procureTime);
+					procurementTask.setProcureTime(procureTime);
 					procurementTaskMapper.updateProcurementTaskById(procurementTask);
 					updateOrders(procurementTask);
 				}
@@ -231,21 +231,21 @@ public class ProcurementServiceImpl implements ProcurementService {
 			//缺货
 			if (procurementTaskList != null && procurementTaskList.size() > 0){
 				for (ProcurementTask procurementTask : procurementTaskList) {
-                    procurementTask.setProcureTime(procureTime);
+					procurementTask.setProcureTime(procureTime);
 					if (procurementTask.getQuantity() <= quantity){
 						procurementTask.setProcureStatus("BOUGHT");
-                        procurementTask.setActualQuantity(procurementTask.getQuantity());
+						procurementTask.setActualQuantity(procurementTask.getQuantity());
 						procurementTask.setProcureQuantity(procurementTask.getQuantity());
 					}else if(quantity >0 && quantity < procurementTask.getQuantity()){
-                        procurementTask.setProcureStatus("LACK");
-                        procurementTask.setActualQuantity(quantity);
-                        procurementTask.setProcureQuantity(quantity);
+						procurementTask.setProcureStatus("LACK");
+						procurementTask.setActualQuantity(quantity);
+						procurementTask.setProcureQuantity(quantity);
 					} else {
 						procurementTask.setProcureStatus("LACK");
 						procurementTask.setActualQuantity(0);
 						procurementTask.setProcureQuantity(0);
 					}
-                    quantity -= procurementTask.getQuantity();
+					quantity -= procurementTask.getQuantity();
 
 					procurementTask.setUpdateTime(new Date());
 					procurementTaskMapper.updateProcurementTaskById(procurementTask);
@@ -256,9 +256,9 @@ public class ProcurementServiceImpl implements ProcurementService {
 			//已买
 			if (procurementTaskList != null && procurementTaskList.size() > 0){
 				for (ProcurementTask procurementTask : procurementTaskList) {
-                    procurementTask.setProcureTime(procureTime);
-                    procurementTask.setProcureQuantity(procurementTask.getQuantity());
-                    procurementTask.setActualQuantity(procurementTask.getQuantity());
+					procurementTask.setProcureTime(procureTime);
+					procurementTask.setProcureQuantity(procurementTask.getQuantity());
+					procurementTask.setActualQuantity(procurementTask.getQuantity());
 					procurementTask.setProcureStatus("BOUGHT");
 					procurementTask.setUpdateTime(new Date());
 					procurementTaskMapper.updateProcurementTaskById(procurementTask);
@@ -452,12 +452,12 @@ public class ProcurementServiceImpl implements ProcurementService {
 		Date date = new Date();
 		if (procurementTaskList != null && procurementTaskList.size() > 0){
 			for (ProcurementTask task : procurementTaskList) {
-                Integer procureQuantity = task.getProcureQuantity();
-                if (procureQuantity != null && procureQuantity > 0){
-                    task.setReceiveStatus("OUTED");
-                    task.setProcureOutTime(date);
-                    procurementTaskMapper.updateProcurementTaskById(task);
-                }
+				Integer procureQuantity = task.getProcureQuantity();
+				if (procureQuantity != null && procureQuantity > 0){
+					task.setReceiveStatus("OUTED");
+					task.setProcureOutTime(date);
+					procurementTaskMapper.updateProcurementTaskById(task);
+				}
 			}
 		}
 
@@ -694,29 +694,29 @@ public class ProcurementServiceImpl implements ProcurementService {
 	@Override
 	public void updateOrderStatus(ProcurementTask procurementTask) {
 
-				procurementTask.setReceiveStatus("RECEIVED");
-				if (procurementTask.getProcurementTaskIdList().contains(",")){
-					String [] str =	procurementTask.getProcurementTaskIdList().split(",");
-					for (String s : str) {
-						procurementTask.setProcurementTaskId(Long .valueOf(s));
-						procurementTaskMapper.updateProcurementTaskById(procurementTask);
-						//根据任务id获取采买任务表信息
-						ProcurementTask procurementTasks = procurementTaskMapper.selectByPrimaryKey(Long .valueOf(s));
-						//修改订单表状态
-						orderService.updateOrderReceivedStatus(procurementTasks.getOrdersId());
-					}
+		procurementTask.setReceiveStatus("RECEIVED");
+		if (procurementTask.getProcurementTaskIdList().contains(",")){
+			String [] str =	procurementTask.getProcurementTaskIdList().split(",");
+			for (String s : str) {
+				procurementTask.setProcurementTaskId(Long .valueOf(s));
+				procurementTaskMapper.updateProcurementTaskById(procurementTask);
+				//根据任务id获取采买任务表信息
+				ProcurementTask procurementTasks = procurementTaskMapper.selectByPrimaryKey(Long .valueOf(s));
+				//修改订单表状态
+				orderService.updateOrderReceivedStatus(procurementTasks.getOrdersId());
+			}
 
-				}else{
-					procurementTask.setProcurementTaskId(Long .valueOf(procurementTask.getProcurementTaskIdList()));
-					//将采买任务表改成已收货
-					procurementTaskMapper.updateProcurementTaskById(procurementTask);
+		}else{
+			procurementTask.setProcurementTaskId(Long .valueOf(procurementTask.getProcurementTaskIdList()));
+			//将采买任务表改成已收货
+			procurementTaskMapper.updateProcurementTaskById(procurementTask);
 
-					ProcurementTask procurementTasks = procurementTaskMapper.selectByPrimaryKey(Long .valueOf(procurementTask.getProcurementTaskIdList()));
-					//修改订单表状态
-					orderService.updateOrderReceivedStatus(procurementTasks.getOrdersId());
-				}
-
+			ProcurementTask procurementTasks = procurementTaskMapper.selectByPrimaryKey(Long .valueOf(procurementTask.getProcurementTaskIdList()));
+			//修改订单表状态
+			orderService.updateOrderReceivedStatus(procurementTasks.getOrdersId());
 		}
+
+	}
 
 
 

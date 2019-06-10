@@ -4,11 +4,13 @@ package com.linayi.controller.correct;
 import com.linayi.controller.BaseController;
 import com.linayi.entity.correct.Correct;
 import com.linayi.entity.correct.SupermarketGoodsVersion;
+import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.enums.OperatorType;
 import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.correct.CorrectService;
 import com.linayi.service.correct.SupermarketGoodsVersionService;
+import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.util.ParamValidUtil;
 import com.linayi.util.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,8 @@ import java.util.Map;
 @Controller
 @RequestMapping("/correct/correct")
 public class CorrectController extends BaseController {
-
+	@Autowired
+	private SupermarketService supermarketService;
 	@Autowired
 	private CorrectService correctService;
 
@@ -246,6 +249,14 @@ public class CorrectController extends BaseController {
 
 			Integer userId = getUserId();
 			correct.setUserId(userId);
+
+			//校验是否绑定超市
+			Supermarket supermarket = supermarketService.getSupermarketByProcurerId(userId);
+			if(supermarket == null){
+				throw new BusinessException(ErrorType.NOT_PROCURER_NO_AUDIT);
+			}
+			correct.setSupermarket(supermarket);
+
 			List<Correct> correctList = correctService.getWaitAuditCorrect(correct);
 			Integer totalPage = (int) Math.ceil(Double.valueOf(correct.getTotal())/Double.valueOf(correct.getPageSize()));
 			if(totalPage <= 0){
@@ -253,10 +264,13 @@ public class CorrectController extends BaseController {
 			}
 			Map<String , Object> map = new HashMap<>();
 			map.put("data", correctList);
+			map.put("supermarketName", supermarket.getName());
 			map.put("totalPage", totalPage);
 			map.put("currentPage",correct.getCurrentPage() );
 
 			return new ResponseData(map);
+		}catch (BusinessException e) {
+			return new ResponseData(e.getErrorType()).toString();
 		} catch (Exception e) {
 			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
 		}
@@ -270,7 +284,8 @@ public class CorrectController extends BaseController {
 			correct.setAuditType(OperatorType.USER.toString());
 			correctService.audit(correct);
 
-			return new ResponseData("审核成功！").toString();
+			correct.setResultStr("审核成功！");
+			return new ResponseData(correct);
 		}catch (BusinessException e) {
 			return new ResponseData(e.getErrorType()).toString();
 		} catch (Exception e) {
@@ -290,6 +305,13 @@ public class CorrectController extends BaseController {
 
 			Integer userId = getUserId();
 			correct.setUserId(userId);
+
+//			//校验是否绑定超市
+//			Supermarket supermarket = supermarketService.getSupermarketByProcurerId(userId);
+//			if(supermarket == null){
+//				throw new BusinessException(ErrorType.NOT_PROCURER_NO_AUDIT);
+//			}
+
 			List<Correct> correctList = correctService.getCorrectByAuditerId(correct);
 			Integer totalPage = (int) Math.ceil(Double.valueOf(correct.getTotal())/Double.valueOf(correct.getPageSize()));
 			if(totalPage <= 0){
@@ -301,6 +323,8 @@ public class CorrectController extends BaseController {
 			map.put("currentPage",correct.getCurrentPage() );
 
 			return new ResponseData(map);
+		} catch (BusinessException e) {
+			return new ResponseData(e.getErrorType()).toString();
 		} catch (Exception e) {
 			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
 		}

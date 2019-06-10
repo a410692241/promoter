@@ -95,4 +95,6 @@ public interface SupermarketMapper {
 	 * @return
 	 */
 	List<Supermarket> getSupermarketByName(String supermarketName);
+
+    Integer getSupermarketIdByName(String name);
 }

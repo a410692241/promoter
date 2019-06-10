@@ -231,6 +231,17 @@ public class Correct extends BaseEntity {
      */
     private String auditType;
 
+    /**
+     * [响应提示]
+     *
+     */
+    private String resultStr;
+
+    /**
+     * 超市商品id
+     */
+    private Long supermarketGoodsId;
+
 
     private AdminAccount adminAccount;
 
@@ -551,6 +562,22 @@ public class Correct extends BaseEntity {
 
     public void setAuditType(String auditType) {
         this.auditType = auditType;
+    }
+
+    public String getResultStr() {
+        return resultStr;
+    }
+
+    public void setResultStr(String resultStr) {
+        this.resultStr = resultStr;
+    }
+
+    public Long getSupermarketGoodsId() {
+        return supermarketGoodsId;
+    }
+
+    public void setSupermarketGoodsId(Long supermarketGoodsId) {
+        this.supermarketGoodsId = supermarketGoodsId;
     }
 
     @Override

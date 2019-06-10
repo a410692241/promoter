@@ -31,24 +31,31 @@
                     </div>
                     <div class="form-group form-group-margin">
                     <div class="input-group">
-                        <span class="input-group-addon">商品名</span>
+                        <span class="input-group-addon">商品名称</span>
                         <input ng-model="search.fullName" type="text" class="form-control">
                     </div>
                 </div>
 
                     <div class="form-group form-group-margin">
                         <div class="input-group">
-                            <span class="input-group-addon">实际开始时间</span> <input type="text"
-                                                                               class="form-control" datetimepicker
-                                                                               ng-model="search.createTimeStart"/>
-                        </div>
-
-                        至
-                        <div class="input-group">
-                            <input type="text" class="form-control" datetimepicker
-                                   ng-model="search.createTimeEnd"/>
+                            <span class="input-group-addon">超市名称</span>
+                            <input ng-model="search.name" type="text" class="form-control">
                         </div>
                     </div>
+
+                    <%--<div class="form-group form-group-margin">--%>
+                        <%--<div class="input-group">--%>
+                            <%--<span class="input-group-addon">实际开始时间</span> <input type="text"--%>
+                                                                               <%--class="form-control" datetimepicker--%>
+                                                                               <%--ng-model="search.createTimeStart"/>--%>
+                        <%--</div>--%>
+
+                        <%--至--%>
+                        <%--<div class="input-group">--%>
+                            <%--<input type="text" class="form-control" datetimepicker--%>
+                                   <%--ng-model="search.createTimeEnd"/>--%>
+                        <%--</div>--%>
+                    <%--</div>--%>
 
 
 

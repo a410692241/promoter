@@ -14,6 +14,7 @@ import com.linayi.entity.area.Area;
 import com.linayi.entity.area.SmallCommunity;
 import com.linayi.entity.user.User;
 import com.linayi.enums.EnabledDisabled;
+import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.redis.RedisService;
 import com.linayi.service.user.UserService;
@@ -120,7 +121,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = BusinessException.class)
     public Object addEmployee(Account account) {
         Date date = new Date();
         Integer accountId = account.getAccountId();
@@ -149,9 +150,15 @@ public class UserServiceImpl implements UserService {
             //新增
             try {
                 Account acc = adminAccountMapper.selectByName(account.getUserName());
+                Account account1 = adminAccountMapper.selectByMobile(account.getMobile());
+                if(CheckUtil.isNotNullEmpty(acc)||CheckUtil.isNotNullEmpty(account1)) {
+                    System.out.println("------------------------------");
+                    return new ResponseData(ErrorType.ACCOUNT_ERROR);
+                }
             }catch (Exception e){
-                return new ResponseData(ErrorType.ACCOUNT_ERROR).toString();
+
             }
+            try {
             account.setCreateTime(date);
             Employee employee = new Employee();
             employee.setEmail(account.getEmail());
@@ -167,7 +174,10 @@ public class UserServiceImpl implements UserService {
             account.setStatus(EnabledDisabled.ENABLED.name());
             account.setUserType("EMPLOYEE");
             account.setPassword(MD5Util.MD5(account.getPassword()));
-            adminAccountMapper.insertAccountAdmin(account);
+                adminAccountMapper.insertAccountAdmin(account);
+            }catch (Exception e){
+                return new ResponseData(ErrorType.MOBILE_SAME);
+            }
         }
         return new ResponseData(account).toString();
     }
