@@ -30,4 +30,6 @@ public interface ShoppingCarMapper {
      * @return
      */
     ShoppingCar getShopCar(ShoppingCar shoppingCar);
+
+    int updateByPrimaryKeySelective(ShoppingCar shoppingCar);
 }

@@ -12,7 +12,7 @@
 	<!-- 配置CommonsMultipartResolver 文件上传 id必须如下配置 -->
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 
-     <!-- 配置c3p0 -->
+     <!-- 配置c3p0  -->
      <!-- 连接池 -->
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
         <property name="driverClass" value="com.mysql.cj.jdbc.Driver"></property>

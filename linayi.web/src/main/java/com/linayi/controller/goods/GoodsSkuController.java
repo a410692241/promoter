@@ -510,8 +510,7 @@ public class GoodsSkuController extends BaseController{
         try {
             //获取倒序goodsSkuId集合
             List<Integer> skuIdsByClientNum = skuClickNumService.getSkuIdsByClientNum(skuClickNum);
-            List<GoodsSku> goodsList = goodsService.getGoodsSkuBySkuIdList(skuIdsByClientNum);
-            return new ResponseData(goodsList);
+            return new ResponseData(skuIdsByClientNum);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseData(ErrorType.SYSTEM_ERROR);

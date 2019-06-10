@@ -69,4 +69,7 @@ public interface SelfOrderMapper {
 
     List<Map> listSelfOrderMessage(@Param("selfOrderId") Long selfOrderId);
 
+    List<SelfOrder> selectByAll(SelfOrder selfOrder);
+
+    int updateByPrimaryKey(SelfOrder record);
 }
