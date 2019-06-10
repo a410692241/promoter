@@ -276,6 +276,7 @@
             <if test="createTimeEnd != null and createTimeEnd != ''">
                 and gs.create_time <![CDATA[ <= ]]> #{createTimeEnd}
             </if>
+
         </where>
         order by gs.goods_sku_id desc
     </select>
@@ -532,7 +533,7 @@
     <select id="getGoodsSkuByVagueGoodsName" resultType="com.linayi.entity.goods.GoodsSku">
         SELECT
             goods_sku_id,
-        NAME name,
+            NAME name,
             full_name,
             barcode,
             category_id,
@@ -784,4 +785,37 @@
          AND  cc.price_type = "PROMOTION"
          AND  cc. STATUS = "AFFECTED"
     </select>-->
+
+
+    <!-- 后台价差排行 -->
+    <!--List<GoodsSku> getBackstageDifferenceRanking()-->
+    <select id="getBackstageDifferenceRanking" resultType="com.linayi.entity.goods.GoodsSku">
+        SELECT
+            gs.goods_sku_id  goodsSkuId,
+            gs.full_name fullName,
+            gs.category_id categoryId,
+            gs.brand_id brandId,
+            max(sg.price) maxPrice,
+            min(sg.price) minPrice,
+         /* GROUP_CONCAT(sg.price),
+            GROUP_CONCAT(sg.supermaeket_id),*/
+            round(((max(sg.price)- min(sg.price))/min(sg.price)*100),2) spreadRate
+        FROM
+            supermarket_goods sg join goods_sku gs on sg.goods_sku_id = gs.goods_sku_id
+        WHERE
+             1=1
+             <if test="goodsSkuId !=null and goodsSkuId != ''">
+                and gs.goods_sku_id=#{goodsSkuId}
+             </if>
+             <if test="name!=null and name!=''">
+                and  gs.full_name like  concat('%',#{name},'%')
+             </if>
+        GROUP BY gs.goods_sku_id
+        HAVING
+              1=1
+        <if test="spreadRate!=null and spreadRate!=''">
+            and spreadRate &gt; #{spreadRate}
+        </if>
+        ORDER BY spreadRate desc
+    </select>
 </mapper>

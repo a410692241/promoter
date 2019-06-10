@@ -303,4 +303,15 @@
 		</where>
   	</select>
 
+	<!--根据超市名模糊查询超市-->
+	<select id="getSupermarketByName" resultType="com.linayi.entity.supermarket.Supermarket">
+		SELECT
+			supermarket_id,
+			name
+		FROM
+			supermarket
+		WHERE
+			name like concat('%', #{supermarketName},'%')
+	</select>
+
 </mapper>
