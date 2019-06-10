@@ -13,6 +13,7 @@ import com.linayi.dao.role.RoleEnumMapper;
 import com.linayi.dao.user.ShoppingCarMapper;
 import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.account.Account;
+import com.linayi.entity.account.AccountRole;
 import com.linayi.entity.account.Role;
 import com.linayi.entity.community.Community;
 import com.linayi.entity.correct.Correct;
@@ -40,10 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class AccountServiceImpl implements AccountService {
