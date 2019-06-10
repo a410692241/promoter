@@ -18,6 +18,7 @@ public enum ErrorType {
     SYSTEM_ERROR(1000, "系统繁忙!"),
     PARAM_ERROR(1901, "请求参数错误!"),
     WECHAT_CALL_ERROR(1902, "微信调用出错!"),
+    THE_ACCOUNT_HAS_BEAN_CHANGED(1903, "该账号数据已被转移,请使用新账号!"),
     THE_PHONE_NUMBER_HAS_BEEN_BOUND(1904, "该手机号已被绑定!"),
     THE_ACCOUNT_HAS_BEEN_BOUND_TO_THE_PHONE_NUMBER(1904, "该账号已绑定手机号!"),
     THE_PHONE_NUMBER_HAS_BEEN_REGIST(1904, "该手机号已被注册!"),

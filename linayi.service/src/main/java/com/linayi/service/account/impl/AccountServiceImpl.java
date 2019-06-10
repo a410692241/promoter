@@ -344,6 +344,10 @@ public class AccountServiceImpl implements AccountService {
         if(accountById.getMobile() != null){
             throw new BusinessException(ErrorType.THE_ACCOUNT_HAS_BEEN_BOUND_TO_THE_PHONE_NUMBER);
         }
+        //检查该账号是否已经是处理后的微信账号
+        if (accountById.getOpenId().contains("_origin")) {
+            throw new BusinessException(ErrorType.THE_ACCOUNT_HAS_BEAN_CHANGED);
+        }
         //检查手机号是否创建
         Account account = new Account();
         account.setMobile(mobile);
@@ -449,8 +453,6 @@ public class AccountServiceImpl implements AccountService {
                 correctLogPm.setCorrectLogId(correctLogDB.getCorrectLogId());
                 correctLogMapper.updateByPrimaryKeySelective(correctLogPm);
             }
-
-
         }else{
             //账号不存在的情况
             Account accountParam = new Account();
