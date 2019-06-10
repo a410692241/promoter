@@ -306,11 +306,11 @@ public class CorrectController extends BaseController {
 			Integer userId = getUserId();
 			correct.setUserId(userId);
 
-			//校验是否绑定超市
-			Supermarket supermarket = supermarketService.getSupermarketByProcurerId(userId);
-			if(supermarket == null){
-				throw new BusinessException(ErrorType.NOT_PROCURER_NO_AUDIT);
-			}
+//			//校验是否绑定超市
+//			Supermarket supermarket = supermarketService.getSupermarketByProcurerId(userId);
+//			if(supermarket == null){
+//				throw new BusinessException(ErrorType.NOT_PROCURER_NO_AUDIT);
+//			}
 
 			List<Correct> correctList = correctService.getCorrectByAuditerId(correct);
 			Integer totalPage = (int) Math.ceil(Double.valueOf(correct.getTotal())/Double.valueOf(correct.getPageSize()));
