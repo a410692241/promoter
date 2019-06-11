@@ -133,5 +133,7 @@ public interface ProcurementTaskMapper {
      * @param procurementTask
      */
     void updateProcurementTaskCanceled(ProcurementTask procurementTask);
+
+    void updateProcureTaskNoById(ProcurementTask procurementTask);
 }
 

@@ -35,6 +35,8 @@ public class ProcurementTask extends BaseEntity{
 
     private Long ordersGoodsId;
 
+    private String procureMergeNo;
+
     private Integer supermarketId;
 
     private Integer goodsSkuId;
@@ -590,4 +592,11 @@ public class ProcurementTask extends BaseEntity{
         this.wavePickingEndTimeTo = wavePickingEndTimeTo;
     }
 
+    public String getProcureMergeNo() {
+        return procureMergeNo;
+    }
+
+    public void setProcureMergeNo(String procureMergeNo) {
+        this.procureMergeNo = procureMergeNo;
+    }
 }
