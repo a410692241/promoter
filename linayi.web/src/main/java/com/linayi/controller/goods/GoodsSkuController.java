@@ -371,7 +371,7 @@ public class GoodsSkuController extends BaseController{
         List<Supermarket> supermarkets = supermarketGoodsService.getPriceSupermarketBycommunityIdAndgoodsSkuId(null, Integer.parseInt(goodsSkuId));
         List<Map> maps = new ArrayList<>();
         supermarkets.forEach(item -> {
-        Map<String, Object> map = new HashMap<>();
+            Map<String, Object> map = new HashMap<>();
             map.put("code", item.getSupermarketId());
             map.put("name", item.getName());
             maps.add(map);
@@ -447,7 +447,7 @@ public class GoodsSkuController extends BaseController{
     @RequestMapping("/exportGoodsData.do")
     @ResponseBody
     public void exportGoodsData(GoodsSku goodsSku, HttpServletRequest request, HttpServletResponse response) throws Exception {
-            goodsService.exportGoodsData(goodsSku,request,response);
+        goodsService.exportGoodsData(goodsSku,request,response);
     }
     /**
      * 根据商品ID将该商品设为推荐商品

@@ -111,6 +111,8 @@ public class ProcurementTask extends BaseEntity{
 
     private String receiverName;//收货人姓名
 
+    private String sex;//收货人性别
+
     private String receiverAddress;//收货地址
 
     private String buyUserName; //采买员姓名
@@ -590,4 +592,11 @@ public class ProcurementTask extends BaseEntity{
         this.wavePickingEndTimeTo = wavePickingEndTimeTo;
     }
 
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
 }
