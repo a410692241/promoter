@@ -121,6 +121,46 @@ public class GoodsSku extends BaseEntity {
 
     private String orderBy; //按什么排序
 
+    private String correctType; //纠错类型
+
+    private Integer supermarketId; //超市id
+
+    private String goodsPrice;//商品价格
+
+    private Long correctId; //纠错id
+
+    public String getGoodsPrice() {
+        return goodsPrice;
+    }
+
+    public void setGoodsPrice(String goodsPrice) {
+        this.goodsPrice = goodsPrice;
+    }
+
+    public Long getCorrectId() {
+        return correctId;
+    }
+
+    public void setCorrectId(Long correctId) {
+        this.correctId = correctId;
+    }
+
+    public Integer getSupermarketId() {
+        return supermarketId;
+    }
+
+    public void setSupermarketId(Integer supermarketId) {
+        this.supermarketId = supermarketId;
+    }
+
+    public String getCorrectType() {
+        return correctType;
+    }
+
+    public void setCorrectType(String correctType) {
+        this.correctType = correctType;
+    }
+
     public String getOrderBy() {
         return orderBy;
     }
