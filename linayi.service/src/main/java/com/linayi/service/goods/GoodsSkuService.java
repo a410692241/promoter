@@ -210,4 +210,11 @@ public interface GoodsSkuService {
 	 * @return
 	 */
 	List<GoodsSku> getGoodsSkuNotPrice(GoodsSku goodsSku);
+
+	/**
+	 * 获取最近七天内点击率前100无价格商品
+	 * @param goodsSku
+	 * @return
+	 */
+	List<GoodsSku> getHighClickNoPriceGoodsList(GoodsSku goodsSku);
 }

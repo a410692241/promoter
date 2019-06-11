@@ -137,6 +137,16 @@ public interface GoodsSkuMapper {
 	 */
 	List<GoodsSku> getBackstageDifferenceRanking(GoodsSku goodsSku);
 
+
+	/**
+	 * 根据超市id和商品id集合查询商品
+	 * @param goodsSku
+	 * @return
+	 */
+	List<GoodsSku> selectBySupermerketIdAndGoodsSkuIdList(GoodsSku goodsSku);
+
+
+
 	/**
 	 * 根据超市id获取无价格的商品信息
 	 * @param goodsSku

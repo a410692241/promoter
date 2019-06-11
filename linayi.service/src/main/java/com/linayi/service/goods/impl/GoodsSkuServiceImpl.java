@@ -122,6 +122,8 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
     private CorrectService correctService;
     @Autowired
     private CorrectMapper correctMapper;
+    @Autowired
+    private SkuClickNumService skuClickNumService;
 
     private RestHighLevelClient esClient = RestClientFactory.getHighLevelClient();
 
@@ -1442,5 +1444,53 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
         return goodsSkuList;
     }
 
+
+    @Override
+    public List<GoodsSku> getHighClickNoPriceGoodsList(GoodsSku goodsSku) {
+       //设置开始时间和七天后结束时间
+        Date nowTime = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(nowTime);//设置起时间
+        cal.set(Calendar.DAY_OF_YEAR,cal.get(Calendar.DAY_OF_YEAR)+7);//增加7天
+        Date afterSevenDay = cal.getTime();
+
+        //获取点击率前100的商品id集合
+        SkuClickNum skuClickNum = new SkuClickNum();
+        skuClickNum.setStartTime(nowTime);
+        skuClickNum.setEndTime(afterSevenDay);
+        skuClickNum.setNum(100);
+        List<Long> skuIdsByClientNum = skuClickNumService.getSkuIdsByClientNum(skuClickNum);
+
+        //获取相应的商品集合
+        goodsSku.setGoodsSkuIdList(skuIdsByClientNum);
+        List<GoodsSku> goodsSkusList = goodsSkuMapper.selectBySupermerketIdAndGoodsSkuIdList(goodsSku);
+
+        for(GoodsSku goods:goodsSkusList){
+            // 通过超市id和商品id查询纠错表，如果结果为null则显示分享按钮
+            List<Correct> correctList = correctMapper.selectCorrect(goodsSku.getSupermarketId(),
+                    Long.valueOf(goods.getGoodsSkuId()));
+            if (correctList.size() <= 0) {
+                goods.setCorrectType("SHARE");
+                // 否则遍历集合
+            } else {
+                Correct param2 = new Correct();
+                param2.setSupermarketId(goodsSku.getSupermarketId());
+                param2.setGoodsSkuId(Long.valueOf(goods.getGoodsSkuId()));
+                List<String> statusList = new ArrayList<>();
+                statusList.add(CorrectStatus.WAIT_AUDIT.toString());
+                statusList.add(CorrectStatus.AUDIT_SUCCESS.toString());
+                param2.setStatusList(statusList);
+                Correct currentCorrect2 = correctMapper.query(param2).stream().findFirst().orElse(null);
+                if (currentCorrect2 != null) {
+                    goods.setCorrectType("VIEW");
+                    goods.setCorrectId(currentCorrect2.getCorrectId());
+                } else {
+                    goods.setCorrectType("SHARE");
+                }
+            }
+        }
+
+        return goodsSkusList;
+    }
 
 }

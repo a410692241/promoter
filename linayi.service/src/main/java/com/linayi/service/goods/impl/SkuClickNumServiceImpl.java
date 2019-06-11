@@ -23,7 +23,7 @@ public class SkuClickNumServiceImpl implements SkuClickNumService {
 
     @Override
     @Transactional
-    public void updateClickNum(Integer goodsSkuId) {
+    public void updateClickNum(Long goodsSkuId) {
         SkuClickNum record = new SkuClickNum();
         record.setGoodsSkuId(goodsSkuId);
         record.setClickDate(new Date());
@@ -41,8 +41,8 @@ public class SkuClickNumServiceImpl implements SkuClickNumService {
 
 
     @Override
-    public List<Integer> getSkuIdsByClientNum(SkuClickNum skuClickNum) {
-        List<Integer> result = skuClickNumMapper.selectByAll(skuClickNum).stream().collect(Collectors.mapping(SkuClickNum::getGoodsSkuId, Collectors.toList()));
+    public List<Long> getSkuIdsByClientNum(SkuClickNum skuClickNum) {
+        List<Long> result = skuClickNumMapper.selectByAll(skuClickNum).stream().collect(Collectors.mapping(SkuClickNum::getGoodsSkuId, Collectors.toList()));
         return result;
     }
 

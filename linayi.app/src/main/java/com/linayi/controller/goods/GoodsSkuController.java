@@ -68,8 +68,8 @@ public class GoodsSkuController extends BaseController {
     @ResponseBody
     public Object showOtherSupermarketPrice(@RequestBody Map<String, Object> param) {
         try {
-            Integer goodsSkuId = (Integer) param.get("goodsSkuId");
-            Map<String, Object> map = supermarketGoodsService.getPriceSupermarketByGoodsSkuId(super.getUserId(), goodsSkuId);
+            Long goodsSkuId = (Long) param.get("goodsSkuId");
+            Map<String, Object> map = supermarketGoodsService.getPriceSupermarketByGoodsSkuId(super.getUserId(), goodsSkuId.intValue());
             skuClickNumService.updateClickNum(goodsSkuId);
             return new ResponseData(map);
         } catch (Exception e) {
@@ -366,5 +366,31 @@ public class GoodsSkuController extends BaseController {
 
         }
     }
+
+    @RequestMapping("/highclicknopricegoods.do")
+    public Object highclicknopricegoods(@RequestBody GoodsSku goodsSku) {
+        try {
+            if (goodsSku.getPageSize() == null) {
+                goodsSku.setPageSize(8);
+            }
+
+            List<GoodsSku> highClickNoPriceGoodsList = goodsSkuService.getHighClickNoPriceGoodsList(goodsSku);
+            Integer totalPage = (int) Math.ceil(Double.valueOf(goodsSku.getTotal()) / Double.valueOf(goodsSku.getPageSize()));
+            if (totalPage <= 0) {
+                totalPage++;
+            }
+            Map<String, Object> map = new HashMap<>();
+            map.put("data", highClickNoPriceGoodsList);
+            map.put("totalPage", totalPage);
+            map.put("currentPage", goodsSku.getCurrentPage());
+
+            return new ResponseData(map);
+        } catch (BusinessException e) {
+            return new ResponseData(e.getErrorType()).toString();
+        } catch (Exception e) {
+            return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+        }
+    }
+
 
 }
