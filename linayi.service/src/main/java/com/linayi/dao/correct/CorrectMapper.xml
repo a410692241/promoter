@@ -632,7 +632,9 @@
         LEFT JOIN correct c ON sg.correct_id = c.correct_id
         LEFT JOIN goods_sku g ON sg.goods_sku_id=g.goods_sku_id
         <where>
-            1=1
+            g.full_name IS NOT NULL
+        AND
+            g.STATUS = 'NORMAL'
             <if test="fullName !=null and fullName != '' ">
                 AND g.full_name like concat('%',#{fullName},'%')
             </if>
