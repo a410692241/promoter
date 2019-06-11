@@ -237,7 +237,8 @@
   		g.name goodsSkuName,
   		g.image goodsImage,
   		o.create_time orderCreateTime,
-  		o.receiver_name receiverName
+  		o.receiver_name receiverName,
+  		o.sex
   	FROM
   		procurement_task p
   	JOIN orders o ON p.orders_id=o.orders_id

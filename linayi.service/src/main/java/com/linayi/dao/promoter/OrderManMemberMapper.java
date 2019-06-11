@@ -20,7 +20,12 @@ public interface OrderManMemberMapper {
      * @param orderManId
      * @return
      */
-   List<OrderManMember> getOrderManMemberListByOrderManId(PromoterOrderMan promoterOrderMan);
+    List<OrderManMember> getOrderManMemberListByOrderManId(PromoterOrderMan promoterOrderMan);
 
     List<OrderManMember> getOrderManMemberListByPromoterId(Integer promoterId);
+
+    List<OrderManMember> selectByAll(OrderManMember orderManMember);
+
+    int updateByPrimaryKeySelective(OrderManMember record);
+
 }

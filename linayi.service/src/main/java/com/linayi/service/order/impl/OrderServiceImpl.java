@@ -572,6 +572,7 @@ public class OrderServiceImpl implements OrderService {
 
             orders2.setMobile(orders1.getMobile());
             orders2.setReceiverName(orders1.getReceiverName());
+            orders2.setSex(orders1.getSex());
             //设置支付编号
             orders2.setPayNumber("123456789");
             //客服电话

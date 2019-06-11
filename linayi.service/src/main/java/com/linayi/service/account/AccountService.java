@@ -3,6 +3,7 @@ package com.linayi.service.account;
 import java.util.List;
 
 import com.linayi.entity.account.Account;
+import com.linayi.entity.account.AccountRole;
 import com.linayi.entity.account.Role;
 import org.springframework.ui.Model;
 
@@ -152,4 +153,6 @@ public interface AccountService {
 	 * @return 返回社区对象
 	 */
 	Account selectAccountBycommunityId(Integer communityId);
+
+	List<AccountRole> getAccountRoleLists(Integer accountId);
 }

@@ -1,21 +1,35 @@
 package com.linayi.service.account.impl;
 
-import java.util.*;
-
-import javax.annotation.Resource;
-
 import com.linayi.dao.account.*;
+import com.linayi.dao.address.ReceiveAddressMapper;
 import com.linayi.dao.community.CommunityMapper;
+import com.linayi.dao.correct.CorrectLogMapper;
 import com.linayi.dao.correct.CorrectMapper;
+import com.linayi.dao.order.OrdersMapper;
+import com.linayi.dao.order.SelfOrderMapper;
+import com.linayi.dao.order.SelfOrderMessageMapper;
+import com.linayi.dao.promoter.OrderManMemberMapper;
 import com.linayi.dao.role.RoleEnumMapper;
+import com.linayi.dao.user.ShoppingCarMapper;
 import com.linayi.dao.user.UserMapper;
-import com.linayi.entity.account.*;
+import com.linayi.entity.account.Account;
+import com.linayi.entity.account.AccountRole;
+import com.linayi.entity.account.Role;
 import com.linayi.entity.community.Community;
+import com.linayi.entity.correct.Correct;
+import com.linayi.entity.correct.CorrectLog;
+import com.linayi.entity.order.Orders;
+import com.linayi.entity.order.SelfOrder;
+import com.linayi.entity.order.SelfOrderMessage;
+import com.linayi.entity.promoter.OrderManMember;
+import com.linayi.entity.user.ReceiveAddress;
+import com.linayi.entity.user.ShoppingCar;
 import com.linayi.entity.user.User;
 import com.linayi.enums.EnabledDisabled;
 import com.linayi.enums.UserType;
 import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
+import com.linayi.service.account.AccountService;
 import com.linayi.service.redis.RedisService;
 import com.linayi.service.user.UserService;
 import com.linayi.util.CheckUtil;
@@ -23,9 +37,11 @@ import com.linayi.util.PageResult;
 import com.linayi.util.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.linayi.service.account.AccountService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+
+import javax.annotation.Resource;
+import java.util.*;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -53,6 +69,22 @@ public class AccountServiceImpl implements AccountService {
     private AccountMenuMapper accountMenuMapper;
     @Autowired
     private CommunityMapper communityMapper;
+    @Autowired
+    private ReceiveAddressMapper receiveAddressMapper;
+    @Autowired
+    private ShoppingCarMapper shoppingCarMapper;
+    @Autowired
+    private OrdersMapper ordersMapper;
+    @Autowired
+    private SelfOrderMapper selfOrderMapper;
+    @Autowired
+    private SelfOrderMessageMapper selfOrderMessageMapper;
+    @Autowired
+    private OrderManMemberMapper orderManMemberMapper;
+    @Autowired
+    private CorrectMapper correctMapper;
+    @Autowired
+    private CorrectLogMapper correctLogMapper;
     /*@Override
     public Account selectAccountByaccountId(Integer accountId) {
         return accountMapper.selectAccountByaccountId(accountId);
@@ -137,6 +169,9 @@ public class AccountServiceImpl implements AccountService {
             String[] split = account.getRoleList().split("%2C");
             List<Integer> ints = new ArrayList<>();
             for (String str : split) {
+                if(str.equals("undefined")){
+                    continue;
+                }
                 ints.add(Integer.valueOf(str));
             }
             if(accountRoles.size() != 0){
@@ -245,7 +280,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Integer getUserId(Integer accountId) {
-        Account account = adminAccountMapper.selectAccountByaccountId(accountId);
+        Account account = accountMapper.getAccountById(accountId);
         if (account != null) {
             return account.getUserId();
         }
@@ -312,18 +347,138 @@ public class AccountServiceImpl implements AccountService {
         return account.getMobile() != null;
     }
 
+    /**
+     * @param accountId 当前的token下的accountId(老微信accountId)
+     * @param mobile
+     * @return
+     */
     @Override
+    @Transactional(rollbackFor = Throwable.class)
     public Object bindMobile(Integer accountId, String mobile) {
-        //检查手机号是否被绑定
-        if (existMobile(mobile)) {
-            throw new BusinessException(ErrorType.THE_PHONE_NUMBER_HAS_BEEN_BOUND);
+        //检查手机号是否被自己绑定
+        Account accountById = accountMapper.getAccountById(accountId);
+        if(accountById.getMobile() != null){
+            throw new BusinessException(ErrorType.THE_ACCOUNT_HAS_BEEN_BOUND_TO_THE_PHONE_NUMBER);
         }
+        //检查该账号是否已经是处理后的微信账号
+        if (accountById.getOpenId().contains("_origin")) {
+            throw new BusinessException(ErrorType.THE_ACCOUNT_HAS_BEAN_CHANGED);
+        }
+        //检查手机号是否创建
         Account account = new Account();
-        account.setAccountId(accountId);
         account.setMobile(mobile);
-        account.setUpdateTime(new Date());
-        accountMapper.updateAccountByaccountId(account);
+        account.setUserType(UserType.USER.name());
+        List<Account> accounts = this.selectAccountList(account);
+        //账号存在的情况
+        if (accounts.size() > 0) {
+            Account accountDb = accounts.stream().findFirst().orElse(null);
+            Integer oldUserId = getUserId(accountId);
+            Integer newAccountId = accountDb.getAccountId();
+            Integer newUserId = getUserId(newAccountId);
+            //取消该微信号
+            Account accountParam = new Account();
+            accountParam.setAccountId(accountId);
+            String openId = accountById.getOpenId();
+            accountParam.setOpenId(openId + "_origin");
+            accountMapper.updateAccountByaccountId(accountParam);
+            //将openId绑定手机号的那个账号
+            Account accountOpenId = new Account();
+            accountOpenId.setAccountId(newAccountId);
+            accountOpenId.setOpenId(openId);
+            accountMapper.updateAccountByaccountId(accountOpenId);
+            //redis token失效
+//            redisService.deleteAccessToken(Long.parseLong(accountId + ""));
+            //转移该微信号的个人收货地址
+            ReceiveAddress address = new ReceiveAddress();
+            address.setUserId(oldUserId);
+            List<ReceiveAddress> receiveAddressesOldUser = receiveAddressMapper.getAddressListByAddress(address);
+            for (ReceiveAddress receiveAddressOldUser : receiveAddressesOldUser) {
+                ReceiveAddress receiveAddressParam = new ReceiveAddress();
+                receiveAddressParam.setUserId(newUserId);
+                receiveAddressParam.setReceiveAddressId(receiveAddressOldUser.getReceiveAddressId());
+                receiveAddressMapper.updateByPrimaryKey(receiveAddressParam);
+            }
+            //转移购物车
+            ShoppingCar shoppingCar = new ShoppingCar();
+            shoppingCar.setUserId(oldUserId);
+            List<ShoppingCar> allCarByReceiveAddressId = shoppingCarMapper.getAllCarByReceiveAddressId(shoppingCar);
+            for (ShoppingCar car : allCarByReceiveAddressId) {
+                ShoppingCar shoppingCarParam = new ShoppingCar();
+                shoppingCarParam.setUserId(newUserId);
+                shoppingCarParam.setShoppingCarId(car.getShoppingCarId());
+                shoppingCarMapper.updateByPrimaryKeySelective(shoppingCarParam);
+            }
+            //转移订单
+            Orders orders = new Orders();
+            orders.setUserId(oldUserId);
+            List<Orders> orderList = ordersMapper.getOrderList(orders);
+            for (Orders order : orderList) {
+                Orders orderParam = new Orders();
+                orderParam.setOrdersId(order.getOrdersId());
+                orderParam.setUserId(newUserId);
+                ordersMapper.updateOrderById(orderParam);
+            }
+            //转移自定义下单内容
+            SelfOrderMessage selfOrderMessage = new SelfOrderMessage();
+            selfOrderMessage.setUserId(oldUserId);
+            List<SelfOrderMessage> selfOrderMessages = selfOrderMessageMapper.selectByAll(selfOrderMessage);
+            for (SelfOrderMessage orderMessage : selfOrderMessages) {
+                SelfOrderMessage selfOrderMessageParam = new SelfOrderMessage();
+                selfOrderMessageParam.setMessageId(orderMessage.getMessageId());
+                selfOrderMessageParam.setUserId(newUserId);
+                selfOrderMessageMapper.updateByPrimaryKey(selfOrderMessageParam);
+            }
+
+            SelfOrder selfOrder = new SelfOrder();
+            selfOrder.setUserId(oldUserId);
+            List<SelfOrder> selfOrders = selfOrderMapper.selectByAll(selfOrder);
+            for (SelfOrder orderMessage : selfOrders) {
+                SelfOrder selfOrderParam = new SelfOrder();
+                selfOrderParam.setSelfOrderId(orderMessage.getSelfOrderId());
+                selfOrderParam.setUserId(newUserId);
+                selfOrderMapper.updateByPrimaryKey(selfOrderParam);
+            }
+            //转移下单员order_man
+            OrderManMember orderManMember = new OrderManMember();
+            orderManMember.setMemberId(oldUserId);
+            List<OrderManMember> orderManMembers = orderManMemberMapper.selectByAll(orderManMember);
+            for (OrderManMember manMember : orderManMembers) {
+                OrderManMember orderManMemberPm = new OrderManMember();
+                orderManMemberPm.setOrderManMemberId(manMember.getOrderManMemberId());
+                orderManMemberPm.setMemberId(newUserId);
+                orderManMemberMapper.updateByPrimaryKeySelective(orderManMemberPm);
+            }
+
+            //转移纠错记录以及日志
+            Correct correct = new Correct();
+            correct.setUserId(oldUserId);
+            List<Correct> corrects = correctMapper.selectByAll(correct);
+            for (Correct correctDB : corrects) {
+                Correct correctPm = new Correct();
+                correctPm.setCorrectId(correctDB.getCorrectId());
+                correctPm.setUserId(newUserId);
+                correctMapper.updateByPrimaryKeySelective(correctPm);
+            }
+
+            CorrectLog correctLog = new CorrectLog();
+            correctLog.setOperatorId(oldUserId);
+            List<CorrectLog> correctLogs = correctLogMapper.selectByAll(correctLog);
+            for (CorrectLog correctLogDB : correctLogs) {
+                CorrectLog correctLogPm = new CorrectLog();
+                correctLogPm.setOperatorId(newUserId);
+                correctLogPm.setCorrectLogId(correctLogDB.getCorrectLogId());
+                correctLogMapper.updateByPrimaryKeySelective(correctLogPm);
+            }
+        }else{
+            //账号不存在的情况
+            Account accountParam = new Account();
+            accountParam.setAccountId(accountId);
+            accountParam.setMobile(mobile);
+            accountParam.setUpdateTime(new Date());
+            accountMapper.updateAccountByaccountId(account);
+        }
         return "绑定手机成功";
+
     }
 
 
@@ -364,5 +519,10 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account selectAccountBycommunityId(Integer communityId) {
         return accountMapper.selectAccountBycommunityId(communityId);
+    }
+
+    @Override
+    public List<AccountRole> getAccountRoleLists(Integer accountId){
+        return accountRoleMapper.getAccountRoleLists(accountId);
     }
 }
