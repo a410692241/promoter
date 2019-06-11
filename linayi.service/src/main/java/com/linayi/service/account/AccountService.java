@@ -152,4 +152,10 @@ public interface AccountService {
 	 * @return 返回社区对象
 	 */
 	Account selectAccountBycommunityId(Integer communityId);
+
+	/**判断该账号是否绑定手机号
+	 * @param accountId
+	 * @return
+	 */
+	boolean isBindMobile(Integer accountId);
 }

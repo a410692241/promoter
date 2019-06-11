@@ -21,6 +21,8 @@ import com.linayi.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.MalformedURLException;
@@ -43,7 +45,7 @@ public class WeixinServiceImpl implements WeixinService {
     private static EmojiConverter emojiConverter = EmojiConverter.getInstance();
     private static final String NONCESTR = "linayi";
     @Override
-    public Object getCode(String code, HttpServletResponse response,boolean linsheng) {
+    public Object getCode(String code, HttpServletRequest request, HttpServletResponse response, boolean linsheng) {
         //获取access_token
         String getTokenUrl = WeixinConfig.GET_TOKEN_URL + "appid=" + Configuration.getConfig().getValue(WeixinConfig.APPID) + "&secret=" + Configuration.getConfig().getValue(WeixinConfig.APPSECRET) + "&code=" + code + "&grant_type=authorization_code";
         String responseStr = HttpClientUtil.sendGetRequest(getTokenUrl, "utf-8");
@@ -108,9 +110,22 @@ public class WeixinServiceImpl implements WeixinService {
             try {
                 //如果是邻生客户端,需要跳转的是邻生的商户端首页
                 if (!linsheng) {
-                    response.sendRedirect(Configuration.getConfig().getValue(WeixinConfig.REDICT_INDEX_URL) + "?accessToken=" + sysetemAccessToken+ "&accountId=" + accountId+"&userId="+userId+"&loginType="+1);
+                    if (!accountService.isBindMobile(accountId)) {
+                        //保存token
+                        Cookie cookie = new Cookie("accessToken", sysetemAccessToken);
+                        cookie.setMaxAge(7 * 24 * 60 * 60);
+                        //设置host
+                        cookie.setDomain(URLUtil.getDomainName(request.getRequestURL().toString()));
+                        cookie.setPath("/");
+                        response.addCookie(cookie);
+                        response.sendRedirect(Configuration.getConfig().getValue(WeixinConfig.BIND_MOBILE_URL));
+                    } else {
+                        response.sendRedirect(Configuration.getConfig().getValue(WeixinConfig.REDICT_INDEX_URL) + "?accessToken=" + sysetemAccessToken+ "&accountId=" + accountId+"&userId="+userId+"&loginType="+1);
+                    }
                     return new ResponseData("登录成功");
                 }
+                //如果没有绑定手机号,那么跳转到绑定手机号的页面
+
                 response.sendRedirect(Configuration.getConfig().getValue(WeixinConfig.LINSHENG_REDICT_INDEX_URL) + "?accessToken=" + sysetemAccessToken);
             } catch (IOException e) {
                 e.printStackTrace();
