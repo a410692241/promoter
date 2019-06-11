@@ -35,4 +35,9 @@
   <select id="getAccountRole" resultType="com.linayi.entity.account.AccountRole">
     select account_role_id, account_id, role_id from account_role where account_id = #{userId}
   </select>
+
+  <select id="getAccountRoleLists" resultType="com.linayi.entity.account.AccountRole">
+    select account_role_id, account_id, role_id from account_role where account_id = #{accountId}
+  </select>
+
 </mapper>

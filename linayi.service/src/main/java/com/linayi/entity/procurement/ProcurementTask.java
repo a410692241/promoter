@@ -35,6 +35,8 @@ public class ProcurementTask extends BaseEntity{
 
     private Long ordersGoodsId;
 
+    private String procureMergeNo;
+
     private Integer supermarketId;
 
     private Integer goodsSkuId;
@@ -110,6 +112,8 @@ public class ProcurementTask extends BaseEntity{
     private Date orderCreateTime;//订单下单时间
 
     private String receiverName;//收货人姓名
+
+    private String sex;//收货人性别
 
     private String receiverAddress;//收货地址
 
@@ -590,4 +594,18 @@ public class ProcurementTask extends BaseEntity{
         this.wavePickingEndTimeTo = wavePickingEndTimeTo;
     }
 
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+    public String getProcureMergeNo() {
+        return procureMergeNo;
+    }
+
+    public void setProcureMergeNo(String procureMergeNo) {
+        this.procureMergeNo = procureMergeNo;
+    }
 }

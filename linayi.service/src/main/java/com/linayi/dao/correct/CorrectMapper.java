@@ -98,4 +98,10 @@ public interface CorrectMapper {
      * 通过商品id获取纠错信息（非通用）
      */
     List<Correct> getcorrectTimeByGoodsSkuId(@Param("goodsSkuId")Long goodsSkuId,@Param("supermarketId")Integer supermarketId);
+    int updateByPrimaryKeySelective(Correct record);
+
+
+    List<Correct> selectByAll(Correct correct);
+
+
 }
