@@ -313,5 +313,15 @@
 	</select>
 
 
+		<!--根据超市名称模糊查询超市列表-->
+		<select id="getSupermarketByName" resultType="com.linayi.entity.supermarket.Supermarket">
+			  SELECT
+				  supermarket_id,
+				  name
+			  FROM
+			  	  supermarket
+			  WHERE
+			  	  name like concat('%',#{name},'%')
+		</select>
 
 </mapper>

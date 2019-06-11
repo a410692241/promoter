@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -173,10 +174,15 @@ public class GoodsSkuController extends BaseController {
     }
 
 
-    //根据商品名模糊搜索商品不包含价格分享价格用(已测试)
+    //根据商品名品牌id属性条形码模糊搜索商品(分享纠错合并)
     @RequestMapping("/vagueGoodsSku.do")
     public Object showVagueGoodsSku(@RequestBody GoodsSku goodsSku) {
         try {
+            //如果前端没传超市id就返回空
+            if (goodsSku.getSupermarketId()==null){
+                return new ResponseData(new ArrayList<>());
+            }
+
             if (goodsSku.getPageSize() == null) {
                 goodsSku.setPageSize(8);
             }
@@ -313,6 +319,52 @@ public class GoodsSkuController extends BaseController {
             e.printStackTrace();
         }
         return new ResponseData("F",ErrorType.SYSTEM_ERROR.getErrorMsg());
+    }
+
+    /**通过超市名模糊查找超市
+     * @param
+     * @return
+     */
+    @RequestMapping("getSupermarketByName.do")
+    @ResponseBody
+    public Object getSupermarketByName(@RequestBody Supermarket supermarket) {
+        try {
+            return new ResponseData(supermarketService.getSupermarketByName(supermarket));
+        } catch (BusinessException e) {
+            return new ResponseData(e.getErrorType()).toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseData(e);
+        }
+    }
+
+
+    //根据商品名品牌id属性条形码模糊搜索商品(分享纠错合并)
+    @RequestMapping("/getGoodsSkuNotPrice.do")
+    public Object getGoodsSkuNotPrice(@RequestBody GoodsSku goodsSku) {
+        try {
+            //如果前端没传超市id就返回空
+            if (goodsSku.getSupermarketId()==null){
+                return new ResponseData(new ArrayList<>());
+            }
+
+            if (goodsSku.getPageSize() == null) {
+                goodsSku.setPageSize(8);
+            }
+            List<GoodsSku> vagueGoodsSkuList = goodsSkuService.getGoodsSkuNotPrice(goodsSku);
+            Integer totalPage = (int) Math.ceil(Double.valueOf(goodsSku.getTotal()) / Double.valueOf(goodsSku.getPageSize()));
+            if (totalPage <= 0) {
+                totalPage++;
+            }
+            Map<String, Object> map = new HashMap<>();
+            map.put("data", vagueGoodsSkuList);
+            map.put("totalPage", totalPage);
+            map.put("currentPage", goodsSku.getCurrentPage());
+            return new ResponseData(map);
+        } catch (Exception e) {
+            return new ResponseData(ErrorType.SYSTEM_ERROR);
+
+        }
     }
 
 }
