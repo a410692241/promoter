@@ -18,6 +18,8 @@ import com.linayi.service.redis.RedisService;
 import com.linayi.service.user.UserService;
 import com.linayi.service.weixin.WeixinService;
 import com.linayi.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +46,7 @@ public class WeixinServiceImpl implements WeixinService {
     private UserService userService;
     private static EmojiConverter emojiConverter = EmojiConverter.getInstance();
     private static final String NONCESTR = "linayi";
+    private Logger logger = LoggerFactory.getLogger(getClass());
     @Override
     public Object getCode(String code, HttpServletRequest request, HttpServletResponse response, boolean linsheng) {
         //获取access_token
@@ -115,7 +118,9 @@ public class WeixinServiceImpl implements WeixinService {
                         Cookie cookie = new Cookie("accessToken", sysetemAccessToken);
                         cookie.setMaxAge(7 * 24 * 60 * 60);
                         //设置host
-                        cookie.setDomain(URLUtil.getDomainName(Configuration.getConfig().getValue(WeixinConfig.REDICT_INDEX_URL)));
+                        String domainName = URLUtil.getDomainName(Configuration.getConfig().getValue(WeixinConfig.BIND_MOBILE_URL));
+                        logger.info(domainName);
+                        cookie.setDomain(domainName);
                         cookie.setPath("/");
                         response.addCookie(cookie);
                         response.sendRedirect(Configuration.getConfig().getValue(WeixinConfig.BIND_MOBILE_URL));
