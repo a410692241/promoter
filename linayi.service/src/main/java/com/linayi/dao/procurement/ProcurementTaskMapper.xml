@@ -414,8 +414,8 @@
             <if test="procureTime != null">
                 procure_time = #{procureTime},
             </if>
-             <if test="procureOutTime != null">
-                 procure_out_time = #{procureOutTime}
+            <if test="procureOutTime != null">
+                procure_out_time = #{procureOutTime}
             </if>
         </set>
         where procurement_task_id = #{procurementTaskId}
@@ -477,27 +477,27 @@
     </select>
     <select id="getProcurementLists" resultType="com.linayi.entity.procurement.ProcurementTask">
         select
-  		procurement_task_id,
-  		orders_id,
-  		pt.supermarket_id,
-  		goods_sku_id,
-  		price,
-  		quantity,
-  		actual_quantity,
-  		receive_status,
-  		procure_status,
-  		community_id,
-  		pt.user_id,
-  		pt.update_time,
-  		pt.create_time,
-  		procure_time,
-  		receive_time,
-  		procure_quantity,
-		receive_quantity,
-		box_quantity,
-    	box_status,
-    	delivery_box_id
-    	 FROM supermarket s join procurement_task pt on s.procurer_id = #{userId} and pt.supermarket_id = s.supermarket_id
+        procurement_task_id,
+        orders_id,
+        pt.supermarket_id,
+        goods_sku_id,
+        price,
+        quantity,
+        actual_quantity,
+        receive_status,
+        procure_status,
+        community_id,
+        pt.user_id,
+        pt.update_time,
+        pt.create_time,
+        procure_time,
+        receive_time,
+        procure_quantity,
+        receive_quantity,
+        box_quantity,
+        box_status,
+        delivery_box_id
+        FROM supermarket s join procurement_task pt on s.procurer_id = #{userId} and pt.supermarket_id = s.supermarket_id
         where pt.goods_sku_id = #{goodsSkuId}
         <if test="procureStatus != null and procureStatus != ''">
             and pt.procure_status = #{procureStatus}
@@ -512,7 +512,7 @@
     </select>
 
     <select id="getCommunityProcurementsList" resultType="com.linayi.entity.procurement.ProcurementTask">
-        SELECT SUM(pt.price * pt.quantity) totalPrice, SUM(pt.quantity) totalQuantity,SUM(pt.procure_quantity) totalProcureQuantity,MIN(pt.price) * SUM(pt.procure_quantity) totalProcurePrice,MIN(pt.price) price, pt.procure_time procureTime,pt.goods_sku_id goodsSkuId, gs.full_name goodsSkuName,GROUP_CONCAT(pt.procurement_task_id) procurementTaskIdList
+        SELECT SUM(pt.price * pt.quantity) totalPrice, SUM(pt.quantity) totalQuantity,SUM(pt.procure_quantity) totalProcureQuantity,MIN(pt.price) * SUM(pt.procure_quantity) totalProcurePrice,MIN(pt.price) price, pt.procure_time procureTime,pt.goods_sku_id goodsSkuId, gs.full_name goodsSkuName,GROUP_CONCAT(pt.procurement_task_id) procurementTaskIdList,pt.procure_merge_no procureMergeNo
         <if test="procureStatus != null and procureStatus == 'FINISHED'">
             ,pt.procure_out_time procureOutTime
         </if>
@@ -544,7 +544,7 @@
         <if test="procureStatus != null and procureStatus == 'FINISHED'">
             pt.procure_out_time,
         </if>
-        pt.goods_sku_id, gs.name
+        pt.goods_sku_id, gs.name, pt.procure_merge_no
 
         <if test="procureStatus != null and procureStatus != 'PROCURING'">
             HAVING totalProcureQuantity > 0
@@ -616,8 +616,8 @@
   	WHERE
   	    orders_id = #{ordersId}
 </select>
-  <!--流转中心任务 查询出未收货的商品列表 List<ProcurementTask> getNotReceivingGoods(ProcurementTask procurTask)-->
-  <select id="getNotReceivingGoods" resultType="com.linayi.entity.procurement.ProcurementTask">
+    <!--流转中心任务 查询出未收货的商品列表 List<ProcurementTask> getNotReceivingGoods(ProcurementTask procurTask)-->
+    <select id="getNotReceivingGoods" resultType="com.linayi.entity.procurement.ProcurementTask">
      SELECT
         SUM(pt.actual_quantity) totalProcureQuantity,gs.goods_sku_id,gs.full_name ,pt.receive_status,
         gs.image,pt.price,SUM(pt.price*pt.actual_quantity) totalPrice,GROUP_CONCAT(procurement_task_id) procurementTaskIdList
@@ -630,19 +630,19 @@
       order by pt.procure_out_time
   </select>
 
-  <!--流转中心任务 对未收货的商品进行收货操作
-   void modifyReceiveStatus(ProcurementTask procurTask);-->
-  <update id="confirmGoods" parameterType="com.linayi.entity.procurement.ProcurementTask">
-      update
-          procurement_task
-      set
-          receive_status='RECEIVED_FLOW',flow_receive_time=#{flowReceiveTime}
-      where
-      procurement_task_id in
-      <foreach collection="procurementTaskIdList" index="index" item="item1" open="(" separator="," close=")">
-          ${item1}
-      </foreach>
-  </update>
+    <!--流转中心任务 对未收货的商品进行收货操作
+     void modifyReceiveStatus(ProcurementTask procurTask);-->
+    <update id="confirmGoods" parameterType="com.linayi.entity.procurement.ProcurementTask">
+        update
+        procurement_task
+        set
+        receive_status='RECEIVED_FLOW',flow_receive_time=#{flowReceiveTime}
+        where
+        procurement_task_id in
+        <foreach collection="procurementTaskIdList" index="index" item="item1" open="(" separator="," close=")">
+            ${item1}
+        </foreach>
+    </update>
     <!--流转中心任务 查询出未发货的商品列表 List<ProcurementTask> getNotReceivingGoods(ProcurementTask procurTask)-->
     <select id="getNotDeliverGoods" resultType="com.linayi.entity.procurement.ProcurementTask">
      SELECT
@@ -660,18 +660,18 @@
     <!--流转中心任务 对收货的商品进行发货操作
    void confirmDeliverGoods(ProcurementTask procurTask);-->
     <update id="confirmDeliverGoods" parameterType="com.linayi.entity.procurement.ProcurementTask">
-      update
-          procurement_task
-      set
-          receive_status='WAIT_RECEIVE',flow_out_time=#{flowOutTime}
-      where
+        update
+        procurement_task
+        set
+        receive_status='WAIT_RECEIVE',flow_out_time=#{flowOutTime}
+        where
         procurement_task_id in
         <foreach collection="procurementTaskIdList" index="index" item="item1" open="(" separator="," close=")">
             ${item1}
         </foreach>
-       and
-          receive_status='RECEIVED_FLOW'
-  </update>
+        and
+        receive_status='RECEIVED_FLOW'
+    </update>
     <!--流转中心任务 查询出已发货的商品列表 List<ProcurementTask> getDeliverGoodsList(ProcurementTask procurTask)-->
     <select id="getDeliverGoodsList" resultType="com.linayi.entity.procurement.ProcurementTask">
     SELECT
@@ -690,8 +690,8 @@
       order by pt.flow_out_time desc
   </select>
 
-  <!--  后台管理系统 流转中心查询出已发货信息
-    List<ProcurementTask> getProcurementsByRECEIVEDFLOW(ProcurementTask procurementTask);-->
+    <!--  后台管理系统 流转中心查询出已发货信息
+      List<ProcurementTask> getProcurementsByRECEIVEDFLOW(ProcurementTask procurementTask);-->
     <!--  后台管理系统 流转中心查询出已发货信息
      List<ProcurementTask> getProcurementsByRECEIVEDFLOW(ProcurementTask procurementTask);-->
     <select id="getProcurementsByRECEIVEDFLOW" resultType="com.linayi.entity.procurement.ProcurementTask">
@@ -818,5 +818,17 @@
             </if>
         </set>
         where orders_id = #{ordersId} and procure_status = #{procureStatus}
+    </update>
+    <update id="updateProcureTaskNoById">
+        update procurement_task
+        <set>
+            <if test="procureMergeNo != null">
+                procure_merge_no = #{procureMergeNo},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where procurement_task_id in (${procurementTaskIdList})
     </update>
 </mapper>
