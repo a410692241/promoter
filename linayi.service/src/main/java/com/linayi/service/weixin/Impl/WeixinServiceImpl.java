@@ -46,7 +46,6 @@ public class WeixinServiceImpl implements WeixinService {
     private UserService userService;
     private static EmojiConverter emojiConverter = EmojiConverter.getInstance();
     private static final String NONCESTR = "linayi";
-    private Logger logger = LoggerFactory.getLogger(getClass());
     @Override
     public Object getCode(String code, HttpServletRequest request, HttpServletResponse response, boolean linsheng) {
         //获取access_token
@@ -114,16 +113,7 @@ public class WeixinServiceImpl implements WeixinService {
                 //如果是邻生客户端,需要跳转的是邻生的商户端首页
                 if (!linsheng) {
                     if (!accountService.isBindMobile(accountId)) {
-                        //保存token
-                        Cookie cookie = new Cookie("accessToken", sysetemAccessToken);
-                        cookie.setMaxAge(7 * 24 * 60 * 60);
-                        //设置host
-                        String domainName = URLUtil.getDomainName(Configuration.getConfig().getValue(WeixinConfig.BIND_MOBILE_URL));
-                        logger.info(domainName);
-                        cookie.setDomain(domainName);
-                        cookie.setPath("/");
-                        response.addCookie(cookie);
-                        response.sendRedirect(Configuration.getConfig().getValue(WeixinConfig.BIND_MOBILE_URL));
+                        response.sendRedirect(Configuration.getConfig().getValue(WeixinConfig.BIND_MOBILE_URL) + "?accessToken=" + sysetemAccessToken + "&userId=" + userId + "&loginType=" + 1);
                     } else {
                         response.sendRedirect(Configuration.getConfig().getValue(WeixinConfig.REDICT_INDEX_URL) + "?accessToken=" + sysetemAccessToken+ "&accountId=" + accountId+"&userId="+userId+"&loginType="+1);
                     }

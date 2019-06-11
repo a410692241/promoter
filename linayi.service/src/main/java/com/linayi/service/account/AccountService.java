@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.linayi.entity.account.Account;
 import com.linayi.entity.account.Role;
+import com.linayi.exception.ErrorType;
 import org.springframework.ui.Model;
 
 /**
@@ -131,11 +132,14 @@ public interface AccountService {
 	 */
 	boolean whetherAccountBindMobile(Integer accountId);
 
+
 	/**
 	 * @param accountId 微信账号绑定手机号
 	 * @return
 	 */
-	Object bindMobile(Integer accountId,String mobile);
+
+	Object bindMobile(Integer accountId, String mobile, String validCode);
+
 
     Object communityLogin(Account account);
 
@@ -158,4 +162,6 @@ public interface AccountService {
 	 * @return
 	 */
 	boolean isBindMobile(Integer accountId);
+
+
 }

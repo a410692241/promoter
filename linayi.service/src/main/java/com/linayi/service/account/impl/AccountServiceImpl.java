@@ -344,14 +344,17 @@ public class AccountServiceImpl implements AccountService {
         return account.getMobile() != null;
     }
 
+
     /**
      * @param accountId 当前的token下的accountId(老微信accountId)
      * @param mobile
      * @return
      */
     @Override
-    @Transactional(rollbackFor = Throwable.class)
-    public Object bindMobile(Integer accountId, String mobile) {
+    public Object bindMobile(Integer accountId, String mobile, String validCode) {
+        if (!redisService.validValidCode(mobile, validCode)) {
+            throw new BusinessException(ErrorType.VERIFICATION_CODE_ERROR);
+        }
         //检查手机号是否被自己绑定
         Account accountById = accountMapper.getAccountById(accountId);
         if(accountById.getMobile() != null){
@@ -475,10 +478,7 @@ public class AccountServiceImpl implements AccountService {
             accountMapper.updateAccountByaccountId(account);
         }
         return "绑定手机成功";
-
     }
-
-
 
     @Override
     public Object communityLogin(Account account) {
