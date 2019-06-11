@@ -600,7 +600,7 @@ public class ProcurementTask extends BaseEntity{
 
     public void setSex(String sex) {
         this.sex = sex;
-        
+    }
     public String getProcureMergeNo() {
         return procureMergeNo;
     }
