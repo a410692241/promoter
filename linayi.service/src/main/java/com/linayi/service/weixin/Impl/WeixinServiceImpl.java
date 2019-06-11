@@ -115,7 +115,7 @@ public class WeixinServiceImpl implements WeixinService {
                         Cookie cookie = new Cookie("accessToken", sysetemAccessToken);
                         cookie.setMaxAge(7 * 24 * 60 * 60);
                         //设置host
-                        cookie.setDomain(URLUtil.getDomainName(request.getRequestURL().toString()));
+                        cookie.setDomain(URLUtil.getDomainName(Configuration.getConfig().getValue(WeixinConfig.REDICT_INDEX_URL)));
                         cookie.setPath("/");
                         response.addCookie(cookie);
                         response.sendRedirect(Configuration.getConfig().getValue(WeixinConfig.BIND_MOBILE_URL));
