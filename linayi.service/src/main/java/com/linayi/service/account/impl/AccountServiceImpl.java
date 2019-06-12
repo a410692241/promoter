@@ -370,8 +370,8 @@ public class AccountServiceImpl implements AccountService {
         account.setUserType(UserType.USER.name());
         List<Account> accounts = this.selectAccountList(account);
         //账号存在的情况
-        if (accounts.size() > 0) {
-            Account accountDb = accounts.stream().findFirst().orElse(null);
+        Account accountDb = accounts.stream().findFirst().orElse(null);
+        if (accountDb != null) {
             Integer oldUserId = getUserId(accountId);
             Integer newAccountId = accountDb.getAccountId();
             Integer newUserId = getUserId(newAccountId);
@@ -398,6 +398,22 @@ public class AccountServiceImpl implements AccountService {
                 receiveAddressParam.setReceiveAddressId(receiveAddressOldUser.getReceiveAddressId());
                 receiveAddressMapper.updateByPrimaryKey(receiveAddressParam);
             }
+
+            //设置配送地址为默认
+            User newUser = userMapper.selectUserByuserId(newUserId);
+            User oldUser = userMapper.selectUserByuserId(oldUserId);
+            Integer newDefaultReceiveAddressId = newUser.getDefaultReceiveAddressId();
+            if (newDefaultReceiveAddressId == null) {
+                User userParam = new User();
+                userParam.setUserId(newUserId);
+                Integer oldDefaultReceiveAddressId = oldUser.getDefaultReceiveAddressId();
+                //手机账号没有默认收货地址,就从旧账号导入默认收货地址
+                if (oldDefaultReceiveAddressId != null) {
+                    userParam.setDefaultReceiveAddressId(oldDefaultReceiveAddressId);
+                    userMapper.updateUserByuserId(userParam);
+                }
+            }
+
             //转移购物车
             ShoppingCar shoppingCar = new ShoppingCar();
             shoppingCar.setUserId(oldUserId);
@@ -469,15 +485,20 @@ public class AccountServiceImpl implements AccountService {
                 correctLogPm.setCorrectLogId(correctLogDB.getCorrectLogId());
                 correctLogMapper.updateByPrimaryKeySelective(correctLogPm);
             }
-        }else{
+            //刷新token(删除旧的token,留下新的token)
+            redisService.deleteAccessToken(Long.parseLong(accountId+""));
+            String systemToken = redisService.GenerationToken(newAccountId);
+            return systemToken;
+        } else {
             //账号不存在的情况
             Account accountParam = new Account();
             accountParam.setAccountId(accountId);
             accountParam.setMobile(mobile);
             accountParam.setUpdateTime(new Date());
             accountMapper.updateAccountByaccountId(account);
+            return redisService.GenerationToken(accountId);
         }
-        return "绑定手机成功";
+
     }
 
     @Override
