@@ -96,6 +96,10 @@
     <if test="endTime != null">
       and click_date &lt;= #{endTime}
     </if>
+    <if test="num != null and num != ''">
+      and num=#{num}
+    </if>
+
     order by num desc LIMIT 0,
     <if test="num == null or num == ''">
       100

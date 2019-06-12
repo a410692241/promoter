@@ -1455,32 +1455,11 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
         Date afterSevenDay = cal.getTime();
 
         //获取点击率前100的商品id集合
-//        SkuClickNum skuClickNum = new SkuClickNum();
-//        skuClickNum.setStartTime(nowTime);
-//        skuClickNum.setEndTime(afterSevenDay);
-//        skuClickNum.setNum(100);
-//        List<Long> skuIdsByClientNum = skuClickNumService.getSkuIdsByClientNum(skuClickNum);
-
-        List<Long> skuIdsByClientNum = new ArrayList<Long>();
-        skuIdsByClientNum.add(3L);
-        skuIdsByClientNum.add(4L);
-        skuIdsByClientNum.add(6L);
-        skuIdsByClientNum.add(9L);
-        skuIdsByClientNum.add(13L);
-        skuIdsByClientNum.add(15L);
-        skuIdsByClientNum.add(18L);
-        skuIdsByClientNum.add(19L);
-        skuIdsByClientNum.add(20L);
-        skuIdsByClientNum.add(23L);
-        skuIdsByClientNum.add(25L);
-        skuIdsByClientNum.add(26L);
-        skuIdsByClientNum.add(27L);
-        skuIdsByClientNum.add(29L);
-        skuIdsByClientNum.add(30L);
-        skuIdsByClientNum.add(31L);
-        skuIdsByClientNum.add(32L);
-        skuIdsByClientNum.add(33L);
-
+        SkuClickNum skuClickNum = new SkuClickNum();
+        skuClickNum.setStartTime(afterSevenDay);
+        skuClickNum.setEndTime(nowTime);
+        skuClickNum.setNum(20);
+        List<Long> skuIdsByClientNum = skuClickNumService.getSkuIdsByClientNum(skuClickNum);
 
         //获取相应的商品集合
         goodsSku.setGoodsSkuIdList(skuIdsByClientNum);
