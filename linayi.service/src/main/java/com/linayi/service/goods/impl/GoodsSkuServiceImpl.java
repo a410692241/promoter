@@ -1451,15 +1451,36 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
         Date nowTime = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(nowTime);//设置起时间
-        cal.set(Calendar.DAY_OF_YEAR,cal.get(Calendar.DAY_OF_YEAR)+7);//增加7天
+        cal.set(Calendar.DAY_OF_YEAR,cal.get(Calendar.DAY_OF_YEAR)-7);//增加7天
         Date afterSevenDay = cal.getTime();
 
         //获取点击率前100的商品id集合
-        SkuClickNum skuClickNum = new SkuClickNum();
-        skuClickNum.setStartTime(nowTime);
-        skuClickNum.setEndTime(afterSevenDay);
-        skuClickNum.setNum(100);
-        List<Long> skuIdsByClientNum = skuClickNumService.getSkuIdsByClientNum(skuClickNum);
+//        SkuClickNum skuClickNum = new SkuClickNum();
+//        skuClickNum.setStartTime(nowTime);
+//        skuClickNum.setEndTime(afterSevenDay);
+//        skuClickNum.setNum(100);
+//        List<Long> skuIdsByClientNum = skuClickNumService.getSkuIdsByClientNum(skuClickNum);
+
+        List<Long> skuIdsByClientNum = new ArrayList<Long>();
+        skuIdsByClientNum.add(3L);
+        skuIdsByClientNum.add(4L);
+        skuIdsByClientNum.add(6L);
+        skuIdsByClientNum.add(9L);
+        skuIdsByClientNum.add(13L);
+        skuIdsByClientNum.add(15L);
+        skuIdsByClientNum.add(18L);
+        skuIdsByClientNum.add(19L);
+        skuIdsByClientNum.add(20L);
+        skuIdsByClientNum.add(23L);
+        skuIdsByClientNum.add(25L);
+        skuIdsByClientNum.add(26L);
+        skuIdsByClientNum.add(27L);
+        skuIdsByClientNum.add(29L);
+        skuIdsByClientNum.add(30L);
+        skuIdsByClientNum.add(31L);
+        skuIdsByClientNum.add(32L);
+        skuIdsByClientNum.add(33L);
+
 
         //获取相应的商品集合
         goodsSku.setGoodsSkuIdList(skuIdsByClientNum);
@@ -1488,6 +1509,10 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
                     goods.setCorrectType("SHARE");
                 }
             }
+
+            //图片处理
+            String goodsImage = ImageUtil.dealToShow(goods.getImage());
+            goods.setImage(goodsImage);
         }
 
         return goodsSkusList;

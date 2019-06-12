@@ -29,7 +29,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/goods/goods")
+    @RequestMapping("/goods/goods")
 public class GoodsSkuController extends BaseController {
     @Autowired
     private GoodsSkuService goodsSkuService;
@@ -367,14 +367,16 @@ public class GoodsSkuController extends BaseController {
         }
     }
 
+    //最近七天点击率前100的无价格商品
     @RequestMapping("/highclicknopricegoods.do")
     public Object highclicknopricegoods(@RequestBody GoodsSku goodsSku) {
-        try {
+//        try {
             if (goodsSku.getPageSize() == null) {
                 goodsSku.setPageSize(8);
             }
 
             List<GoodsSku> highClickNoPriceGoodsList = goodsSkuService.getHighClickNoPriceGoodsList(goodsSku);
+            goodsSku.setTotal(highClickNoPriceGoodsList.size());
             Integer totalPage = (int) Math.ceil(Double.valueOf(goodsSku.getTotal()) / Double.valueOf(goodsSku.getPageSize()));
             if (totalPage <= 0) {
                 totalPage++;
@@ -385,11 +387,11 @@ public class GoodsSkuController extends BaseController {
             map.put("currentPage", goodsSku.getCurrentPage());
 
             return new ResponseData(map);
-        } catch (BusinessException e) {
-            return new ResponseData(e.getErrorType()).toString();
-        } catch (Exception e) {
-            return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
-        }
+//        } catch (BusinessException e) {
+//            return new ResponseData(e.getErrorType()).toString();
+//        } catch (Exception e) {
+//            return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+//        }
     }
 
 
