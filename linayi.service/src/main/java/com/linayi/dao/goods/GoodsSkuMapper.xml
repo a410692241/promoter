@@ -834,10 +834,12 @@
                     gs.create_time
                  FROM
                     goods_sku gs LEFT JOIN supermarket_goods sg ON gs.goods_sku_id=sg.goods_sku_id
-                    AND sg.supermarket_id=#{supermarketId}
+                    AND sg.supermarket_id=#{supermarketId} LEFT JOIN supermarket_goods_record sgr
+                    ON sgr.goods_sku_id=gs.goods_sku_id AND sgr.supermarket_id=#{supermarketId}
             <where>
                       gs.STATUS='NORMAL'
                 AND   sg.goods_sku_id is null
+                AND   (sgr.goods_sku_id is null AND sgr.supermarket_id is null)
                 <if test="brandId!=null">
                     and brand_id=#{brandId}
                 </if>

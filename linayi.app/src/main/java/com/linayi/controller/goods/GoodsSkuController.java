@@ -5,12 +5,14 @@ import com.linayi.controller.BaseController;
 import com.linayi.dao.goods.SkuClickNumMapper;
 import com.linayi.entity.account.Account;
 import com.linayi.entity.goods.GoodsSku;
+import com.linayi.entity.recode.SupermarketGoodsRecord;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.goods.GoodsSkuService;
 import com.linayi.service.goods.SkuClickNumService;
 import com.linayi.service.goods.SupermarketGoodsService;
+import com.linayi.service.recode.SupermarketGoodsRecordService;
 import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.util.PageResult;
 import com.linayi.util.ParamValidUtil;
@@ -39,6 +41,8 @@ public class GoodsSkuController extends BaseController {
     private SupermarketService supermarketService;
     @Autowired
     private SkuClickNumService skuClickNumService;
+    @Autowired
+    private SupermarketGoodsRecordService supermarketGoodsRecordService;
 
     @RequestMapping("/upload.do")
     @ResponseBody
@@ -339,7 +343,11 @@ public class GoodsSkuController extends BaseController {
     }
 
 
-    //根据商品名品牌id属性条形码模糊搜索商品(分享纠错合并)
+    /**
+     * 根据超市获取该超市没有价格的商品(分享纠错)
+     * @param goodsSku
+     * @return
+     */
     @RequestMapping("/getGoodsSkuNotPrice.do")
     public Object getGoodsSkuNotPrice(@RequestBody GoodsSku goodsSku) {
         try {
@@ -389,6 +397,24 @@ public class GoodsSkuController extends BaseController {
             return new ResponseData(e.getErrorType()).toString();
         } catch (Exception e) {
             return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+        }
+    }
+
+
+    /**
+     * 分享点击暂无价格插入记录数据
+     * @param supermarketGoodsRecord
+     * @return
+     */
+    @RequestMapping("insertRecode.do")
+    @ResponseBody
+    public Object insertRecode(@RequestBody SupermarketGoodsRecord supermarketGoodsRecord) {
+        try {
+            supermarketGoodsRecordService.insert(supermarketGoodsRecord);
+            return new ResponseData("SUCCESS");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseData(e);
         }
     }
 
