@@ -384,7 +384,6 @@ public class GoodsSkuController extends BaseController {
             }
 
             List<GoodsSku> highClickNoPriceGoodsList = goodsSkuService.getHighClickNoPriceGoodsList(goodsSku);
-            goodsSku.setTotal(highClickNoPriceGoodsList.size());
             Integer totalPage = (int) Math.ceil(Double.valueOf(goodsSku.getTotal()) / Double.valueOf(goodsSku.getPageSize()));
             if (totalPage <= 0) {
                 totalPage++;

@@ -858,23 +858,23 @@
             </where>
         </select>
 
-    <select id="selectBySupermerketIdAndGoodsSkuIdList" resultType="com.linayi.entity.goods.GoodsSku">
+    <select id="selectBySupermerketIdAndGoodsSkuIdList" resultType="com.linayi.entity.goods.GoodsSku" parameterType="com.linayi.entity.goods.GoodsSku">
         SELECT
           gs.full_name,gs.goods_sku_id,gs.image
         FROM
           goods_sku gs
-        LEFT JOIN supermarket_goods sg ON sg.goods_sku_id = gs.goods_sku_id AND sg.supermarket_id = #{goodsSku.supermarketId}
+        LEFT JOIN supermarket_goods sg ON sg.goods_sku_id = gs.goods_sku_id AND sg.supermarket_id = #{supermarketId}
         <where>
-          sg.goods_sku_id IS NULL
-        AND
+           sg.goods_sku_id IS NULL
+            AND
             gs.STATUS='NORMAL'
-        <if test="goodsSkuIdList != null and goodsSkuIdList.size() > 0">
-            and gs.goods_sku_id in
-            <foreach item="goodsSkuId" index="index" collection="goodsSkuIdList"
-                     open="(" separator="," close=")">
-                #{goodsSkuId}
-            </foreach>
-        </if>
+            <if test="goodsSkuIdList != null and goodsSkuIdList.size() > 0">
+            AND    gs.goods_sku_id IN
+                <foreach collection="goodsSkuIdList" item="item" index="index"
+                         open="(" separator="," close=")">
+                    ${item}
+                </foreach>
+            </if>
         </where>
     </select>
 

@@ -144,7 +144,7 @@ public interface GoodsSkuMapper {
 	 * @param goodsSkuIdList
 	 * @return
 	 */
-	List<GoodsSku> selectBySupermerketIdAndGoodsSkuIdList(@Param("goodsSku") GoodsSku goodsSku);
+	List<GoodsSku> selectBySupermerketIdAndGoodsSkuIdList(GoodsSku goodsSku);
 
 
 
