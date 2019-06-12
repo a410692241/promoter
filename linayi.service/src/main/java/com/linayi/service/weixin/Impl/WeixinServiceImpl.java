@@ -113,7 +113,7 @@ public class WeixinServiceImpl implements WeixinService {
                 //如果是邻生客户端,需要跳转的是邻生的商户端首页
                 if (!linsheng) {
                     if (!accountService.isBindMobile(accountId)) {
-                        response.sendRedirect(Configuration.getConfig().getValue(WeixinConfig.BIND_MOBILE_URL) + "?accessToken=" + sysetemAccessToken + "&userId=" + userId + "&loginType=" + 1);
+                        response.sendRedirect(Configuration.getConfig().getValue(WeixinConfig.BIND_MOBILE_URL) + "&accessToken=" + sysetemAccessToken);
                     } else {
                         response.sendRedirect(Configuration.getConfig().getValue(WeixinConfig.REDICT_INDEX_URL) + "?accessToken=" + sysetemAccessToken+ "&accountId=" + accountId+"&userId="+userId+"&loginType="+1);
                     }
