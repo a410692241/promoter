@@ -141,9 +141,10 @@ public interface GoodsSkuMapper {
 	/**
 	 * 根据超市id和商品id集合查询商品
 	 * @param goodsSku
+	 * @param goodsSkuIdList
 	 * @return
 	 */
-	List<GoodsSku> selectBySupermerketIdAndGoodsSkuIdList(GoodsSku goodsSku);
+	List<GoodsSku> selectBySupermerketIdAndGoodsSkuIdList(@Param("goodsSku") GoodsSku goodsSku);
 
 
 
