@@ -14,4 +14,6 @@ public interface SupermarketGoodsRecordMapper {
     int updateByPrimaryKeySelective(SupermarketGoodsRecord record);
 
     int updateByPrimaryKey(SupermarketGoodsRecord record);
+
+    SupermarketGoodsRecord getSupermarketGoodsRecord(SupermarketGoodsRecord supermarketGoodsRecord);
 }

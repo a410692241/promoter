@@ -17,6 +17,8 @@ public class SupermarketGoodsRecordServiceImpl implements SupermarketGoodsRecord
     @Transactional
     @Override
     public void insert(SupermarketGoodsRecord supermarketGoodsRecord) {
-        supermarketGoodsRecordMapper.insert(supermarketGoodsRecord);
+        if (supermarketGoodsRecordMapper.getSupermarketGoodsRecord(supermarketGoodsRecord)==null){
+            supermarketGoodsRecordMapper.insert(supermarketGoodsRecord);
+        }
     }
 }

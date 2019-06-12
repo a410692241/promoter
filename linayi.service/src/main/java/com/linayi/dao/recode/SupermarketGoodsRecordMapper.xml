@@ -68,4 +68,14 @@
       supermarket_id = #{supermarketId,jdbcType=INTEGER}
     where supermarket_goods_record_id = #{supermarketGoodsRecordId,jdbcType=INTEGER}
   </update>
+  <select id="getSupermarketGoodsRecord" resultType="com.linayi.entity.recode.SupermarketGoodsRecord">
+      SELECT
+            supermarket_goods_record_id, goods_sku_id, supermarket_id
+      FROM
+            supermarket_goods_record
+      WHERE
+            goods_sku_id=#{goodsSkuId}
+      AND
+            supermarket_id=#{supermarketId}
+  </select>
 </mapper>
