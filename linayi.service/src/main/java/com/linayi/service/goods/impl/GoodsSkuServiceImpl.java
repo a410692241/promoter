@@ -1458,7 +1458,6 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
         SkuClickNum skuClickNum = new SkuClickNum();
         skuClickNum.setStartTime(afterSevenDay);
         skuClickNum.setEndTime(nowTime);
-        skuClickNum.setNum(20);
         List<Long> skuIdsByClientNum = skuClickNumService.getSkuIdsByClientNum(skuClickNum);
 
         //获取相应的商品集合
