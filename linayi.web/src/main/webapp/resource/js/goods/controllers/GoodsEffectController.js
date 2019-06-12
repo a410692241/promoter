@@ -230,7 +230,7 @@ app.controller('goodsEffectCtrl'/**
                                 }else{
                                     opts = opts + "<a href='javascript:void(0);' ng-click='changeStatus( "+rowObject.goodsId+","+2+" )' class='btn btn-primary fa fa-eye btn-sm td-compile'>下架</a> ";
                                 }*/
-                            opts = opts + "<a href='javascript:void(0);' ng-click='edit( " + rowObject.goodsSkuId + " )' class='btn btn-danger fa fa-show btn-sm td-compile'>立即生效</a> ";
+                            opts = opts + "<a href='javascript:void(0);' ng-click='share( " + rowObject.goodsSkuId + " )' class='btn btn-danger fa fa-show btn-sm td-compile'>立即生效</a> ";
                             return opts;
                         }
                     }
@@ -768,7 +768,7 @@ app.controller('goodsEffectCtrl'/**
 
             }
             $.ajax({
-                url: urls.ms + "/correct/correct/updatePriceForAdmin.do",
+                url: urls.ms + "/correct/correct/immediatelyAffect.do",
                 data: $scope.correct,
                 dataType: "json",
                 type: "post",
@@ -776,9 +776,9 @@ app.controller('goodsEffectCtrl'/**
                     isTrue = true;
                     if (data.respCode === "S") {
                         $modalInstance.close();
-                        alert("修改价格成功,等待审核!");
+                        alert(data.data);
                     } else {
-                        alert("修改价格失败");
+                        alert("请正确填写信息！");
                     }
                 }
             });
