@@ -852,9 +852,6 @@
                 <if test="barcode!=null and barcode!=''">
                     and gs.barcode like concat('%',#{barcode},'%')
                 </if>
-                <if test="status!=null and status!=''">
-                    and gs.status=#{status}
-                </if>
             </where>
         </select>
 
