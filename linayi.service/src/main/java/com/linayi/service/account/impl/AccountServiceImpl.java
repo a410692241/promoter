@@ -386,6 +386,7 @@ public class AccountServiceImpl implements AccountService {
             Account accountOpenId = new Account();
             accountOpenId.setAccountId(newAccountId);
             accountOpenId.setOpenId(openId);
+            accountOpenId.setUpdateTime(new Date());
             accountMapper.updateAccountByaccountId(accountOpenId);
             //redis token失效
 //            redisService.deleteAccessToken(Long.parseLong(accountId + ""));
@@ -496,7 +497,7 @@ public class AccountServiceImpl implements AccountService {
             accountParam.setAccountId(accountId);
             accountParam.setMobile(mobile);
             accountParam.setUpdateTime(new Date());
-            accountMapper.updateAccountByaccountId(account);
+            accountMapper.updateAccountByaccountId(accountParam);
             return redisService.GenerationToken(accountId);
         }
 
