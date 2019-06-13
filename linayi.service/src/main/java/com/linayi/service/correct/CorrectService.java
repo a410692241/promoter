@@ -90,5 +90,11 @@ public interface CorrectService {
      */
     List<Correct> getAffectedMinPrice(Correct correct) throws ParseException;
 
-//    void updatePriceForAdmin(Correct correct);
+    /**
+     * 前台分享纠错合并
+     * @param correct
+     * @param file
+     * @return
+     */
+    void updatePriceByApp(Correct correct, MultipartFile file);
 }

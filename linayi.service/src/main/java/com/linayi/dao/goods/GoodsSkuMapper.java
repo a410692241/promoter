@@ -63,7 +63,7 @@ public interface GoodsSkuMapper {
     	List<Integer>getGoodsSkuIdBygoodsSku();
     	
     /**
-              * 自定义搜索下单	
+              * 自定义搜索下单
      * @param brandId   品牌id
      * @param goodsName 商品名
      * @param valueName 属性名

@@ -321,4 +321,27 @@ public class CorrectController extends BaseController {
 	}
 
 
+	/**
+	 * 分享纠错查看按钮合并
+	 * @param correct
+	 * @param file
+	 * @return
+	 */
+	@RequestMapping("/updatePriceByApp.do")
+	@ResponseBody
+	public Object updatePriceByApp(Correct correct, MultipartFile file){
+		try {
+			correct.setUserId(getUserId());
+			correct.setAuditType(OperatorType.USER.toString());
+			correctService.updatePriceByApp(correct,file);
+			return new ResponseData("价格修改成功");
+		}catch (BusinessException e) {
+			return new ResponseData(e.getErrorType()).toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+		}
+
+	}
+
 }
