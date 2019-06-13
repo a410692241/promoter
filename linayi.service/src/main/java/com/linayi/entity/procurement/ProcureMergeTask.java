@@ -2,8 +2,8 @@ package com.linayi.entity.procurement;
 
 import java.util.Date;
 
-public class ProcurementNumber {
-    private Long procurementNumberId;
+public class ProcureMergeTask {
+    private Long procureMergeTaskId;
     private Date startTime;
     private Date createTime;
     private String procureMergeNo;
@@ -34,11 +34,12 @@ public class ProcurementNumber {
         this.procureMergeNo = procureMergeNo;
     }
 
-    public Long getProcurementNumberId() {
-        return procurementNumberId;
+
+    public Long getProcureMergeTaskId() {
+        return procureMergeTaskId;
     }
 
-    public void setProcurementNumberId(Long procurementNumberId) {
-        this.procurementNumberId = procurementNumberId;
+    public void setProcureMergeTaskId(Long procureMergeTaskId) {
+        this.procureMergeTaskId = procureMergeTaskId;
     }
 }
