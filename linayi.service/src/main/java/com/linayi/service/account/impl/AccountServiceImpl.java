@@ -353,9 +353,9 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public Object bindMobile(Integer accountId, String mobile, String validCode) {
-        if (!redisService.validValidCode(mobile, validCode)) {
-            throw new BusinessException(ErrorType.VERIFICATION_CODE_ERROR);
-        }
+//        if (!redisService.validValidCode(mobile, validCode)) {
+//            throw new BusinessException(ErrorType.VERIFICATION_CODE_ERROR);
+//        }
         //检查手机号是否被自己绑定
         Account accountById = accountMapper.getAccountById(accountId);
         if(accountById.getMobile() != null){
