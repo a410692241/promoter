@@ -558,6 +558,12 @@
             <if test="fullName !=null and fullName != '' ">
                 AND g.full_name like concat('%',#{fullName},'%')
             </if>
+            <if test="createTimeStart != null">
+                and c.create_time &gt;= #{createTimeStart}
+            </if>
+            <if test="createTimeEnd != null">
+                and c.create_time &lt;= #{createTimeEnd}
+            </if>
         </where>
         ORDER BY c.create_time desc
     </select>
