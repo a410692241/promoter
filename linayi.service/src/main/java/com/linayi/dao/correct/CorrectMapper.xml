@@ -610,7 +610,7 @@
     <select id="getCorrectByAuditerId"  resultType="com.linayi.entity.correct.Correct">
         SELECT
           c.correct_id,if(c.status='AUDIT_FAIL','价格错误','审核通过') status,c.goods_sku_id,c.supermarket_id,c.price,c.audit_time,g.full_name,g.image goodsImage,
-          (select round(((max(price)-min(price))/min(price)*100),2)  from correct where goods_sku_id=c.goods_sku_id and (status='AFFECTED'  or status='AUDIT_SUCCESS' or status='WAIT_AUDIT') group by goods_sku_id) spreadRate
+          IFNULL((select round(((max(price)-min(price))/min(price)*100),2)  from correct where goods_sku_id=c.goods_sku_id and (status='AFFECTED'  or status='AUDIT_SUCCESS' or status='WAIT_AUDIT') group by goods_sku_id),0) spreadRate
         FROM
           correct c join goods_sku g on c.goods_sku_id = g.goods_sku_id
         <where>
