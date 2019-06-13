@@ -7,7 +7,7 @@ import com.linayi.dao.community.CommunityMapper;
 import com.linayi.dao.goods.GoodsSkuMapper;
 import com.linayi.dao.order.OrdersGoodsMapper;
 import com.linayi.dao.order.OrdersMapper;
-import com.linayi.dao.procurement.ProcurementNumberMapper;
+import com.linayi.dao.procurement.ProcureMergeTaskMapper;
 import com.linayi.dao.procurement.ProcurementTaskMapper;
 import com.linayi.dao.supermarket.SupermarketMapper;
 import com.linayi.dao.user.UserMapper;
@@ -16,7 +16,7 @@ import com.linayi.entity.community.Community;
 import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.order.Orders;
 import com.linayi.entity.order.OrdersGoods;
-import com.linayi.entity.procurement.ProcurementNumber;
+import com.linayi.entity.procurement.ProcureMergeTask;
 import com.linayi.entity.procurement.ProcurementTask;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.exception.ErrorType;
@@ -71,7 +71,7 @@ public class ProcurementServiceImpl implements ProcurementService {
     @Autowired
     private RedisUtil redisUtil;
     @Autowired
-    private ProcurementNumberMapper procurementNumberMapper;
+    private ProcureMergeTaskMapper procureMergeTaskMapper;
 
 	@Override
 	public void addProcurementTask(ProcurementTask task) {
@@ -129,11 +129,11 @@ public class ProcurementServiceImpl implements ProcurementService {
                         procurementTask1.setUpdateTime(new Date());
 						procurementTaskMapper.updateProcureTaskNoById(procurementTask1);
 
-                        ProcurementNumber procurementNumber = new ProcurementNumber();
-                        procurementNumber.setStartTime(procurementTask.getCreateTime());
-                        procurementNumber.setCreateTime(new Date());
-                        procurementNumber.setProcureMergeNo(procureMergeNo);
-                        procurementNumberMapper.insert(procurementNumber);
+						ProcureMergeTask procureMergeTask = new ProcureMergeTask();
+						procureMergeTask.setStartTime(procurementTask.getCreateTime());
+						procureMergeTask.setCreateTime(new Date());
+						procureMergeTask.setProcureMergeNo(procureMergeNo);
+						procureMergeTaskMapper.insert(procureMergeTask);
 
                     }
 					GoodsSku goods = goodsSkuMapper.getGoodsById(task.getGoodsSkuId());
