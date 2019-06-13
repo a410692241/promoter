@@ -351,6 +351,7 @@ public class AccountServiceImpl implements AccountService {
      * @return
      */
     @Override
+    @Transactional
     public Object bindMobile(Integer accountId, String mobile, String validCode) {
         if (!redisService.validValidCode(mobile, validCode)) {
             throw new BusinessException(ErrorType.VERIFICATION_CODE_ERROR);
