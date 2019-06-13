@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -55,9 +56,9 @@ public class WeixinController {
 
     @RequestMapping("getCode.do")
     @Transactional
-    public Object getCode(String code, HttpServletResponse response) {
+    public Object getCode(String code, HttpServletRequest request, HttpServletResponse response) {
         try {
-            return weixinService.getCode(code,response,false);
+            return weixinService.getCode(code,request,response,false);
         } catch (BusinessException e) {
             return new ResponseData(e.getErrorType()).toString();
         } catch (Exception e) {
@@ -68,9 +69,9 @@ public class WeixinController {
 
     @RequestMapping("getLinShengCode.do")
     @Transactional
-    public Object getLinShengCode(String code, HttpServletResponse response) {
+    public Object getLinShengCode(String code, HttpServletRequest request,HttpServletResponse response) {
         try {
-            return weixinService.getCode(code,response,true);
+            return weixinService.getCode(code,request,response,true);
         } catch (BusinessException e) {
             return new ResponseData(e.getErrorType()).toString();
         } catch (Exception e) {

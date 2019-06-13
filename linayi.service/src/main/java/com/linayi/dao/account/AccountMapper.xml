@@ -237,13 +237,13 @@
             <if test="status!=null and status!=''">
                 `status`=#{status},
             </if>
-            <if test="createTime!=null and createTime!=''">
+            <if test="createTime!=null">
                 `create_time`=#{createTime},
             </if>
-            <if test="lastLoginTime!=null and lastLoginTime!=''">
+            <if test="lastLoginTime!=null">
                 `last_login_time`=#{lastLoginTime},
             </if>
-            <if test="updateTime!=null and updateTime!=''">
+            <if test="updateTime!=null">
                 `update_time`=#{updateTime},
             </if>
             <if test="creatorAccountId!=null and creatorAccountId!=''">
