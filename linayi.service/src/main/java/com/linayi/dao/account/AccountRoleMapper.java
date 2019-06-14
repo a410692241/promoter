@@ -2,6 +2,8 @@ package com.linayi.dao.account;
 
 import com.linayi.entity.account.AccountRole;
 
+import java.util.List;
+
 public interface AccountRoleMapper {
     int insert(AccountRole record);
 
@@ -13,4 +15,6 @@ public interface AccountRoleMapper {
      * @return
      */
     AccountRole getAccountRole(Integer userId);
+
+    List<AccountRole> getAccountRoleLists(Integer accountId);
 }

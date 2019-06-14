@@ -169,6 +169,9 @@ public class AccountServiceImpl implements AccountService {
             String[] split = account.getRoleList().split("%2C");
             List<Integer> ints = new ArrayList<>();
             for (String str : split) {
+                if(str.equals("undefined")){
+                    continue;
+                }
                 ints.add(Integer.valueOf(str));
             }
             if(accountRoles.size() != 0){
@@ -516,5 +519,10 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account selectAccountBycommunityId(Integer communityId) {
         return accountMapper.selectAccountBycommunityId(communityId);
+    }
+
+    @Override
+    public List<AccountRole> getAccountRoleLists(Integer accountId){
+        return accountRoleMapper.getAccountRoleLists(accountId);
     }
 }

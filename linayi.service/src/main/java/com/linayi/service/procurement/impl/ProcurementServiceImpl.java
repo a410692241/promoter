@@ -7,6 +7,7 @@ import com.linayi.dao.community.CommunityMapper;
 import com.linayi.dao.goods.GoodsSkuMapper;
 import com.linayi.dao.order.OrdersGoodsMapper;
 import com.linayi.dao.order.OrdersMapper;
+import com.linayi.dao.procurement.ProcureMergeTaskMapper;
 import com.linayi.dao.procurement.ProcurementTaskMapper;
 import com.linayi.dao.supermarket.SupermarketMapper;
 import com.linayi.dao.user.UserMapper;
@@ -15,6 +16,7 @@ import com.linayi.entity.community.Community;
 import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.order.Orders;
 import com.linayi.entity.order.OrdersGoods;
+import com.linayi.entity.procurement.ProcureMergeTask;
 import com.linayi.entity.procurement.ProcurementTask;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.exception.ErrorType;
@@ -66,6 +68,10 @@ public class ProcurementServiceImpl implements ProcurementService {
 	private CommunitySupermarketService communitySupermarketService;
 	@Autowired
 	private CommunityService communityService;
+    @Autowired
+    private RedisUtil redisUtil;
+    @Autowired
+    private ProcureMergeTaskMapper procureMergeTaskMapper;
 
 	@Override
 	public void addProcurementTask(ProcurementTask task) {
@@ -114,6 +120,22 @@ public class ProcurementServiceImpl implements ProcurementService {
 		if (procurementTaskList != null && procurementTaskList.size() > 0){
 			for (ProcurementTask task : procurementTaskList) {
 				if(task != null){
+					if(task.getProcureMergeNo() == null || "".equals(task.getProcureMergeNo())){
+						//没有采买任务合并编号
+                        ProcurementTask procurementTask1 = new ProcurementTask();
+						String procureMergeNo = createProcureMergeNo();
+                        procurementTask1.setProcureMergeNo(procureMergeNo);
+                        procurementTask1.setProcurementTaskIdList(task.getProcurementTaskIdList());
+                        procurementTask1.setUpdateTime(new Date());
+						procurementTaskMapper.updateProcureTaskNoById(procurementTask1);
+						task.setProcureMergeNo(procureMergeNo);
+						ProcureMergeTask procureMergeTask = new ProcureMergeTask();
+						procureMergeTask.setStartTime(procurementTask.getCreateTime());
+						procureMergeTask.setCreateTime(new Date());
+						procureMergeTask.setProcureMergeNo(procureMergeNo);
+						procureMergeTaskMapper.insert(procureMergeTask);
+
+                    }
 					GoodsSku goods = goodsSkuMapper.getGoodsById(task.getGoodsSkuId());
 					if(goods != null){
 						task.setGoodsImage(ImageUtil.dealToShow(goods.getImage()));
@@ -835,4 +857,29 @@ public class ProcurementServiceImpl implements ProcurementService {
 	public List<ProcurementTask> getProcurements(ProcurementTask procurementTask) {
 		return procurementTaskMapper.getProcurementTaskList(procurementTask);
 	}
+
+    @Override
+	public String createProcureMergeNo(){
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date());
+		int year = c.get(Calendar.YEAR);
+		int day = c.get(Calendar.DAY_OF_YEAR);
+		int hour = c.get(Calendar.HOUR_OF_DAY);
+		int minute = c.get(Calendar.MINUTE);
+		int second = c.get(Calendar.SECOND);
+		int millisecond = c.get(Calendar.MILLISECOND);
+		String dayFmt = String.format("%1$03d", day);
+        String hourFmt = String.format("%1$02d", hour);
+        String minuteFmt = String.format("%1$02d", minute);
+        String secondFmt = String.format("%1$02d", second);
+        String millisecondFmt = String.format("%1$03d", millisecond);
+        String prefix = (year - 2000) + dayFmt + hourFmt + minuteFmt + secondFmt + millisecondFmt;
+        long seq = redisUtil.incr(prefix, 1);
+        if (seq == 1){
+            redisUtil.expire(prefix,600);
+        }
+        String formatSeq = String.format("%1$02d", seq);
+        return (year - 2000) + dayFmt + hourFmt + minuteFmt + formatSeq + secondFmt + millisecondFmt;
+	}
+
 }
