@@ -558,10 +558,10 @@
             <if test="fullName !=null and fullName != '' ">
                 AND g.full_name like concat('%',#{fullName},'%')
             </if>
-            <if test="createTimeStart != null">
+            <if test="createTimeStart != null and createTimeStart!=''">
                 and c.create_time &gt;= #{createTimeStart}
             </if>
-            <if test="createTimeEnd != null">
+            <if test="createTimeEnd != null and createTimeEnd!=''">
                 and c.create_time &lt;= #{createTimeEnd}
             </if>
         </where>
