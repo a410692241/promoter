@@ -888,6 +888,12 @@
                 and gs.barcode like concat('%',#{barcode},'%')
             </if>
         </where>
+        order by field(gs.goods_sku_id,
+        <foreach collection="goodsSkuIdList" item="item" index="index"
+                  separator=",">
+            ${item}
+        </foreach>
+        )
     </select>
 
 
