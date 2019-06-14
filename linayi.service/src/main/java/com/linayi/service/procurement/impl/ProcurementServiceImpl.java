@@ -128,7 +128,7 @@ public class ProcurementServiceImpl implements ProcurementService {
                         procurementTask1.setProcurementTaskIdList(task.getProcurementTaskIdList());
                         procurementTask1.setUpdateTime(new Date());
 						procurementTaskMapper.updateProcureTaskNoById(procurementTask1);
-
+						task.setProcureMergeNo(procureMergeNo);
 						ProcureMergeTask procureMergeTask = new ProcureMergeTask();
 						procureMergeTask.setStartTime(procurementTask.getCreateTime());
 						procureMergeTask.setCreateTime(new Date());
