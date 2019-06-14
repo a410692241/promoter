@@ -623,10 +623,10 @@
             c.auditer_id=#{userId}
             AND
             c.audit_type = 'USER'
-            <if test="createTimeStart != null">
+            <if test="createTimeStart != null and createTimeStart !=''">
                 and c.audit_time &gt;= #{createTimeStart}
             </if>
-            <if test="createTimeEnd != null">
+            <if test="createTimeEnd != null and createTimeEnd !=''">
                 and c.audit_time &lt;= #{createTimeEnd}
             </if>
         </where>
