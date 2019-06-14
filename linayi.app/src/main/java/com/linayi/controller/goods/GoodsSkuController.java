@@ -2,7 +2,6 @@ package com.linayi.controller.goods;
 
 
 import com.linayi.controller.BaseController;
-import com.linayi.dao.goods.SkuClickNumMapper;
 import com.linayi.entity.account.Account;
 import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.recode.SupermarketGoodsRecord;
@@ -72,7 +71,7 @@ public class GoodsSkuController extends BaseController {
     @ResponseBody
     public Object showOtherSupermarketPrice(@RequestBody Map<String, Object> param) {
         try {
-            Long goodsSkuId = (Long) param.get("goodsSkuId");
+            Long goodsSkuId = Long.parseLong(param.get("goodsSkuId") + "");
             Map<String, Object> map = supermarketGoodsService.getPriceSupermarketByGoodsSkuId(super.getUserId(), goodsSkuId.intValue());
             skuClickNumService.updateClickNum(goodsSkuId);
             return new ResponseData(map);
