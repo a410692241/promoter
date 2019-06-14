@@ -378,7 +378,12 @@ public class GoodsSkuController extends BaseController {
     //最近七天点击率前100的无价格商品
     @RequestMapping("/highclicknopricegoods.do")
     public Object highclicknopricegoods(@RequestBody GoodsSku goodsSku) {
-//        try {
+        try {
+            //如果前端没传超市id就返回空
+            if (goodsSku.getSupermarketId()==null){
+                return new ResponseData(new ArrayList<>());
+            }
+
             if (goodsSku.getPageSize() == null) {
                 goodsSku.setPageSize(8);
             }
@@ -394,11 +399,11 @@ public class GoodsSkuController extends BaseController {
             map.put("currentPage", goodsSku.getCurrentPage());
 
             return new ResponseData(map);
-//        } catch (BusinessException e) {
-//            return new ResponseData(e.getErrorType()).toString();
-//        } catch (Exception e) {
-//            return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
-//        }
+        } catch (BusinessException e) {
+            return new ResponseData(e.getErrorType()).toString();
+        } catch (Exception e) {
+            return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+        }
     }
 
 
