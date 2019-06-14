@@ -105,4 +105,8 @@ public interface CorrectService {
      * @return
      */
     void updatePriceByApp(Correct correct, MultipartFile file);
+
+    void priceImmediatelyAffect(Correct correct, MultipartFile file);
+
+    void adjustPriceMaxAndMin(Correct corrects);
 }
