@@ -65,7 +65,8 @@ public enum ErrorType {
     USER_IS_DISABLED(2029,"该用户已禁用!"),
     NOT_PROCURER_NO_AUDIT(2030,"请先联系管理员绑定采买超市！"),
     MOBILE_SAME(2031,"手机号等信息已经存在"),
-    PASSWORDCONSISTENCY(2032,"不能与原密码一致");
+    PASSWORDCONSISTENCY(2032,"不能与原密码一致"),
+    SHAREPRICEOVERFLOW(2033,"分享价格溢出");
 
 
 

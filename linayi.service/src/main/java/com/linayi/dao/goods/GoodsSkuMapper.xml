@@ -834,45 +834,59 @@
                     gs.create_time
                  FROM
                     goods_sku gs LEFT JOIN supermarket_goods sg ON gs.goods_sku_id=sg.goods_sku_id
-                    AND sg.supermarket_id=#{supermarketId}
+                    AND sg.supermarket_id=#{supermarketId} LEFT JOIN supermarket_goods_record sgr
+                    ON sgr.goods_sku_id=gs.goods_sku_id AND sgr.supermarket_id=#{supermarketId}
             <where>
                       gs.STATUS='NORMAL'
                 AND   sg.goods_sku_id is null
+                AND   (sgr.goods_sku_id is null AND sgr.supermarket_id is null)
                 <if test="brandId!=null">
-                    and brand_id=#{brandId}
+                    and gs.brand_id=#{brandId}
                 </if>
                 <if test="fullName!=null and fullName!=''">
-                    and full_name like concat('%',#{fullName},'%')
+                    and gs.full_name like concat('%',#{fullName},'%')
                 </if>
                 <if test="valueName!=null and valueName!=''">
-                    and full_name like concat('%',#{valueName},'%')
+                    and gs.full_name like concat('%',#{valueName},'%')
                 </if>
                 <if test="barcode!=null and barcode!=''">
-                    and barcode like concat('%',#{barcode},'%')
-                </if>
-                <if test="status!=null and status!=''">
-                    and status=#{status}
+                    and gs.barcode like concat('%',#{barcode},'%')
                 </if>
             </where>
         </select>
 
-    <select id="selectBySupermerketIdAndGoodsSkuIdList" resultType="com.linayi.entity.goods.GoodsSku">
+    <select id="selectBySupermerketIdAndGoodsSkuIdList" resultType="com.linayi.entity.goods.GoodsSku" parameterType="com.linayi.entity.goods.GoodsSku">
         SELECT
-
+          gs.full_name,gs.goods_sku_id,gs.image
         FROM
           goods_sku gs
         LEFT JOIN supermarket_goods sg ON sg.goods_sku_id = gs.goods_sku_id AND sg.supermarket_id = #{supermarketId}
+        LEFT JOIN supermarket_goods_record sgr ON sgr.goods_sku_id=gs.goods_sku_id AND sgr.supermarket_id=#{supermarketId}
         <where>
-          sg.goods_sku_id IS NULL
-        AND
+           sg.goods_sku_id IS NULL
+            AND
             gs.STATUS='NORMAL'
-        <if test="goodsSkuIdList != null and goodsSkuIdList.size() > 0">
-            and gs.goods_sku_id in
-            <foreach item="goodsSkuId" index="index" collection="goodsSkuIdList"
-                     open="(" separator="," close=")">
-                #{goodsSkuId}
-            </foreach>
-        </if>
+            AND
+            (sgr.goods_sku_id is null AND sgr.supermarket_id is null)
+            <if test="goodsSkuIdList != null and goodsSkuIdList.size() > 0">
+            AND    gs.goods_sku_id IN
+                <foreach collection="goodsSkuIdList" item="item" index="index"
+                         open="(" separator="," close=")">
+                    ${item}
+                </foreach>
+            </if>
+            <if test="brandId!=null">
+                and gs.brand_id=#{brandId}
+            </if>
+            <if test="fullName!=null and fullName!=''">
+                and gs.full_name like concat('%',#{fullName},'%')
+            </if>
+            <if test="valueName!=null and valueName!=''">
+                and gs.full_name like concat('%',#{valueName},'%')
+            </if>
+            <if test="barcode!=null and barcode!=''">
+                and gs.barcode like concat('%',#{barcode},'%')
+            </if>
         </where>
     </select>
 

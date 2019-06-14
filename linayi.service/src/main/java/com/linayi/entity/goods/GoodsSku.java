@@ -129,6 +129,18 @@ public class GoodsSku extends BaseEntity {
 
     private Long correctId; //纠错id
 
+    /**
+     * [开始时间]
+     */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private Date startTime;
+
+    /**
+     * [结束时间]
+     */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private Date endTime;
+
     public String getGoodsPrice() {
         return goodsPrice;
     }
@@ -663,5 +675,21 @@ public class GoodsSku extends BaseEntity {
 
     public void setMaxPriceSuper(Integer maxPriceSuper) {
         this.maxPriceSuper = maxPriceSuper;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 }

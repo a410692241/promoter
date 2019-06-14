@@ -127,12 +127,6 @@ public class UserServiceImpl implements UserService {
         Integer accountId = account.getAccountId();
         account.setEmployeeId(accountId);
         if (accountId != null) {
-            //修改,判断用户名和手机号是否跟之前一样,一样返回未做任何修改
-            Account acc = userMapper.selectEmployeeById(account);
-            if (acc.getMobile().equals(account.getMobile())) {
-                return new ResponseData(ErrorType.UPDATE_ERROR).toString();
-            }
-            /*acc.setUserId();*/
             AdminAccount admin = adminAccountMapper.selectAdminIdByUserId(accountId);
             account.setAccountId(admin.getAccountId());
             account.setUpdateTime(date);
@@ -152,7 +146,6 @@ public class UserServiceImpl implements UserService {
                 Account acc = adminAccountMapper.selectByName(account.getUserName());
                 Account account1 = adminAccountMapper.selectByMobile(account.getMobile());
                 if(CheckUtil.isNotNullEmpty(acc)||CheckUtil.isNotNullEmpty(account1)) {
-                    System.out.println("------------------------------");
                     return new ResponseData(ErrorType.ACCOUNT_ERROR);
                 }
             }catch (Exception e){

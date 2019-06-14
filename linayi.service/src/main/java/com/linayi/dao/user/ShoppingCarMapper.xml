@@ -24,9 +24,6 @@
             <if test="receiveAddressId != null">
                 AND receive_address_id = #{receiveAddressId}
             </if>
-            <if test="selectStatus != null and selectStatus != ''">
-                AND select_status = #{selectStatus}
-            </if>
         </where>
     </select>
     <select id="getShopCarById" resultMap="BaseResultMap">

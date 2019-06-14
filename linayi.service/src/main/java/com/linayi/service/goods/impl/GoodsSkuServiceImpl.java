@@ -1451,14 +1451,13 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
         Date nowTime = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(nowTime);//设置起时间
-        cal.set(Calendar.DAY_OF_YEAR,cal.get(Calendar.DAY_OF_YEAR)+7);//增加7天
+        cal.set(Calendar.DAY_OF_YEAR,cal.get(Calendar.DAY_OF_YEAR)-7);//增加7天
         Date afterSevenDay = cal.getTime();
 
         //获取点击率前100的商品id集合
         SkuClickNum skuClickNum = new SkuClickNum();
-        skuClickNum.setStartTime(nowTime);
-        skuClickNum.setEndTime(afterSevenDay);
-        skuClickNum.setNum(100);
+        skuClickNum.setStartTime(afterSevenDay);
+        skuClickNum.setEndTime(nowTime);
         List<Long> skuIdsByClientNum = skuClickNumService.getSkuIdsByClientNum(skuClickNum);
 
         //获取相应的商品集合
@@ -1488,6 +1487,10 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
                     goods.setCorrectType("SHARE");
                 }
             }
+
+            //图片处理
+            String goodsImage = ImageUtil.dealToShow(goods.getImage());
+            goods.setImage(goodsImage);
         }
 
         return goodsSkusList;

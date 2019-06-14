@@ -19,6 +19,7 @@ import com.linayi.service.promoter.OrderManMemberService;
 import com.linayi.service.promoter.PromoterOrderManService;
 import com.linayi.service.user.UserService;
 import com.linayi.util.DateUtil;
+import com.linayi.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -204,7 +205,7 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 				User currentUser = userService.selectUserList(user).stream().findFirst().orElse(null);
 				if(currentUser != null) {
 					orderManMember.setNickname(currentUser.getNickname());
-					orderManMember.setHeadImage(currentUser.getHeadImage());
+					orderManMember.setHeadImage(ImageUtil.dealToShow(currentUser.getHeadImage()));
 					if(currentUser.getHeadImage() == null) {
 						orderManMember.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
 					}
