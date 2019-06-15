@@ -125,12 +125,9 @@
       and click_date &lt;= #{endTime}
     </if>
     GROUP BY goods_sku_id
-    order by num desc LIMIT 0,
-    <if test="num == null or num == ''">
-      100
-    </if>
+    order by num desc
     <if test="num != null and num != ''">
-      #{num}
+      LIMIT 0,#{num}
     </if>
   </select>
 </mapper>

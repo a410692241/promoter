@@ -1,13 +1,11 @@
 package com.linayi.service.goods;
 
-import com.linayi.entity.goods.GoodsSku;
 import org.springframework.stereotype.Service;
-import javax.annotation.Resource;
 import com.linayi.entity.goods.SkuClickNum;
-import java.util.Date;
-import java.util.List;
 
-import com.linayi.dao.goods.SkuClickNumMapper;
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public interface SkuClickNumService{
     /**增加指定商品的点击量
@@ -20,6 +18,6 @@ public interface SkuClickNumService{
      * @return
      * @param skuClickNum
      */
-    List<Long> getSkuIdsByClientNum(SkuClickNum skuClickNum);
+    Map<Long, Integer> getSkuIdsByClientNum(SkuClickNum skuClickNum);
 
 }
