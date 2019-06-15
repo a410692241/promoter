@@ -483,6 +483,9 @@
             <if test="auditerId !=null ">
                 `auditer_id` = #{auditerId,jdbcType=TIMESTAMP},
             </if>
+            <if test="auditType !=null ">
+                `audit_type` = #{auditType,jdbcType=TIMESTAMP},
+            </if>
         </trim>
         where `correct_id` = #{correctId}
     </update>
@@ -620,10 +623,10 @@
             c.auditer_id=#{userId}
             AND
             c.audit_type = 'USER'
-            <if test="createTimeStart != null">
+            <if test="createTimeStart != null and createTimeStart !=''">
                 and c.audit_time &gt;= #{createTimeStart}
             </if>
-            <if test="createTimeEnd != null">
+            <if test="createTimeEnd != null and createTimeEnd !=''">
                 and c.audit_time &lt;= #{createTimeEnd}
             </if>
         </where>
