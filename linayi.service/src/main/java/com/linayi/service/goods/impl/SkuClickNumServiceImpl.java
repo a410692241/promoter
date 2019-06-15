@@ -8,8 +8,7 @@ import javax.annotation.Resource;
 
 import com.linayi.entity.goods.SkuClickNum;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.linayi.dao.goods.SkuClickNumMapper;
@@ -23,7 +22,7 @@ public class SkuClickNumServiceImpl implements SkuClickNumService {
 
     @Override
     @Transactional
-    public void updateClickNum(Integer goodsSkuId) {
+    public void updateClickNum(Long goodsSkuId) {
         SkuClickNum record = new SkuClickNum();
         record.setGoodsSkuId(goodsSkuId);
         record.setClickDate(new Date());
@@ -41,10 +40,10 @@ public class SkuClickNumServiceImpl implements SkuClickNumService {
 
 
     @Override
-    public List<Integer> getSkuIdsByClientNum(SkuClickNum skuClickNum) {
-        List<Integer> result = skuClickNumMapper.selectByAll(skuClickNum).stream().collect(Collectors.mapping(SkuClickNum::getGoodsSkuId, Collectors.toList()));
+    public List<Long> getSkuIdsByClientNum(SkuClickNum skuClickNum) {
+        List<SkuClickNum> skuClickNums = skuClickNumMapper.selectConcatNum(skuClickNum);
+        List<Long> result = skuClickNums.stream().collect(Collectors.mapping(SkuClickNum::getGoodsSkuId, Collectors.toList()));
         return result;
     }
-
 
 }

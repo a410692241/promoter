@@ -3,6 +3,7 @@ package com.linayi.service.goods.impl;
 import com.linayi.dao.address.ReceiveAddressMapper;
 import com.linayi.dao.area.SmallCommunityMapper;
 import com.linayi.dao.community.CommunityMapper;
+import com.linayi.dao.correct.CorrectMapper;
 import com.linayi.dao.goods.*;
 import com.linayi.dao.promoter.OpenMemberInfoMapper;
 import com.linayi.dao.promoter.PromoterOrderManMapper;
@@ -18,6 +19,7 @@ import com.linayi.entity.user.ReceiveAddress;
 import com.linayi.entity.user.ShoppingCar;
 import com.linayi.entity.user.User;
 import com.linayi.enums.CategoryLevel;
+import com.linayi.enums.CorrectStatus;
 import com.linayi.enums.MemberLevel;
 import com.linayi.enums.PriceOrderType;
 import com.linayi.exception.BusinessException;
@@ -118,6 +120,10 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
     private SupermarketService supermarketService;
     @Autowired
     private CorrectService correctService;
+    @Autowired
+    private CorrectMapper correctMapper;
+    @Autowired
+    private SkuClickNumService skuClickNumService;
 
     private RestHighLevelClient esClient = RestClientFactory.getHighLevelClient();
 
@@ -677,19 +683,79 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 	}
 
 
-	//根据商品名模糊查询商品信息(不包含价格)
+	//根据商品名品牌名规格模糊查询商品信息(分享纠错合并)
 	@Override
 	public List<GoodsSku> getGoodsSkuByVagueGoodsName(GoodsSku goodsSku) {
 
-		List<GoodsSku> goodsSkuList = goodsSkuMapper.getGoodsSkuByVagueGoodsName(goodsSku);
-		if(goodsSkuList.size()>0) {
 
-			for(GoodsSku i:goodsSkuList ) {
-				i.setImage(ImageUtil.dealToShow(i.getImage()));
-			}
-		}
-		return goodsSkuList;
-	}
+        List<GoodsSku> goodsSkuList = goodsSkuMapper.getGoodsSkuByVagueGoodsName(goodsSku);
+
+        // 遍历商品集合
+        for (GoodsSku goods : goodsSkuList) {
+            // 通过超市id、商品id、状态为“生效”中查询纠错表
+            Correct param = new Correct();
+            param.setSupermarketId(goodsSku.getSupermarketId());
+            param.setGoodsSkuId(Long.valueOf(goods.getGoodsSkuId()));
+            param.setStatus(CorrectStatus.AFFECTED.toString());
+            Correct currentCorrect = correctMapper.query(param).stream().findFirst().orElse(null);
+            // 当查询结果不为null时，表示该商品有价格
+            if (currentCorrect != null) {
+                Correct param1 = new Correct();
+                param1.setSupermarketId(goodsSku.getSupermarketId());
+                param1.setGoodsSkuId(Long.valueOf(goods.getGoodsSkuId()));
+                List<String> statusList = new ArrayList<>();
+                statusList.add(CorrectStatus.WAIT_AUDIT.toString());
+                statusList.add(CorrectStatus.AUDIT_SUCCESS.toString());
+                param1.setStatusList(statusList);
+                Correct currentCorrect1 = correctMapper.query(param1).stream().findFirst().orElse(null);
+                if (currentCorrect1 != null) {
+                    goods.setCorrectType("VIEW");
+                    goods.setGoodsPrice(currentCorrect.getPrice().toString());
+                    goods.setCorrectId(currentCorrect1.getCorrectId());
+                } else {
+                    goods.setCorrectType("CORRECT");
+                    //获取该商品的超市价格
+                    SupermarketGoods currentSupermarketGoods = supermarketGoodsMapper.getSupermarketGoodsBysupermarketIdAndgoodsSkuId(currentCorrect.getGoodsSkuId().intValue(), currentCorrect.getSupermarketId());
+                    if (currentSupermarketGoods != null) {
+                        goods.setGoodsPrice(currentSupermarketGoods.getPrice().toString());
+                        goods.setCorrectId(currentCorrect.getCorrectId());
+                        goods.setGoodsSkuId(currentCorrect.getGoodsSkuId());
+                    }
+                }
+
+                // 否则表示该商品无价格
+            } else {
+                // 通过超市id和商品id查询纠错表，如果结果为null则显示分享按钮
+                List<Correct> correctList = correctMapper.selectCorrect(goodsSku.getSupermarketId(),
+                        Long.valueOf(goods.getGoodsSkuId()));
+                if (correctList.size() <= 0) {
+                    goods.setCorrectType("SHARE");
+                    // 否则遍历集合
+                } else {
+                    Correct param2 = new Correct();
+                    param2.setSupermarketId(goodsSku.getSupermarketId());
+                    param2.setGoodsSkuId(Long.valueOf(goods.getGoodsSkuId()));
+                    List<String> statusList = new ArrayList<>();
+                    statusList.add(CorrectStatus.WAIT_AUDIT.toString());
+                    statusList.add(CorrectStatus.AUDIT_SUCCESS.toString());
+                    param2.setStatusList(statusList);
+                    Correct currentCorrect2 = correctMapper.query(param2).stream().findFirst().orElse(null);
+                    if (currentCorrect2 != null) {
+                        goods.setCorrectType("VIEW");
+                        goods.setCorrectId(currentCorrect2.getCorrectId());
+                    } else {
+                        goods.setCorrectType("SHARE");
+                    }
+                }
+            }
+
+            goods.setImage(ImageUtil.dealToShow(goods.getImage()));
+
+            }
+        return goodsSkuList;
+        }
+
+
 
 	//自定义下单
 	@Override
@@ -1336,6 +1402,98 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
         workbook.write(fOut);
         fOut.flush();
         fOut.close();
+    }
+
+
+
+    //根据超市id商品名品牌名规格模糊查询无价格的商品信息(分享纠错合并)
+    @Override
+    public List<GoodsSku> getGoodsSkuNotPrice(GoodsSku goodsSku) {
+
+        List<GoodsSku> goodsSkuList = goodsSkuMapper.getGoodsSkuNotPrice(goodsSku);
+
+        // 遍历商品集合
+        for (GoodsSku goods : goodsSkuList) {
+                // 通过超市id和商品id查询纠错表，如果结果为null则显示分享按钮
+                List<Correct> correctList = correctMapper.selectCorrect(goodsSku.getSupermarketId(),
+                        Long.valueOf(goods.getGoodsSkuId()));
+                if (correctList.size() <= 0) {
+                    goods.setCorrectType("SHARE");
+                    // 否则遍历集合
+                } else {
+                    Correct param2 = new Correct();
+                    param2.setSupermarketId(goodsSku.getSupermarketId());
+                    param2.setGoodsSkuId(Long.valueOf(goods.getGoodsSkuId()));
+                    List<String> statusList = new ArrayList<>();
+                    statusList.add(CorrectStatus.WAIT_AUDIT.toString());
+                    statusList.add(CorrectStatus.AUDIT_SUCCESS.toString());
+                    param2.setStatusList(statusList);
+                    Correct currentCorrect2 = correctMapper.query(param2).stream().findFirst().orElse(null);
+                    if (currentCorrect2 != null) {
+                        goods.setCorrectType("VIEW");
+                        goods.setCorrectId(currentCorrect2.getCorrectId());
+                    } else {
+                        goods.setCorrectType("SHARE");
+                    }
+
+            }
+
+            goods.setImage(ImageUtil.dealToShow(goods.getImage()));
+
+        }
+        return goodsSkuList;
+    }
+
+
+    @Override
+    public List<GoodsSku> getHighClickNoPriceGoodsList(GoodsSku goodsSku) {
+       //设置开始时间和七天后结束时间
+        Date nowTime = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(nowTime);//设置起时间
+        cal.set(Calendar.DAY_OF_YEAR,cal.get(Calendar.DAY_OF_YEAR)-7);//增加7天
+        Date afterSevenDay = cal.getTime();
+
+        //获取点击率前100的商品id集合
+        SkuClickNum skuClickNum = new SkuClickNum();
+        skuClickNum.setStartTime(afterSevenDay);
+        skuClickNum.setEndTime(nowTime);
+        List<Long> skuIdsByClientNum = skuClickNumService.getSkuIdsByClientNum(skuClickNum);
+
+        //获取相应的商品集合
+        goodsSku.setGoodsSkuIdList(skuIdsByClientNum);
+        List<GoodsSku> goodsSkusList = goodsSkuMapper.selectBySupermerketIdAndGoodsSkuIdList(goodsSku);
+
+        for(GoodsSku goods:goodsSkusList){
+            // 通过超市id和商品id查询纠错表，如果结果为null则显示分享按钮
+            List<Correct> correctList = correctMapper.selectCorrect(goodsSku.getSupermarketId(),
+                    Long.valueOf(goods.getGoodsSkuId()));
+            if (correctList.size() <= 0) {
+                goods.setCorrectType("SHARE");
+                // 否则遍历集合
+            } else {
+                Correct param2 = new Correct();
+                param2.setSupermarketId(goodsSku.getSupermarketId());
+                param2.setGoodsSkuId(Long.valueOf(goods.getGoodsSkuId()));
+                List<String> statusList = new ArrayList<>();
+                statusList.add(CorrectStatus.WAIT_AUDIT.toString());
+                statusList.add(CorrectStatus.AUDIT_SUCCESS.toString());
+                param2.setStatusList(statusList);
+                Correct currentCorrect2 = correctMapper.query(param2).stream().findFirst().orElse(null);
+                if (currentCorrect2 != null) {
+                    goods.setCorrectType("VIEW");
+                    goods.setCorrectId(currentCorrect2.getCorrectId());
+                } else {
+                    goods.setCorrectType("SHARE");
+                }
+            }
+
+            //图片处理
+            String goodsImage = ImageUtil.dealToShow(goods.getImage());
+            goods.setImage(goodsImage);
+        }
+
+        return goodsSkusList;
     }
 
 }
