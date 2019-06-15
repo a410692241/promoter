@@ -320,11 +320,11 @@ public class CorrectServiceImpl implements CorrectService {
         param.setCorrectId(correct.getCorrectId());
         Correct currentCorrect = correctMapper.query(param).stream().findFirst().orElse(null);
 
-        //判断用户不能撤回别人正在纠错的记录
+       /* //判断用户不能撤回别人正在纠错的记录
         if (OperatorType.USER.toString().equals(userType) && !(correct.getUserId().equals(currentCorrect.getUserId()))) {
             throw new BusinessException(ErrorType.NOT_YOUR_CORRECT);
         }
-
+*/
         if (!(CorrectStatus.WAIT_AUDIT.toString().equals(currentCorrect.getStatus()) ||
                 CorrectStatus.AUDIT_SUCCESS.toString().equals(currentCorrect.getStatus()))) {
             throw new BusinessException(ErrorType.HAVE_MAN_RECALL_ERROR);
