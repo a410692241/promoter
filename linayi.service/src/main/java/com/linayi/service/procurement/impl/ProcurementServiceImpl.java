@@ -119,7 +119,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementsList(procurementTask);
 		if (procurementTaskList != null && procurementTaskList.size() > 0){
 			for (ProcurementTask task : procurementTaskList) {
-				if(task != null){
+				if(task != null && "PROCURING".equals(procureStatus)){
 					if(task.getProcureMergeNo() == null || "".equals(task.getProcureMergeNo())){
 						//没有采买任务合并编号
                         ProcurementTask procurementTask1 = new ProcurementTask();
