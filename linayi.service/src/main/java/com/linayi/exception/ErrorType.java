@@ -21,6 +21,7 @@ public enum ErrorType {
     THE_ACCOUNT_HAS_BEAN_CHANGED(1903, "该账号数据已被转移,请使用新账号!"),
     THE_PHONE_NUMBER_HAS_BEEN_BOUND(1904, "该手机号已被绑定!"),
     THE_ACCOUNT_HAS_BEEN_BOUND_TO_THE_PHONE_NUMBER(1904, "该账号已绑定手机号!"),
+    THE_MOBILE_PHONE_NUMBER_HAS_BEEN_BOUND_TO_WECHAT(1904, "该手机号已经绑定微信!"),
     THE_PHONE_NUMBER_HAS_BEEN_REGIST(1904, "该手机号已被注册!"),
     MESSAGE_FAILED_TO_SEND(1905, "短信发送失败!"),
     TOKEN_DISABLED(1906, "accessToken失效!"),
