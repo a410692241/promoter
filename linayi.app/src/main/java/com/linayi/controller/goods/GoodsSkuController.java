@@ -2,15 +2,16 @@ package com.linayi.controller.goods;
 
 
 import com.linayi.controller.BaseController;
-import com.linayi.dao.goods.SkuClickNumMapper;
 import com.linayi.entity.account.Account;
 import com.linayi.entity.goods.GoodsSku;
+import com.linayi.entity.recode.SupermarketGoodsRecord;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.goods.GoodsSkuService;
 import com.linayi.service.goods.SkuClickNumService;
 import com.linayi.service.goods.SupermarketGoodsService;
+import com.linayi.service.recode.SupermarketGoodsRecordService;
 import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.util.PageResult;
 import com.linayi.util.ParamValidUtil;
@@ -22,13 +23,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
 @RestController
-@RequestMapping("/goods/goods")
+    @RequestMapping("/goods/goods")
 public class GoodsSkuController extends BaseController {
     @Autowired
     private GoodsSkuService goodsSkuService;
@@ -38,6 +40,8 @@ public class GoodsSkuController extends BaseController {
     private SupermarketService supermarketService;
     @Autowired
     private SkuClickNumService skuClickNumService;
+    @Autowired
+    private SupermarketGoodsRecordService supermarketGoodsRecordService;
 
     @RequestMapping("/upload.do")
     @ResponseBody
@@ -67,8 +71,8 @@ public class GoodsSkuController extends BaseController {
     @ResponseBody
     public Object showOtherSupermarketPrice(@RequestBody Map<String, Object> param) {
         try {
-            Integer goodsSkuId = (Integer) param.get("goodsSkuId");
-            Map<String, Object> map = supermarketGoodsService.getPriceSupermarketByGoodsSkuId(super.getUserId(), goodsSkuId);
+            Long goodsSkuId = Long.parseLong(param.get("goodsSkuId") + "");
+            Map<String, Object> map = supermarketGoodsService.getPriceSupermarketByGoodsSkuId(super.getUserId(), goodsSkuId.intValue());
             skuClickNumService.updateClickNum(goodsSkuId);
             return new ResponseData(map);
         } catch (Exception e) {
@@ -173,10 +177,15 @@ public class GoodsSkuController extends BaseController {
     }
 
 
-    //根据商品名模糊搜索商品不包含价格分享价格用(已测试)
+    //根据商品名品牌id属性条形码模糊搜索商品(分享纠错合并)
     @RequestMapping("/vagueGoodsSku.do")
     public Object showVagueGoodsSku(@RequestBody GoodsSku goodsSku) {
         try {
+            //如果前端没传超市id就返回空
+            if (goodsSku.getSupermarketId()==null){
+                return new ResponseData(new ArrayList<>());
+            }
+
             if (goodsSku.getPageSize() == null) {
                 goodsSku.setPageSize(8);
             }
@@ -314,5 +323,105 @@ public class GoodsSkuController extends BaseController {
         }
         return new ResponseData("F",ErrorType.SYSTEM_ERROR.getErrorMsg());
     }
+
+    /**通过超市名模糊查找超市
+     * @param
+     * @return
+     */
+    @RequestMapping("getSupermarketByName.do")
+    @ResponseBody
+    public Object getSupermarketByName(@RequestBody Supermarket supermarket) {
+        try {
+            return new ResponseData(supermarketService.getSupermarketByName(supermarket));
+        } catch (BusinessException e) {
+            return new ResponseData(e.getErrorType()).toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseData(e);
+        }
+    }
+
+
+    /**
+     * 根据超市获取该超市没有价格的商品(分享纠错)
+     * @param goodsSku
+     * @return
+     */
+    @RequestMapping("/getGoodsSkuNotPrice.do")
+    public Object getGoodsSkuNotPrice(@RequestBody GoodsSku goodsSku) {
+        try {
+            //如果前端没传超市id就返回空
+            if (goodsSku.getSupermarketId()==null){
+                return new ResponseData(new ArrayList<>());
+            }
+
+            if (goodsSku.getPageSize() == null) {
+                goodsSku.setPageSize(8);
+            }
+            List<GoodsSku> vagueGoodsSkuList = goodsSkuService.getGoodsSkuNotPrice(goodsSku);
+            Integer totalPage = (int) Math.ceil(Double.valueOf(goodsSku.getTotal()) / Double.valueOf(goodsSku.getPageSize()));
+            if (totalPage <= 0) {
+                totalPage++;
+            }
+            Map<String, Object> map = new HashMap<>();
+            map.put("data", vagueGoodsSkuList);
+            map.put("totalPage", totalPage);
+            map.put("currentPage", goodsSku.getCurrentPage());
+            return new ResponseData(map);
+        } catch (Exception e) {
+            return new ResponseData(ErrorType.SYSTEM_ERROR);
+
+        }
+    }
+
+    //最近七天点击率前100的无价格商品
+    @RequestMapping("/highclicknopricegoods.do")
+    public Object highclicknopricegoods(@RequestBody GoodsSku goodsSku) {
+        try {
+            //如果前端没传超市id就返回空
+            if (goodsSku.getSupermarketId()==null){
+                return new ResponseData(new ArrayList<>());
+            }
+
+            if (goodsSku.getPageSize() == null) {
+                goodsSku.setPageSize(8);
+            }
+
+            List<GoodsSku> highClickNoPriceGoodsList = goodsSkuService.getHighClickNoPriceGoodsList(goodsSku);
+            Integer totalPage = (int) Math.ceil(Double.valueOf(goodsSku.getTotal()) / Double.valueOf(goodsSku.getPageSize()));
+            if (totalPage <= 0) {
+                totalPage++;
+            }
+            Map<String, Object> map = new HashMap<>();
+            map.put("data", highClickNoPriceGoodsList);
+            map.put("totalPage", totalPage);
+            map.put("currentPage", goodsSku.getCurrentPage());
+
+            return new ResponseData(map);
+        } catch (BusinessException e) {
+            return new ResponseData(e.getErrorType()).toString();
+        } catch (Exception e) {
+            return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+        }
+    }
+
+
+    /**
+     * 分享点击暂无价格插入记录数据
+     * @param supermarketGoodsRecord
+     * @return
+     */
+    @RequestMapping("insertRecode.do")
+    @ResponseBody
+    public Object insertRecode(@RequestBody SupermarketGoodsRecord supermarketGoodsRecord) {
+        try {
+            supermarketGoodsRecordService.insert(supermarketGoodsRecord);
+            return new ResponseData("SUCCESS");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseData(e);
+        }
+    }
+
 
 }

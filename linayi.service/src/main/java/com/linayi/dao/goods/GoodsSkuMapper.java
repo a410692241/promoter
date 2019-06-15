@@ -63,7 +63,7 @@ public interface GoodsSkuMapper {
     	List<Integer>getGoodsSkuIdBygoodsSku();
     	
     /**
-              * 自定义搜索下单	
+              * 自定义搜索下单
      * @param brandId   品牌id
      * @param goodsName 商品名
      * @param valueName 属性名
@@ -136,4 +136,22 @@ public interface GoodsSkuMapper {
 	 * @return
 	 */
 	List<GoodsSku> getBackstageDifferenceRanking(GoodsSku goodsSku);
+
+
+	/**
+	 * 根据超市id和商品id集合查询商品
+	 * @param goodsSku
+	 * @param goodsSkuIdList
+	 * @return
+	 */
+	List<GoodsSku> selectBySupermerketIdAndGoodsSkuIdList(GoodsSku goodsSku);
+
+
+
+	/**
+	 * 根据超市id获取无价格的商品信息
+	 * @param goodsSku
+	 * @return
+	 */
+	List<GoodsSku> getGoodsSkuNotPrice(GoodsSku goodsSku);
 }

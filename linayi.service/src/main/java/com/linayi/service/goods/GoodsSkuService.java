@@ -203,4 +203,18 @@ public interface GoodsSkuService {
     List<GoodsSku> getGoodsSkuBySkuIdList(List<Integer> skuIdsByClientNum);
 
 	public void exportAffectedPriceData(Correct correct, HttpServletRequest request, HttpServletResponse response) throws Exception;
+
+	/**
+	 * 根据超市id获取无价格的商品信息
+	 * @param goodsSku
+	 * @return
+	 */
+	List<GoodsSku> getGoodsSkuNotPrice(GoodsSku goodsSku);
+
+	/**
+	 * 获取最近七天内点击率前100无价格商品
+	 * @param goodsSku
+	 * @return
+	 */
+	List<GoodsSku> getHighClickNoPriceGoodsList(GoodsSku goodsSku);
 }
