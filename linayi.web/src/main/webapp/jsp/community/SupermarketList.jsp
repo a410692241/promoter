@@ -28,6 +28,12 @@
                             <input ng-model="search.name" type="text" class="form-control">
                         </div>
                     </div>
+                    <div class="form-group form-group-margin">
+                        <div class="input-group">
+                            <span class="input-group-addon">采买员ID</span>
+                            <input ng-model="search.procurerId" type="text" class="form-control">
+                        </div>
+                    </div>
 	    			<div class="form-group form-group-margin">
                         <div class="input-group">
                             <span class="input-group-addon"> 创建时间</span>

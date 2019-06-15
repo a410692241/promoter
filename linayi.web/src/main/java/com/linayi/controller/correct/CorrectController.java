@@ -256,7 +256,7 @@ public class CorrectController extends BaseController {
      * excel 导出
      */
     @RequestMapping(value = "/exportShareRecord.do", method = RequestMethod.GET)
-    public void exportExcel(Correct correct , HttpServletRequest request, HttpServletResponse response) {
+    public void exportExcel(Correct correct, HttpServletRequest request, HttpServletResponse response) {
         List<Correct> list = correctService.page(correct);
 
         try {
@@ -264,7 +264,7 @@ public class CorrectController extends BaseController {
             //而实际上只要你的内容正确，文件后缀名之类可以随便改，就算你指定是下载excel文件，下载时我也可以把他改成pdf等。
             response.setContentType("application/vnd.ms-excel");
             // 传递中文参数编码
-            String codedFileName = java.net.URLEncoder.encode("分享纠错信息","UTF-8");
+            String codedFileName = java.net.URLEncoder.encode("分享纠错信息", "UTF-8");
             response.setHeader("content-disposition", "attachment;filename=" + codedFileName + ".xls");
             // 定义一个工作薄
             Workbook workbook = new HSSFWorkbook();
@@ -294,35 +294,35 @@ public class CorrectController extends BaseController {
             // 遍历输出
             for (int i = 1; i <= list.size(); i++) {
                 Correct correct1 = list.get(i - 1);
-                if("WAIT_AUDIT".equals(correct1.getStatus())){
+                if ("WAIT_AUDIT".equals(correct1.getStatus())) {
                     correct1.setStatus("待审核");
-                }else if("AUDIT_SUCCESS".equals(correct1.getStatus())){
+                } else if ("AUDIT_SUCCESS".equals(correct1.getStatus())) {
                     correct1.setStatus("审核通过");
-                }else if("AUDIT_SUCCESS".equals(correct1.getStatus())){
+                } else if ("AUDIT_SUCCESS".equals(correct1.getStatus())) {
                     correct1.setStatus("审核通过");
-                }else if("RECALL".equals(correct1.getStatus())){
+                } else if ("RECALL".equals(correct1.getStatus())) {
                     correct1.setStatus("撤回");
-                }else if("AUDIT_FAIL".equals(correct1.getStatus())){
+                } else if ("AUDIT_FAIL".equals(correct1.getStatus())) {
                     correct1.setStatus("审核不通过");
-                }else if("AFFECTED".equals(correct1.getStatus())){
+                } else if ("AFFECTED".equals(correct1.getStatus())) {
                     correct1.setStatus("已生效");
-                }else if("EXPIRED".equals(correct1.getStatus())){
+                } else if ("EXPIRED".equals(correct1.getStatus())) {
                     correct1.setStatus("已过期");
                 }
 
-                if("SHARE".equals(correct1.getType())){
+                if ("SHARE".equals(correct1.getType())) {
                     correct1.setType("分享");
-                }else if("CORRECT".equals(correct1.getType())){
+                } else if ("CORRECT".equals(correct1.getType())) {
                     correct1.setType("纠错");
                 }
 
-                if("NORMAL".equals(correct1.getPriceType())){
+                if ("NORMAL".equals(correct1.getPriceType())) {
                     correct1.setPriceType("正常价");
-                }else if("PROMOTION".equals(correct1.getPriceType())){
+                } else if ("PROMOTION".equals(correct1.getPriceType())) {
                     correct1.setPriceType("促销价");
-                }else if("DEAL".equals(correct1.getPriceType())){
+                } else if ("DEAL".equals(correct1.getPriceType())) {
                     correct1.setPriceType("处理价");
-                }else if("MEMBER".equals(correct1.getPriceType())){
+                } else if ("MEMBER".equals(correct1.getPriceType())) {
                     correct1.setPriceType("会员价");
                 }
 
@@ -334,11 +334,11 @@ public class CorrectController extends BaseController {
                 row.createCell(4).setCellValue(correct1.getFullName());
                 row.createCell(5).setCellValue(correct1.getName());
                 row.createCell(6).setCellValue(correct1.getType());
-                row.createCell(7).setCellValue(correct1.getPrice()/100.00);
+                row.createCell(7).setCellValue(correct1.getPrice() / 100.00);
                 row.createCell(8).setCellValue(correct1.getPriceType());
-                row.createCell(9).setCellValue(DateUtil.date2String(correct1.getStartTime(),pattern));
-                row.createCell(10).setCellValue(DateUtil.date2String(correct1.getEndTime(),pattern));
-                row.createCell(11).setCellValue(DateUtil.date2String(correct1.getCreateTime(),pattern));
+                row.createCell(9).setCellValue(DateUtil.date2String(correct1.getStartTime(), pattern));
+                row.createCell(10).setCellValue(DateUtil.date2String(correct1.getEndTime(), pattern));
+                row.createCell(11).setCellValue(DateUtil.date2String(correct1.getCreateTime(), pattern));
             }
             OutputStream fOut = response.getOutputStream();
             workbook.write(fOut);
@@ -358,76 +358,76 @@ public class CorrectController extends BaseController {
         cal.setTime(nowTime);//设置起时间
         cal.add(Calendar.YEAR, 1);//增加一年
         Date afterOneYearTime = cal.getTime();
-        try{
-        if (
-                (correct.getPrice() == null || correct.getPrice() <= 0) ||
-                        (correct.getGoodsSkuId() == null || correct.getGoodsSkuId() <= 0) ||
-                        (correct.getSupermarketId() == null || correct.getSupermarketId() <= 0)
-        ) {
-            throw new BusinessException(ErrorType.INCOMPLETE_INFO);
-        }
-            if(correct.getPrice()>=210000000){
-            System.out.println("分享价格参数溢出,:");
-            throw new Exception();
-        }
-
-        //后台分享部分数据处理,设置默认开始时间为当前时间，结束时间为一年后
-        if (correct.getStartTime() == null) {
-            correct.setStartTime(nowTime);
-        }
-        if (correct.getEndTime() == null) {
-            correct.setEndTime(afterOneYearTime);
-        }
-        if (correct.getPriceType() == null || "".equals(correct.getPriceType())) {
-            correct.setPriceType(PriceType.NORMAL.toString());
-        }
-        String userType = OperatorType.ADMIN.toString();
-        AdminAccount adminAccount = (AdminAccount) httpRequest.getSession().getAttribute("loginAccount");
-                    Integer creatorId = adminAccount.getAccountId();
-        correct.setUserId(creatorId);
-
-        if ("SHARE".equals(correct.getCorrectType())) {
-            if(correct.getCorrectId() != null ){
-                correct.setCorrectId(null);
+        try {
+            if (
+                    (correct.getPrice() == null || correct.getPrice() <= 0) ||
+                            (correct.getGoodsSkuId() == null || correct.getGoodsSkuId() <= 0) ||
+                            (correct.getSupermarketId() == null || correct.getSupermarketId() <= 0)
+            ) {
+                throw new BusinessException(ErrorType.INCOMPLETE_INFO);
             }
-            // 线程安全并发处理
-            initVersion(correct);
-            correctService.share(correct, file, OperatorType.ADMIN.getOperatorTypeName());
-        }
-        if ("CORRECT".equals(correct.getCorrectType())) {
-            if(correct.getCorrectId() != null ){
-                correct.setParentId(correct.getCorrectId());
-                correct.setCorrectId(null);
+            if (correct.getPrice() >= 210000000) {
+                System.out.println("分享价格参数溢出,:");
+                throw new Exception();
             }
-            correctService.correct(correct, file, OperatorType.ADMIN.getOperatorTypeName());
-        }
 
-        if ("VIEW".equals(correct.getCorrectType())) {
-            //
-            //调用撤回方法
-            Correct currentCorrect = correctService.recall(correct, userType);
+            //后台分享部分数据处理,设置默认开始时间为当前时间，结束时间为一年后
+            if (correct.getStartTime() == null) {
+                correct.setStartTime(nowTime);
+            }
+            if (correct.getEndTime() == null) {
+                correct.setEndTime(afterOneYearTime);
+            }
+            if (correct.getPriceType() == null || "".equals(correct.getPriceType())) {
+                correct.setPriceType(PriceType.NORMAL.toString());
+            }
+            String userType = OperatorType.ADMIN.toString();
+            AdminAccount adminAccount = (AdminAccount) httpRequest.getSession().getAttribute("loginAccount");
+            Integer creatorId = adminAccount.getAccountId();
+            correct.setUserId(creatorId);
 
-            //撤回后,重新通过超市id和商品id查询该商品的状态(可纠错,可分享,可查看)
-            Supermarket supermarket = supermarketGoodsService.getCorrectTypeBySupermarketIdAndgoodsSkuId(correct.getGoodsSkuId(),correct.getSupermarketId());
-            if("CORRECT".equals(supermarket.getCorrectType())){
-                if(correct.getCorrectId() != null ){
+            if ("SHARE".equals(correct.getCorrectType())) {
+                if (correct.getCorrectId() != null) {
                     correct.setCorrectId(null);
                 }
-                correct.setParentId(currentCorrect.getParentId());
-                correctService.correct(correct, file, OperatorType.ADMIN.getOperatorTypeName());
-            }else if("SHARE".equals(supermarket.getCorrectType())){
-                if(correct.getCorrectId() != null ){
-                    correct.setCorrectId(null);
-                }
-
                 // 线程安全并发处理
                 initVersion(correct);
                 correctService.share(correct, file, OperatorType.ADMIN.getOperatorTypeName());
-            }else{
-                throw new BusinessException(ErrorType.SYSTEM_ERROR);
             }
-        }
-        return new ResponseData("修改价格成功！");
+            if ("CORRECT".equals(correct.getCorrectType())) {
+                if (correct.getCorrectId() != null) {
+                    correct.setParentId(correct.getCorrectId());
+                    correct.setCorrectId(null);
+                }
+                correctService.correct(correct, file, OperatorType.ADMIN.getOperatorTypeName());
+            }
+
+            if ("VIEW".equals(correct.getCorrectType())) {
+                //
+                //调用撤回方法
+                Correct currentCorrect = correctService.recall(correct, userType);
+
+                //撤回后,重新通过超市id和商品id查询该商品的状态(可纠错,可分享,可查看)
+                Supermarket supermarket = supermarketGoodsService.getCorrectTypeBySupermarketIdAndgoodsSkuId(correct.getGoodsSkuId(), correct.getSupermarketId());
+                if ("CORRECT".equals(supermarket.getCorrectType())) {
+                    if (correct.getCorrectId() != null) {
+                        correct.setCorrectId(null);
+                    }
+                    correct.setParentId(currentCorrect.getParentId());
+                    correctService.correct(correct, file, OperatorType.ADMIN.getOperatorTypeName());
+                } else if ("SHARE".equals(supermarket.getCorrectType())) {
+                    if (correct.getCorrectId() != null) {
+                        correct.setCorrectId(null);
+                    }
+
+                    // 线程安全并发处理
+                    initVersion(correct);
+                    correctService.share(correct, file, OperatorType.ADMIN.getOperatorTypeName());
+                } else {
+                    throw new BusinessException(ErrorType.SYSTEM_ERROR);
+                }
+            }
+            return new ResponseData("修改价格成功！");
         } catch (BusinessException e) {
             return new ResponseData(e.getErrorType()).toString();
         } catch (Exception e) {
@@ -455,13 +455,13 @@ public class CorrectController extends BaseController {
 
     //获取纠错表其它超市价格
     @RequestMapping("/getOtherPrice.do")
-    public String getOtherPrice(Integer goodsSkuId, ModelMap modelMap){
+    public String getOtherPrice(Integer goodsSkuId, ModelMap modelMap) {
 
 
         List<Correct> otherPrice = correctService.getOtherPrice(goodsSkuId);
 
 
-        modelMap.addAttribute("otherPrice",otherPrice);
+        modelMap.addAttribute("otherPrice", otherPrice);
 
         return "/jsp/goods/otherPrice";
 
@@ -470,14 +470,14 @@ public class CorrectController extends BaseController {
     //获取商品生效最低价列表
     @RequestMapping("/getaffectedminprice.do")
     @ResponseBody
-    public Object getAffectedMinPrice(Correct correct){
+    public Object getAffectedMinPrice(Correct correct) {
         try {
             List<Correct> correctList = correctService.getAffectedMinPrice(correct);
 
             PageResult<Correct> page = new PageResult<>(correctList, correct.getTotal());
 
             return page;
-        }catch (Exception e) {
+        } catch (Exception e) {
             return new ResponseData(ErrorType.SYSTEM_ERROR);
 
         }
@@ -485,16 +485,48 @@ public class CorrectController extends BaseController {
 
     //获取商品所有超级价格
     @RequestMapping("/getSupermarketPrice.do")
-    public String getSupermarketPrice(SupermarketGoods supermarketGoods, ModelMap modelMap){
+    public String getSupermarketPrice(SupermarketGoods supermarketGoods, ModelMap modelMap) {
 
         List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getOtherPrice(supermarketGoods);
 
-        modelMap.addAttribute("supermarketPrice",supermarketGoodsList);
+        modelMap.addAttribute("supermarketPrice", supermarketGoodsList);
 
         return "/jsp/goods/supermarketPrice";
 
     }
 
-
+    //价格分享后立即生效
+    @RequestMapping("/immediatelyAffect.do")
+    @ResponseBody
+    public Object priceImmediatelyAffect(Correct correct, MultipartFile file, HttpServletRequest httpRequest) {
+        try {
+            if (
+                    (correct.getPrice() == null || correct.getPrice() <= 0) ||
+                            (correct.getGoodsSkuId() == null || correct.getGoodsSkuId() <= 0) ||
+                            (correct.getSupermarketId() == null || correct.getSupermarketId() <= 0)
+            ) {
+                throw new BusinessException(ErrorType.INCOMPLETE_INFO);
+            }
+            if (correct.getPrice() >= 210000000) {
+                System.out.println("分享价格参数溢出,:");
+                throw new Exception();
+            }
+            Date now = new Date();
+            //判断是否为生效和过期时间之间
+            if (now.after(correct.getStartTime()) && now.before(correct.getEndTime())) {
+                AdminAccount adminAccount = (AdminAccount) httpRequest.getSession().getAttribute("loginAccount");
+                Integer creatorId = adminAccount.getAccountId();
+                correct.setUserId(creatorId);
+                correctService.priceImmediatelyAffect(correct, file);
+                return new ResponseData("价格立即生效成功！");
+            }else {
+                return new ResponseData(ErrorType.INCOMPLETE_INFO).toString();
+            }
+        } catch (BusinessException e) {
+            return new ResponseData(e.getErrorType()).toString();
+        } catch (Exception e) {
+            return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+        }
+    }
 
 }

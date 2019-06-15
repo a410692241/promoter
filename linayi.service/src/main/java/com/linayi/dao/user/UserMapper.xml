@@ -232,6 +232,9 @@ where user_id=#{userId}
             <if test="openOrderManInfoId !=null ">
                 `open_order_man_info_id`=#{openOrderManInfoId},
             </if>
+            <if test="defaultReceiveAddressId !=null ">
+                `default_receive_address_id`=#{defaultReceiveAddressId} ,
+            </if>
         </set>
         where user_id=#{userId}
     </update>

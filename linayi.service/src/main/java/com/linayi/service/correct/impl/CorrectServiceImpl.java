@@ -21,6 +21,7 @@ import com.linayi.service.community.CommunitySupermarketService;
 import com.linayi.service.correct.CorrectService;
 import com.linayi.service.correct.SupermarketGoodsVersionService;
 import com.linayi.service.goods.GoodsSkuService;
+import com.linayi.service.goods.SupermarketGoodsService;
 import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.service.user.UserService;
 import com.linayi.util.*;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -57,6 +59,8 @@ public class CorrectServiceImpl implements CorrectService {
     private CommunitySupermarketService communitySupermarketService;
     @Resource
     private SupermarketGoodsVersionService supermarketGoodsVersionService;
+    @Autowired
+    private SupermarketGoodsService supermarketGoodsService;
 
 
     /*添加分享价格申请*/
@@ -106,10 +110,16 @@ public class CorrectServiceImpl implements CorrectService {
         SupermarketGoods supermarketGoods = new SupermarketGoods();
         supermarketGoods.setGoodsSkuId(correct.getGoodsSkuId());
         List<SupermarketGoods> supermarketGoodsList = supermarketGoodsMapper.getSupermarketGoods(supermarketGoods);
-        if (supermarketGoodsList.size() == 0 || correct.getPrice() < supermarketGoodsList.get(0).getPrice()){
+        if (supermarketGoodsList.size() == 0 || correct.getPrice() < supermarketGoodsList.get(0).getPrice()) {
             correct.setStatus(CorrectStatus.WAIT_AUDIT.toString());
-        }else{
+        } else {
             correct.setStatus(CorrectStatus.AUDIT_SUCCESS.toString());
+        }
+
+        //立即生效专用
+        if ("immediatelyAffect".equals(correct.getName())) {
+            correct.setStatus(CorrectStatus.AFFECTED.toString());
+            correct.setActualStartTime(new Date());
         }
 
         correct.setCreateTime(now);
@@ -149,7 +159,7 @@ public class CorrectServiceImpl implements CorrectService {
     /*添加纠错价格申请*/
     @Override
     @Transactional
-    public Correct correct(Correct correct, MultipartFile file,String userType) {
+    public Correct correct(Correct correct, MultipartFile file, String userType) {
         // 线程安全并发处理
         SupermarketGoodsVersion param1 = new SupermarketGoodsVersion();
         param1.setSupermarketId(correct.getSupermarketId());
@@ -178,7 +188,7 @@ public class CorrectServiceImpl implements CorrectService {
 //        }
 
         //图片处理
-        if(OperatorType.USER.toString().equals(userType)){
+        if (OperatorType.USER.toString().equals(userType)) {
             String path = null;
             try {
                 path = ImageUtil.handleUpload(file);
@@ -194,10 +204,30 @@ public class CorrectServiceImpl implements CorrectService {
         SupermarketGoods supermarketGoods = new SupermarketGoods();
         supermarketGoods.setGoodsSkuId(correct.getGoodsSkuId());
         List<SupermarketGoods> supermarketGoodsList = supermarketGoodsMapper.getSupermarketGoods(supermarketGoods);
-        if (supermarketGoodsList.size() == 0 || correct.getPrice() < supermarketGoodsList.get(0).getPrice()){
+        if (supermarketGoodsList.size() == 0 || correct.getPrice() < supermarketGoodsList.get(0).getPrice()) {
             correct.setStatus(CorrectStatus.WAIT_AUDIT.toString());
-        }else{
+        } else {
             correct.setStatus(CorrectStatus.AUDIT_SUCCESS.toString());
+        }
+
+        //立即生效专用
+        if ("immediatelyAffect".equals(correct.getName())) {
+            correct.setStatus(CorrectStatus.AFFECTED.toString());
+            correct.setActualStartTime(new Date());
+            Correct correctExpire = new Correct();
+            correctExpire.setCorrectId(correct.getParentId());
+            correctExpire.setActualEndTime(new Date());
+            correctExpire.setUpdateTime(new Date());
+            correctExpire.setStatus(CorrectStatus.EXPIRED.toString());
+            this.updateCorrect(correctExpire);
+            //插入纠错日志数据
+            CorrectLog correctLog = new CorrectLog();
+            correctLog.setCorrectId(correctExpire.getCorrectId());
+            correctLog.setOperatorId(correct.getUserId());
+            correctLog.setOperateStatus(CorrectStatus.EXPIRED.toString());
+            correctLog.setOperatorType(OperatorType.ADMIN.toString());
+            correctLog.setCreateTime(now);
+            correctLogMapper.insert(correctLog);
         }
 
         correct.setCreateTime(now);
@@ -214,7 +244,14 @@ public class CorrectServiceImpl implements CorrectService {
         //插入correct_log表
         CorrectLog correctLog = new CorrectLog();
         correctLog.setCorrectId(correct.getCorrectId());
-        correctLog.setOperateStatus(CorrectStatus.WAIT_AUDIT.toString());
+
+        //立即生效专用
+        if ("immediatelyAffect".equals(correct.getName())) {
+            correctLog.setOperateStatus(correct.getStatus());
+        } else {
+            correctLog.setOperateStatus(CorrectStatus.WAIT_AUDIT.toString());
+        }
+
         correctLog.setOperatorId(correct.getUserId());
         if (OperatorType.ADMIN.toString().equals(userType)) {
             correctLog.setOperatorType(userType);
@@ -283,11 +320,11 @@ public class CorrectServiceImpl implements CorrectService {
         param.setCorrectId(correct.getCorrectId());
         Correct currentCorrect = correctMapper.query(param).stream().findFirst().orElse(null);
 
-        //判断用户不能撤回别人正在纠错的记录
+       /* //判断用户不能撤回别人正在纠错的记录
         if (OperatorType.USER.toString().equals(userType) && !(correct.getUserId().equals(currentCorrect.getUserId()))) {
             throw new BusinessException(ErrorType.NOT_YOUR_CORRECT);
         }
-
+*/
         if (!(CorrectStatus.WAIT_AUDIT.toString().equals(currentCorrect.getStatus()) ||
                 CorrectStatus.AUDIT_SUCCESS.toString().equals(currentCorrect.getStatus()))) {
             throw new BusinessException(ErrorType.HAVE_MAN_RECALL_ERROR);
@@ -318,6 +355,7 @@ public class CorrectServiceImpl implements CorrectService {
         }
         return correctParam;
     }
+
     @Override
     @Transactional
     public void audit(Correct correct) {
@@ -349,8 +387,8 @@ public class CorrectServiceImpl implements CorrectService {
             correctLog.setCreateTime(now);
             correctLogMapper.insert(correctLog);
 
-            if(CorrectStatus.AUDIT_FAIL.toString().equals(correct.getStatus()) && OperatorType.USER.toString().equals(correct.getAuditType())){
-                if(correct.getParentId() ==null){
+            if (CorrectStatus.AUDIT_FAIL.toString().equals(correct.getStatus()) && OperatorType.USER.toString().equals(correct.getAuditType())) {
+                if (correct.getParentId() == null) {
                     Correct param2 = new Correct();
                     param2.setSupermarketId(correct.getSupermarketId());
                     param2.setGoodsSkuId(correct.getGoodsSkuId());
@@ -362,26 +400,24 @@ public class CorrectServiceImpl implements CorrectService {
                     Correct currentCorrect = correctMapper.query(param2).stream().findFirst().orElse(null);
                     if (currentCorrect != null) {
                         throw new BusinessException(ErrorType.HAVE_MAN_SHARE_ERROR);
-                    }else{
+                    } else {
                         correct.setType(CorrectType.SHARE.toString());
                     }
                 }
 
 
-                if(correct.getParentId() !=null){
+                if (correct.getParentId() != null) {
                     Correct param3 = new Correct();
                     param3.setCorrectId(correct.getParentId());
                     Correct currentCorrect2 = correctMapper.query(param3).stream().findFirst().orElse(null);
                     if (!CorrectStatus.AFFECTED.toString().equals(currentCorrect2.getStatus())) {
                         throw new BusinessException(ErrorType.HAVE_MAN_CORRECT_ERROR);
-                    }else{
+                    } else {
                         correct.setType(CorrectType.CORRECT.toString());
                     }
                 }
 
             }
-
-
 
 
         } else {
@@ -461,7 +497,7 @@ public class CorrectServiceImpl implements CorrectService {
             if (adminAccount != null) {
                 user.setRealName(adminAccount.getUserName());
                 user.setMobile(item.getMobile());
-            }else {
+            } else {
                 user.setRealName("");
                 user.setMobile("");
             }
@@ -485,8 +521,6 @@ public class CorrectServiceImpl implements CorrectService {
         });
         return corrects;
     }
-
-
 
 
     @Override
@@ -514,10 +548,10 @@ public class CorrectServiceImpl implements CorrectService {
         } else if (correct.getParentId() == null) {
             correct.setParentImage("http://www.laykj.cn/wherebuy/images/2019/04/26/10/0b3db243-6338-4c4c-99a8-ccb26b623837.jpg");
         }
-        if(CheckUtil.isNullEmpty(correct.getParentImage())){
+        if (CheckUtil.isNullEmpty(correct.getParentImage())) {
             correct.setParentImage("http://www.laykj.cn/wherebuy/images/2019/04/26/10/0b3db243-6338-4c4c-99a8-ccb26b623837.jpg");
         }
-        if(CheckUtil.isNullEmpty(correct.getImage())){
+        if (CheckUtil.isNullEmpty(correct.getImage())) {
             correct.setImage("http://www.laykj.cn/wherebuy/images/2019/04/26/10/0b3db243-6338-4c4c-99a8-ccb26b623837.jpg");
         }
         return correct;
@@ -539,7 +573,7 @@ public class CorrectServiceImpl implements CorrectService {
         return correctMapper.getCorrect(correct);
     }
 
-    public List<Correct> getCorrectExpire(Correct correct){
+    public List<Correct> getCorrectExpire(Correct correct) {
         return correctMapper.getCorrectExpire(correct);
     }
 
@@ -604,7 +638,7 @@ public class CorrectServiceImpl implements CorrectService {
                 for (Integer communityId : communityIdList) {
                     communitySupermarketService.toUpdateCommunityPrice(communityId, corrects.getGoodsSkuId().intValue());
                 }
-            }else{
+            } else {
                 throw new BusinessException(ErrorType.SYSTEM_ERROR);
             }
         }
@@ -633,9 +667,9 @@ public class CorrectServiceImpl implements CorrectService {
             Date endTime = corrects.getEndTime();
             Calendar ca = Calendar.getInstance();
             ca.setTime(endTime);
-            ca.set(Calendar.HOUR_OF_DAY,18);
-            ca.set(Calendar.MINUTE,0);
-            ca.set(Calendar.SECOND,0);
+            ca.set(Calendar.HOUR_OF_DAY, 18);
+            ca.set(Calendar.MINUTE, 0);
+            ca.set(Calendar.SECOND, 0);
             ca.add(Calendar.DAY_OF_MONTH, -1);
             endTime = ca.getTime();
             //判断是否已过期
@@ -752,10 +786,10 @@ public class CorrectServiceImpl implements CorrectService {
 //        }
         correct.setSupermarketId(correct.getSupermarket().getSupermarketId());
         //获取待审核列表
-       List<Correct> correctList = correctMapper.getWaitAuditCorrectBySupermerketId(correct);
+        List<Correct> correctList = correctMapper.getWaitAuditCorrectBySupermerketId(correct);
 
-       //图片处理
-        for(Correct currentCorrect:correctList){
+        //图片处理
+        for (Correct currentCorrect : correctList) {
             String Image = ImageUtil.dealToShow(currentCorrect.getGoodsImage());
             currentCorrect.setGoodsImage(Image);
 //            currentCorrect.setSupermarkerName(supermarket.getName());
@@ -769,7 +803,7 @@ public class CorrectServiceImpl implements CorrectService {
         List<Correct> correctList = correctMapper.getCorrectByAuditerId(correct);
 
         //图片处理
-        for(Correct currentCorrect:correctList){
+        for (Correct currentCorrect : correctList) {
             String Image = ImageUtil.dealToShow(currentCorrect.getGoodsImage());
             currentCorrect.setGoodsImage(Image);
 //            currentCorrect.setSupermarkerName(supermarket.getName());
@@ -782,12 +816,12 @@ public class CorrectServiceImpl implements CorrectService {
         List<Correct> correctList = correctMapper.getAffectedMinPrice(correct);
 //        List<Correct> resultList = new ArrayList<Correct>();
 
-       for(Correct thisCorrect:correctList){
-           Correct currentCorrect = correctMapper.getcorrectTimeByGoodsSkuId(thisCorrect.getGoodsSkuId(), supermarketMapper.getSupermarketIdByName(thisCorrect.getName())).stream().findFirst().orElse(null);
-           if(currentCorrect !=null){
-               thisCorrect.setActualStartTime(currentCorrect.getActualStartTime());
-               thisCorrect.setCreateTime(currentCorrect.getCreateTime());
-               System.out.println("开始时间："+thisCorrect.getActualStartTime());
+        for (Correct thisCorrect : correctList) {
+            Correct currentCorrect = correctMapper.getcorrectTimeByGoodsSkuId(thisCorrect.getGoodsSkuId(), supermarketMapper.getSupermarketIdByName(thisCorrect.getName())).stream().findFirst().orElse(null);
+            if (currentCorrect != null) {
+                thisCorrect.setActualStartTime(currentCorrect.getActualStartTime());
+                thisCorrect.setCreateTime(currentCorrect.getCreateTime());
+                System.out.println("开始时间：" + thisCorrect.getActualStartTime());
 
 //               resultList.add(thisCorrect);
 //
@@ -800,13 +834,159 @@ public class CorrectServiceImpl implements CorrectService {
 //                        resultList.remove(thisCorrect);
 //                    }
 //               }
-           }
-       }
+            }
+        }
 
-            //排序
+        //排序
 //            Collections.sort(correctList, (o1, o2) -> (int) (o2.getActualStartTime().compareTo(o1.getActualStartTime())));
 
-            return correctList;
+        return correctList;
+    }
+
+    @Override
+    @Transactional
+    public void priceImmediatelyAffect(Correct correct, MultipartFile file) {
+        correct.setName("immediatelyAffect");
+        String userType = OperatorType.ADMIN.toString();
+        if ("SHARE".equals(correct.getCorrectType())) {
+            if (correct.getCorrectId() != null) {
+                correct.setCorrectId(null);
+            }
+            // 线程安全并发处理
+            initVersion(correct);
+            correctService.share(correct, file, OperatorType.ADMIN.getOperatorTypeName());
+            //插入后，调整商品的最高价和最低价
+            correctService.adjustPriceMaxAndMin(correct);
+        }
+        if ("CORRECT".equals(correct.getCorrectType())) {
+            if (correct.getCorrectId() != null) {
+                correct.setParentId(correct.getCorrectId());
+                correct.setCorrectId(null);
+            }
+            correctService.correct(correct, file, OperatorType.ADMIN.getOperatorTypeName());
+            //插入后，调整商品的最高价和最低价
+            correctService.adjustPriceMaxAndMin(correct);
+        }
+
+        if ("VIEW".equals(correct.getCorrectType())) {
+            //调用撤回方法
+            Correct currentCorrect = correctService.recall(correct, userType);
+
+            //撤回后,重新通过超市id和商品id查询该商品的状态(可纠错,可分享,可查看)
+            Supermarket supermarket = supermarketGoodsService.getCorrectTypeBySupermarketIdAndgoodsSkuId(correct.getGoodsSkuId(), correct.getSupermarketId());
+            if ("CORRECT".equals(supermarket.getCorrectType())) {
+                if (correct.getCorrectId() != null) {
+                    correct.setCorrectId(null);
+                }
+                correct.setParentId(currentCorrect.getParentId());
+                correctService.correct(correct, file, OperatorType.ADMIN.getOperatorTypeName());
+                //插入后，调整商品的最高价和最低价
+                correctService.adjustPriceMaxAndMin(correct);
+            } else if ("SHARE".equals(supermarket.getCorrectType())) {
+                if (correct.getCorrectId() != null) {
+                    correct.setCorrectId(null);
+                }
+                // 线程安全并发处理
+                initVersion(correct);
+                correctService.share(correct, file, OperatorType.ADMIN.getOperatorTypeName());
+                //插入后，调整商品的最高价和最低价
+                correctService.adjustPriceMaxAndMin(correct);
+            } else {
+                throw new BusinessException(ErrorType.SYSTEM_ERROR);
+            }
+        }
+
+    }
+
+    @Override
+    public void adjustPriceMaxAndMin(Correct corrects) {
+        //删除旧超市商品价格表
+        supermarketGoodsMapper.deleteSupermarketGoods(corrects.getSupermarketId(), corrects.getGoodsSkuId());
+        //插入新超市商品价格表
+        SupermarketGoods supermarketGoods = new SupermarketGoods();
+        supermarketGoods.setSupermarketId(corrects.getSupermarketId());
+        supermarketGoods.setGoodsSkuId(corrects.getGoodsSkuId());
+        supermarketGoods.setPrice(corrects.getPrice());
+        supermarketGoods.setCorrectId(corrects.getCorrectId());
+        supermarketGoodsMapper.insert(supermarketGoods);
+        //调整商品的最高价和最低价
+        List<Integer> communityIdList = communitySupermarketService.getCommunityIdBysupermarketId(corrects.getSupermarketId());
+        for (Integer communityId : communityIdList) {
+            communitySupermarketService.toUpdateCommunityPrice(communityId, corrects.getGoodsSkuId().intValue());
+        }
+    }
+
+        public void initVersion(Correct correct) {
+            try {
+                SupermarketGoodsVersion version = new SupermarketGoodsVersion();
+                version.setSupermarketId(correct.getSupermarketId());
+                version.setGoodsSkuId(Integer.parseInt(correct.getGoodsSkuId() + ""));
+                supermarketGoodsVersionService.insert(version);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Transactional
+        @Override
+        public void updatePriceByApp(Correct correct, MultipartFile file){
+            if (
+                    (correct.getPrice() == null || correct.getPrice() <= 0) ||
+                            (correct.getGoodsSkuId() == null || correct.getGoodsSkuId() <= 0) ||
+                            (correct.getSupermarketId() == null || correct.getSupermarketId() <= 0)||
+                            (correct.getPriceType() == null )||
+            (correct.getStartTime() == null )||
+            (correct.getEndTime() == null )
+            ) {
+                throw new BusinessException(ErrorType.INCOMPLETE_INFO);
+            }
+            if(correct.getPrice()>=210000000){
+                System.out.println("分享价格参数溢出,:");
+                throw new BusinessException(ErrorType.SHAREPRICEOVERFLOW);
+            }
+
+            if ("SHARE".equals(correct.getCorrectType())) {
+                if(correct.getCorrectId() != null ){
+                    correct.setCorrectId(null);
+                }
+                // 线程安全并发处理
+                initVersion(correct);
+                correctService.share(correct, file, OperatorType.USER.getOperatorTypeName());
+            }
+            if ("CORRECT".equals(correct.getCorrectType())) {
+                if(correct.getCorrectId() != null ){
+                    correct.setParentId(correct.getCorrectId());
+                    correct.setCorrectId(null);
+                }
+                correctService.correct(correct, file, OperatorType.USER.getOperatorTypeName());
+            }
+
+            if ("VIEW".equals(correct.getCorrectType())) {
+                //
+                //调用撤回方法
+                Correct currentCorrect = correctService.recall(correct, OperatorType.USER.toString());
+
+                //撤回后,重新通过超市id和商品id查询该商品的状态(可纠错,可分享,可查看)
+                Supermarket supermarket = supermarketGoodsService.getCorrectTypeBySupermarketIdAndgoodsSkuId(correct.getGoodsSkuId(),correct.getSupermarketId());
+                if("CORRECT".equals(supermarket.getCorrectType())){
+                    if(correct.getCorrectId() != null ){
+                        correct.setCorrectId(null);
+                    }
+                    correct.setParentId(currentCorrect.getParentId());
+                    correctService.correct(correct, file, OperatorType.USER.getOperatorTypeName());
+                }else if("SHARE".equals(supermarket.getCorrectType())){
+                    if(correct.getCorrectId() != null ){
+                        correct.setCorrectId(null);
+                    }
+
+                    // 线程安全并发处理
+                    initVersion(correct);
+                    correctService.share(correct, file, OperatorType.USER.getOperatorTypeName());
+                }else{
+                    throw new BusinessException(ErrorType.SYSTEM_ERROR);
+                }
+            }
+
         }
 
 
