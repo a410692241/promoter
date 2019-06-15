@@ -342,7 +342,11 @@ public class CorrectController extends BaseController {
 			correct.setUserId(getUserId());
 			correct.setAuditType(OperatorType.USER.toString());
 			correctService.updatePriceByApp(correct,file);
-			return new ResponseData("价格修改成功");
+			if("CORRECT".equals(correct.getCorrectType())){
+				return new ResponseData("价格修改成功");
+			}else {
+				return new ResponseData("价格分享成功");
+			}
 		}catch (BusinessException e) {
 			return new ResponseData(e.getErrorType()).toString();
 		} catch (Exception e) {
