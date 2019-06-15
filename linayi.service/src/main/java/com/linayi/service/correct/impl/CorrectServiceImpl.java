@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -915,15 +916,78 @@ public class CorrectServiceImpl implements CorrectService {
         }
     }
 
-    public void initVersion(Correct correct) {
-        try {
-            SupermarketGoodsVersion version = new SupermarketGoodsVersion();
-            version.setSupermarketId(correct.getSupermarketId());
-            version.setGoodsSkuId(Integer.parseInt(correct.getGoodsSkuId() + ""));
-            supermarketGoodsVersionService.insert(version);
-        } catch (Exception e) {
-            e.printStackTrace();
+        public void initVersion(Correct correct) {
+            try {
+                SupermarketGoodsVersion version = new SupermarketGoodsVersion();
+                version.setSupermarketId(correct.getSupermarketId());
+                version.setGoodsSkuId(Integer.parseInt(correct.getGoodsSkuId() + ""));
+                supermarketGoodsVersionService.insert(version);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-    }
+
+        @Transactional
+        @Override
+        public void updatePriceByApp(Correct correct, MultipartFile file){
+            if (
+                    (correct.getPrice() == null || correct.getPrice() <= 0) ||
+                            (correct.getGoodsSkuId() == null || correct.getGoodsSkuId() <= 0) ||
+                            (correct.getSupermarketId() == null || correct.getSupermarketId() <= 0)||
+                            (correct.getPriceType() == null )||
+            (correct.getStartTime() == null )||
+            (correct.getEndTime() == null )
+            ) {
+                throw new BusinessException(ErrorType.INCOMPLETE_INFO);
+            }
+            if(correct.getPrice()>=210000000){
+                System.out.println("分享价格参数溢出,:");
+                throw new BusinessException(ErrorType.SHAREPRICEOVERFLOW);
+            }
+
+            if ("SHARE".equals(correct.getCorrectType())) {
+                if(correct.getCorrectId() != null ){
+                    correct.setCorrectId(null);
+                }
+                // 线程安全并发处理
+                initVersion(correct);
+                correctService.share(correct, file, OperatorType.USER.getOperatorTypeName());
+            }
+            if ("CORRECT".equals(correct.getCorrectType())) {
+                if(correct.getCorrectId() != null ){
+                    correct.setParentId(correct.getCorrectId());
+                    correct.setCorrectId(null);
+                }
+                correctService.correct(correct, file, OperatorType.USER.getOperatorTypeName());
+            }
+
+            if ("VIEW".equals(correct.getCorrectType())) {
+                //
+                //调用撤回方法
+                Correct currentCorrect = correctService.recall(correct, OperatorType.USER.toString());
+
+                //撤回后,重新通过超市id和商品id查询该商品的状态(可纠错,可分享,可查看)
+                Supermarket supermarket = supermarketGoodsService.getCorrectTypeBySupermarketIdAndgoodsSkuId(correct.getGoodsSkuId(),correct.getSupermarketId());
+                if("CORRECT".equals(supermarket.getCorrectType())){
+                    if(correct.getCorrectId() != null ){
+                        correct.setCorrectId(null);
+                    }
+                    correct.setParentId(currentCorrect.getParentId());
+                    correctService.correct(correct, file, OperatorType.USER.getOperatorTypeName());
+                }else if("SHARE".equals(supermarket.getCorrectType())){
+                    if(correct.getCorrectId() != null ){
+                        correct.setCorrectId(null);
+                    }
+
+                    // 线程安全并发处理
+                    initVersion(correct);
+                    correctService.share(correct, file, OperatorType.USER.getOperatorTypeName());
+                }else{
+                    throw new BusinessException(ErrorType.SYSTEM_ERROR);
+                }
+            }
+
+        }
+
 
 }

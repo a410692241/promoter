@@ -509,7 +509,7 @@ public class GoodsSkuController extends BaseController{
     public Object getSkuListByClickNum(SkuClickNum skuClickNum) throws Exception {
         try {
             //获取倒序goodsSkuId集合
-            List<Integer> skuIdsByClientNum = skuClickNumService.getSkuIdsByClientNum(skuClickNum);
+            List<Long> skuIdsByClientNum = skuClickNumService.getSkuIdsByClientNum(skuClickNum);
             return new ResponseData(skuIdsByClientNum);
         } catch (Exception e) {
             e.printStackTrace();

@@ -121,6 +121,58 @@ public class GoodsSku extends BaseEntity {
 
     private String orderBy; //按什么排序
 
+    private String correctType; //纠错类型
+
+    private Integer supermarketId; //超市id
+
+    private String goodsPrice;//商品价格
+
+    private Long correctId; //纠错id
+
+    /**
+     * [开始时间]
+     */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private Date startTime;
+
+    /**
+     * [结束时间]
+     */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private Date endTime;
+
+    public String getGoodsPrice() {
+        return goodsPrice;
+    }
+
+    public void setGoodsPrice(String goodsPrice) {
+        this.goodsPrice = goodsPrice;
+    }
+
+    public Long getCorrectId() {
+        return correctId;
+    }
+
+    public void setCorrectId(Long correctId) {
+        this.correctId = correctId;
+    }
+
+    public Integer getSupermarketId() {
+        return supermarketId;
+    }
+
+    public void setSupermarketId(Integer supermarketId) {
+        this.supermarketId = supermarketId;
+    }
+
+    public String getCorrectType() {
+        return correctType;
+    }
+
+    public void setCorrectType(String correctType) {
+        this.correctType = correctType;
+    }
+
     public String getOrderBy() {
         return orderBy;
     }
@@ -623,5 +675,21 @@ public class GoodsSku extends BaseEntity {
 
     public void setMaxPriceSuper(Integer maxPriceSuper) {
         this.maxPriceSuper = maxPriceSuper;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 }

@@ -8,7 +8,7 @@ public class SkuClickNum {
     /**
      * [商品id]
      */
-    private Integer goodsSkuId;
+    private Long goodsSkuId;
 
     /**
      * [点击日期]
@@ -25,11 +25,11 @@ public class SkuClickNum {
      */
     private Integer num;
 
-    public Integer getGoodsSkuId() {
+    public Long getGoodsSkuId() {
         return goodsSkuId;
     }
 
-    public void setGoodsSkuId(Integer goodsSkuId) {
+    public void setGoodsSkuId(Long goodsSkuId) {
         this.goodsSkuId = goodsSkuId;
     }
 
