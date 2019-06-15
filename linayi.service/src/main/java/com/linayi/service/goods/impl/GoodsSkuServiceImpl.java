@@ -31,6 +31,7 @@ import com.linayi.service.promoter.OpenMemberInfoService;
 import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.util.*;
 import com.linayi.vo.promoter.PromoterVo;
+import org.apache.http.nio.entity.SkipContentListener;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
@@ -1458,8 +1459,10 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
         SkuClickNum skuClickNum = new SkuClickNum();
         skuClickNum.setStartTime(afterSevenDay);
         skuClickNum.setEndTime(nowTime);
-        List<Long> skuIdsByClientNum = skuClickNumService.getSkuIdsByClientNum(skuClickNum);
-
+//        List<Long> skuIdsByClientNum = skuClickNumService.getSkuIdsByClientNum(skuClickNum);
+        Map<Long, Integer> skuClickNumMap = skuClickNumService.getSkuIdsByClientNum(skuClickNum);
+        Set<Long> skuIdsByClientNumSet = skuClickNumMap.keySet();
+        ArrayList skuIdsByClientNum = new ArrayList(skuIdsByClientNumSet);
         //获取相应的商品集合
         goodsSku.setGoodsSkuIdList(skuIdsByClientNum);
         List<GoodsSku> goodsSkusList = goodsSkuMapper.selectBySupermerketIdAndGoodsSkuIdList(goodsSku);
@@ -1491,6 +1494,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
             //图片处理
             String goodsImage = ImageUtil.dealToShow(goods.getImage());
             goods.setImage(goodsImage);
+            goods.setClickNum(skuClickNumMap.get(goods.getGoodsSkuId()));
         }
 
         return goodsSkusList;

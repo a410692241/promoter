@@ -129,6 +129,8 @@ public class GoodsSku extends BaseEntity {
 
     private Long correctId; //纠错id
 
+    private Integer clickNum;
+
     /**
      * [开始时间]
      */
@@ -691,5 +693,13 @@ public class GoodsSku extends BaseEntity {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public Integer getClickNum() {
+        return clickNum;
+    }
+
+    public void setClickNum(Integer clickNum) {
+        this.clickNum = clickNum;
     }
 }

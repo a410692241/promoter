@@ -1,7 +1,7 @@
 package com.linayi.service.goods.impl;
 
 import com.linayi.service.goods.SkuClickNumService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.sun.imageio.plugins.common.I18N;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -40,10 +40,20 @@ public class SkuClickNumServiceImpl implements SkuClickNumService {
 
 
     @Override
-    public List<Long> getSkuIdsByClientNum(SkuClickNum skuClickNum) {
+    public Map<Long, Integer> getSkuIdsByClientNum(SkuClickNum skuClickNum) {
         List<SkuClickNum> skuClickNums = skuClickNumMapper.selectConcatNum(skuClickNum);
-        List<Long> result = skuClickNums.stream().collect(Collectors.mapping(SkuClickNum::getGoodsSkuId, Collectors.toList()));
-        return result;
+        //转化集合key=goodsSKuId,value=clickNum的map
+        HashMap<Long, Integer> map = new LinkedHashMap<>();
+        skuClickNums.parallelStream().collect(Collectors.groupingBy(SkuClickNum::getGoodsSkuId,
+                Collectors.mapping(SkuClickNum::getNum, Collectors.toList()))).forEach((k, v) -> {
+            Integer num = v.stream().findFirst().orElse(null);
+            map.put(k, num);
+        });
+        //对map通过clickNum进行排序
+        HashMap<Long, Integer> sortedMap = new LinkedHashMap<>();
+        map.entrySet().stream().sorted(Map.Entry.comparingByValue((i1, i2) -> i2 - i1))
+                .forEachOrdered(x -> sortedMap.put(x.getKey(), x.getValue()));
+        return sortedMap;
     }
 
 }

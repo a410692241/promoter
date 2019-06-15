@@ -483,9 +483,6 @@
             <if test="auditerId !=null ">
                 `auditer_id` = #{auditerId,jdbcType=TIMESTAMP},
             </if>
-            <if test="auditType !=null ">
-                `audit_type` = #{auditType,jdbcType=VARCHAR},
-            </if>
         </trim>
         where `correct_id` = #{correctId}
     </update>
