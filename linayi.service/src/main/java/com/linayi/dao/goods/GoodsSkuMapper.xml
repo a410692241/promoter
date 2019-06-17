@@ -837,12 +837,23 @@
                     gs.update_time,
                     gs.create_time
                  FROM
-                    goods_sku gs LEFT JOIN supermarket_goods sg ON gs.goods_sku_id=sg.goods_sku_id
-                    AND sg.supermarket_id=#{supermarketId} LEFT JOIN supermarket_goods_record sgr
+                    goods_sku gs LEFT JOIN (
+                      SELECT
+                            goods_sku_id
+                      FROM
+                            correct
+                       WHERE
+                            supermarket_id=#{supermarketId}
+                        AND (status='AFFECTED'
+                            OR status = 'WAIT_AUDIT'
+                            OR status = 'AUDIT_SUCCESS')
+                        GROUP BY
+                            goods_sku_id
+                            ) cc ON cc.goods_sku_id = gs.goods_sku_id LEFT JOIN supermarket_goods_record sgr
                     ON sgr.goods_sku_id=gs.goods_sku_id AND sgr.supermarket_id=#{supermarketId}
             <where>
                       gs.STATUS='NORMAL'
-                AND   sg.goods_sku_id is null
+                AND   cc.goods_sku_id is null
                 AND   (sgr.goods_sku_id is null AND sgr.supermarket_id is null)
                 <if test="brandName!=null and brandName!=''">
                     and gs.full_name like concat('%',#{brandName},'%')
