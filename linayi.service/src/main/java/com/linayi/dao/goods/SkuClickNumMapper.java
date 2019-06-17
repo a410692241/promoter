@@ -15,8 +15,9 @@ public interface SkuClickNumMapper {
     SkuClickNum selectByPrimaryKey(@Param("goodsSkuId") Integer goodsSkuId, @Param("clickDate") Date clickDate);
 
     List<SkuClickNum> selectByAll(SkuClickNum skuClickNum);
-
     int updateByPrimaryKeySelective(SkuClickNum record);
 
     int updateByPrimaryKey(SkuClickNum record);
+
+    List<SkuClickNum> selectConcatNum(SkuClickNum skuClickNum);
 }

@@ -544,15 +544,14 @@
             barcode,
             category_id,
             brand_id,
-            status,
             image,
             update_time,
             create_time
         FROM
            goods_sku
         <where>
-            <if test="brandId!=null">
-                and brand_id=#{brandId}
+            <if test="brandName!=null and brandName!=''">
+                and full_name like concat('%',#{brandName},'%')
             </if>
             <if test="fullName!=null and fullName!=''">
                 and full_name like concat('%',#{fullName},'%')
@@ -687,7 +686,7 @@
         where
             cg.community_id=#{communityId}
         AND
-            gs.is_recommend ='TRUE'
+            gs.is_recommend ='TRUE' AND gs.status='NORMAL'
             <if test="memberLevel!=null and memberLevel=='NORMAL'">
                 and cg.min_price_normal IS NOT NULL
             </if>
@@ -743,8 +742,9 @@
         LEFT JOIN goods_attr_value gav ON gav.goods_sku_id=gs.goods_sku_id
         LEFT JOIN attribute_value av ON av.value_id=gav.attr_value_id
         <where>
+            gs.status='NORMAL'
             <if test="communityId !=null and communityId !=''">
-                cg.community_id = #{communityId}
+             AND  cg.community_id = #{communityId}
             </if>
             AND  c.price_type = "PROMOTION"
             AND  c.STATUS = "AFFECTED"
@@ -802,7 +802,7 @@
         FROM
             supermarket_goods sg join goods_sku gs on sg.goods_sku_id = gs.goods_sku_id
         WHERE
-             1=1
+              gs.status='NORMAL'
              <if test="goodsSkuId !=null and goodsSkuId != ''">
                 and gs.goods_sku_id=#{goodsSkuId}
              </if>
@@ -810,6 +810,91 @@
                 and  gs.full_name like  concat('%',#{name},'%')
              </if>
         GROUP BY gs.goods_sku_id
+        HAVING
+                1=1
+                <if test="spreadRate!=null and spreadRate!=''">
+                    and spreadRate &gt; #{spreadRate}
+                </if>
         ORDER BY spreadRate desc
     </select>
+
+
+        <!-- 根据超市id获取无价格的商品列表 -->
+        <!--List<GoodsSku> getGoodsSkuNotPrice(GoodsSku goodsSku) -->
+        <select id="getGoodsSkuNotPrice" resultType="com.linayi.entity.goods.GoodsSku">
+                SELECT
+                    gs.goods_sku_id,
+                    gs.NAME name,
+                    gs.full_name,
+                    gs.barcode,
+                    gs.category_id,
+                    gs.brand_id,
+                    gs.image,
+                    gs.update_time,
+                    gs.create_time
+                 FROM
+                    goods_sku gs LEFT JOIN supermarket_goods sg ON gs.goods_sku_id=sg.goods_sku_id
+                    AND sg.supermarket_id=#{supermarketId} LEFT JOIN supermarket_goods_record sgr
+                    ON sgr.goods_sku_id=gs.goods_sku_id AND sgr.supermarket_id=#{supermarketId}
+            <where>
+                      gs.STATUS='NORMAL'
+                AND   sg.goods_sku_id is null
+                AND   (sgr.goods_sku_id is null AND sgr.supermarket_id is null)
+                <if test="brandName!=null and brandName!=''">
+                    and gs.full_name like concat('%',#{brandName},'%')
+                </if>
+                <if test="fullName!=null and fullName!=''">
+                    and gs.full_name like concat('%',#{fullName},'%')
+                </if>
+                <if test="valueName!=null and valueName!=''">
+                    and gs.full_name like concat('%',#{valueName},'%')
+                </if>
+                <if test="barcode!=null and barcode!=''">
+                    and gs.barcode like concat('%',#{barcode},'%')
+                </if>
+            </where>
+        </select>
+
+    <select id="selectBySupermerketIdAndGoodsSkuIdList" resultType="com.linayi.entity.goods.GoodsSku" parameterType="com.linayi.entity.goods.GoodsSku">
+        SELECT
+          gs.full_name,gs.goods_sku_id,gs.image
+        FROM
+          goods_sku gs
+        LEFT JOIN supermarket_goods sg ON sg.goods_sku_id = gs.goods_sku_id AND sg.supermarket_id = #{supermarketId}
+        LEFT JOIN supermarket_goods_record sgr ON sgr.goods_sku_id=gs.goods_sku_id AND sgr.supermarket_id=#{supermarketId}
+        <where>
+           sg.goods_sku_id IS NULL
+            AND
+            gs.STATUS='NORMAL'
+            AND
+            (sgr.goods_sku_id is null AND sgr.supermarket_id is null)
+            <if test="goodsSkuIdList != null and goodsSkuIdList.size() > 0">
+            AND    gs.goods_sku_id IN
+                <foreach collection="goodsSkuIdList" item="item" index="index"
+                         open="(" separator="," close=")">
+                    ${item}
+                </foreach>
+            </if>
+            <if test="brandName!=null and brandName!=''">
+                and gs.full_name like concat('%',#{brandName},'%')
+            </if>
+            <if test="fullName!=null and fullName!=''">
+                and gs.full_name like concat('%',#{fullName},'%')
+            </if>
+            <if test="valueName!=null and valueName!=''">
+                and gs.full_name like concat('%',#{valueName},'%')
+            </if>
+            <if test="barcode!=null and barcode!=''">
+                and gs.barcode like concat('%',#{barcode},'%')
+            </if>
+        </where>
+        order by field(gs.goods_sku_id,
+        <foreach collection="goodsSkuIdList" item="item" index="index"
+                  separator=",">
+            ${item}
+        </foreach>
+        )
+    </select>
+
+
 </mapper>

@@ -347,14 +347,18 @@ public class AccountServiceImpl implements AccountService {
         return account.getMobile() != null;
     }
 
+
     /**
      * @param accountId 当前的token下的accountId(老微信accountId)
      * @param mobile
      * @return
      */
     @Override
-    @Transactional(rollbackFor = Throwable.class)
-    public Object bindMobile(Integer accountId, String mobile) {
+    @Transactional
+    public Object bindMobile(Integer accountId, String mobile, String validCode) {
+        if (!redisService.validValidCode(mobile, validCode)) {
+            throw new BusinessException(ErrorType.VERIFICATION_CODE_ERROR);
+        }
         //检查手机号是否被自己绑定
         Account accountById = accountMapper.getAccountById(accountId);
         if(accountById.getMobile() != null){
@@ -370,10 +374,13 @@ public class AccountServiceImpl implements AccountService {
         account.setUserType(UserType.USER.name());
         List<Account> accounts = this.selectAccountList(account);
         //账号存在的情况
-        if (accounts.size() > 0) {
-            Account accountDb = accounts.stream().findFirst().orElse(null);
+        Account accountDb = accounts.stream().findFirst().orElse(null);
+        if (accountDb != null) {
             Integer oldUserId = getUserId(accountId);
             Integer newAccountId = accountDb.getAccountId();
+            if (accountDb.getOpenId() != null) {
+                throw new BusinessException(ErrorType.THE_MOBILE_PHONE_NUMBER_HAS_BEEN_BOUND_TO_WECHAT);
+            }
             Integer newUserId = getUserId(newAccountId);
             //取消该微信号
             Account accountParam = new Account();
@@ -385,6 +392,7 @@ public class AccountServiceImpl implements AccountService {
             Account accountOpenId = new Account();
             accountOpenId.setAccountId(newAccountId);
             accountOpenId.setOpenId(openId);
+            accountOpenId.setUpdateTime(new Date());
             accountMapper.updateAccountByaccountId(accountOpenId);
             //redis token失效
 //            redisService.deleteAccessToken(Long.parseLong(accountId + ""));
@@ -398,6 +406,22 @@ public class AccountServiceImpl implements AccountService {
                 receiveAddressParam.setReceiveAddressId(receiveAddressOldUser.getReceiveAddressId());
                 receiveAddressMapper.updateByPrimaryKey(receiveAddressParam);
             }
+
+            //设置配送地址为默认
+            User newUser = userMapper.selectUserByuserId(newUserId);
+            User oldUser = userMapper.selectUserByuserId(oldUserId);
+            Integer newDefaultReceiveAddressId = newUser.getDefaultReceiveAddressId();
+            if (newDefaultReceiveAddressId == null) {
+                User userParam = new User();
+                userParam.setUserId(newUserId);
+                Integer oldDefaultReceiveAddressId = oldUser.getDefaultReceiveAddressId();
+                //手机账号没有默认收货地址,就从旧账号导入默认收货地址
+                if (oldDefaultReceiveAddressId != null) {
+                    userParam.setDefaultReceiveAddressId(oldDefaultReceiveAddressId);
+                    userMapper.updateUserByuserId(userParam);
+                }
+            }
+
             //转移购物车
             ShoppingCar shoppingCar = new ShoppingCar();
             shoppingCar.setUserId(oldUserId);
@@ -469,19 +493,21 @@ public class AccountServiceImpl implements AccountService {
                 correctLogPm.setCorrectLogId(correctLogDB.getCorrectLogId());
                 correctLogMapper.updateByPrimaryKeySelective(correctLogPm);
             }
-        }else{
+            //刷新token(删除旧的token,留下新的token)
+            redisService.deleteAccessToken(Long.parseLong(accountId+""));
+            String systemToken = redisService.GenerationToken(newAccountId);
+            return systemToken;
+        } else {
             //账号不存在的情况
             Account accountParam = new Account();
             accountParam.setAccountId(accountId);
             accountParam.setMobile(mobile);
             accountParam.setUpdateTime(new Date());
-            accountMapper.updateAccountByaccountId(account);
+            accountMapper.updateAccountByaccountId(accountParam);
+            return redisService.GenerationToken(accountId);
         }
-        return "绑定手机成功";
 
     }
-
-
 
     @Override
     public Object communityLogin(Account account) {
@@ -519,6 +545,15 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account selectAccountBycommunityId(Integer communityId) {
         return accountMapper.selectAccountBycommunityId(communityId);
+    }
+
+    @Override
+    public boolean isBindMobile(Integer accountId) {
+        Account account = accountMapper.getAccountById(accountId);
+        if (account.getMobile() == null) {
+            return false;
+        }
+        return true;
     }
 
     @Override

@@ -237,4 +237,13 @@ public class SupermarketServiceImpl implements SupermarketService {
 	public Supermarket getSupermarketById(Integer SupermarketId) {
 		return supermarketMapper.selectSupermarketBysupermarketId(SupermarketId);
 	}
+
+	//模糊查询超市
+	@Override
+	public List<Supermarket> getSupermarketByName(Supermarket supermarket) {
+
+		return supermarketMapper.getSupermarketByName(supermarket);
+	}
+
+
 }

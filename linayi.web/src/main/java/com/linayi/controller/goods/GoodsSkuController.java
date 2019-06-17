@@ -499,25 +499,6 @@ public class GoodsSkuController extends BaseController{
         goodsService.exportDifferenceRanking(goodsSku,request,response);
     }
 
-    /**获取点击量排行商品
-     * @param skuClickNum
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping("/getSkuListByClickNum.do")
-    @ResponseBody
-    public Object getSkuListByClickNum(SkuClickNum skuClickNum) throws Exception {
-        try {
-            //获取倒序goodsSkuId集合
-            List<Integer> skuIdsByClientNum = skuClickNumService.getSkuIdsByClientNum(skuClickNum);
-            return new ResponseData(skuIdsByClientNum);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseData(ErrorType.SYSTEM_ERROR);
-        }
-    }
-
-
     @RequestMapping("/exportAffectedPriceData.do")
     @ResponseBody
     public void exportAffectedPriceData(Correct correct, HttpServletRequest request, HttpServletResponse response) throws Exception {

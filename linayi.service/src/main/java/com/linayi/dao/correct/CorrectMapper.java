@@ -2,7 +2,6 @@ package com.linayi.dao.correct;
 
 import java.util.List;
 
-import com.linayi.entity.goods.SupermarketGoods;
 import org.apache.ibatis.annotations.Param;
 
 import com.linayi.entity.correct.Correct;
