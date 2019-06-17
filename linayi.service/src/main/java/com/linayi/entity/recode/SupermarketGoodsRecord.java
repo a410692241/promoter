@@ -1,11 +1,23 @@
 package com.linayi.entity.recode;
 
+import java.util.Date;
+
 public class SupermarketGoodsRecord {
     private Integer supermarketGoodsRecordId;
 
     private Integer goodsSkuId;
 
     private Integer supermarketId;
+
+    private Date createTime;
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
     public Integer getSupermarketGoodsRecordId() {
         return supermarketGoodsRecordId;

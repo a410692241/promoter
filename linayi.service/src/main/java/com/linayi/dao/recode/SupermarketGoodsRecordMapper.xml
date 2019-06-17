@@ -6,10 +6,11 @@
     <id column="supermarket_goods_record_id" jdbcType="INTEGER" property="supermarketGoodsRecordId" />
     <result column="goods_sku_id" jdbcType="INTEGER" property="goodsSkuId" />
     <result column="supermarket_id" jdbcType="INTEGER" property="supermarketId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    supermarket_goods_record_id, goods_sku_id, supermarket_id
+    supermarket_goods_record_id, goods_sku_id, supermarket_id,create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     <!--@mbg.generated-->
@@ -25,8 +26,8 @@
   </delete>
   <insert id="insert" keyColumn="supermarket_goods_record_id" keyProperty="supermarketGoodsRecordId" parameterType="com.linayi.entity.recode.SupermarketGoodsRecord" useGeneratedKeys="true">
     <!--@mbg.generated-->
-    insert into supermarket_goods_record (goods_sku_id, supermarket_id)
-    values (#{goodsSkuId,jdbcType=INTEGER}, #{supermarketId,jdbcType=INTEGER})
+    insert into supermarket_goods_record (goods_sku_id, supermarket_id,create_time)
+    values (#{goodsSkuId,jdbcType=INTEGER}, #{supermarketId,jdbcType=INTEGER},#{createTime})
   </insert>
   <insert id="insertSelective" keyColumn="supermarket_goods_record_id" keyProperty="supermarketGoodsRecordId" parameterType="com.linayi.entity.recode.SupermarketGoodsRecord" useGeneratedKeys="true">
     <!--@mbg.generated-->
