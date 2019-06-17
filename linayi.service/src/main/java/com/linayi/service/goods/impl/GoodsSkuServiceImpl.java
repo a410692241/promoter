@@ -1311,10 +1311,11 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
         // 在本行赋值 以0开始
 
         row.createCell(0).setCellValue("商品编号");
-        row.createCell(1).setCellValue("商品全名");
-        row.createCell(2).setCellValue("最高价(元)");
-        row.createCell(3).setCellValue("最低价(元)");
-        row.createCell(4).setCellValue("价差率");
+        row.createCell(1).setCellValue("商品全称");
+        row.createCell(2).setCellValue("商品条码");
+        row.createCell(3).setCellValue("最高价(元)");
+        row.createCell(4).setCellValue("最低价(元)");
+        row.createCell(5).setCellValue("价差率");
         // 定义样式
         CellStyle cellStyle = workbook.createCellStyle();
         // 格式化日期
@@ -1326,9 +1327,10 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
             row = sheet.createRow(i);
             row.createCell(0).setCellValue(goods.getGoodsSkuId());
             row.createCell(1).setCellValue(goods.getFullName());
-            row.createCell(2).setCellValue(goods.getMaxPrice()/100.00);
-            row.createCell(3).setCellValue(goods.getMinPrice()/100.00);
-            row.createCell(4).setCellValue(goods.getSpreadRate()+"%");
+            row.createCell(2).setCellValue(goods.getBarcode());
+            row.createCell(3).setCellValue(goods.getMaxPrice()/100.00);
+            row.createCell(4).setCellValue(goods.getMinPrice()/100.00);
+            row.createCell(5).setCellValue(goods.getSpreadRate()+"%");
         }
         OutputStream  fOut = response.getOutputStream();
         workbook.write(fOut);

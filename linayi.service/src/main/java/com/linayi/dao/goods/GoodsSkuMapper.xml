@@ -794,6 +794,7 @@
             gs.full_name fullName,
             gs.category_id categoryId,
             gs.brand_id brandId,
+            gs.barcode,
             max(sg.price) maxPrice,
             min(sg.price) minPrice,
          /* GROUP_CONCAT(sg.price),
@@ -806,8 +807,11 @@
              <if test="goodsSkuId !=null and goodsSkuId != ''">
                 and gs.goods_sku_id=#{goodsSkuId}
              </if>
-             <if test="name!=null and name!=''">
-                and  gs.full_name like  concat('%',#{name},'%')
+            <if test="barcode !=null and barcode != ''">
+                and gs.barcode like  concat('%',#{barcode},'%')
+             </if>
+             <if test="fullName!=null and fullName!=''">
+                and  gs.full_name like  concat('%',#{fullName},'%')
              </if>
         GROUP BY gs.goods_sku_id
         HAVING
