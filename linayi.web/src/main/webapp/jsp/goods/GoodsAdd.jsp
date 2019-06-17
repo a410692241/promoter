@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8"
          pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="cl" uri="http://www.lay.com/option" %>
 <style type="text/css">
     .ww {
@@ -211,12 +212,12 @@
                 </tr>
                 <tr>
                     <td>分享开始自：</td>
-                    <td><input type="date" id="startTime" name="startTime"></td>
+                    <td><input type="date" id="startTime" name="starTime"></td>
                     <td></td>
                 </tr>
                 <tr>
                     <td>分享结束于：</td>
-                    <td><input type="date" id="endTime" name="endTime"></td>
+                    <td><input type="date" id="endTime" name="enTime"></td>
                     <td></td>
                 </tr>
                 <tr>
