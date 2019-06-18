@@ -34,6 +34,13 @@ public class PriceExpireTimer extends QuartzJobBean implements Job {
         Date endTime = ca.getTime();
         correct.setStatus(CorrectStatus.AFFECTED.toString());
         correct.setEndTime(endTime);
+        Calendar cas = Calendar.getInstance();
+        cas.set(Calendar.HOUR_OF_DAY,0);
+        cas.set(Calendar.MINUTE,0);
+        cas.set(Calendar.SECOND,0);
+        cas.add(Calendar.DAY_OF_MONTH, 0);
+        Date startTime = cas.getTime();
+        correct.setStartTime(startTime);
         //查询审核通过的数据
         List<Correct> list = correctService.getCorrectExpire(correct);
         System.out.println("priceExpire totalNums=" + list.size());
