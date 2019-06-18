@@ -526,7 +526,9 @@
         where
         status=#{status,jdbcType=VARCHAR}
         AND
-        end_time &lt; #{endTime}
+        end_time &gt;= #{startTime}
+        AND
+        end_time &lt;= #{endTime}
     </select>
 
 
