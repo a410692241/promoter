@@ -1455,12 +1455,12 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 
         Calendar cal2 = Calendar.getInstance();
         cal2.setTime(nowTime);//设置起时间
-        cal2.set(Calendar.DAY_OF_YEAR,cal2.get(Calendar.DAY_OF_YEAR)-1);//增加7天
+        cal2.set(Calendar.DAY_OF_YEAR,cal2.get(Calendar.DAY_OF_YEAR)-1);//昨天
         Date yesterday = cal2.getTime();
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(yesterday);//设置起时间
-        cal.set(Calendar.DAY_OF_YEAR,cal.get(Calendar.DAY_OF_YEAR)-7);//增加7天
+        cal.set(Calendar.DAY_OF_YEAR,cal.get(Calendar.DAY_OF_YEAR)-7);//昨天往前推7天
         Date eightDaysAgo = cal.getTime();
 
         //获取点击率前100的商品id集合
