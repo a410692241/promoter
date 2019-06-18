@@ -1311,10 +1311,11 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
         // 在本行赋值 以0开始
 
         row.createCell(0).setCellValue("商品编号");
-        row.createCell(1).setCellValue("商品全名");
-        row.createCell(2).setCellValue("最高价(元)");
-        row.createCell(3).setCellValue("最低价(元)");
-        row.createCell(4).setCellValue("价差率");
+        row.createCell(1).setCellValue("商品全称");
+        row.createCell(2).setCellValue("商品条码");
+        row.createCell(3).setCellValue("最高价(元)");
+        row.createCell(4).setCellValue("最低价(元)");
+        row.createCell(5).setCellValue("价差率");
         // 定义样式
         CellStyle cellStyle = workbook.createCellStyle();
         // 格式化日期
@@ -1326,9 +1327,10 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
             row = sheet.createRow(i);
             row.createCell(0).setCellValue(goods.getGoodsSkuId());
             row.createCell(1).setCellValue(goods.getFullName());
-            row.createCell(2).setCellValue(goods.getMaxPrice()/100.00);
-            row.createCell(3).setCellValue(goods.getMinPrice()/100.00);
-            row.createCell(4).setCellValue(goods.getSpreadRate()+"%");
+            row.createCell(2).setCellValue(goods.getBarcode());
+            row.createCell(3).setCellValue(goods.getMaxPrice()/100.00);
+            row.createCell(4).setCellValue(goods.getMinPrice()/100.00);
+            row.createCell(5).setCellValue(goods.getSpreadRate()+"%");
         }
         OutputStream  fOut = response.getOutputStream();
         workbook.write(fOut);
@@ -1448,17 +1450,23 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
 
     @Override
     public List<GoodsSku> getHighClickNoPriceGoodsList(GoodsSku goodsSku) {
-       //设置开始时间和七天后结束时间
+       //设置开始结束时间为昨天开始往前推七天
         Date nowTime = new Date();
+
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(nowTime);//设置起时间
+        cal2.set(Calendar.DAY_OF_YEAR,cal2.get(Calendar.DAY_OF_YEAR)-1);//昨天
+        Date yesterday = cal2.getTime();
+
         Calendar cal = Calendar.getInstance();
-        cal.setTime(nowTime);//设置起时间
-        cal.set(Calendar.DAY_OF_YEAR,cal.get(Calendar.DAY_OF_YEAR)-7);//增加7天
-        Date afterSevenDay = cal.getTime();
+        cal.setTime(yesterday);//设置起时间
+        cal.set(Calendar.DAY_OF_YEAR,cal.get(Calendar.DAY_OF_YEAR)-7);//昨天往前推7天
+        Date eightDaysAgo = cal.getTime();
 
         //获取点击率前100的商品id集合
         SkuClickNum skuClickNum = new SkuClickNum();
-        skuClickNum.setStartTime(afterSevenDay);
-        skuClickNum.setEndTime(nowTime);
+        skuClickNum.setStartTime(eightDaysAgo);
+        skuClickNum.setEndTime(yesterday);
 //        List<Long> skuIdsByClientNum = skuClickNumService.getSkuIdsByClientNum(skuClickNum);
         Map<Long, Integer> skuClickNumMap = skuClickNumService.getSkuIdsByClientNum(skuClickNum);
         Set<Long> skuIdsByClientNumSet = skuClickNumMap.keySet();
@@ -1496,6 +1504,26 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
             goods.setImage(goodsImage);
             goods.setClickNum(skuClickNumMap.get(goods.getGoodsSkuId()));
         }
+
+
+        List<GoodsSku> copyGoodsList = new ArrayList<>();
+//        copyGoodsList = goodsSkusList;
+        for(int i=0;i<goodsSkusList.size();i++){
+            Correct correct = new Correct();
+            correct.setGoodsSkuId(goodsSkusList.get(i).getGoodsSkuId());
+            correct.setSupermarketId(goodsSku.getSupermarketId());
+            ArrayList<String> statusList = new ArrayList<>();
+            statusList.add("WAIT_AUDIT");
+            statusList.add("AUDIT_SUCCESS");
+            correct.setStatusList(statusList);
+            Correct query = correctMapper.query(correct).stream().findFirst().orElse(null);
+            if(query != null){
+//                goodsSkusList.remove(i);
+                copyGoodsList.add(goodsSkusList.get(i));
+            }
+
+        }
+        goodsSkusList.removeAll(copyGoodsList);
 
         return goodsSkusList;
     }

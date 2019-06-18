@@ -9,7 +9,8 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 		$scope.exportData = exportData;
 		$scope.search={
 			goodsSkuId:'',
-			name:'',
+			fullName:'',
+			barcode:'',
 			spreadRate:''
 		};
 		$scope.list();
@@ -35,6 +36,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 			colModel : [
 			            {name:'goodsSkuId',label:'商品ID',width:80},
 			            {name:'fullName',label:'商品名称',sortable:false,width:200},
+						{name:'barcode',label:'商品条码',sortable:false,width:80},
 			            {name:'maxPrice',label:'最高价(单位:元)',sortable:false,
 							formatter: function (cellvalue, options, rowObject) {
 								return cellvalue / 100;
@@ -81,12 +83,25 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 	//导出数据
 	function exportData() {
 		var goodsSkuId = $scope.search.goodsSkuId;
-		var name = $scope.search.name;
+		var fullName = $scope.search.fullName;
+		var barcode = $scope.search.barcode;
+		var spreadRate = $scope.search.spreadRate;
 		var data = '';
 		if (goodsSkuId === undefined || goodsSkuId == '') {
 			goodsSkuId = null;
 		} else {
 			data += '&goodsSkuId=' + goodsSkuId;
+		}
+		if (fullName === undefined || fullName == '') {
+			fullName = null;
+		} else {
+			data += '&fullName=' + fullName;
+		}
+
+		if (barcode === undefined || barcode == '') {
+			barcode = null;
+		} else {
+			data += '&barcode=' + barcode;
 		}
 
 		if (spreadRate === undefined || spreadRate == '') {

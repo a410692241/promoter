@@ -279,13 +279,14 @@ public class CorrectController extends BaseController {
             row.createCell(2).setCellValue("手机号");
             row.createCell(3).setCellValue("状态");
             row.createCell(4).setCellValue("商品名");
-            row.createCell(5).setCellValue("超市");
-            row.createCell(6).setCellValue("分享类型");
-            row.createCell(7).setCellValue("价格（元）");
-            row.createCell(8).setCellValue("价格类型");
-            row.createCell(9).setCellValue("有效开始时间");
-            row.createCell(10).setCellValue("有效结束时间");
-            row.createCell(11).setCellValue("创建时间");
+            row.createCell(5).setCellValue("条形码");
+            row.createCell(6).setCellValue("超市");
+            row.createCell(7).setCellValue("分享类型");
+            row.createCell(8).setCellValue("价格（元）");
+            row.createCell(9).setCellValue("价格类型");
+            row.createCell(10).setCellValue("有效开始时间");
+            row.createCell(11).setCellValue("有效结束时间");
+            row.createCell(12).setCellValue("创建时间");
             // 定义样式
             CellStyle cellStyle = workbook.createCellStyle();
             // 格式化日期
@@ -332,13 +333,14 @@ public class CorrectController extends BaseController {
                 row.createCell(2).setCellValue(correct1.getMobile());
                 row.createCell(3).setCellValue(correct1.getStatus());
                 row.createCell(4).setCellValue(correct1.getFullName());
-                row.createCell(5).setCellValue(correct1.getName());
-                row.createCell(6).setCellValue(correct1.getType());
-                row.createCell(7).setCellValue(correct1.getPrice() / 100.00);
-                row.createCell(8).setCellValue(correct1.getPriceType());
-                row.createCell(9).setCellValue(DateUtil.date2String(correct1.getStartTime(), pattern));
-                row.createCell(10).setCellValue(DateUtil.date2String(correct1.getEndTime(), pattern));
-                row.createCell(11).setCellValue(DateUtil.date2String(correct1.getCreateTime(), pattern));
+                row.createCell(5).setCellValue(correct1.getBarcode());
+                row.createCell(6).setCellValue(correct1.getName());
+                row.createCell(7).setCellValue(correct1.getType());
+                row.createCell(8).setCellValue(correct1.getPrice() / 100.00);
+                row.createCell(9).setCellValue(correct1.getPriceType());
+                row.createCell(10).setCellValue(DateUtil.date2String(correct1.getStartTime(), pattern));
+                row.createCell(11).setCellValue(DateUtil.date2String(correct1.getEndTime(), pattern));
+                row.createCell(12).setCellValue(DateUtil.date2String(correct1.getCreateTime(), pattern));
             }
             OutputStream fOut = response.getOutputStream();
             workbook.write(fOut);

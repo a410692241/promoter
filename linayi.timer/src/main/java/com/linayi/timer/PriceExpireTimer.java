@@ -30,7 +30,7 @@ public class PriceExpireTimer extends QuartzJobBean implements Job {
         ca.set(Calendar.HOUR_OF_DAY,0);
         ca.set(Calendar.MINUTE,0);
         ca.set(Calendar.SECOND,0);
-        ca.add(Calendar.DAY_OF_MONTH, 2);
+        ca.add(Calendar.DAY_OF_MONTH, 1);
         Date endTime = ca.getTime();
         correct.setStatus(CorrectStatus.AFFECTED.toString());
         correct.setEndTime(endTime);

@@ -16,6 +16,13 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
         // list();
         $scope.search = {
             status: "",
+            correctId:'',
+            mobile:'',
+            realName:'',
+            name:'',
+            fullName:'',
+            createTimeStart:'',
+            createTimeEnd:'',
             priceType: ""
         };
     }
@@ -35,7 +42,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
             postData: $scope.search,
             pager: "#correctPager",
             multiselect: true,
-            rownumWidth: 100,
+            rownumWidth: 80,
             colModel: [
                 {name: 'correctId', label: '主键', sortable: false, hidden: true},
                 {name: 'realName', label: '真实姓名', sortable: false},
@@ -67,6 +74,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
                 {name: 'userId', label: '用户id', sortable: false, hidden: true},
                 {name: 'goodsSkuId', label: '商品id', sortable: false, hidden: true},
                 {name: 'fullName', label: '商品', sortable: false},
+                {name: 'barcode', label: '条形码', sortable: false,width: 240},
                 {name: 'supermarketId', label: '超市id', sortable: false, hidden: true},
                 {name: 'name', label: '超市', sortable: false},
                 {
@@ -532,7 +540,7 @@ app.controller('correctCtrl', function ($http, $scope, toaster, correctService, 
             sum++;
         }
 
-        if (sum == 8) {
+        if (sum == 9) {
             toaster.error("", "请输入搜索条件后导出!", 3000);
             return;
         }
