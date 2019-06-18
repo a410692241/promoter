@@ -876,7 +876,7 @@ public class ProcurementServiceImpl implements ProcurementService {
         String prefix = (year - 2000) + dayFmt + hourFmt + minuteFmt + secondFmt + millisecondFmt;
         long seq = redisUtil.incr(prefix, 1);
         if (seq == 1){
-            redisUtil.expire(prefix,600);
+            redisUtil.expire(prefix,3);
         }
         String formatSeq = String.format("%1$02d", seq);
         return (year - 2000) + dayFmt + hourFmt + minuteFmt + formatSeq + secondFmt + millisecondFmt;

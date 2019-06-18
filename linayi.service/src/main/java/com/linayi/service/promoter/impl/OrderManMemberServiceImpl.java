@@ -226,7 +226,7 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 			orderManMember.setNickname(user.getNickname());
 			if(user.getHeadImage() != null) {
 				String headImage = user.getHeadImage();
-				orderManMember.setHeadImage(headImage);
+				orderManMember.setHeadImage(ImageUtil.dealToShow(headImage));
 			}else {
 				orderManMember.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
 			}
