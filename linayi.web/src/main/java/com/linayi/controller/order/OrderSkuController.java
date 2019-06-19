@@ -4,10 +4,8 @@ import com.linayi.entity.goods.SupermarketGoods;
 import com.linayi.entity.order.OrdersSku;
 import com.linayi.entity.procurement.ProcurementTask;
 import com.linayi.enums.MemberLevel;
-import com.linayi.service.address.ReceiveAddressService;
 import com.linayi.service.goods.SupermarketGoodsService;
 import com.linayi.service.order.OrderService;
-import com.linayi.service.order.OrdersGoodsService;
 import com.linayi.service.procurement.ProcurementService;
 import com.linayi.util.MemberPriceUtil;
 import com.linayi.util.PageResult;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,7 +72,7 @@ public class OrderSkuController {
 
         List<Integer> collect = data.stream().map(p -> p.getSupermarketId()).collect(Collectors.toList());
         List<SupermarketGoods> allSpermarketGoodsList = MemberPriceUtil.allSpermarketGoodsList;
-        List<SupermarketGoods> supermarketGoodsList1 = allSpermarketGoodsList.stream().filter(supermarket -> !collect.contains(supermarket.getSupermarketId())).collect(Collectors.toList());
+        List<SupermarketGoods> supermarketGoodsList1 = allSpermarketGoodsList.stream().filter(supermarket -> !collect.contains(supermarket.getSupermarketId())).sorted(Comparator.comparing(SupermarketGoods::getPrice)).collect(Collectors.toList());
 
         mv.addObject("procurementTaskId", procurementTask.getProcurementTaskId());
         mv.addObject("spermarketGoodsList",supermarketGoodsList1);
