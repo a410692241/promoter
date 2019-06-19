@@ -14,14 +14,17 @@ import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.area.Area;
 import com.linayi.entity.community.Community;
 import com.linayi.entity.goods.GoodsSku;
+import com.linayi.entity.goods.SupermarketGoods;
 import com.linayi.entity.order.Orders;
 import com.linayi.entity.order.OrdersGoods;
 import com.linayi.entity.procurement.ProcureMergeTask;
 import com.linayi.entity.procurement.ProcurementTask;
 import com.linayi.entity.supermarket.Supermarket;
+import com.linayi.enums.MemberLevel;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.community.CommunityService;
 import com.linayi.service.community.CommunitySupermarketService;
+import com.linayi.service.goods.SupermarketGoodsService;
 import com.linayi.service.order.OrderService;
 import com.linayi.service.procurement.ProcurementService;
 import com.linayi.service.supermarket.SupermarketService;
@@ -34,6 +37,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -72,6 +76,8 @@ public class ProcurementServiceImpl implements ProcurementService {
     private RedisUtil redisUtil;
     @Autowired
     private ProcureMergeTaskMapper procureMergeTaskMapper;
+	@Autowired
+	private SupermarketGoodsService supermarketGoodsService;
 
 	@Override
 	public void addProcurementTask(ProcurementTask task) {
@@ -512,31 +518,34 @@ public class ProcurementServiceImpl implements ProcurementService {
 		procurementTask.setOrdersGoodsId(procurement.getOrdersGoodsId());
 		procurementTask.setProcurementTaskId(null);
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurementTask);
-		List<Integer> procurementTaskIds = new ArrayList<>();
 		for (ProcurementTask task : procurementTaskList) {
 			task.setSupermarketName(supermarketMapper.selectSupermarketBysupermarketId(task.getSupermarketId()).getName());
-			procurementTaskIds.add(task.getSupermarketId());
 		}
 		Collections.reverse(procurementTaskList);
-		OrdersGoods ordersGoods = new OrdersGoods();
-		ordersGoods.setOrdersGoodsId(procurementTask.getOrdersGoodsId());
-		List<OrdersGoods> ordersGoodsList = ordersGoodsMapper.getOrdersGoodsByOrdersGoods(ordersGoods);
-		OrdersGoods ordersGoods1 = ordersGoodsList.get(0);
-		String sL = ordersGoods1.getSupermarketList();
-		List<Map> list = JSON.parseArray(sL, Map.class);
-		for (int i1 = 0; i1 < list.size(); i1++) {
-			Map map1 = list.get(i1);
-			int supermarket_id = Integer.parseInt(map1.get("supermarket_id") + "");
-			if(procurementTaskIds.contains(supermarket_id)){
-				continue;
-			}
-			Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(Integer.parseInt(map1.get("supermarket_id") + ""));
+
+
+		List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getSupermarketGoodsList(procurement.getGoodsSkuId(), procurement.getCommunityId());
+		MemberPriceUtil.supermarketPriceByLevel(MemberLevel.SUPER,supermarketGoodsList);
+		ModelAndView mv = new ModelAndView("jsp/order/OrderDetail");
+		ProcurementTask procurementTask2 = new ProcurementTask();
+		procurementTask2.setOrdersId(procurement.getOrdersId());
+		procurementTask2.setOrdersGoodsId(procurement.getOrdersGoodsId());
+		List<ProcurementTask> data = procurementTaskMapper.getProcurementTaskList(procurementTask2);
+
+		List<Integer> collect = data.stream().map(p -> p.getSupermarketId()).collect(Collectors.toList());
+		List<SupermarketGoods> allSpermarketGoodsList = MemberPriceUtil.allSpermarketGoodsList;
+		List<SupermarketGoods> supermarketGoodsList1 = allSpermarketGoodsList.stream().filter(supermarket -> !collect.contains(supermarket.getSupermarketId())).sorted(Comparator.comparing(SupermarketGoods::getPrice)).collect(Collectors.toList());
+
+
+		for (SupermarketGoods supermarketGoods : supermarketGoodsList1) {
+			Supermarket supermarket = supermarketMapper.selectSupermarketBysupermarketId(supermarketGoods.getSupermarketId());
 			ProcurementTask procurementTask1 = new ProcurementTask();
 			procurementTask1.setSupermarketName(supermarket.getName());
-			procurementTask1.setPrice(Integer.parseInt(map1.get("price") + ""));
+			procurementTask1.setPrice(supermarketGoods.getPrice());
 			procurementTask1.setProcureQuantity(0);
 			procurementTaskList.add(procurementTask1);
 		}
+
 		return procurementTaskList;
 	}
 

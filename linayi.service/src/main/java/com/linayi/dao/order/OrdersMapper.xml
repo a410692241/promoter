@@ -613,7 +613,9 @@
   SET
     deliverer_id = #{delivererId},
     community_status = #{communityStatus},
-    delivery_finish_time = #{deliveryFinishTime}
+    delivery_finish_time = #{deliveryFinishTime},
+    actual_arrive_time = #{actualArriveTime},
+    update_time = #{updateTime}
   WHERE
     orders_id = #{ordersId}
 </update>
