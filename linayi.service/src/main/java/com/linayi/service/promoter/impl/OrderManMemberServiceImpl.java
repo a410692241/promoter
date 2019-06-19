@@ -170,11 +170,11 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 		Date endTime = cal.getTime();
 		openMemberInfo.setEndTime(endTime);
 
-		openMemberInfo.setFreeTimes(getFreeNumberByMemberLevel(memberLevel));
+		openMemberInfo.setFreeTimes(0);
 		openMemberInfo.setUserId(uid);
 		openMemberInfo.setOrderManId(userId);
 		openMemberInfo.setCreateTime(new Date());
-		openMemberInfo.setMemberLevel(memberLevel);
+		openMemberInfo.setMemberLevel("SENIOR");
 		openMemberInfo.setOpenOrderManInfoId(openOrderManInfoId);
 		openMemberInfoMapper.insert(openMemberInfo);
 
