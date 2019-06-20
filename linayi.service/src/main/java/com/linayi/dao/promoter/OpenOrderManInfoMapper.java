@@ -5,6 +5,8 @@ import com.linayi.entity.promoter.PromoterOrderMan;
 
 import java.util.List;
 
+import java.util.List;
+
 public interface OpenOrderManInfoMapper {
     int insert(OpenOrderManInfo record);
 
@@ -21,4 +23,6 @@ public interface OpenOrderManInfoMapper {
      * @return
      */
     List<PromoterOrderMan> getOpenOrderManInfoList(PromoterOrderMan promoterOrderMan);
+
+    List<OpenOrderManInfo> getOpenOrderManInfoByOrderManId(Integer orderManId);
 }

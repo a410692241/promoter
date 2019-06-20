@@ -2,6 +2,8 @@ package com.linayi.controller.promoter;
 
 import java.util.List;
 
+import com.linayi.entity.user.AuthenticationApply;
+import com.linayi.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +28,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.web.multipart.MultipartFile;
 
 @Api(value = "Promoter",description="推广商接口")
 
@@ -313,4 +316,31 @@ public class PromoterController extends BaseController {
 		}
 		return new ResponseData(ErrorType.SYSTEM_ERROR);
 	}
+
+
+	//邀请家庭服务师（扫二维码不用审核版本）
+		@RequestMapping("/inviteOrderMan.do")
+	@ResponseBody
+	public Object inviteOrderMan(String realName, String mobile,Integer userId, Integer applierId, String address, MultipartFile[] file) {
+		try {
+			AuthenticationApply apply = new AuthenticationApply();
+			apply.setAddress(address);
+			apply.setRealName(realName);
+			apply.setMobile(mobile);
+			apply.setUserId(userId);
+			apply.setApplierId(applierId);
+			//判断对象和数组是否为null
+			if (apply != null && file.length == 2) {
+				promoterOrderManService.inviteOrderMan(apply, file);
+			}
+			return new ResponseData("开通家庭服务师成功!");
+		} catch (BusinessException e) {
+			return new ResponseData(e.getErrorType()).toString();
+		} catch (Exception e) {
+			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+		}
+
+	}
+
+
 }

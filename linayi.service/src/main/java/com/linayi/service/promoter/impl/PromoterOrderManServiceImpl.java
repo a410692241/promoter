@@ -10,6 +10,8 @@ import com.linayi.entity.promoter.*;
 import com.linayi.entity.user.AuthenticationApply;
 import com.linayi.entity.user.ReceiveAddress;
 import com.linayi.entity.user.User;
+import com.linayi.exception.BusinessException;
+import com.linayi.exception.ErrorType;
 import com.linayi.service.promoter.PromoterOrderManService;
 import com.linayi.service.user.UserService;
 import com.linayi.util.DateUtil;
@@ -17,6 +19,7 @@ import com.linayi.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -560,4 +563,72 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         promoterOrder.setOrderProfit(orderProfit);
         return promoterOrder;
     }
+
+    @Override
+    public void inviteOrderMan(AuthenticationApply apply, MultipartFile[] file) throws Exception {
+        Date nowTime = new Date();
+        //判断邀请人是否在有效期内
+        OpenOrderManInfo openOrderManInfo2 = openOrderManInfoMapper.getOpenOrderManInfoByOrderManId(apply.getUserId()).stream().findFirst().orElse(null);
+        if(openOrderManInfo2 == null || openOrderManInfo2.getEndTime().before(nowTime)){
+            throw new BusinessException(ErrorType.APPLY_ERROR);
+        }
+        //判断是否已经存在家庭服务师
+        OpenOrderManInfo openOrderManInfo1 = openOrderManInfoMapper.getOpenOrderManInfoByOrderManId(apply.getApplierId()).stream().findFirst().orElse(null);
+        if(openOrderManInfo1 != null && openOrderManInfo1.getEndTime().after(nowTime)){
+            throw new BusinessException(ErrorType.ORDER_MAN_ALREADY_EXIST);
+        }
+
+        //插入申请表
+        AuthenticationApply authenticationApply = new AuthenticationApply();
+        authenticationApply.setAddress(apply.getAddress());
+        authenticationApply.setRealName(apply.getRealName());
+        authenticationApply.setMobile(apply.getMobile());
+        authenticationApply.setUserId(apply.getUserId());
+        authenticationApply.setIdCardFront(ImageUtil.handleUpload(file[0]));
+        authenticationApply.setIdCardBack(ImageUtil.handleUpload(file[1]));
+        authenticationApply.setCreateTime(new Date());
+        authenticationApply.setUpdateTime(new Date());
+        authenticationApply.setStatus("AUDIT_SUCCESS");
+        authenticationApply.setAuthenticationType("ORDER_MAN");
+        int rows = authenticationApplyMapper.insert(authenticationApply);
+
+        //插入家庭服务师相关表
+        OpenOrderManInfo openOrderManInfo = new OpenOrderManInfo();
+        Calendar c = Calendar.getInstance();  //得到当前日期和时间
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND,0);
+        Date startTime = c.getTime();
+        openOrderManInfo.setStartTime(startTime);
+
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.YEAR,1);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.MILLISECOND,0);
+        Date endTime = cal.getTime();
+        openOrderManInfo.setEndTime(endTime);
+        openOrderManInfo.setCreateTime(new Date());
+        openOrderManInfo.setOrderManLevel("1");
+        if(openOrderManInfo2 != null){
+            openOrderManInfo.setPromoterId(openOrderManInfo2.getPromoterId());
+        }
+        openOrderManInfo.setOrderManId(apply.getApplierId());
+        openOrderManInfo.setSalesId(apply.getUserId());
+        openOrderManInfo.setIdentity("ORDER_MAN");
+        openOrderManInfoMapper.insert(openOrderManInfo);
+
+//        User userInfo = userMapper.selectUserByuserId(apply.getApplierId());
+        User user = new User();
+        user.setUserId(apply.getApplierId());
+        user.setOpenOrderManInfoId(openOrderManInfo.getOpenOrderManInfoId());
+        user.setIsOrderMan("TRUE");
+        userMapper.updateUserByuserId(user);
+
+        //TODO 插入推广商下单员表
+    }
+
+
 }

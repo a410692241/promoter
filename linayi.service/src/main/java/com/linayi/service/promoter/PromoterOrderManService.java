@@ -4,6 +4,8 @@ import com.linayi.entity.order.Orders;
 import com.linayi.entity.promoter.OpenOrderManInfo;
 import com.linayi.entity.promoter.OrderManMember;
 import com.linayi.entity.promoter.PromoterOrderMan;
+import com.linayi.entity.user.AuthenticationApply;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -56,6 +58,14 @@ public interface PromoterOrderManService {
      * @param identity 推广商类型
      */
     void applyOrderManInWeb(String status,Integer applyId,Integer userId,Integer promoterId,String identity);
+
+    /**
+     * 邀请家庭服务师（扫二维码版本）
+     * @param apply
+     * @param file
+     * @return
+     */
+    public void inviteOrderMan(AuthenticationApply apply, MultipartFile[] file) throws Exception;
 
 
     /**

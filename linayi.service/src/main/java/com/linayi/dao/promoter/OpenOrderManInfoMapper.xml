@@ -6,11 +6,11 @@
 </sql>
   <insert id="insert" parameterType="com.linayi.entity.promoter.OpenOrderManInfo" useGeneratedKeys="true" keyProperty="openOrderManInfoId">
     insert into open_order_man_info (open_order_man_info_id, promoter_id, order_man_id, 
-      identity, order_man_level, start_time, 
+      identity, order_man_level, start_time, sales_id,
       end_time, update_time, create_time
       )
     values (#{openOrderManInfoId,jdbcType=INTEGER}, #{promoterId,jdbcType=INTEGER}, #{orderManId,jdbcType=INTEGER}, 
-      #{identity,jdbcType=VARCHAR}, #{orderManLevel,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, 
+      #{identity,jdbcType=VARCHAR}, #{orderManLevel,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, #{salesId,jdbcType=INTEGER},
       #{endTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -62,5 +62,10 @@
     GROUP BY
         oomi1.open_order_man_info_id
     ORDER BY oomi1.order_man_id &lt;&gt; #{userId},oomi1.open_order_man_info_id DESC
+  </select>
+
+  <select id="getOpenOrderManInfoByOrderManId" resultType="com.linayi.entity.promoter.OpenOrderManInfo">
+    SELECT <include refid="base_column"/> from open_order_man_info
+    where order_man_id = #{orderManId}
   </select>
 </mapper>
