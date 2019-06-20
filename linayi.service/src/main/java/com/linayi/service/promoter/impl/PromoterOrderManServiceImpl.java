@@ -521,4 +521,43 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             authenticationApplyMapper.updateApplyOrederManInfoById(apply);
         }
     }
+
+    //家庭服务师列表（新）
+    @Override
+    public List<PromoterOrderMan> getOpenOrderManInfoList(PromoterOrderMan promoterOrderMan) {
+        List<PromoterOrderMan> promoterOrderMEN = openOrderManInfoMapper.getOpenOrderManInfoList(promoterOrderMan);
+        for (PromoterOrderMan promoterOrderMAN : promoterOrderMEN) {
+            if(promoterOrderMAN.getHeadImage() == null) {
+                promoterOrderMAN.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
+            }else {
+                String headImage = ImageUtil.dealToShow(promoterOrderMAN.getHeadImage());
+                promoterOrderMAN.setHeadImage(headImage);
+            }
+        }
+        return promoterOrderMEN;
+    }
+
+    @Override
+    public PromoterOrderMan getOpenOrderManOrderList(PromoterOrderMan promoterOrderMan) {
+        //获取家庭服务师列表
+        List<PromoterOrderMan> promoterOrderMEN = openOrderManInfoMapper.getOpenOrderManInfoList(promoterOrderMan);
+        Integer numberOfOrders = 0;
+        Integer totalSum = 0;
+        Integer orderProfit = 0;
+        if (promoterOrderMEN.size()>0) {
+            if (!"MONTH".equals(promoterOrderMan.getDate())){
+                promoterOrderMEN.remove(0);
+            }
+            for (PromoterOrderMan promoterOrderMAN : promoterOrderMEN) {
+                numberOfOrders += promoterOrderMAN.getNumberOfOrders();
+                totalSum += promoterOrderMAN.getTotalSum();
+            }
+        }
+        PromoterOrderMan promoterOrder = new PromoterOrderMan();
+        promoterOrder.setNumberOfOrders(numberOfOrders);
+        promoterOrder.setTotalSum(totalSum);
+        promoterOrder.setNumberOfOrderMan(promoterOrderMEN.size());
+        promoterOrder.setOrderProfit(orderProfit);
+        return promoterOrder;
+    }
 }

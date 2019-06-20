@@ -18,4 +18,49 @@
     select <include refid="base_column"/> from open_order_man_info
     where open_order_man_info_id = #{openOrderManInfoId}
   </select>
+
+
+  <select id="getOpenOrderManInfoList" resultType="com.linayi.entity.promoter.PromoterOrderMan">
+    SELECT
+        oomi1.order_man_id,
+        oomi1.start_time,
+        oomi1.end_time,
+        oomi1.promoter_id,
+        oomi1.create_time,
+        IFNULL(COUNT(o.orders_id), 0) numberOfOrders,
+        IFNULL(
+        (SUM(o.amount)),
+        0
+        ) totalSum,
+        (
+          SELECT
+               COUNT(open_member_info_id)
+          FROM
+               open_member_info
+          WHERE
+              start_time &lt; NOW()
+              AND end_time &gt; NOW()
+              AND order_man_id = oomi1.order_man_id
+          ) numberOfMembers,
+        u.mobile,
+        u.head_image headImage,
+        u.nickname
+    FROM
+        open_order_man_info oomi1
+        LEFT JOIN orders o ON oomi1.order_man_id = o.order_man_id AND (o.community_status='PROCURE_FINISHED' or o.community_status='DELIVER_FINISHED')
+        LEFT JOIN `user` u ON u.user_id = oomi1.order_man_id
+    WHERE
+             oomi1.start_time &lt; NOW()
+         AND oomi1.end_time &gt; NOW()
+        <if test="date==null  or date!='MONTH'">
+         AND   (oomi1.sales_id = #{userId} or oomi1.order_man_id=#{userId})
+        </if>
+        <if test="date!=null and date=='MONTH'">
+         AND  oomi1.sales_id = #{userId}
+         AND  oomi1.create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
+        </if>
+    GROUP BY
+        oomi1.open_order_man_info_id
+    ORDER BY oomi1.order_man_id &lt;&gt; #{userId},oomi1.open_order_man_info_id DESC
+  </select>
 </mapper>

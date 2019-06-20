@@ -73,10 +73,8 @@ public class PromoterController extends BaseController {
 			ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(promoterOrderMan);
 			PromoterOrderMan promoterOrderMan1 = pv.transObject(PromoterOrderMan.class);
 			Integer userId = getUserId();
-			promoterOrderMan1.setOrderManId(userId);
-
-			PromoterOrderMan currentPromoterOrderMan = promoterOrderManService.myTeamOrderStatistics(promoterOrderMan1);
-
+			promoterOrderMan1.setUserId(userId);
+			PromoterOrderMan currentPromoterOrderMan = promoterOrderManService.getOpenOrderManOrderList(promoterOrderMan1);
 			return new ResponseData(currentPromoterOrderMan);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -94,13 +92,13 @@ public class PromoterController extends BaseController {
 			PromoterOrderMan promoterOrderMan1 = pv.transObject(PromoterOrderMan.class);
 
 			if (promoterOrderMan1.getPageSize() == null) {
-				promoterOrderMan1.setPageSize(15);
+				promoterOrderMan1.setPageSize(10);
 			}
 
 			Integer userId = getUserId();
-			promoterOrderMan1.setOrderManId(userId);
+			promoterOrderMan1.setUserId(userId);
 
-			List<PromoterOrderMan> promoterOrderManList = promoterOrderManService.orderManList(promoterOrderMan1);
+			List<PromoterOrderMan> promoterOrderManList = promoterOrderManService.getOpenOrderManInfoList(promoterOrderMan1);
 			pageResult = new PageResult<>(promoterOrderManList,promoterOrderMan1);
 			return new ResponseData(pageResult);
 		} catch (Exception e) {

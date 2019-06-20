@@ -56,4 +56,18 @@ public interface PromoterOrderManService {
      * @param identity 推广商类型
      */
     void applyOrderManInWeb(String status,Integer applyId,Integer userId,Integer promoterId,String identity);
+
+
+    /**
+     * 家庭服务师列表(新)
+     * @return
+     */
+    List<PromoterOrderMan> getOpenOrderManInfoList(PromoterOrderMan promoterOrderMan);
+
+    /**
+     * 我的团队订单列表
+     * @param promoterOrderMan
+     * @return
+     */
+    PromoterOrderMan getOpenOrderManOrderList(PromoterOrderMan promoterOrderMan);
 }
