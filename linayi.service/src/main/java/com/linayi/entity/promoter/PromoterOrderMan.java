@@ -2,10 +2,11 @@ package com.linayi.entity.promoter;
 
 import com.linayi.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
-
+@Data
 public class PromoterOrderMan extends BaseEntity {
     private Integer promoterOrderManId;
 
@@ -31,10 +32,10 @@ public class PromoterOrderMan extends BaseEntity {
     @ApiModelProperty(name = "homePageIncome", value = "首页总成交额")
     private Integer homePageIncome;            //总成交额(首页)
 
-    @ApiModelProperty(name = "numberOfOrders", value = "订单数")
+    @ApiModelProperty(name = "numberOfOrders", value = "订单数/个人订单数")
     private Integer numberOfOrders;            //订单数(通用)
 
-    @ApiModelProperty(name = "totalSum", value = "订单合计金额")
+    @ApiModelProperty(name = "totalSum", value = "订单合计金额/个人成交额")
     private Integer totalSum;            //订单合计金额(通用)
 
     @ApiModelProperty(name = "totalHundredSum", value = "订单合计大于或等于100金额")
@@ -72,190 +73,27 @@ public class PromoterOrderMan extends BaseEntity {
 
     private String date;            //用于查询订单统计时时查询本月还是全部	本月MONTH 	全部:ALL
 
+    private Integer salesId;
 
-    public Integer getPromoterOrderManId() {
-        return promoterOrderManId;
-    }
+    @ApiModelProperty(name = "personalSales", value = "个人销售服务额")
+    private Integer personalSales;
 
-    public void setPromoterOrderManId(Integer promoterOrderManId) {
-        this.promoterOrderManId = promoterOrderManId;
-    }
+    @ApiModelProperty(name = "personalProfit", value = "个人收益")
+    private Integer personalProfit;
 
-    public Integer getPromoterId() {
-        return promoterId;
-    }
+    @ApiModelProperty(name = "teamOfOrders", value = "团队订单量")
+    private Integer teamOfOrders;
 
-    public void setPromoterId(Integer promoterId) {
-        this.promoterId = promoterId;
-    }
+    @ApiModelProperty(name = "teamTotalSum", value = "团队成交额")
+    private Integer teamTotalSum;
 
-    public Integer getOrderManId() {
-        return orderManId;
-    }
+    @ApiModelProperty(name = "teamSales", value = "团队销售服务额")
+    private Integer teamSales;
 
-    public void setOrderManId(Integer orderManId) {
-        this.orderManId = orderManId;
-    }
+    @ApiModelProperty(name = "teamProfit", value = "团队收益")
+    private Integer teamProfit;
 
-    public String getIdentity() {
-        return identity;
-    }
+    @ApiModelProperty(name = "personalTotalProfit", value = "个人总收益")
+    private Integer personalTotalProfit;
 
-    public void setIdentity(String identity) {
-        this.identity = identity == null ? null : identity.trim();
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getHeadImage() {
-        return headImage;
-    }
-
-    public void setHeadImage(String headImage) {
-        this.headImage = headImage;
-    }
-
-
-    public Integer getHomePageIncome() {
-        return homePageIncome;
-    }
-
-    public void setHomePageIncome(Integer homePageIncome) {
-        this.homePageIncome = homePageIncome;
-    }
-
-    public Integer getNumberOfOrders() {
-        return numberOfOrders;
-    }
-
-    public void setNumberOfOrders(Integer numberOfOrders) {
-        this.numberOfOrders = numberOfOrders;
-    }
-
-    public Integer getTotalSum() {
-        return totalSum;
-    }
-
-    public void setTotalSum(Integer totalSum) {
-        this.totalSum = totalSum;
-    }
-
-    public Integer getNumberOfMembers() {
-        return numberOfMembers;
-    }
-
-    public void setNumberOfMembers(Integer numberOfMembers) {
-        this.numberOfMembers = numberOfMembers;
-    }
-
-    public Integer getNumberOfOrderMan() {
-        return numberOfOrderMan;
-    }
-
-    public void setNumberOfOrderMan(Integer numberOfOrderMan) {
-        this.numberOfOrderMan = numberOfOrderMan;
-    }
-
-    public Integer getNumberOfUser() {
-        return numberOfUser;
-    }
-
-    public void setNumberOfUser(Integer numberOfUser) {
-        this.numberOfUser = numberOfUser;
-    }
-
-    public Integer getOrderProfit() {
-        return orderProfit;
-    }
-
-    public void setOrderProfit(Integer orderProfit) {
-        this.orderProfit = orderProfit;
-    }
-
-    public Integer getOrderStatisticsData3() {
-        return orderStatisticsData3;
-    }
-
-    public void setOrderStatisticsData3(Integer orderStatisticsData3) {
-        this.orderStatisticsData3 = orderStatisticsData3;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public Date getOpenMemberTime() {
-        return openMemberTime;
-    }
-
-    public void setOpenMemberTime(Date openMemberTime) {
-        this.openMemberTime = openMemberTime;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-
-    public Integer getTotalHundredSum() {
-        return totalHundredSum;
-    }
-
-    public void setTotalHundredSum(Integer totalHundredSum) {
-        this.totalHundredSum = totalHundredSum;
-    }
-
-    public String getParentType() {
-        return parentType;
-    }
-
-    public void setParentType(String parentType) {
-        this.parentType = parentType;
-    }
 }

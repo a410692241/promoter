@@ -87,10 +87,12 @@
 
     <select id="getOpenMemberInfo" resultType="com.linayi.entity.promoter.OpenMemberInfo">
         SELECT
-    		 open_member_info_id, user_id, member_level, start_time, end_time, order_man_id, create_time
+    		 omi.open_member_info_id, omi.user_id, omi.member_level, omi.start_time, omi.end_time, omi.order_man_id, omi.create_time
     	FROM
-    		open_member_info
+    		open_member_info omi
+    	JOIN user u ON omi.user_id=u.user_id
     	WHERE
-    		user_id=#{userId} and end_time >=  now()
+    		omi.user_id=#{userId} and omi.end_time >=  now()
+    		and u.is_member='TRUE'
     </select>
 </mapper>

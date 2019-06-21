@@ -876,19 +876,19 @@ public class ProcurementServiceImpl implements ProcurementService {
 		int hour = c.get(Calendar.HOUR_OF_DAY);
 		int minute = c.get(Calendar.MINUTE);
 		int second = c.get(Calendar.SECOND);
-		int millisecond = c.get(Calendar.MILLISECOND);
+//		int millisecond = c.get(Calendar.MILLISECOND);
 		String dayFmt = String.format("%1$03d", day);
         String hourFmt = String.format("%1$02d", hour);
         String minuteFmt = String.format("%1$02d", minute);
         String secondFmt = String.format("%1$02d", second);
-        String millisecondFmt = String.format("%1$03d", millisecond);
-        String prefix = (year - 2000) + dayFmt + hourFmt + minuteFmt + secondFmt + millisecondFmt;
+//        String millisecondFmt = String.format("%1$03d", millisecond);
+        String prefix = (year - 2000) + dayFmt + hourFmt + minuteFmt + secondFmt;
         long seq = redisUtil.incr(prefix, 1);
         if (seq == 1){
             redisUtil.expire(prefix,3);
         }
         String formatSeq = String.format("%1$02d", seq);
-        return (year - 2000) + dayFmt + hourFmt + minuteFmt + formatSeq + secondFmt + millisecondFmt;
+        return (year - 2000) + dayFmt + hourFmt + minuteFmt + formatSeq + secondFmt;
 	}
 
 }

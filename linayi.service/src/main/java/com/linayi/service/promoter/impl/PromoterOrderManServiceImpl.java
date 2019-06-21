@@ -10,6 +10,8 @@ import com.linayi.entity.promoter.*;
 import com.linayi.entity.user.AuthenticationApply;
 import com.linayi.entity.user.ReceiveAddress;
 import com.linayi.entity.user.User;
+import com.linayi.exception.BusinessException;
+import com.linayi.exception.ErrorType;
 import com.linayi.service.promoter.PromoterOrderManService;
 import com.linayi.service.user.UserService;
 import com.linayi.util.DateUtil;
@@ -17,6 +19,7 @@ import com.linayi.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -520,5 +523,187 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         }else if("AUDIT_FAIL".equals(status)){
             authenticationApplyMapper.updateApplyOrederManInfoById(apply);
         }
+    }
+
+    //家庭服务师列表（新）
+    @Override
+    public List<PromoterOrderMan> getOpenOrderManInfoList(PromoterOrderMan promoterOrderMan) {
+        List<PromoterOrderMan> promoterOrderMEN = openOrderManInfoMapper.getOpenOrderManInfoList(promoterOrderMan);
+        for (PromoterOrderMan promoterOrderMAN : promoterOrderMEN) {
+            if(promoterOrderMAN.getHeadImage() == null) {
+                promoterOrderMAN.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
+            }else {
+                String headImage = ImageUtil.dealToShow(promoterOrderMAN.getHeadImage());
+                promoterOrderMAN.setHeadImage(headImage);
+            }
+        }
+        return promoterOrderMEN;
+    }
+
+    @Override
+    public PromoterOrderMan getOpenOrderManOrderList(PromoterOrderMan promoterOrderMan) {
+        //获取家庭服务师列表
+        List<PromoterOrderMan> promoterOrderMEN = openOrderManInfoMapper.getOpenOrderManInfoList(promoterOrderMan);
+        Integer numberOfOrders = 0;
+        Integer totalSum = 0;
+        Integer orderProfit = 0;
+        if (promoterOrderMEN.size()>0) {
+            if (!"MONTH".equals(promoterOrderMan.getDate())){
+                promoterOrderMEN.remove(0);
+            }
+            for (PromoterOrderMan promoterOrderMAN : promoterOrderMEN) {
+                numberOfOrders += promoterOrderMAN.getNumberOfOrders();
+                totalSum += promoterOrderMAN.getTotalSum();
+            }
+        }
+        PromoterOrderMan promoterOrder = new PromoterOrderMan();
+        promoterOrder.setNumberOfOrders(numberOfOrders);
+        promoterOrder.setTotalSum(totalSum);
+        promoterOrder.setNumberOfOrderMan(promoterOrderMEN.size());
+        promoterOrder.setOrderProfit(orderProfit);
+        return promoterOrder;
+    }
+
+
+
+    @Override
+    public void inviteOrderMan(AuthenticationApply apply, MultipartFile[] file) throws Exception {
+        Date nowTime = new Date();
+        //判断邀请人是否在有效期内
+        OpenOrderManInfo openOrderManInfo2 = openOrderManInfoMapper.getOpenOrderManInfoByOrderManId(apply.getUserId()).stream().findFirst().orElse(null);
+        if(openOrderManInfo2 == null || openOrderManInfo2.getEndTime().before(nowTime)){
+            throw new BusinessException(ErrorType.APPLY_ERROR);
+        }
+        //判断是否已经存在家庭服务师
+        OpenOrderManInfo openOrderManInfo1 = openOrderManInfoMapper.getOpenOrderManInfoByOrderManId(apply.getApplierId()).stream().findFirst().orElse(null);
+        if(openOrderManInfo1 != null && openOrderManInfo1.getEndTime().after(nowTime)){
+            throw new BusinessException(ErrorType.ORDER_MAN_ALREADY_EXIST);
+        }
+
+        //插入申请表
+        AuthenticationApply authenticationApply = new AuthenticationApply();
+        authenticationApply.setAddress(apply.getAddress());
+        authenticationApply.setRealName(apply.getRealName());
+        authenticationApply.setMobile(apply.getMobile());
+        authenticationApply.setUserId(apply.getUserId());
+        authenticationApply.setAreaCode(apply.getAreaCode());
+        authenticationApply.setIdCardFront(ImageUtil.handleUpload(file[0]));
+        authenticationApply.setIdCardBack(ImageUtil.handleUpload(file[1]));
+        authenticationApply.setCreateTime(new Date());
+        authenticationApply.setUpdateTime(new Date());
+        authenticationApply.setStatus("AUDIT_SUCCESS");
+        authenticationApply.setAuthenticationType("ORDER_MAN");
+        int rows = authenticationApplyMapper.insert(authenticationApply);
+
+        //插入家庭服务师相关表
+        OpenOrderManInfo openOrderManInfo = new OpenOrderManInfo();
+        Calendar c = Calendar.getInstance();  //得到当前日期和时间
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND,0);
+        Date startTime = c.getTime();
+        openOrderManInfo.setStartTime(startTime);
+
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.YEAR,1);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.MILLISECOND,0);
+        Date endTime = cal.getTime();
+        openOrderManInfo.setEndTime(endTime);
+        openOrderManInfo.setCreateTime(new Date());
+        openOrderManInfo.setOrderManLevel("1");
+        if(openOrderManInfo2 != null){
+            openOrderManInfo.setPromoterId(openOrderManInfo2.getPromoterId());
+        }
+        openOrderManInfo.setOrderManId(apply.getApplierId());
+        openOrderManInfo.setSalesId(apply.getUserId());
+        openOrderManInfo.setIdentity("ORDER_MAN");
+        openOrderManInfoMapper.insert(openOrderManInfo);
+
+//        User userInfo = userMapper.selectUserByuserId(apply.getApplierId());
+        User user = new User();
+        user.setUserId(apply.getApplierId());
+        user.setOpenOrderManInfoId(openOrderManInfo.getOpenOrderManInfoId());
+        user.setIsOrderMan("TRUE");
+        userMapper.updateUserByuserId(user);
+
+        //插入推广商下单员表（前期有用到此表，怕影响之前的接口，所以还是插入此表比较保险）
+        PromoterOrderMan promoterOrderMan = new PromoterOrderMan();
+        promoterOrderMan.setOrderManId(apply.getApplierId());
+        if(openOrderManInfo2 != null){
+            promoterOrderMan.setPromoterId(openOrderManInfo2.getPromoterId());
+        }
+        promoterOrderMan.setIdentity("ORDER_MAN");
+        promoterOrderMan.setCreateTime(nowTime);
+        promoterOrderMan.setParentType("PROMOTER");
+        promoterOrderManMapper.insert(promoterOrderMan);
+    }
+
+
+
+    //首页数据统计(本月)
+    @Override
+    public PromoterOrderMan getIndexData(PromoterOrderMan promoterOrderMan) {
+        //个人月订单/金额/有效销售额
+        PromoterOrderMan promoterOrder = openOrderManInfoMapper.getPersonalOrder(promoterOrderMan.getUserId());
+        //个人收益 订单数*2 + 有效销售额*0.8% + 个人订单数大于等于10奖励100
+        int personalProfit = (int) (promoterOrder.getNumberOfOrders() * 200 + promoterOrder.getPersonalSales() * 0.008 + (promoterOrder.getNumberOfOrders() >= 10 ? 10000 : 0));
+        promoterOrder.setPersonalProfit(personalProfit);
+        Integer teamOfOrders = 0; //团队订单量
+        Integer teamTotalSum = 0; //团队成交额
+        Integer teamProfit = 0; //团队收益
+        Integer teamSales = 0; //团队销售服务额
+        //获取全部家庭服务师列表
+        int count = 0;
+        List<PromoterOrderMan> promoterOrderMEN = openOrderManInfoMapper.getOpenOrderManInfoList(promoterOrderMan);
+        if (promoterOrderMEN.size() > 0) {
+            promoterOrderMEN.remove(0);
+            for (PromoterOrderMan promoterOrderMAN : promoterOrderMEN) {
+                PromoterOrderMan teamPromoterOrder = openOrderManInfoMapper.getPersonalOrder(promoterOrderMAN.getOrderManId());
+                if (teamPromoterOrder.getNumberOfOrders() > 10) {
+                    count++;
+                }
+                teamOfOrders += teamOfOrders;
+                teamTotalSum += teamPromoterOrder.getTotalSum();
+                teamSales += teamPromoterOrder.getPersonalSales();
+            }
+        }
+        if (teamOfOrders >= 50 && teamOfOrders < 100) {
+            teamProfit = 10000;
+        } else if (teamOfOrders >= 100 && teamOfOrders < 200) {
+            teamProfit = 15000;
+        } else if (teamOfOrders >= 200 && teamOfOrders < 500) {
+            teamProfit = 32000;
+        } else if (teamOfOrders >= 500 && teamOfOrders < 1000) {
+            teamProfit = 85000;
+        } else if (teamOfOrders >= 1000 && teamOfOrders < 2000) {
+            teamProfit = 180000;
+        } else if (teamOfOrders >= 2000 && teamOfOrders < 3000) {
+            teamProfit = 380000;
+        } else if (teamOfOrders >= 3000 && teamOfOrders < 4000) {
+            teamProfit = 600000;
+        } else if (teamOfOrders >= 4000 && teamOfOrders < 5000) {
+            teamProfit = 880000;
+        } else if (teamOfOrders >= 5000) {
+            teamProfit = 1180000;
+        }
+        promoterOrder.setTeamOfOrders(teamOfOrders);
+        promoterOrder.setTeamTotalSum(teamTotalSum);
+        promoterOrder.setTeamProfit(teamProfit - (count * 10000)); //减去订单数大于10单以上的
+        promoterOrder.setTeamSales(teamSales);
+        promoterOrder.setOrderManId(promoterOrderMan.getUserId());
+        //个人总收益
+        promoterOrder.setPersonalTotalProfit(promoterOrder.getTeamProfit()+promoterOrder.getPersonalProfit());
+        User user = userService.selectUserByuserId(promoterOrderMan.getUserId());
+        if(user.getHeadImage() == null) {
+            promoterOrder.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
+        }else {
+            String headImage = ImageUtil.dealToShow(user.getHeadImage());
+            promoterOrder.setHeadImage(headImage);
+        }
+        return promoterOrder;
     }
 }
