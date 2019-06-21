@@ -190,7 +190,7 @@ public class PromoterController extends BaseController {
 		}
 	}
 
-	@ApiOperation(value = "新增会员的有效时间", notes = "根据会员ID",produces = "application/xml,application/json")
+	@ApiOperation(value = "提交邀请会员的申请", notes = "根据会员ID",produces = "application/xml,application/json")
 	@RequestMapping(value ="openPromoterDuration.do",method=RequestMethod.POST)
 	public Object openPromoterDuration(@RequestBody PromoterVo.openPromoterDuration param){
 		ResponseData rr = null;

@@ -12,6 +12,7 @@ import com.linayi.entity.user.AuthenticationApply;
 import com.linayi.entity.user.User;
 import com.linayi.enums.SpokesmanStatus;
 import com.linayi.exception.ErrorType;
+import com.linayi.service.promoter.OrderManMemberService;
 import com.linayi.service.promoter.PromoterOrderManService;
 import com.linayi.service.spokesman.SpokesmanService;
 import com.linayi.service.user.AuthenticationApplyService;
@@ -46,6 +47,9 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 	
 	@Resource
 	private PromoterOrderManService promoterOrderManService;
+	@Resource
+	private OrderManMemberService orderManMemberService;
+
 
 	@Override
 	public Object applySharer(AuthenticationApply apply, MultipartFile[] file) {
@@ -139,7 +143,10 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 			promoterOrderManService.applyOrderManInWeb(apply.getStatus(), apply.getApplyId(), apply.getUserId(), apply.getPromoterId(), apply.getIdentity());
 		}
 		if("AUDIT_SUCCESS".equals(apply.getStatus())&&!"家庭服务师".equals(apply.getAuthenticationType())){
-			if("价格分享员".equals(apply.getAuthenticationType())){
+			if("会员".equals(apply.getAuthenticationType())){
+				apply.setAuditStr(apply.getStatus());
+				orderManMemberService.auditMember(apply);
+			} else if("价格分享员".equals(apply.getAuthenticationType())){
 				AuthenticationApply authenticationApply = new AuthenticationApply();
 				authenticationApply.setApplyId(apply.getApplyId());
 				authenticationApply.setStatus(apply.getStatus());
@@ -246,6 +253,7 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 			authenticationApplyMapper.updateStatusByApplyId(authenticationApply);
 			User user1 = userMapper.selectUserByuserId(apply.getUserId());
 
+
 			if("TRUE".equals(user1.getIsSharer())){
 				User user = new User();
 				user.setUserId(apply.getUserId());
@@ -257,6 +265,12 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 				user.setUserId(apply.getUserId());
 				user.setUpdateTime(new Date());
 				user.setIsProcurer("FALSE");
+				userMapper.updateUserByuserId(user);
+			}else if("TRUE".equals(user1.getIsMember())){
+				User user = new User();
+				user.setUserId(apply.getUserId());
+				user.setUpdateTime(new Date());
+				user.setIsMember("FALSE");
 				userMapper.updateUserByuserId(user);
 			}
 			Spokesman currentSpokesman = spokesmanService.selectSpokesmanByUserId(apply.getUserId());

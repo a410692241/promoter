@@ -61,6 +61,8 @@ public class AuthenticationApply extends BaseEntity implements Serializable{
     private String identity;
 
     private Integer orderManId;
+
+    private String auditStr;
     
 	public Integer getPromoterId() {
 		return promoterId;
@@ -285,6 +287,14 @@ public class AuthenticationApply extends BaseEntity implements Serializable{
 
     public void setOrderManId(Integer orderManId) {
         this.orderManId = orderManId;
+    }
+
+    public String getAuditStr() {
+        return auditStr;
+    }
+
+    public void setAuditStr(String auditStr) {
+        this.auditStr = auditStr;
     }
 
     @Override

@@ -95,4 +95,18 @@
     		omi.user_id=#{userId} and omi.end_time >=  now()
     		and u.is_member='TRUE'
     </select>
+
+    <update id="updateByuserIdAndOrderManId" parameterType="com.linayi.entity.promoter.OpenMemberInfo" >
+        update open_member_info
+        <set>
+            <if test="startTime != null">
+                start_time = #{startTime},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+        </set>
+        where user_id = #{userId} AND order_man_id=#{orderManId}
+    </update>
+
 </mapper>
