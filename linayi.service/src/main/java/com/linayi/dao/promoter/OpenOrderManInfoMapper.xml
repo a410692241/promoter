@@ -6,11 +6,11 @@
 </sql>
   <insert id="insert" parameterType="com.linayi.entity.promoter.OpenOrderManInfo" useGeneratedKeys="true" keyProperty="openOrderManInfoId">
     insert into open_order_man_info (open_order_man_info_id, promoter_id, order_man_id, 
-      identity, order_man_level, start_time, 
+      identity, order_man_level, start_time, sales_id,
       end_time, update_time, create_time
       )
     values (#{openOrderManInfoId,jdbcType=INTEGER}, #{promoterId,jdbcType=INTEGER}, #{orderManId,jdbcType=INTEGER}, 
-      #{identity,jdbcType=VARCHAR}, #{orderManLevel,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, 
+      #{identity,jdbcType=VARCHAR}, #{orderManLevel,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, #{salesId,jdbcType=INTEGER},
       #{endTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -18,4 +18,71 @@
     select <include refid="base_column"/> from open_order_man_info
     where open_order_man_info_id = #{openOrderManInfoId}
   </select>
+
+
+  <select id="getOpenOrderManInfoList" resultType="com.linayi.entity.promoter.PromoterOrderMan">
+    SELECT
+        oomi1.order_man_id,
+        oomi1.start_time,
+        oomi1.end_time,
+        oomi1.promoter_id,
+        oomi1.create_time,
+        oomi1.order_man_id,
+        IFNULL(COUNT(o.orders_id), 0) numberOfOrders,
+        IFNULL(
+        (SUM(o.amount)),
+        0
+        ) totalSum,
+        (
+          SELECT
+               COUNT(open_member_info_id)
+          FROM
+               open_member_info
+          WHERE
+              start_time &lt; NOW()
+              AND end_time &gt; NOW()
+              AND order_man_id = oomi1.order_man_id
+          ) numberOfMembers,
+        u.mobile,
+        u.head_image headImage,
+        u.nickname
+    FROM
+        open_order_man_info oomi1
+        LEFT JOIN orders o ON oomi1.order_man_id = o.order_man_id AND (o.community_status='PROCURE_FINISHED' or o.community_status='DELIVER_FINISHED')
+        LEFT JOIN `user` u ON u.user_id = oomi1.order_man_id
+    WHERE
+             oomi1.start_time &lt; NOW()
+         AND oomi1.end_time &gt; NOW()
+        <if test="date==null  or date!='MONTH'">
+         AND   (oomi1.sales_id = #{userId} or oomi1.order_man_id=#{userId})
+        </if>
+        <if test="date!=null and date=='MONTH'">
+         AND  oomi1.sales_id = #{userId}
+         AND  oomi1.create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
+        </if>
+    GROUP BY
+        oomi1.open_order_man_info_id
+    ORDER BY oomi1.order_man_id &lt;&gt; #{userId},oomi1.open_order_man_info_id DESC
+  </select>
+
+  <select id="getOpenOrderManInfoByOrderManId" resultType="com.linayi.entity.promoter.OpenOrderManInfo">
+    SELECT <include refid="base_column"/> from open_order_man_info
+    where order_man_id = #{orderManId}
+  </select>
+
+    <!--首页个人订单量/个人成交额/个人销售服务额-->
+    <select id="getPersonalOrder" resultType="com.linayi.entity.promoter.PromoterOrderMan">
+      SELECT
+            count(o.orders_id) numberOfOrders,
+            IFNULL(sum(o.amount),0) totalSum,
+            IFNULL(sum(IF(o.amount&gt;=10000,o.amount-1000,0)),0) personalSales
+       FROM
+            receive_address ra
+            JOIN orders o ON o.receive_address_id = ra.receive_address_id
+            AND (o.community_status='PROCURE_FINISHED' OR o.community_status='DELIVER_FINISHED')
+            AND o.create_time >  timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
+      WHERE
+            (ra.STATUS = 'NORMAL'AND ra.address_type = 'CUSTOMER'AND ra.user_id = #{userId})
+            OR o.order_man_id=#{userId}
+    </select>
 </mapper>

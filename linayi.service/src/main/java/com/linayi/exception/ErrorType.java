@@ -67,7 +67,11 @@ public enum ErrorType {
     NOT_PROCURER_NO_AUDIT(2030,"请先联系管理员绑定采买超市！"),
     MOBILE_SAME(2031,"手机号等信息已经存在"),
     PASSWORDCONSISTENCY(2032,"不能与原密码一致"),
-    SHAREPRICEOVERFLOW(2033,"分享价格溢出");
+    SHAREPRICEOVERFLOW(2033,"分享价格溢出"),
+    ORDER_MAN_ALREADY_EXIST(2034,"您已经是家庭服务师且在有效期内，不能重复开通！"),
+    APPLY_ERROR(2035,"邀请人信息错误，开通家庭服务师失败！"),
+    MEMBER_NOT_AUDIT(2036,"此用户有未审核的会员申请，暂时不能邀请!"),
+    MEMBER_EXIST(2037,"此用户已经是会员且在有效期内，邀请失败！");
 
 
 

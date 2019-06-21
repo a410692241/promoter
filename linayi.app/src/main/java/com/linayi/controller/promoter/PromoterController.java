@@ -2,6 +2,8 @@ package com.linayi.controller.promoter;
 
 import java.util.List;
 
+import com.linayi.entity.user.AuthenticationApply;
+import com.linayi.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,8 +28,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.web.multipart.MultipartFile;
 
-@Api(value = "Promoter",description="推广商接口")
+@Api(value = "Promoter",description="家庭服务师接口")
 
 @RestController
 @RequestMapping("/promoter/promoter")
@@ -43,19 +46,16 @@ public class PromoterController extends BaseController {
 
 
 	// 推广商首页
-	@ApiOperation(value = "推广商首页", notes = "", produces =
-
+	@ApiOperation(value = "家庭服务师首页", notes = "", produces =
 			"application/xml,application/json")
 	@RequestMapping
-
 			(value = "/promoterIndex.do", method = RequestMethod.POST)
 	public Object promoterIndex() {
 		try {
 			PromoterOrderMan promoterOrderMan = new PromoterOrderMan();
 			Integer userId = getUserId();
-			promoterOrderMan.setOrderManId(userId);
-			PromoterOrderMan currentPromoterOrderMan = promoterOrderManService.promoterIndex(promoterOrderMan);
-
+			promoterOrderMan.setUserId(userId);
+			PromoterOrderMan currentPromoterOrderMan = promoterOrderManService.getIndexData(promoterOrderMan);
 			return new ResponseData(currentPromoterOrderMan);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -73,10 +73,8 @@ public class PromoterController extends BaseController {
 			ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(promoterOrderMan);
 			PromoterOrderMan promoterOrderMan1 = pv.transObject(PromoterOrderMan.class);
 			Integer userId = getUserId();
-			promoterOrderMan1.setOrderManId(userId);
-
-			PromoterOrderMan currentPromoterOrderMan = promoterOrderManService.myTeamOrderStatistics(promoterOrderMan1);
-
+			promoterOrderMan1.setUserId(userId);
+			PromoterOrderMan currentPromoterOrderMan = promoterOrderManService.getOpenOrderManOrderList(promoterOrderMan1);
 			return new ResponseData(currentPromoterOrderMan);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -94,13 +92,13 @@ public class PromoterController extends BaseController {
 			PromoterOrderMan promoterOrderMan1 = pv.transObject(PromoterOrderMan.class);
 
 			if (promoterOrderMan1.getPageSize() == null) {
-				promoterOrderMan1.setPageSize(15);
+				promoterOrderMan1.setPageSize(10);
 			}
 
 			Integer userId = getUserId();
-			promoterOrderMan1.setOrderManId(userId);
+			promoterOrderMan1.setUserId(userId);
 
-			List<PromoterOrderMan> promoterOrderManList = promoterOrderManService.orderManList(promoterOrderMan1);
+			List<PromoterOrderMan> promoterOrderManList = promoterOrderManService.getOpenOrderManInfoList(promoterOrderMan1);
 			pageResult = new PageResult<>(promoterOrderManList,promoterOrderMan1);
 			return new ResponseData(pageResult);
 		} catch (Exception e) {
@@ -194,7 +192,7 @@ public class PromoterController extends BaseController {
 
 	@ApiOperation(value = "新增会员的有效时间", notes = "根据会员ID",produces = "application/xml,application/json")
 	@RequestMapping(value ="openPromoterDuration.do",method=RequestMethod.POST)
-	public ResponseData openPromoterDuration(@RequestBody PromoterVo.openPromoterDuration param){
+	public Object openPromoterDuration(@RequestBody PromoterVo.openPromoterDuration param){
 		ResponseData rr = null;
 		try{
 			Integer promoterDuration = param.getPromoterDuration();
@@ -202,8 +200,10 @@ public class PromoterController extends BaseController {
 			Integer userId = getUserId();
 			Integer uid = param.getUserId();
 			orderManMemberService.updateValidTimeById(uid,userId,memberLevel,promoterDuration);
-			rr=new ResponseData("success");
+			rr=new ResponseData("邀请会员申请成功，等待后台审核！");
 			return rr;
+		}catch (BusinessException e) {
+			return new ResponseData(e.getErrorType()).toString();
 		}catch(Exception e){
 			return new ResponseData(ErrorType.SYSTEM_ERROR);
 		}
@@ -315,4 +315,33 @@ public class PromoterController extends BaseController {
 		}
 		return new ResponseData(ErrorType.SYSTEM_ERROR);
 	}
+
+
+	//邀请家庭服务师（扫二维码不用审核版本）
+	@ApiOperation(value = "扫二维码邀请", produces = "application/xml,application/json")
+		@PostMapping("/inviteOrderMan.do")
+	@ResponseBody
+	public Object inviteOrderMan(String realName,String areaCode, String mobile,Integer userId,String address, MultipartFile[] file) {
+		try {
+			AuthenticationApply apply = new AuthenticationApply();
+			apply.setAddress(address);
+			apply.setRealName(realName);
+			apply.setMobile(mobile);
+			apply.setUserId(userId);
+			apply.setAreaCode(areaCode);
+			apply.setApplierId(getUserId());
+			//判断对象和数组是否为null
+			if (apply != null && file.length == 2) {
+				promoterOrderManService.inviteOrderMan(apply, file);
+			}
+			return new ResponseData("开通家庭服务师成功!");
+		} catch (BusinessException e) {
+			return new ResponseData(e.getErrorType()).toString();
+		} catch (Exception e) {
+			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+		}
+
+	}
+
+
 }
