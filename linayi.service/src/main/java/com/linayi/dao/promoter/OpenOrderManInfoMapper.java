@@ -25,4 +25,12 @@ public interface OpenOrderManInfoMapper {
     List<PromoterOrderMan> getOpenOrderManInfoList(PromoterOrderMan promoterOrderMan);
 
     List<OpenOrderManInfo> getOpenOrderManInfoByOrderManId(Integer orderManId);
+
+
+    /**
+     * 首页数据统计
+     * @param promoterOrderMan
+     * @return
+     */
+   PromoterOrderMan getPersonalOrder(Integer userId);
 }

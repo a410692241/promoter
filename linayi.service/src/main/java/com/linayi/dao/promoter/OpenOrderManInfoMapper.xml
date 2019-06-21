@@ -27,6 +27,7 @@
         oomi1.end_time,
         oomi1.promoter_id,
         oomi1.create_time,
+        oomi1.order_man_id,
         IFNULL(COUNT(o.orders_id), 0) numberOfOrders,
         IFNULL(
         (SUM(o.amount)),
@@ -68,4 +69,20 @@
     SELECT <include refid="base_column"/> from open_order_man_info
     where order_man_id = #{orderManId}
   </select>
+
+    <!--首页个人订单量/个人成交额/个人销售服务额-->
+    <select id="getPersonalOrder" resultType="com.linayi.entity.promoter.PromoterOrderMan">
+      SELECT
+            count(o.orders_id) numberOfOrders,
+            IFNULL(sum(o.amount),0) totalSum,
+            IFNULL(sum(IF(o.amount&gt;=10000,o.amount-1000,0)),0) personalSales
+       FROM
+            receive_address ra
+            JOIN orders o ON o.receive_address_id = ra.receive_address_id
+            AND (o.community_status='PROCURE_FINISHED' OR o.community_status='DELIVER_FINISHED')
+            AND o.create_time >  timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
+      WHERE
+            (ra.STATUS = 'NORMAL'AND ra.address_type = 'CUSTOMER'AND ra.user_id = #{userId})
+            OR order_man_id=#{userId}
+    </select>
 </mapper>

@@ -47,18 +47,15 @@ public class PromoterController extends BaseController {
 
 	// 推广商首页
 	@ApiOperation(value = "推广商首页", notes = "", produces =
-
 			"application/xml,application/json")
 	@RequestMapping
-
 			(value = "/promoterIndex.do", method = RequestMethod.POST)
 	public Object promoterIndex() {
 		try {
 			PromoterOrderMan promoterOrderMan = new PromoterOrderMan();
 			Integer userId = getUserId();
-			promoterOrderMan.setOrderManId(userId);
-			PromoterOrderMan currentPromoterOrderMan = promoterOrderManService.promoterIndex(promoterOrderMan);
-
+			promoterOrderMan.setUserId(userId);
+			PromoterOrderMan currentPromoterOrderMan = promoterOrderManService.getIndexData(promoterOrderMan);
 			return new ResponseData(currentPromoterOrderMan);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -319,7 +316,7 @@ public class PromoterController extends BaseController {
 
 
 	//邀请家庭服务师（扫二维码不用审核版本）
-		@RequestMapping("/inviteOrderMan.do")
+		@PostMapping("/inviteOrderMan.do")
 	@ResponseBody
 	public Object inviteOrderMan(String realName, String mobile,Integer userId,String address, MultipartFile[] file) {
 		try {

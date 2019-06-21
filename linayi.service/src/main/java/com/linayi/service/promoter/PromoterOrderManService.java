@@ -80,4 +80,11 @@ public interface PromoterOrderManService {
      * @return
      */
     PromoterOrderMan getOpenOrderManOrderList(PromoterOrderMan promoterOrderMan);
+
+    /**
+     * 首页数据统计
+     * @param promoterOrderMan
+     * @return
+     */
+    PromoterOrderMan getIndexData(PromoterOrderMan promoterOrderMan);
 }

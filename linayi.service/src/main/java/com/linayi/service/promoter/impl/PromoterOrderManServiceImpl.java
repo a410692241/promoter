@@ -564,6 +564,8 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         return promoterOrder;
     }
 
+
+
     @Override
     public void inviteOrderMan(AuthenticationApply apply, MultipartFile[] file) throws Exception {
         Date nowTime = new Date();
@@ -640,4 +642,59 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     }
 
 
+
+    //首页数据统计(本月)
+    @Override
+    public PromoterOrderMan getIndexData(PromoterOrderMan promoterOrderMan) {
+        //个人月订单/金额/有效销售额
+        PromoterOrderMan promoterOrder = openOrderManInfoMapper.getPersonalOrder(promoterOrderMan.getUserId());
+        //个人收益 订单数*2 + 有效销售额*0.8% + 个人订单数大于等于10奖励100
+        int personalProfit = (int) (promoterOrder.getNumberOfOrders() * 200 + promoterOrder.getPersonalSales() * 0.008 + (promoterOrder.getNumberOfOrders() >= 10 ? 10000 : 0));
+        promoterOrder.setPersonalProfit(personalProfit);
+        Integer teamOfOrders = 0; //团队订单量
+        Integer teamTotalSum = 0; //团队成交额
+        Integer teamProfit = 0; //团队收益
+        Integer teamSales = 0; //团队销售服务额
+        //获取全部家庭服务师列表
+        int count = 0;
+        List<PromoterOrderMan> promoterOrderMEN = openOrderManInfoMapper.getOpenOrderManInfoList(promoterOrderMan);
+        if (promoterOrderMEN.size() > 0) {
+            promoterOrderMEN.remove(0);
+            for (PromoterOrderMan promoterOrderMAN : promoterOrderMEN) {
+                PromoterOrderMan teamPromoterOrder = openOrderManInfoMapper.getPersonalOrder(promoterOrderMAN.getOrderManId());
+                if (teamPromoterOrder.getNumberOfOrders() > 10) {
+                    count++;
+                }
+                teamOfOrders += teamOfOrders;
+                teamTotalSum += teamPromoterOrder.getTotalSum();
+                teamSales += teamPromoterOrder.getPersonalSales();
+            }
+        }
+        if (teamOfOrders >= 50 && teamOfOrders < 100) {
+            teamProfit = 10000;
+        } else if (teamOfOrders >= 100 && teamOfOrders < 200) {
+            teamProfit = 15000;
+        } else if (teamOfOrders >= 200 && teamOfOrders < 500) {
+            teamProfit = 32000;
+        } else if (teamOfOrders >= 500 && teamOfOrders < 1000) {
+            teamProfit = 85000;
+        } else if (teamOfOrders >= 1000 && teamOfOrders < 2000) {
+            teamProfit = 180000;
+        } else if (teamOfOrders >= 2000 && teamOfOrders < 3000) {
+            teamProfit = 380000;
+        } else if (teamOfOrders >= 3000 && teamOfOrders < 4000) {
+            teamProfit = 600000;
+        } else if (teamOfOrders >= 4000 && teamOfOrders < 5000) {
+            teamProfit = 880000;
+        } else if (teamOfOrders >= 5000) {
+            teamProfit = 1180000;
+        }
+        promoterOrder.setTeamOfOrders(teamOfOrders);
+        promoterOrder.setTeamTotalSum(teamTotalSum);
+        promoterOrder.setTeamProfit(teamProfit - (count * 10000)); //减去订单数大于10单以上的
+        promoterOrder.setTeamSales(teamSales);
+        //个人总收益
+        promoterOrder.setPersonalTotalProfit(promoterOrder.getTeamProfit()+promoterOrder.getPersonalProfit());
+        return promoterOrder;
+    }
 }

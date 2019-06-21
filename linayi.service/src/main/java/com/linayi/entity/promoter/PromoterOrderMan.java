@@ -32,10 +32,10 @@ public class PromoterOrderMan extends BaseEntity {
     @ApiModelProperty(name = "homePageIncome", value = "首页总成交额")
     private Integer homePageIncome;            //总成交额(首页)
 
-    @ApiModelProperty(name = "numberOfOrders", value = "订单数")
+    @ApiModelProperty(name = "numberOfOrders", value = "订单数/个人订单数")
     private Integer numberOfOrders;            //订单数(通用)
 
-    @ApiModelProperty(name = "totalSum", value = "订单合计金额")
+    @ApiModelProperty(name = "totalSum", value = "订单合计金额/个人成交额")
     private Integer totalSum;            //订单合计金额(通用)
 
     @ApiModelProperty(name = "totalHundredSum", value = "订单合计大于或等于100金额")
@@ -74,4 +74,26 @@ public class PromoterOrderMan extends BaseEntity {
     private String date;            //用于查询订单统计时时查询本月还是全部	本月MONTH 	全部:ALL
 
     private Integer salesId;
+
+    @ApiModelProperty(name = "personalSales", value = "个人销售服务额")
+    private Integer personalSales;
+
+    @ApiModelProperty(name = "personalProfit", value = "个人收益")
+    private Integer personalProfit;
+
+    @ApiModelProperty(name = "teamOfOrders", value = "团队订单量")
+    private Integer teamOfOrders;
+
+    @ApiModelProperty(name = "teamTotalSum", value = "团队成交额")
+    private Integer teamTotalSum;
+
+    @ApiModelProperty(name = "teamSales", value = "团队销售服务额")
+    private Integer teamSales;
+
+    @ApiModelProperty(name = "teamProfit", value = "团队收益")
+    private Integer teamProfit;
+
+    @ApiModelProperty(name = "personalTotalProfit", value = "个人总收益")
+    private Integer personalTotalProfit;
+
 }
