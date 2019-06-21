@@ -250,16 +250,12 @@ public class PromoterController extends BaseController {
 	})
 	@RequestMapping(value ="statisticalOrder.do",method=RequestMethod.POST)
 	public Object statisticalOrder( @RequestBody PromoterVo.statisticalOrder param){
-		ResponseData rr = null;
 		try {
-			String range = param.getDate();
-			PromoterOrderMan promoterOrderMan = promoterOrderManService.getStatisALL(getUserId(), range,"CUSTOMER",null);
-			promoterOrderMan.setOrderStatisticsData3(promoterOrderMan.getNumberOfMembers());
-			if(promoterOrderMan.getNumberOfMembers() == null){
-				promoterOrderMan.setOrderStatisticsData3(0);
-			}
-			rr = new ResponseData(promoterOrderMan);
-			return rr;
+			ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(param);
+			PromoterOrderMan promoterOrderMan = pv.transObject(PromoterOrderMan.class);
+			promoterOrderMan.setUserId(getUserId());
+			PromoterOrderMan promoterOrder= promoterOrderManService.getPersonalOrderProfit(promoterOrderMan);
+			return new ResponseData(promoterOrder);
 		} catch (Exception e) {
 			return new ResponseData(ErrorType.SYSTEM_ERROR);
 		}

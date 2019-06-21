@@ -87,4 +87,11 @@ public interface PromoterOrderManService {
      * @return
      */
     PromoterOrderMan getIndexData(PromoterOrderMan promoterOrderMan);
+
+
+    /**
+     * 代顾客下单数据统计
+     * @return
+     */
+    PromoterOrderMan getPersonalOrderProfit(PromoterOrderMan promoterOrderMan);
 }
