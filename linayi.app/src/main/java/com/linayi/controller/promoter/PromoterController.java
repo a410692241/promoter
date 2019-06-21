@@ -321,14 +321,14 @@ public class PromoterController extends BaseController {
 	//邀请家庭服务师（扫二维码不用审核版本）
 		@RequestMapping("/inviteOrderMan.do")
 	@ResponseBody
-	public Object inviteOrderMan(String realName, String mobile,Integer userId, Integer applierId, String address, MultipartFile[] file) {
+	public Object inviteOrderMan(String realName, String mobile,Integer userId,String address, MultipartFile[] file) {
 		try {
 			AuthenticationApply apply = new AuthenticationApply();
 			apply.setAddress(address);
 			apply.setRealName(realName);
 			apply.setMobile(mobile);
 			apply.setUserId(userId);
-			apply.setApplierId(applierId);
+			apply.setApplierId(getUserId());
 			//判断对象和数组是否为null
 			if (apply != null && file.length == 2) {
 				promoterOrderManService.inviteOrderMan(apply, file);

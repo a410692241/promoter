@@ -627,7 +627,16 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         user.setIsOrderMan("TRUE");
         userMapper.updateUserByuserId(user);
 
-        //TODO 插入推广商下单员表
+        //插入推广商下单员表（前期有用到此表，怕影响之前的接口，所以还是插入此表比较保险）
+        PromoterOrderMan promoterOrderMan = new PromoterOrderMan();
+        promoterOrderMan.setOrderManId(apply.getApplierId());
+        if(openOrderManInfo2 != null){
+            promoterOrderMan.setPromoterId(openOrderManInfo2.getPromoterId());
+        }
+        promoterOrderMan.setIdentity("ORDER_MAN");
+        promoterOrderMan.setCreateTime(nowTime);
+        promoterOrderMan.setParentType("PROMOTER");
+        promoterOrderManMapper.insert(promoterOrderMan);
     }
 
 
