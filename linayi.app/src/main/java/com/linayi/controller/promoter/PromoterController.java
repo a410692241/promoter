@@ -192,7 +192,7 @@ public class PromoterController extends BaseController {
 
 	@ApiOperation(value = "新增会员的有效时间", notes = "根据会员ID",produces = "application/xml,application/json")
 	@RequestMapping(value ="openPromoterDuration.do",method=RequestMethod.POST)
-	public ResponseData openPromoterDuration(@RequestBody PromoterVo.openPromoterDuration param){
+	public Object openPromoterDuration(@RequestBody PromoterVo.openPromoterDuration param){
 		ResponseData rr = null;
 		try{
 			Integer promoterDuration = param.getPromoterDuration();
@@ -200,8 +200,10 @@ public class PromoterController extends BaseController {
 			Integer userId = getUserId();
 			Integer uid = param.getUserId();
 			orderManMemberService.updateValidTimeById(uid,userId,memberLevel,promoterDuration);
-			rr=new ResponseData("success");
+			rr=new ResponseData("邀请会员申请成功，等待后台审核！");
 			return rr;
+		}catch (BusinessException e) {
+			return new ResponseData(e.getErrorType()).toString();
 		}catch(Exception e){
 			return new ResponseData(ErrorType.SYSTEM_ERROR);
 		}
@@ -318,13 +320,14 @@ public class PromoterController extends BaseController {
 	//邀请家庭服务师（扫二维码不用审核版本）
 		@PostMapping("/inviteOrderMan.do")
 	@ResponseBody
-	public Object inviteOrderMan(String realName, String mobile,Integer userId,String address, MultipartFile[] file) {
+	public Object inviteOrderMan(String realName,String areaCode, String mobile,Integer userId,String address, MultipartFile[] file) {
 		try {
 			AuthenticationApply apply = new AuthenticationApply();
 			apply.setAddress(address);
 			apply.setRealName(realName);
 			apply.setMobile(mobile);
 			apply.setUserId(userId);
+			apply.setAreaCode(areaCode);
 			apply.setApplierId(getUserId());
 			//判断对象和数组是否为null
 			if (apply != null && file.length == 2) {

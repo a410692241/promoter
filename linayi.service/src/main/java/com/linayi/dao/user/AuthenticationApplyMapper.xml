@@ -24,7 +24,8 @@
 		specialty,
 		hobby,
 		motto,
-		image
+		image,
+		order_man_id
 		)
 		values (
 		#{applyId,jdbcType=INTEGER},
@@ -45,7 +46,8 @@
 		#{specialty,jdbcType=VARCHAR},
 		#{hobby,jdbcType=VARCHAR},
 		#{motto,jdbcType=VARCHAR},
-		#{image,jdbcType=VARCHAR}
+		#{image,jdbcType=VARCHAR},
+		#{orderManId,jdbcType=INTEGER}
 		)
 	</insert>
 

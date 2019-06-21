@@ -586,6 +586,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         authenticationApply.setRealName(apply.getRealName());
         authenticationApply.setMobile(apply.getMobile());
         authenticationApply.setUserId(apply.getUserId());
+        authenticationApply.setAreaCode(apply.getAreaCode());
         authenticationApply.setIdCardFront(ImageUtil.handleUpload(file[0]));
         authenticationApply.setIdCardBack(ImageUtil.handleUpload(file[1]));
         authenticationApply.setCreateTime(new Date());
