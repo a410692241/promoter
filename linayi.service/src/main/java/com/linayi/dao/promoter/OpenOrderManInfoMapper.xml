@@ -83,6 +83,6 @@
             AND o.create_time >  timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
       WHERE
             (ra.STATUS = 'NORMAL'AND ra.address_type = 'CUSTOMER'AND ra.user_id = #{userId})
-            OR order_man_id=#{userId}
+            OR o.order_man_id=#{userId}
     </select>
 </mapper>

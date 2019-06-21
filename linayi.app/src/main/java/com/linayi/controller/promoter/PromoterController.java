@@ -30,7 +30,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.multipart.MultipartFile;
 
-@Api(value = "Promoter",description="推广商接口")
+@Api(value = "Promoter",description="家庭服务师接口")
 
 @RestController
 @RequestMapping("/promoter/promoter")
@@ -46,7 +46,7 @@ public class PromoterController extends BaseController {
 
 
 	// 推广商首页
-	@ApiOperation(value = "推广商首页", notes = "", produces =
+	@ApiOperation(value = "家庭服务师首页", notes = "", produces =
 			"application/xml,application/json")
 	@RequestMapping
 			(value = "/promoterIndex.do", method = RequestMethod.POST)
@@ -318,6 +318,7 @@ public class PromoterController extends BaseController {
 
 
 	//邀请家庭服务师（扫二维码不用审核版本）
+	@ApiOperation(value = "扫二维码邀请", produces = "application/xml,application/json")
 		@PostMapping("/inviteOrderMan.do")
 	@ResponseBody
 	public Object inviteOrderMan(String realName,String areaCode, String mobile,Integer userId,String address, MultipartFile[] file) {

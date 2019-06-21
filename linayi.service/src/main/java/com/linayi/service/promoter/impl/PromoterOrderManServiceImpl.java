@@ -694,8 +694,16 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         promoterOrder.setTeamTotalSum(teamTotalSum);
         promoterOrder.setTeamProfit(teamProfit - (count * 10000)); //减去订单数大于10单以上的
         promoterOrder.setTeamSales(teamSales);
+        promoterOrder.setOrderManId(promoterOrderMan.getUserId());
         //个人总收益
         promoterOrder.setPersonalTotalProfit(promoterOrder.getTeamProfit()+promoterOrder.getPersonalProfit());
+        User user = userService.selectUserByuserId(promoterOrderMan.getUserId());
+        if(user.getHeadImage() == null) {
+            promoterOrder.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
+        }else {
+            String headImage = ImageUtil.dealToShow(user.getHeadImage());
+            promoterOrder.setHeadImage(headImage);
+        }
         return promoterOrder;
     }
 }
