@@ -677,7 +677,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
                 if (teamPromoterOrder.getNumberOfOrders() > 10) {
                     count++;
                 }
-                teamOfOrders += teamOfOrders;
+                teamOfOrders += teamPromoterOrder.getNumberOfOrders();
                 teamTotalSum += teamPromoterOrder.getTotalSum();
                 teamSales += teamPromoterOrder.getPersonalSales();
             }
