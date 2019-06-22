@@ -18,6 +18,10 @@
     select <include refid="base_column"/> from open_order_man_info
     where open_order_man_info_id = #{openOrderManInfoId}
   </select>
+    <select id="getOpenOrderManInfoByEndTime" resultType="com.linayi.entity.promoter.OpenOrderManInfo">
+        select <include refid="base_column"/> from open_order_man_info
+        where order_man_id = #{orderManId} and end_time &gt;  now()
+    </select>
 
 
   <select id="getOpenOrderManInfoList" resultType="com.linayi.entity.promoter.PromoterOrderMan">

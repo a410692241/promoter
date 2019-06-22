@@ -105,17 +105,22 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 						var opts = "";
 						opts = opts + "<a href='javascript:void(0);' ng-click='edit( " + rowObject.userId + " )' class='btn btn-primary shiny fa fa-edit btn-sm td-compile'>编辑</a> ";
 
-					if( rowObject.isOrderMan == 'FALSE' ){
-						opts = opts + "<a href='javascript:void(0);' ng-click='orderMan( "+rowObject.userId+","+ 20+ ")' class='btn btn-primary fa fa-show btn-sm td-compile'>启用家庭服务师</a> ";
-					}else{
-						opts = opts + "<a href='javascript:void(0);' ng-click='orderMan( "+rowObject.userId+" ,"+ 10 + ")' class='btn btn-primary fa fa-show btn-sm td-compile'>禁用家庭服务师</a> ";
-					}
+						if(rowObject.orderMan == true){
+							if( rowObject.isOrderMan == 'FALSE' ){
+								opts = opts + "<a href='javascript:void(0);' ng-click='orderMan( "+rowObject.userId+","+ 20+ ")' class='btn btn-primary fa fa-show btn-sm td-compile'>启用家庭服务师</a> ";
+							}else{
+								opts = opts + "<a href='javascript:void(0);' ng-click='orderMan( "+rowObject.userId+" ,"+ 10 + ")' class='btn btn-primary fa fa-show btn-sm td-compile'>禁用家庭服务师</a> ";
+							}
+						}
 
-					if( rowObject.isMember == 'FALSE' ){
-							opts = opts + "<a href='javascript:void(0);' ng-click='member( "+rowObject.userId+","+ 20+ ")' class='btn btn-primary fa fa-show btn-sm td-compile'>启用会员</a> ";
-					}else{
-							opts = opts + "<a href='javascript:void(0);' ng-click='member( "+rowObject.userId+" ,"+ 10 + ")' class='btn btn-primary fa fa-show btn-sm td-compile'>禁用会员</a> ";
-					}
+						if(rowObject.member == true){
+							if( rowObject.isMember == 'FALSE' ){
+								opts = opts + "<a href='javascript:void(0);' ng-click='member( "+rowObject.userId+","+ 20+ ")' class='btn btn-primary fa fa-show btn-sm td-compile'>启用会员</a> ";
+							}else{
+								opts = opts + "<a href='javascript:void(0);' ng-click='member( "+rowObject.userId+" ,"+ 10 + ")' class='btn btn-primary fa fa-show btn-sm td-compile'>禁用会员</a> ";
+							}
+						}
+
 					return opts;
 				}}
 //	             {label:"操作",name:"opt",width:220,sortable:false,formatter:function(cellvalue, options, rowObject){

@@ -128,6 +128,10 @@ public class User extends BaseEntity implements Serializable {
 
     private String receiverAddress;
 
+    private Boolean member;
+
+    private Boolean orderMan;
+
     private static final long serialVersionUID = 1L;
     
     public String getIsProcurer() {
@@ -470,5 +474,21 @@ public class User extends BaseEntity implements Serializable {
 
     public void setIsFlow(String isFlow) {
         this.isFlow = isFlow;
+    }
+
+    public Boolean getMember() {
+        return member;
+    }
+
+    public void setMember(Boolean member) {
+        this.member = member;
+    }
+
+    public Boolean getOrderMan() {
+        return orderMan;
+    }
+
+    public void setOrderMan(Boolean orderMan) {
+        this.orderMan = orderMan;
     }
 }

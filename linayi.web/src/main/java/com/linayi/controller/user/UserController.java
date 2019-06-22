@@ -1,7 +1,9 @@
 package com.linayi.controller.user;
 
 
+import com.linayi.entity.promoter.OpenOrderManInfo;
 import com.linayi.entity.user.User;
+import com.linayi.service.promoter.PromoterOrderManService;
 import com.linayi.service.user.UserService;
 import com.linayi.util.PageResult;
 import com.linayi.util.ResponseData;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -22,12 +25,19 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private PromoterOrderManService promoterOrderManService;
 
 
     @RequestMapping("/list.do")
     @ResponseBody
     public Object userList(User user) {
         List<User> list = userService.selectUserListByWeb(user);
+        for(User currentUser:list){
+            Map<String,Boolean> memberAndOrderMan = promoterOrderManService.getMemberAndOrderMan(currentUser.getUserId());
+            currentUser.setMember(memberAndOrderMan.get("member"));
+            currentUser.setOrderMan(memberAndOrderMan.get("orderMan"));
+        }
         PageResult<User> pageResult = new PageResult<User>(list, user.getTotal());
         return pageResult;
     }
