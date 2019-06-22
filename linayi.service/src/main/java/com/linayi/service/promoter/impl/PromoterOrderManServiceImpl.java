@@ -644,7 +644,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
 
 
 
-    //首页数据统计(本月)
+    //首页数据统计(本月包含收益)
     @Override
     public PromoterOrderMan getIndexData(PromoterOrderMan promoterOrderMan) {
         //个人月订单/金额/有效销售额
@@ -704,6 +704,9 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         promoterOrder.setTeamOfOrders(teamOfOrders);
         promoterOrder.setTeamTotalSum(teamTotalSum);
         promoterOrder.setTeamProfit(teamProfit - (count * 10000)); //减去订单数大于10单以上的
+        if(promoterOrder.getTeamProfit()<0){
+            promoterOrder.setTeamProfit(0);
+        }
         promoterOrder.setTeamSales(teamSales);
         promoterOrder.setOrderManId(promoterOrderMan.getUserId());
         //个人总收益
