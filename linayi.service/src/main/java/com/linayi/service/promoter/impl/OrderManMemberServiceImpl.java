@@ -249,9 +249,13 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 		authenticationApplyMapper.insert(authenticationApply);
 
 
-		//TODO 判断会员表和关联表，如果有数据就修改，没有才新增
-		//插入会员表
-		OpenMemberInfo openMemberInfo = new OpenMemberInfo();
+		//TODO 判断会员表和关联表，如果有数据就修改，没有才新
+		OpenMemberInfo paramOenMemberInfo = new OpenMemberInfo();
+		paramOenMemberInfo.setUserId(uid);
+		OpenMemberInfo currentOpenMemberInfo = openMemberInfoMapper.getMemberStartTimeByUserId(paramOenMemberInfo).stream().findFirst().orElse(null);
+		if(currentOpenMemberInfo == null){
+			//插入会员表
+			OpenMemberInfo openMemberInfo = new OpenMemberInfo();
 //		Calendar cal = Calendar.getInstance();
 //		cal.set(Calendar.HOUR_OF_DAY, 0);
 //		cal.set(Calendar.MINUTE, 0);
@@ -268,20 +272,42 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 //		Date endTime = cal.getTime();
 //		openMemberInfo.setEndTime(endTime);
 
-		openMemberInfo.setFreeTimes(0);
-		openMemberInfo.setUserId(uid);
-		openMemberInfo.setOrderManId(userId);
-		openMemberInfo.setCreateTime(new Date());
-		openMemberInfo.setMemberLevel("SENIOR");
-		openMemberInfo.setOpenOrderManInfoId(openOrderManInfoId);
-		openMemberInfoMapper.insert(openMemberInfo);
+			openMemberInfo.setFreeTimes(0);
+			openMemberInfo.setUserId(uid);
+			openMemberInfo.setOrderManId(userId);
+			openMemberInfo.setCreateTime(new Date());
+			openMemberInfo.setMemberLevel("SENIOR");
+			openMemberInfo.setOpenOrderManInfoId(openOrderManInfoId);
+			openMemberInfoMapper.insert(openMemberInfo);
+		}else{
+			OpenMemberInfo openMemberInfo = new OpenMemberInfo();
+			openMemberInfo.setOpenMemberInfoId(currentOpenMemberInfo.getOpenMemberInfoId());
+			openMemberInfo.setMemberLevel("1");
+			openMemberInfo.setStartTime(null);
+			openMemberInfo.setEndTime(null);
+			openMemberInfo.setFreeTimes(0);
+			openMemberInfo.setOrderManId(userId);
+			openMemberInfo.setOpenOrderManInfoId(openOrderManInfoId);
+			openMemberInfoMapper.updateById(openMemberInfo);
+		}
 
-		//插入下单员会员表
-		OrderManMember record = new OrderManMember();
-		record.setMemberId(uid);
-		record.setOrderManId(userId);
-		record.setCreateTime(new Date());
-		orderManMemberMapper.insert(record );
+		OrderManMember orderManMember = new OrderManMember();
+		orderManMember.setMemberId(uid);
+		orderManMember.setOrderManId(userId);
+		OrderManMember currentOrderManMember = orderManMemberMapper.selectByAll(orderManMember).stream().findFirst().orElse(null);
+		if(currentOrderManMember == null){
+			//插入下单员会员表
+			OrderManMember record = new OrderManMember();
+			record.setMemberId(uid);
+			record.setOrderManId(userId);
+			record.setCreateTime(new Date());
+			orderManMemberMapper.insert(record );
+		}else{
+			OrderManMember record = new OrderManMember();
+			record.setOrderManMemberId(currentOrderManMember.getOrderManMemberId());
+			record.setUpdateTime(nowTime);
+			orderManMemberMapper.updateByPrimaryKeySelective(record);
+		}
 
 		return null;
 	}

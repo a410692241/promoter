@@ -37,4 +37,5 @@ public interface OpenMemberInfoMapper {
     OpenMemberInfo getOpenMemberInfo(Integer userId);
 
     void updateByuserIdAndOrderManId(OpenMemberInfo openMemberInfo);
+
 }
