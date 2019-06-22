@@ -38,7 +38,7 @@
     <select id="getOrderManMemberListByOrderManId" resultType="com.linayi.entity.promoter.OrderManMember">
  	select omm.member_id memberId from order_man_member omm
     left join user u on omm.member_id = u.user_id AND u.is_member = 'TRUE'
-    join open_member_info omi on u.user=omi.user_id AND omi.end_time &gt; now()
+    join open_member_info omi on u.user_id=omi.user_id AND omi.end_time &gt; now()
  	WHERE
  		omm.order_man_id=#{orderManId}
  		order by omm.create_time DESC
