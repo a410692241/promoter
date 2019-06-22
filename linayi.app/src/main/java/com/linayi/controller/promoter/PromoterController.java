@@ -107,47 +107,49 @@ public class PromoterController extends BaseController {
 		return new ResponseData(ErrorType.SYSTEM_ERROR);
 	}
 
-	// 会员列表-订单统计
-	@ApiOperation(value = "会员列表-订单统计", produces = "application/xml,application/json")
-	@RequestMapping(value = "/memberListOrderStatistics.do", method = RequestMethod.POST)
-	public Object memberListOrderStatistics(@RequestBody PromoterVo.MemberListOrderStatisticsObj promoterOrderMan) {
-		try {
-			ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(promoterOrderMan);
-			PromoterOrderMan promoterOrderMan1 = pv.transObject(PromoterOrderMan.class);
-			promoterOrderMan1.setOrderManId(getUserId());
-			PromoterOrderMan currentPromoterOrderMan = promoterOrderManService.getOrderManData(promoterOrderMan1);
-			/*PromoterOrderMan currentPromoterOrderMan = promoterOrderManService.memberListOrderStatistics(promoterOrderMan1);*/
+    // 会员列表-订单统计
+    @ApiOperation(value = "会员列表-订单统计", produces = "application/xml,application/json")
+    @RequestMapping(value = "/memberListOrderStatistics.do", method = RequestMethod.POST)
+    public Object memberListOrderStatistics(@RequestBody PromoterVo.MemberListOrderStatisticsObj promoterOrderMan) {
+        try {
+            ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(promoterOrderMan);
+            PromoterOrderMan promoterOrderMan1 = pv.transObject(PromoterOrderMan.class);
 
-			return new ResponseData(currentPromoterOrderMan);
-		} catch (Exception e) {
-			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
-		}
-	}
+            if (promoterOrderMan1.getOrderManId() == null) {
+                Integer userId = getUserId();
+                promoterOrderMan1.setOrderManId(userId);
+            }
+            PromoterOrderMan currentPromoterOrderMan = promoterOrderManService.memberListOrderStatistics(promoterOrderMan1);
 
-	// 会员列表-会员列表
-	@ApiOperation(value = "会员列表-会员列表", produces = "application/xml,application/json")
-	@RequestMapping(value = "/memberList.do", method = RequestMethod.POST)
-	public Object memberList(@RequestBody PromoterVo.MemberListObj promoterOrderMan) {
-		PageResult<PromoterOrderMan> pageResult = new PageResult<>();
-		try {
-			ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(promoterOrderMan);
-			PromoterOrderMan promoterOrderMan1 = pv.transObject(PromoterOrderMan.class);
-			if (promoterOrderMan1.getPageSize() == null) {
-				promoterOrderMan1.setPageSize(8);
-			}
-		/*	if (promoterOrderMan1.getOrderManId() == null) {
-				Integer userId = getUserId();
-				promoterOrderMan1.setOrderManId (userId);
-			}
-			List<OrderManMember> orderManMemberList = promoterOrderManService.memberList(promoterOrderMan1);*/
-			List<PromoterOrderMan> orderManMemberList = promoterOrderManService.getMemberData(promoterOrderMan1.getOrderManId());
-			pageResult = new PageResult<>(orderManMemberList, promoterOrderMan1);
-			return new ResponseData(pageResult);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return new ResponseData(ErrorType.SYSTEM_ERROR);
-	}
+            return new ResponseData(currentPromoterOrderMan);
+        } catch (Exception e) {
+            return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+        }
+    }
+
+    // 会员列表-会员列表
+    @ApiOperation(value = "会员列表-会员列表", produces = "application/xml,application/json")
+    @RequestMapping(value = "/memberList.do", method = RequestMethod.POST)
+    public Object memberList(@RequestBody PromoterVo.MemberListObj promoterOrderMan) {
+        PageResult<OrderManMember> pageResult = new PageResult<>();
+        try {
+            ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(promoterOrderMan);
+            PromoterOrderMan promoterOrderMan1 = pv.transObject(PromoterOrderMan.class);
+            if (promoterOrderMan1.getPageSize() == null) {
+                promoterOrderMan1.setPageSize(8);
+            }
+            if (promoterOrderMan1.getOrderManId() == null) {
+                Integer userId = getUserId();
+                promoterOrderMan1.setOrderManId (userId);
+            }
+            List<OrderManMember> orderManMemberList = promoterOrderManService.memberList(promoterOrderMan1);
+            pageResult = new PageResult<>(orderManMemberList, promoterOrderMan1);
+            return new ResponseData(pageResult);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseData(ErrorType.SYSTEM_ERROR);
+    }
 
 	@ApiOperation(value = "新增会员", notes = "根据手机号",produces = "application/xml,application/json")
 	@RequestMapping(value = "openPromoter.do",method=RequestMethod.POST)
