@@ -698,7 +698,10 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         }
         Date nowTime = new Date();
         if("AUDIT_SUCCESS".equals(apply.getAuditStr())){
-            OpenOrderManInfo openOrderManInfo2 = openOrderManInfoMapper.getOpenOrderManInfoByOrderManId(apply.getOrderManId()).stream().findFirst().orElse(null);
+            OpenOrderManInfo openOrderManInfo2 = new OpenOrderManInfo();
+            if(apply.getOrderManId() != null){
+                openOrderManInfo2 = openOrderManInfoMapper.getOpenOrderManInfoByOrderManId(apply.getOrderManId()).stream().findFirst().orElse(null);
+            }
             OpenOrderManInfo openOrderManInfo = new OpenOrderManInfo();
             //开始时间和结束时间处理
             Calendar c = Calendar.getInstance();  //得到当前日期和时间
@@ -724,8 +727,11 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
                 openOrderManInfo.setEndTime(endTime);
                 openOrderManInfo.setCreateTime(new Date());
                 openOrderManInfo.setOrderManLevel("1");
-                if(openOrderManInfo2 != null){
+                if(openOrderManInfo2 != null ){
                     openOrderManInfo.setPromoterId(openOrderManInfo2.getPromoterId());
+                }
+                if(apply.getOrderManId() == null){
+                    openOrderManInfo.setPromoterId(1);
                 }
                 openOrderManInfo.setOrderManId(apply.getUserId());
                 if(apply.getOrderManId() != null){
@@ -760,6 +766,9 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             promoterOrderMan.setOrderManId(apply.getUserId());
             if(openOrderManInfo2 != null){
                 promoterOrderMan.setPromoterId(openOrderManInfo2.getPromoterId());
+            }
+            if(apply.getOrderManId() == null){
+                promoterOrderMan.setPromoterId(1);
             }
             promoterOrderMan.setIdentity("ORDER_MAN");
             promoterOrderMan.setCreateTime(nowTime);
