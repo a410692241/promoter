@@ -569,7 +569,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         PromoterOrderMan promoterOrder = new PromoterOrderMan();
         promoterOrder.setNumberOfOrders(numberOfOrders);
         promoterOrder.setTotalSum(totalSum);
-        promoterOrder.setNumberOfOrderMan(promoterOrderMEN.size()-1);
+        promoterOrder.setNumberOfOrderMan(promoterOrderMEN.size());
         promoterOrder.setOrderProfit(orderProfit);
         return promoterOrder;
     }
