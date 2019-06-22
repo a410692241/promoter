@@ -565,7 +565,84 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     }
 
 
+    //邀请家庭服务师-无需审核版本（作废）
+//    @Override
+//    public void inviteOrderMan(AuthenticationApply apply, MultipartFile[] file) throws Exception {
+//        Date nowTime = new Date();
+//        //判断邀请人是否在有效期内
+//        OpenOrderManInfo openOrderManInfo2 = openOrderManInfoMapper.getOpenOrderManInfoByOrderManId(apply.getUserId()).stream().findFirst().orElse(null);
+//        if(openOrderManInfo2 == null || openOrderManInfo2.getEndTime().before(nowTime)){
+//            throw new BusinessException(ErrorType.APPLY_ERROR);
+//        }
+//        //判断是否已经存在家庭服务师
+//        OpenOrderManInfo openOrderManInfo1 = openOrderManInfoMapper.getOpenOrderManInfoByOrderManId(apply.getApplierId()).stream().findFirst().orElse(null);
+//        if(openOrderManInfo1 != null && openOrderManInfo1.getEndTime().after(nowTime)){
+//            throw new BusinessException(ErrorType.ORDER_MAN_ALREADY_EXIST);
+//        }
+//
+//        //插入申请表
+//        AuthenticationApply authenticationApply = new AuthenticationApply();
+//        authenticationApply.setAddress(apply.getAddress());
+//        authenticationApply.setRealName(apply.getRealName());
+//        authenticationApply.setMobile(apply.getMobile());
+//        authenticationApply.setUserId(apply.getUserId());
+//        authenticationApply.setAreaCode(apply.getAreaCode());
+//        authenticationApply.setIdCardFront(ImageUtil.handleUpload(file[0]));
+//        authenticationApply.setIdCardBack(ImageUtil.handleUpload(file[1]));
+//        authenticationApply.setCreateTime(new Date());
+//        authenticationApply.setUpdateTime(new Date());
+//        authenticationApply.setStatus("AUDIT_SUCCESS");
+//        authenticationApply.setAuthenticationType("ORDER_MAN");
+//        int rows = authenticationApplyMapper.insert(authenticationApply);
+//
+//        //插入家庭服务师相关表
+//        OpenOrderManInfo openOrderManInfo = new OpenOrderManInfo();
+//        Calendar c = Calendar.getInstance();  //得到当前日期和时间
+//        c.set(Calendar.HOUR_OF_DAY, 0);
+//        c.set(Calendar.MINUTE, 0);
+//        c.set(Calendar.SECOND, 0);
+//        c.set(Calendar.MILLISECOND,0);
+//        Date startTime = c.getTime();
+//        openOrderManInfo.setStartTime(startTime);
+//
+//        Calendar cal = Calendar.getInstance();
+//        cal.add(Calendar.YEAR,1);
+//        cal.set(Calendar.HOUR_OF_DAY, 23);
+//        cal.set(Calendar.SECOND, 59);
+//        cal.set(Calendar.MINUTE, 59);
+//        cal.set(Calendar.MILLISECOND,0);
+//        Date endTime = cal.getTime();
+//        openOrderManInfo.setEndTime(endTime);
+//        openOrderManInfo.setCreateTime(new Date());
+//        openOrderManInfo.setOrderManLevel("1");
+//        if(openOrderManInfo2 != null){
+//            openOrderManInfo.setPromoterId(openOrderManInfo2.getPromoterId());
+//        }
+//        openOrderManInfo.setOrderManId(apply.getApplierId());
+//        openOrderManInfo.setSalesId(apply.getUserId());
+//        openOrderManInfo.setIdentity("ORDER_MAN");
+//        openOrderManInfoMapper.insert(openOrderManInfo);
+//
+////        User userInfo = userMapper.selectUserByuserId(apply.getApplierId());
+//        User user = new User();
+//        user.setUserId(apply.getApplierId());
+//        user.setOpenOrderManInfoId(openOrderManInfo.getOpenOrderManInfoId());
+//        user.setIsOrderMan("TRUE");
+//        userMapper.updateUserByuserId(user);
+//
+//        //插入推广商下单员表（前期有用到此表，怕影响之前的接口，所以还是插入此表比较保险）
+//        PromoterOrderMan promoterOrderMan = new PromoterOrderMan();
+//        promoterOrderMan.setOrderManId(apply.getApplierId());
+//        if(openOrderManInfo2 != null){
+//            promoterOrderMan.setPromoterId(openOrderManInfo2.getPromoterId());
+//        }
+//        promoterOrderMan.setIdentity("ORDER_MAN");
+//        promoterOrderMan.setCreateTime(nowTime);
+//        promoterOrderMan.setParentType("PROMOTER");
+//        promoterOrderManMapper.insert(promoterOrderMan);
+//    }
 
+    //邀请家庭服务师-需要审核版本
     @Override
     public void inviteOrderMan(AuthenticationApply apply, MultipartFile[] file) throws Exception {
         Date nowTime = new Date();
@@ -585,63 +662,102 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         authenticationApply.setAddress(apply.getAddress());
         authenticationApply.setRealName(apply.getRealName());
         authenticationApply.setMobile(apply.getMobile());
-        authenticationApply.setUserId(apply.getUserId());
+        authenticationApply.setUserId(apply.getApplierId());
         authenticationApply.setAreaCode(apply.getAreaCode());
         authenticationApply.setIdCardFront(ImageUtil.handleUpload(file[0]));
         authenticationApply.setIdCardBack(ImageUtil.handleUpload(file[1]));
         authenticationApply.setCreateTime(new Date());
         authenticationApply.setUpdateTime(new Date());
-        authenticationApply.setStatus("AUDIT_SUCCESS");
+        authenticationApply.setStatus("WAIT_AUDIT");
+        authenticationApply.setOrderManId(apply.getUserId());
         authenticationApply.setAuthenticationType("ORDER_MAN");
         int rows = authenticationApplyMapper.insert(authenticationApply);
 
-        //插入家庭服务师相关表
-        OpenOrderManInfo openOrderManInfo = new OpenOrderManInfo();
-        Calendar c = Calendar.getInstance();  //得到当前日期和时间
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND,0);
-        Date startTime = c.getTime();
-        openOrderManInfo.setStartTime(startTime);
-
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.YEAR,1);
-        cal.set(Calendar.HOUR_OF_DAY, 23);
-        cal.set(Calendar.SECOND, 59);
-        cal.set(Calendar.MINUTE, 59);
-        cal.set(Calendar.MILLISECOND,0);
-        Date endTime = cal.getTime();
-        openOrderManInfo.setEndTime(endTime);
-        openOrderManInfo.setCreateTime(new Date());
-        openOrderManInfo.setOrderManLevel("1");
-        if(openOrderManInfo2 != null){
-            openOrderManInfo.setPromoterId(openOrderManInfo2.getPromoterId());
-        }
-        openOrderManInfo.setOrderManId(apply.getApplierId());
-        openOrderManInfo.setSalesId(apply.getUserId());
-        openOrderManInfo.setIdentity("ORDER_MAN");
-        openOrderManInfoMapper.insert(openOrderManInfo);
-
-//        User userInfo = userMapper.selectUserByuserId(apply.getApplierId());
-        User user = new User();
-        user.setUserId(apply.getApplierId());
-        user.setOpenOrderManInfoId(openOrderManInfo.getOpenOrderManInfoId());
-        user.setIsOrderMan("TRUE");
-        userMapper.updateUserByuserId(user);
-
-        //插入推广商下单员表（前期有用到此表，怕影响之前的接口，所以还是插入此表比较保险）
-        PromoterOrderMan promoterOrderMan = new PromoterOrderMan();
-        promoterOrderMan.setOrderManId(apply.getApplierId());
-        if(openOrderManInfo2 != null){
-            promoterOrderMan.setPromoterId(openOrderManInfo2.getPromoterId());
-        }
-        promoterOrderMan.setIdentity("ORDER_MAN");
-        promoterOrderMan.setCreateTime(nowTime);
-        promoterOrderMan.setParentType("PROMOTER");
-        promoterOrderManMapper.insert(promoterOrderMan);
     }
 
+    @Override
+    public void auditOrderMan(AuthenticationApply apply) {
+       //校验申请信息是否为“待审核状态”
+        if(!"WAIT_AUDIT".equals(apply.getStatus())){
+            throw new BusinessException(ErrorType.AUDIT_ERROR);
+        }
+        Date nowTime = new Date();
+        if("AUDIT_SUCCESS".equals(apply.getAuditStr())){
+            OpenOrderManInfo openOrderManInfo2 = openOrderManInfoMapper.getOpenOrderManInfoByOrderManId(apply.getOrderManId()).stream().findFirst().orElse(null);
+            OpenOrderManInfo openOrderManInfo = new OpenOrderManInfo();
+            //开始时间和结束时间处理
+            Calendar c = Calendar.getInstance();  //得到当前日期和时间
+            c.set(Calendar.HOUR_OF_DAY, 0);
+            c.set(Calendar.MINUTE, 0);
+            c.set(Calendar.SECOND, 0);
+            c.set(Calendar.MILLISECOND,0);
+            Date startTime = c.getTime();
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.YEAR,1);
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            cal.set(Calendar.SECOND, 59);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.MILLISECOND,0);
+            Date endTime = cal.getTime();
+            //判断如果已经有家庭服务师信息，则修改信息，否则才新增家庭服务师信息
+            OpenOrderManInfo paramOpenOrderManInfo = new OpenOrderManInfo();
+            paramOpenOrderManInfo.setOrderManId(apply.getUserId());
+            paramOpenOrderManInfo.setSalesId(apply.getOrderManId());
+            OpenOrderManInfo currentOpenOrderManInfo = openOrderManInfoMapper.selectByOrderManIdAndSalesId(paramOpenOrderManInfo).stream().findFirst().orElse(null);
+            if(currentOpenOrderManInfo == null){
+                //插入家庭服务师相关表
+                openOrderManInfo.setStartTime(startTime);
+                openOrderManInfo.setEndTime(endTime);
+                openOrderManInfo.setCreateTime(new Date());
+                openOrderManInfo.setOrderManLevel("1");
+                if(openOrderManInfo2 != null){
+                    openOrderManInfo.setPromoterId(openOrderManInfo2.getPromoterId());
+                }
+                openOrderManInfo.setOrderManId(apply.getUserId());
+                openOrderManInfo.setSalesId(apply.getOrderManId());
+                openOrderManInfo.setIdentity("ORDER_MAN");
+                openOrderManInfoMapper.insert(openOrderManInfo);
+            }else{
+                OpenOrderManInfo openOrderManInfo3 = new OpenOrderManInfo();
+                openOrderManInfo3.setOpenOrderManInfoId(currentOpenOrderManInfo.getOpenOrderManInfoId());
+                openOrderManInfo3.setOrderManLevel("1");
+                openOrderManInfo3.setStartTime(startTime);
+                openOrderManInfo3.setEndTime(endTime);
+                openOrderManInfo3.setUpdateTime(nowTime);
+                openOrderManInfoMapper.updateOpenOrderManInfo(openOrderManInfo3);
+            }
+
+            AuthenticationApply authenticationApply = new AuthenticationApply();
+            authenticationApply.setApplyId(apply.getApplyId());
+            authenticationApply.setStatus(apply.getAuditStr());
+            authenticationApplyMapper.updateApplyOrederManInfoById(authenticationApply);
+
+//        User userInfo = userMapper.selectUserByuserId(apply.getApplierId());
+            User user = new User();
+            user.setUserId(apply.getUserId());
+            user.setOpenOrderManInfoId(openOrderManInfo.getOpenOrderManInfoId());
+            user.setIsOrderMan("TRUE");
+            userMapper.updateUserByuserId(user);
+
+            //插入推广商下单员表（前期有用到此表，怕影响之前的接口，所以还是插入此表比较保险）
+            PromoterOrderMan promoterOrderMan = new PromoterOrderMan();
+            promoterOrderMan.setOrderManId(apply.getUserId());
+            if(openOrderManInfo2 != null){
+                promoterOrderMan.setPromoterId(openOrderManInfo2.getPromoterId());
+            }
+            promoterOrderMan.setIdentity("ORDER_MAN");
+            promoterOrderMan.setCreateTime(nowTime);
+            promoterOrderMan.setParentType("PROMOTER");
+            promoterOrderManMapper.insert(promoterOrderMan);
+        }
+        if("AUDIT_FAIL".equals(apply.getAuditStr())){
+            AuthenticationApply authenticationApply = new AuthenticationApply();
+            authenticationApply.setApplyId(apply.getApplyId());
+            authenticationApply.setStatus(apply.getAuditStr());
+            authenticationApplyMapper.updateApplyOrederManInfoById(authenticationApply);
+        }
+
+    }
 
 
     //首页数据统计(本月包含收益)

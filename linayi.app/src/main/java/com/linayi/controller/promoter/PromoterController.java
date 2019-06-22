@@ -330,7 +330,7 @@ public class PromoterController extends BaseController {
 			if (apply != null && file.length == 2) {
 				promoterOrderManService.inviteOrderMan(apply, file);
 			}
-			return new ResponseData("开通家庭服务师成功!");
+			return new ResponseData("申请成为家庭服务师成功，请等待后台系统审核!");
 		} catch (BusinessException e) {
 			return new ResponseData(e.getErrorType()).toString();
 		} catch (Exception e) {

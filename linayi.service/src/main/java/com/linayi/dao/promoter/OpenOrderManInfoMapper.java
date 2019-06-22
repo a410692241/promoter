@@ -39,4 +39,18 @@ public interface OpenOrderManInfoMapper {
      * @return
      */
     PromoterOrderMan getPersonalOrderProfit(PromoterOrderMan promoterOrderMan);
+
+    /**
+     * 根据order_man_id和sales_id查询家庭服务师信息
+     * @param promoterOrderMan
+     * @return
+     */
+    List<OpenOrderManInfo> selectByOrderManIdAndSalesId(OpenOrderManInfo openOrderManInfo);
+
+    /**
+     * 修改下单员表信息
+     * @param openOrderManInfo
+     * @return
+     */
+    Integer updateOpenOrderManInfo(OpenOrderManInfo openOrderManInfo);
 }
