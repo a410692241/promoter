@@ -155,9 +155,9 @@
         </if>
     </select>
 
-    <select id="selectByOrderManIdAndSalesId" resultType="com.linayi.entity.promoter.OpenOrderManInfo">
+    <select id="selectByOrderManId" resultType="com.linayi.entity.promoter.OpenOrderManInfo">
         select <include refid="base_column"/> from open_order_man_info
-        where order_man_id = #{orderManId} AND sales_id=#{salesId}
+        where order_man_id = #{orderManId}
     </select>
 
     <update id="updateOpenOrderManInfo" parameterType="com.linayi.entity.promoter.OpenOrderManInfo">
