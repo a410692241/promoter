@@ -99,6 +99,15 @@
     		and u.is_member='TRUE'
     </select>
 
+    <select id="getOpenMemberInfoByEndTime" resultType="com.linayi.entity.promoter.OpenMemberInfo">
+        SELECT
+    		 open_member_info_id, user_id, member_level, start_time, end_time, order_man_id, create_time
+    	FROM
+    		open_member_info
+    	WHERE
+    		user_id=#{userId} and end_time &gt;  now()
+    </select>
+
     <update id="updateByuserIdAndOrderManId" parameterType="com.linayi.entity.promoter.OpenMemberInfo" >
         update open_member_info
         <set>

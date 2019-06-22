@@ -17,6 +17,8 @@ public interface OpenOrderManInfoMapper {
      */
     OpenOrderManInfo getOpenOrderManInfoById(Integer openOrderManInfoId);
 
+    List<OpenOrderManInfo> getOpenOrderManInfoByEndTime(Integer userId);
+
 
     /**
      * 家庭服务师列表(新)

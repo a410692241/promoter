@@ -8,6 +8,7 @@ import com.linayi.entity.user.AuthenticationApply;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 public interface PromoterOrderManService {
     /*推广商首页*/
@@ -116,4 +117,11 @@ public interface PromoterOrderManService {
      * @return
      */
     PromoterOrderMan getOrderManData(PromoterOrderMan PromoterOrderMan);
+
+    /**
+     * 通过用户id获取会员和家庭服务师身份（根据结束时间查询身份）
+     * @param userId
+     * @return
+     */
+    Map getMemberAndOrderMan(Integer userId);
 }

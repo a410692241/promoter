@@ -16,14 +16,13 @@ import com.linayi.service.promoter.PromoterOrderManService;
 import com.linayi.service.user.UserService;
 import com.linayi.util.DateUtil;
 import com.linayi.util.ImageUtil;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class PromoterOrderManServiceImpl implements PromoterOrderManService {
@@ -868,6 +867,24 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         }
         promoterOrder.setOrderProfit(personalProfit);
         return promoterOrder;
+    }
+
+    @Override
+    public Map getMemberAndOrderMan(Integer userId) {
+        HashMap<String, Boolean> map = new HashMap<>();
+        OpenMemberInfo openMemberInfo = openMemberInfoMapper.getOpenMemberInfoByEndTime(userId).stream().findFirst().orElse(null);
+        if (openMemberInfo != null){
+            map.put("member",true);
+        }else{
+            map.put("member",false);
+        }
+        OpenOrderManInfo openOrderManInfo = openOrderManInfoMapper.getOpenOrderManInfoByEndTime(userId).stream().findFirst().orElse(null);
+        if(openOrderManInfo != null){
+            map.put("orderMan",true);
+        }else{
+            map.put("orderMan",false);
+        }
+        return map;
     }
 
 
