@@ -154,4 +154,7 @@ public interface OrdersMapper {
      * @return
      */
     List<Orders> getProcureOrderList(Orders orders);
+
+
+    List<Orders> getALLOrders(Orders orders);
 }

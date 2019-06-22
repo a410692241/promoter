@@ -639,6 +639,7 @@
           </if>
           <if test="userId != null">
               AND o.user_id = #{userId}
+              AND (o.community_status='PROCURE_FINISHED' OR o.community_status='DELIVER_FINISHED')
           </if>
       </where>
   </select>
@@ -673,4 +674,85 @@
           AND o.user_id = #{userId}
       </if>
   </select>
+
+    <select id="getALLOrders" resultMap="BaseResultMap">
+        select orders_id, user_id, receiver_name, mobile, address_one, address_two, address_three, pay_way, save_amount, service_fee, extra_fee, arrive_time, actual_arrive_time,
+        remark, quantity, amount, user_status, community_status, community_id, update_time, create_time from orders
+        <where>
+            (o.community_status='PROCURE_FINISHED' OR o.community_status='DELIVER_FINISHED')
+            <if test="userStatus != null and userStatus != ''">
+                and user_status = #{userStatus}
+            </if>
+            <if test="ordersId != null">
+                and orders_id = #{ordersId}
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="addressType != null">
+                AND address_Type = #{addressType}
+            </if>
+            <if test="receiverName != null">
+                AND receiver_name = #{receiverName}
+            </if>
+            <if test="mobile != null and mobile != ''">
+                AND mobile = #{mobile}
+            </if>
+            <if test="addressOne != null">
+                AND address_one = #{addressOne}
+            </if>
+            <if test="addressTwo != null">
+                AND address_two = #{addressTwo}
+            </if>
+            <if test="addressThree != null">
+                AND address_three = #{addressThree}
+            </if>
+            <if test="payWay != null">
+                AND pay_way = #{payWay}
+            </if>
+            <if test="saveAmount != null">
+                AND save_amount = #{saveAmount}
+            </if>
+            <if test="serviceFee != null">
+                AND service_fee = #{serviceFee}
+            </if>
+            <if test="extraFee != null">
+                AND extra_fee = #{extraFee}
+            </if>
+            <if test="arriveTime != null">
+                AND arrive_time = #{arriveTime}
+            </if>
+            <if test="actualArriveTime != null">
+                AND actual_arrive_time = #{actualArriveTime}
+            </if>
+            <if test="remark != null">
+                AND remark = #{remark}
+            </if>
+            <if test="quantity != null">
+                AND quantity = #{quantity}
+            </if>
+            <if test="amount != null">
+                AND amount = #{amount}
+            </if>
+            <if test="communityStatus != null and communityStatus != ''">
+                AND community_status = #{communityStatus}
+            </if>
+            <if test="communityId != null">
+                AND community_id = #{communityId}
+            </if>
+            <if test="updateTime != null">
+                AND update_time = #{updateTime}
+            </if>
+            <if test="createTimeStart != null and createTimeStart != ''">
+                AND create_time <![CDATA[ >= ]]> #{createTimeStart}
+            </if>
+            <if test="createTimeEnd != null and createTimeEnd != ''">
+                AND create_time <![CDATA[ <= ]]> #{createTimeEnd}
+            </if>
+            <if test="receiveAddressId != null">
+                AND receive_address_id = #{receiveAddressId}
+            </if>
+        </where>
+        order by `create_time` desc
+    </select>
 </mapper>

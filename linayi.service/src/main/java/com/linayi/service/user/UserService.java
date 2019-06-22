@@ -88,5 +88,18 @@ public interface UserService {
      * @return
      */
     User getUserForSpokesMan(Integer userId);
+
+    /**
+     * 启用或禁用家庭服务师
+     * @param user
+     */
+    void enableorderMan(User user);
+
+
+    /**
+     * 启用或禁用会员
+     * @param user
+     */
+    void enableMember(User user);
 }
 

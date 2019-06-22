@@ -16,6 +16,8 @@
         <result column="real_name" jdbcType="VARCHAR" property="realName" />
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
         <result column="is_sharer" jdbcType="VARCHAR" property="isSharer" />
+        <result column="is_member" jdbcType="VARCHAR" property="isMember" />
+        <result column="is_order_man" jdbcType="VARCHAR" property="isOrderMan" />
         <result column="default_receive_address_id" jdbcType="INTEGER"
                 property="defaultReceiveAddressId" />
     </resultMap>
@@ -130,7 +132,8 @@ where user_id=#{userId}
     </select>
     <select id="selectUserListByWeb" resultType="com.linayi.entity.user.User">
         select
-        u.`user_id`,u.`nickname`,u.`head_image`,u.`sex`,acc.`mobile`,u.`qq`,u.`email`,u.`real_name`,u.`create_time`,u.`update_time`
+        u.`user_id`,u.`nickname`,u.`head_image`,u.`sex`,acc.`mobile`,u.`qq`,u.`email`,u.`real_name`,u.`create_time`,u.`update_time`,
+        u.`is_member`,u.`is_order_man`
         from
         `user` u join account acc on u.user_id=acc.user_id
         <where>
