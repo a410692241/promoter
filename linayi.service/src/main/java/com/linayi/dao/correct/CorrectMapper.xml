@@ -608,10 +608,14 @@
           (select round(((max(price)-min(price))/min(price)*100),2)  from correct where goods_sku_id=c.goods_sku_id and (status='AFFECTED'  or status='AUDIT_SUCCESS' or status='WAIT_AUDIT') group by goods_sku_id) spreadRate
         FROM
           correct c join goods_sku g on c.goods_sku_id = g.goods_sku_id
-        WHERE
-          c.supermarket_id = #{supermarketId}
-        AND
-          c.status = 'WAIT_AUDIT'
+        <where>
+            c.supermarket_id = #{supermarketId}
+            AND
+            c.status = 'WAIT_AUDIT'
+            <if test="categoryId!=null and categoryId!=''">
+                and g.category_id = #{categoryId}
+            </if>
+        </where>
         ORDER BY
           c.create_time DESC
     </select>
