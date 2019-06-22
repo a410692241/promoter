@@ -23,10 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
@@ -119,8 +116,8 @@ public class GoodsSkuController extends BaseController{
             Integer supermarketId,
             String priceType,
             Double price,
-            String startTime,
-            String endTime
+            String starTime,
+            String enTime
     ) {
         String result;
         try {
@@ -145,18 +142,18 @@ public class GoodsSkuController extends BaseController{
 
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 Date startDate, endDate;
-                if (startTime == null || startTime.equals("")){
+                if (starTime == null || starTime.equals("")){
                     startDate = new Date();
                 }else {
-                    startDate = sdf.parse(startTime);
+                    startDate = sdf.parse(starTime);
                 }
-                if (endTime == null || endTime.equals("")){
+                if (enTime == null || enTime.equals("")){
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(startDate);//设置起时间
                     cal.add(Calendar.YEAR, 1);//增加一年
                     endDate = cal.getTime();
                 }else {
-                    endDate = sdf.parse(endTime);
+                    endDate = sdf.parse(enTime);
                 }
                 correct.setStartTime(startDate);
                 correct.setEndTime(endDate);

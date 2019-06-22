@@ -30,9 +30,19 @@ public interface OpenMemberInfoMapper {
     List<OpenMemberInfo> getMemberStartTimeByUserId(OpenMemberInfo openMemberInfo);
 
     /**
-     * 根据userId查询有效的开通会员信息
+     * 根据userId查询有效的开通会员信息(user表为true并且会员表结束时间未过期)
      * @param userId
      * @return
      */
     OpenMemberInfo getOpenMemberInfo(Integer userId);
+
+    /**
+     * 根据userId查询有效的开通会员信息(会员表结束时间未过期)
+     * @param userId
+     * @return
+     */
+    List<OpenMemberInfo> getOpenMemberInfoByEndTime(Integer userId);
+
+    void updateByuserIdAndOrderManId(OpenMemberInfo openMemberInfo);
+
 }

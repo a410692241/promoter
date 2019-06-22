@@ -372,7 +372,7 @@ app.controller('orderCtrl', function ($scope, toaster, orderService, messager, t
                     label: '价差率',
                     sortable: false,
                     formatter: function (cellvalue, options, rowObject) {
-                        return (Math.round(cellvalue * 10000) / 100.00 + "%");
+                        return cellvalue + "%";
                     }
                 },
                 {

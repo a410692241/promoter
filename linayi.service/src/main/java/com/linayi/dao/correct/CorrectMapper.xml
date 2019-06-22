@@ -345,6 +345,7 @@
         s.supermarket_id,
         c.status,
         g.full_name fullName,
+        g.barcode,
         c.type,
         c.price,
         c.price_type,
@@ -524,6 +525,8 @@
         correct
         where
         status=#{status,jdbcType=VARCHAR}
+        AND
+        end_time &gt;= #{startTime}
         AND
         end_time &lt; #{endTime}
     </select>

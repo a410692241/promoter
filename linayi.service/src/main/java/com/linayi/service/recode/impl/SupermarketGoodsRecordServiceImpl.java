@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 
 @Service
 public class SupermarketGoodsRecordServiceImpl implements SupermarketGoodsRecordService {
@@ -18,6 +20,7 @@ public class SupermarketGoodsRecordServiceImpl implements SupermarketGoodsRecord
     @Override
     public void insert(SupermarketGoodsRecord supermarketGoodsRecord) {
         if (supermarketGoodsRecordMapper.getSupermarketGoodsRecord(supermarketGoodsRecord)==null){
+            supermarketGoodsRecord.setCreateTime(new Date());
             supermarketGoodsRecordMapper.insert(supermarketGoodsRecord);
         }
     }

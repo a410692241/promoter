@@ -1,7 +1,7 @@
 package com.linayi.service.goods.impl;
 
 import com.linayi.service.goods.SkuClickNumService;
-import com.sun.imageio.plugins.common.I18N;
+import org.springframework.beans.factory.wiring.BeanWiringInfo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -41,6 +41,14 @@ public class SkuClickNumServiceImpl implements SkuClickNumService {
 
     @Override
     public Map<Long, Integer> getSkuIdsByClientNum(SkuClickNum skuClickNum) {
+        Date startTime = skuClickNum.getStartTime();
+        Date endTime = skuClickNum.getEndTime();
+        //时间清为当天00:00:00
+        if (startTime != null && endTime != null) {
+            skuClickNum.setStartTime(setTimeZero(startTime));
+            skuClickNum.setStartTime(setTimeZero(endTime));
+        }
+
         List<SkuClickNum> skuClickNums = skuClickNumMapper.selectConcatNum(skuClickNum);
         //转化集合key=goodsSKuId,value=clickNum的map
         HashMap<Long, Integer> map = new LinkedHashMap<>();
@@ -54,6 +62,15 @@ public class SkuClickNumServiceImpl implements SkuClickNumService {
         map.entrySet().stream().sorted(Map.Entry.comparingByValue((i1, i2) -> i2 - i1))
                 .forEachOrdered(x -> sortedMap.put(x.getKey(), x.getValue()));
         return sortedMap;
+    }
+
+    private Date setTimeZero(Date startTime) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(startTime);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        return c.getTime();
     }
 
 }

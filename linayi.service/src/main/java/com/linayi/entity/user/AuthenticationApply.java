@@ -17,6 +17,9 @@ public class AuthenticationApply extends BaseEntity implements Serializable{
 
     private Integer userId;
 
+    //申请家庭服务师——被邀请人的user_id
+    private Integer applierId;
+
     private String authenticationType;
 
     private String realName;
@@ -56,6 +59,10 @@ public class AuthenticationApply extends BaseEntity implements Serializable{
     private Integer promoterId;
     
     private String identity;
+
+    private Integer orderManId;
+
+    private String auditStr;
     
 	public Integer getPromoterId() {
 		return promoterId;
@@ -265,7 +272,32 @@ public class AuthenticationApply extends BaseEntity implements Serializable{
         this.image = image;
     }
 
-	@Override
+
+    public Integer getApplierId() {
+        return applierId;
+    }
+
+    public void setApplierId(Integer applierId) {
+        this.applierId = applierId;
+    }
+
+    public Integer getOrderManId() {
+        return orderManId;
+    }
+
+    public void setOrderManId(Integer orderManId) {
+        this.orderManId = orderManId;
+    }
+
+    public String getAuditStr() {
+        return auditStr;
+    }
+
+    public void setAuditStr(String auditStr) {
+        this.auditStr = auditStr;
+    }
+
+    @Override
 	public String toString() {
 		return "AuthenticationApply [applyId=" + applyId + ", userId=" + userId + ", authenticationType="
 				+ authenticationType + ", realName=" + realName + ", mobile=" + mobile + ", idCardFront=" + idCardFront

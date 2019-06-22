@@ -151,9 +151,9 @@ public class PromoterVo {
     }
 
     public static class openPromoterDuration{
-    	@ApiModelProperty(name = "promoterDuration", value = "开通会员时间", required = true, example = "1")
+    	@ApiModelProperty(name = "promoterDuration", value = "开通会员时间", required = true, example = "12")
     	public Integer promoterDuration;
-    	@ApiModelProperty(name = "memberLevel", value = "开通会员等级", required = true, example = "NORMAL")
+    	@ApiModelProperty(name = "memberLevel", value = "开通会员等级", required = true, example = "SENIOR")
     	public String memberLevel;
     	@ApiModelProperty(name = "userId", value = "开通会员Id", required = true, example = "1")
     	public Integer userId;

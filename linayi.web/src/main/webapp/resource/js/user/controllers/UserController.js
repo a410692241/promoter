@@ -9,6 +9,8 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 		$scope.auth = auth;
 		$scope.batchDisable = batchDisable;
 		$scope.disable = disable;
+		$scope.orderMan = orderMan;
+		$scope.member = member;
 		$scope.search={
 				userId:"",
 				nickname:"",
@@ -28,6 +30,8 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 			sexName : '',
 			address : '',
 			age : '',
+			isOrderMan:'',
+			isMember:'',
 			authenticationRemark :'',
 			mobile:''
 		};
@@ -99,12 +103,26 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 					sortable: false,
 					formatter: function (cellvalue, options, rowObject) {
 						var opts = "";
-
 						opts = opts + "<a href='javascript:void(0);' ng-click='edit( " + rowObject.userId + " )' class='btn btn-primary shiny fa fa-edit btn-sm td-compile'>编辑</a> ";
 
-						return opts;
-					}
-				}
+						if(rowObject.orderMan == true){
+							if( rowObject.isOrderMan == 'FALSE' ){
+								opts = opts + "<a href='javascript:void(0);' ng-click='orderMan( "+rowObject.userId+","+ 20+ ")' class='btn btn-primary fa fa-show btn-sm td-compile'>启用家庭服务师</a> ";
+							}else{
+								opts = opts + "<a href='javascript:void(0);' ng-click='orderMan( "+rowObject.userId+" ,"+ 10 + ")' class='btn btn-primary fa fa-show btn-sm td-compile'>禁用家庭服务师</a> ";
+							}
+						}
+
+						if(rowObject.member == true){
+							if( rowObject.isMember == 'FALSE' ){
+								opts = opts + "<a href='javascript:void(0);' ng-click='member( "+rowObject.userId+","+ 20+ ")' class='btn btn-primary fa fa-show btn-sm td-compile'>启用会员</a> ";
+							}else{
+								opts = opts + "<a href='javascript:void(0);' ng-click='member( "+rowObject.userId+" ,"+ 10 + ")' class='btn btn-primary fa fa-show btn-sm td-compile'>禁用会员</a> ";
+							}
+						}
+
+					return opts;
+				}}
 //	             {label:"操作",name:"opt",width:220,sortable:false,formatter:function(cellvalue, options, rowObject){
 //					var opts = "";
 //					opts = opts + "<a href='javascript:void(0);' ng-click='show( "+rowObject.userId+" )' class='btn btn-primary fa fa-eye btn-sm td-compile'>查看</a> ";
@@ -117,6 +135,8 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 //					}
 //            		return opts;
 //	             }}
+
+
 			],
 			onSelectRow:function(rowId,status){
 				var rows = $( this ).jqGrid( "getRowData" , rowId);
@@ -145,8 +165,76 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 
 
 	}
-	
-    /**禁用或者启用*/
+
+	/**禁用/启用家庭服务师*/
+	function orderMan(userId,man){
+		var isOrderMan;
+		if (man==20){
+			isOrderMan="FALSE";
+		}else{
+			isOrderMan="TRUE";
+		}
+		var text = man == 20 ? "启用" : "禁用"
+		messager.confirm("确认"+ text + "?",function( $modalInstance ){
+			$.ajax({
+				url:urls.ms+"/user/user/enableorderMan.do",
+				data:{
+					userId:userId,
+					isOrderMan:isOrderMan
+				},
+				dataType:"json",
+				type:"post",
+				success:function( data ){
+					if( data.respCode == "S" ){
+						list();
+						$scope.$apply(function(){
+							$modalInstance.close();
+						});
+
+					}else{
+						toaster.error( "",data.msg,3000 );
+					}
+				}
+			});
+		});
+	}
+
+
+	/**禁用/启用会员*/
+	function member(userId,man){
+		var isMember;
+		if (man==20){
+			isMember="FALSE";
+		}else{
+			isMember="TRUE";
+		}
+		var text = man == 20 ? "启用" : "禁用"
+		messager.confirm("确认"+ text + "?",function( $modalInstance ){
+			$.ajax({
+				url:urls.ms+"/user/user/enableMember.do",
+				data:{
+					userId:userId,
+					isMember:isMember
+				},
+				dataType:"json",
+				type:"post",
+				success:function( data ){
+					if( data.respCode == "S" ){
+						list();
+						$scope.$apply(function(){
+							$modalInstance.close();
+						});
+
+					}else{
+						toaster.error( "",data.msg,3000 );
+					}
+				}
+			});
+		});
+	}
+
+
+	/**禁用或者启用*/
     function disable( id , valid ){
     	var text = valid == 10 ? "启用" : "禁用"
     	messager.confirm("确认"+ text + "?",function( $modalInstance ){
