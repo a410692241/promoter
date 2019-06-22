@@ -85,4 +85,25 @@
             (ra.STATUS = 'NORMAL'AND ra.address_type = 'CUSTOMER'AND ra.user_id = #{userId})
             OR o.order_man_id=#{userId}
     </select>
+
+    <!--代顾客下单订单量/个人成交额/个人销售服务额-->
+    <select id="getPersonalOrderProfit" resultType="com.linayi.entity.promoter.PromoterOrderMan">
+      SELECT
+            count(DISTINCT ra.receive_address_id) numberOfUser,
+            count(o.orders_id) numberOfOrders,
+            IFNULL(sum(o.amount),0) totalSum,
+            IFNULL(sum(IF(o.amount&gt;=10000,o.amount-1000,0)),0) personalSales
+       FROM
+            receive_address ra LEFT
+            JOIN orders o ON o.receive_address_id = ra.receive_address_id
+            AND (o.community_status='PROCURE_FINISHED' OR o.community_status='DELIVER_FINISHED')
+            <if test="date!=null and date=='MONTH'">
+                AND o.create_time &gt;  timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
+            </if>
+      WHERE
+            ra.STATUS = 'NORMAL' AND ra.address_type = 'CUSTOMER' AND ra.user_id = #{userId}
+            <if test="date!=null and date=='MONTH'">
+                AND ra.create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
+            </if>
+    </select>
 </mapper>

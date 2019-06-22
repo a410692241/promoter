@@ -30,7 +30,7 @@ public enum ErrorType {
     UPDATE_STATUS(1910,"修改状态异常"),
     ADD_ERROR(1911,"添加失败!"),
     VERIFICATION_CODE_ERROR(1912,"验证码错误"),
-    AUDIT_ERROR(1913,"审核失败，已有人审核!"),
+    AUDIT_ERROR(1913,"审核失败，已被审核!"),
     USERNAME_DOES_NOT_EXIST(1914,"用户名不存在!"),
     UNFILLED_SHIPPING_ADDRESS(1915,"未填写收货地址!"),
     REDIS_DATA_ERROR(1916,"redis数据出错!"),
@@ -70,6 +70,7 @@ public enum ErrorType {
     SHAREPRICEOVERFLOW(2033,"分享价格溢出"),
     ORDER_MAN_ALREADY_EXIST(2034,"您已经是家庭服务师且在有效期内，不能重复开通！"),
     APPLY_ERROR(2035,"邀请人信息错误，开通家庭服务师失败！"),
+    APPLY_ERROR2(2035,"邀请人信息错误，邀请会员失败！"),
     MEMBER_NOT_AUDIT(2036,"此用户有未审核的会员申请，暂时不能邀请!"),
     MEMBER_EXIST(2037,"此用户已经是会员且在有效期内，邀请失败！");
 
