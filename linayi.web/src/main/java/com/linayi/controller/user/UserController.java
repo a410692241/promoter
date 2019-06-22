@@ -52,4 +52,21 @@ public class UserController {
         return mv;
     }
 
+    //禁用或启用家庭服务师
+    @RequestMapping("/enableorderMan.do")
+    @ResponseBody
+    public Object enableorderMan(User user) {
+        userService.enableorderMan(user);
+        return new ResponseData("SUCCESS");
+    }
+
+    //禁用或启用会员
+    @RequestMapping("/enableMember.do")
+    @ResponseBody
+    public Object enableMember(User user) {
+        userService.enableMember(user);
+        return new ResponseData("SUCCESS");
+    }
+
+
 }

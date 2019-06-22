@@ -29,6 +29,7 @@
         oomi1.create_time,
         oomi1.order_man_id,
         IFNULL(COUNT(o.orders_id), 0) numberOfOrders,
+        IFNULL(sum(IF(o.amount&gt;=10000,o.amount-1000,0)),0) personalSales,
         IFNULL(
         (SUM(o.amount)),
         0
@@ -49,6 +50,9 @@
     FROM
         open_order_man_info oomi1
         LEFT JOIN orders o ON oomi1.order_man_id = o.order_man_id AND (o.community_status='PROCURE_FINISHED' or o.community_status='DELIVER_FINISHED')
+          <if test="date!=null and date=='MONTH'">
+              AND  o.create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
+          </if>
         LEFT JOIN `user` u ON u.user_id = oomi1.order_man_id
     WHERE
              oomi1.start_time &lt; NOW()
@@ -57,8 +61,8 @@
          AND   (oomi1.sales_id = #{userId} or oomi1.order_man_id=#{userId})
         </if>
         <if test="date!=null and date=='MONTH'">
-         AND  oomi1.sales_id = #{userId}
          AND  oomi1.create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
+         AND  (oomi1.sales_id = #{userId} or oomi1.order_man_id=#{userId})
         </if>
     GROUP BY
         oomi1.open_order_man_info_id
@@ -105,6 +109,28 @@
             <if test="date!=null and date=='MONTH'">
                 AND ra.create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
             </if>
+    </select>
+
+    <select id="getMemberData" resultType="com.linayi.entity.promoter.PromoterOrderMan">
+            SELECT
+                  omi.create_time,
+                  omi.open_member_info_id,
+                  u.mobile,
+                  u.head_image headImage,
+                  u.nickname,
+                  COUNT(o.orders_id) numberOfOrders,
+                  IFNULL(sum(IF(o.amount&gt;=10000,o.amount-1000,0)),0) personalSales,
+            FROM
+                 open_member_info omi JOIN orders o ON omi.order_man_id=o.order_man_id
+                <if test="date!=null and date=='MONTH'">
+                    AND  o.create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
+                </if>
+                 JOIN user u ON u.user_id = omi.user_id
+            WHERE
+                 omi.end_time &gt; now();
+                 AND omi.order_man_id = #{userId}
+            ORDER BY
+                 omi.open_member_info_id
     </select>
 
     <select id="selectByOrderManIdAndSalesId" resultType="com.linayi.entity.promoter.OpenOrderManInfo">

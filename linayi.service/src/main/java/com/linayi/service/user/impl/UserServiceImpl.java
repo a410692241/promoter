@@ -330,4 +330,26 @@ public class UserServiceImpl implements UserService {
         user.setReceiverAddress(areaName + addressTwo);
         return user;
     }
+
+    //禁用或启用家庭服务师
+    @Override
+    public void enableorderMan(User user) {
+        if ("FALSE".equals(user.getIsOrderMan())){
+            user.setIsOrderMan("TRUE");
+        }else {
+            user.setIsOrderMan("FALSE");
+        }
+        userMapper.updateUserByuserId(user);
+    }
+
+    //禁用或启用会员
+    @Override
+    public void enableMember(User user) {
+        if ("FALSE".equals(user.getIsMember())){
+            user.setIsMember("TRUE");
+        }else {
+            user.setIsMember("FALSE");
+        }
+        userMapper.updateUserByuserId(user);
+    }
 }

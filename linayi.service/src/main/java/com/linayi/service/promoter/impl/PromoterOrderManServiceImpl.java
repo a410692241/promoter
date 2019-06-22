@@ -548,10 +548,21 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         Integer totalSum = 0;
         Integer orderProfit = 0;
         if (promoterOrderMEN.size()>0) {
-            if (!"MONTH".equals(promoterOrderMan.getDate())){
-                promoterOrderMEN.remove(0);
-            }
             for (PromoterOrderMan promoterOrderMAN : promoterOrderMEN) {
+                OpenOrderManInfo openOrderManInfo = openOrderManInfoMapper.getOpenOrderManInfoByOrderManId(promoterOrderMAN.getOrderManId()).stream().findFirst().orElse(null);
+                String openOrderManLevel = openOrderManInfo.getOrderManLevel();
+                int personalProfit = 0;
+                if ("1".equals(openOrderManLevel)){
+                    //个人收益(一级) 订单数*2 + 有效销售额*0.8% + 个人订单数大于等于10奖励100
+                    personalProfit = (int) (promoterOrderMAN.getNumberOfOrders() * 200 + promoterOrderMAN.getPersonalSales() * 0.008 + (promoterOrderMAN.getNumberOfOrders() >= 10 ? 10000 : 0));
+                }else if ("2".equals(openOrderManLevel)){
+                    //个人收益(二级) 订单数*2.5 + 有效销售额*1% + 个人订单数大于等于10奖励100
+                    personalProfit = (int) (promoterOrderMAN.getNumberOfOrders() * 250 + promoterOrderMAN.getPersonalSales() * 0.01 + (promoterOrderMAN.getNumberOfOrders() >= 10 ? 10000 : 0));
+                }else if ("3".equals(openOrderManLevel)){
+                    //个人收益(三级) 订单数*3 + 有效销售额*1.2% + 个人订单数大于等于10奖励100
+                    personalProfit = (int) (promoterOrderMAN.getNumberOfOrders() * 300 + promoterOrderMAN.getPersonalSales() * 0.012 + (promoterOrderMAN.getNumberOfOrders() >= 10 ? 10000 : 0));
+                }
+                orderProfit+=personalProfit;
                 numberOfOrders += promoterOrderMAN.getNumberOfOrders();
                 totalSum += promoterOrderMAN.getTotalSum();
             }
@@ -559,7 +570,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         PromoterOrderMan promoterOrder = new PromoterOrderMan();
         promoterOrder.setNumberOfOrders(numberOfOrders);
         promoterOrder.setTotalSum(totalSum);
-        promoterOrder.setNumberOfOrderMan(promoterOrderMEN.size());
+        promoterOrder.setNumberOfOrderMan(promoterOrderMEN.size()-1);
         promoterOrder.setOrderProfit(orderProfit);
         return promoterOrder;
     }
