@@ -871,4 +871,48 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     }
 
 
+    //获取下级会员列表
+    @Override
+    public List<PromoterOrderMan> getMemberData(Integer userId) {
+        List<PromoterOrderMan> promoterOrderMan = openOrderManInfoMapper.getMemberData(userId);
+        PromoterOrderMan promoterOrderMan1 = new PromoterOrderMan();
+        promoterOrderMan1.setOrderManId(userId);
+        for (PromoterOrderMan orderMan : promoterOrderMan) {
+            promoterOrderMan1.setUserId(orderMan.getUserId());
+            PromoterOrderMan promoterOrder = openOrderManInfoMapper.getOrderManData(promoterOrderMan1);
+            if(orderMan.getHeadImage() == null) {
+                orderMan.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
+            }else {
+                String headImage = ImageUtil.dealToShow(orderMan.getHeadImage());
+                orderMan.setHeadImage(headImage);
+            }
+            orderMan.setNumberOfOrders(promoterOrder.getNumberOfOrders());
+            orderMan.setTotalSum(promoterOrder.getTotalSum());
+        }
+        return promoterOrderMan;
+    }
+
+
+    //根据家庭服务师id和date获取订单数据统计
+    @Override
+    public PromoterOrderMan getOrderManData(PromoterOrderMan PromoterOrderMan) {
+        PromoterOrderMan promoterOrderMan = openOrderManInfoMapper.getOrderManData(PromoterOrderMan);
+        OpenOrderManInfo openOrderManInfo = openOrderManInfoMapper.getOpenOrderManInfoByOrderManId(PromoterOrderMan.getOrderManId()).stream().findFirst().orElse(null);
+        String openOrderManLevel = openOrderManInfo.getOrderManLevel();
+        int personalProfit = 0;
+        if ("1".equals(openOrderManLevel)){
+            //个人收益(一级) 订单数*2 + 有效销售额*0.8% + 个人订单数大于等于10奖励100
+            personalProfit = (int) (promoterOrderMan.getNumberOfOrders() * 200 + promoterOrderMan.getPersonalSales() * 0.008 + (promoterOrderMan.getNumberOfOrders() >= 10 ? 10000 : 0));
+        }else if ("2".equals(openOrderManLevel)){
+            //个人收益(二级) 订单数*2.5 + 有效销售额*1% + 个人订单数大于等于10奖励100
+            personalProfit = (int) (promoterOrderMan.getNumberOfOrders() * 250 + promoterOrderMan.getPersonalSales() * 0.01 + (promoterOrderMan.getNumberOfOrders() >= 10 ? 10000 : 0));
+        }else if ("3".equals(openOrderManLevel)){
+            //个人收益(三级) 订单数*3 + 有效销售额*1.2% + 个人订单数大于等于10奖励100
+            personalProfit = (int) (promoterOrderMan.getNumberOfOrders() * 300 + promoterOrderMan.getPersonalSales() * 0.012 + (promoterOrderMan.getNumberOfOrders() >= 10 ? 10000 : 0));
+        }
+        promoterOrderMan.setOrderProfit(personalProfit);
+        return promoterOrderMan;
+    }
+
+
 }

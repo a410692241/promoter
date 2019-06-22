@@ -111,26 +111,44 @@
             </if>
     </select>
 
+
+    <!--获取下级会员列表-->
     <select id="getMemberData" resultType="com.linayi.entity.promoter.PromoterOrderMan">
             SELECT
-                  omi.create_time,
+                  omi.create_time openMemberTime,
                   omi.open_member_info_id,
+                  omi.user_id,
                   u.mobile,
                   u.head_image headImage,
-                  u.nickname,
-                  COUNT(o.orders_id) numberOfOrders,
-                  IFNULL(sum(IF(o.amount&gt;=10000,o.amount-1000,0)),0) personalSales,
+                  u.nickname
             FROM
-                 open_member_info omi JOIN orders o ON omi.order_man_id=o.order_man_id
-                <if test="date!=null and date=='MONTH'">
-                    AND  o.create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
-                </if>
+                 open_member_info omi LEFT
                  JOIN user u ON u.user_id = omi.user_id
             WHERE
-                 omi.end_time &gt; now();
-                 AND omi.order_man_id = #{userId}
-            ORDER BY
+                 omi.order_man_id = #{userId}
+                 AND  omi.end_time &gt; now()
+            GROUP BY
                  omi.open_member_info_id
+            ORDER BY
+                 omi.open_member_info_id DESC
+    </select>
+
+    <!--根据家庭服务师id获取订单数据-->
+    <select id="getOrderManData" resultType="com.linayi.entity.promoter.PromoterOrderMan">
+        SELECT
+              IFNULL(count(orders_id),0) numberOfOrders,
+              IFNULL(sum(amount),0) totalSum,
+              IFNULL(sum(IF(amount&gt;=10000,amount-1000,0)),0) personalSales
+        FROM
+              orders
+        WHERE
+              order_man_id = #{orderManId}
+        <if test="userId!=null and userId!=''">
+            AND user_id = #{userId}
+        </if>
+        <if test="date!=null and date=='MONTH'">
+            AND create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
+        </if>
     </select>
 
     <select id="selectByOrderManIdAndSalesId" resultType="com.linayi.entity.promoter.OpenOrderManInfo">

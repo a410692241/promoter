@@ -114,12 +114,9 @@ public class PromoterController extends BaseController {
 		try {
 			ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(promoterOrderMan);
 			PromoterOrderMan promoterOrderMan1 = pv.transObject(PromoterOrderMan.class);
-
-			if (promoterOrderMan1.getOrderManId() == null) {
-				Integer userId = getUserId();
-				promoterOrderMan1.setOrderManId(userId);
-			}
-			PromoterOrderMan currentPromoterOrderMan = promoterOrderManService.memberListOrderStatistics(promoterOrderMan1);
+			promoterOrderMan1.setOrderManId(getUserId());
+			PromoterOrderMan currentPromoterOrderMan = promoterOrderManService.getOrderManData(promoterOrderMan1);
+			/*PromoterOrderMan currentPromoterOrderMan = promoterOrderManService.memberListOrderStatistics(promoterOrderMan1);*/
 
 			return new ResponseData(currentPromoterOrderMan);
 		} catch (Exception e) {
@@ -131,18 +128,19 @@ public class PromoterController extends BaseController {
 	@ApiOperation(value = "会员列表-会员列表", produces = "application/xml,application/json")
 	@RequestMapping(value = "/memberList.do", method = RequestMethod.POST)
 	public Object memberList(@RequestBody PromoterVo.MemberListObj promoterOrderMan) {
-		PageResult<OrderManMember> pageResult = new PageResult<>();
+		PageResult<PromoterOrderMan> pageResult = new PageResult<>();
 		try {
 			ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(promoterOrderMan);
 			PromoterOrderMan promoterOrderMan1 = pv.transObject(PromoterOrderMan.class);
 			if (promoterOrderMan1.getPageSize() == null) {
 				promoterOrderMan1.setPageSize(8);
 			}
-			if (promoterOrderMan1.getOrderManId() == null) {
+		/*	if (promoterOrderMan1.getOrderManId() == null) {
 				Integer userId = getUserId();
 				promoterOrderMan1.setOrderManId (userId);
 			}
-			List<OrderManMember> orderManMemberList = promoterOrderManService.memberList(promoterOrderMan1);
+			List<OrderManMember> orderManMemberList = promoterOrderManService.memberList(promoterOrderMan1);*/
+			List<PromoterOrderMan> orderManMemberList = promoterOrderManService.getMemberData(promoterOrderMan1.getOrderManId());
 			pageResult = new PageResult<>(orderManMemberList, promoterOrderMan1);
 			return new ResponseData(pageResult);
 		} catch (Exception e) {
