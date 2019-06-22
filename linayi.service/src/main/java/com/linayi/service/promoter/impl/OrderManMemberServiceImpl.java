@@ -161,156 +161,208 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 	}
 
 	//邀请开通会员无需审核版本（作废！）
-//	@Override
-//	public Integer updateValidTimeById(Integer uid,Integer userId,String memberLevel,Integer promoterDuration) {
-//		Integer openOrderManInfoId = userMapper.getOpenOrderManInfoIdByUserId(userId);
-//
-//		OpenMemberInfo openMemberInfo = new OpenMemberInfo();
-//		Calendar cal = Calendar.getInstance();
-//		cal.set(Calendar.HOUR_OF_DAY, 0);
-//		cal.set(Calendar.MINUTE, 0);
-//		cal.set(Calendar.SECOND, 0);
-//		cal.set(Calendar.MILLISECOND,0);
-//		Date startTime = cal.getTime();
-//		openMemberInfo .setStartTime(startTime);
-//
-//		cal.add(Calendar.MONTH, promoterDuration);
-//		cal.set(Calendar.HOUR_OF_DAY,23);
-//		cal.set(Calendar.MINUTE, 59);
-//		cal.set(Calendar.SECOND, 59);
-//		cal.set(Calendar.MILLISECOND,0);
-//		Date endTime = cal.getTime();
-//		openMemberInfo.setEndTime(endTime);
-//
-//		openMemberInfo.setFreeTimes(0);
-//		openMemberInfo.setUserId(uid);
-//		openMemberInfo.setOrderManId(userId);
-//		openMemberInfo.setCreateTime(new Date());
-//		openMemberInfo.setMemberLevel("SENIOR");
-//		openMemberInfo.setOpenOrderManInfoId(openOrderManInfoId);
-//		openMemberInfoMapper.insert(openMemberInfo);
-//
-//		OrderManMember record = new OrderManMember();
-//		record.setMemberId(uid);
-//		record.setOrderManId(userId);
-//		record.setCreateTime(new Date());
-//		orderManMemberMapper.insert(record );
-//
-//		User user = new User();
-//		user.setUserId(uid);
-//		user.setIsMember("TRUE");
-//		user.setOpenMemberInfoId(openMemberInfo.getOpenMemberInfoId());
-//		userMapper.updateUserByuserId(user);
-//		return null;
+	@Override
+	@Transactional
+	public Integer updateValidTimeById(Integer uid,Integer userId,String memberLevel,Integer promoterDuration) {
+	Date nowTime = new Date();
+	//判断邀请人是否在有效期内
+	OpenOrderManInfo openOrderManInfo2 = openOrderManInfoMapper.getOpenOrderManInfoByOrderManId(userId).stream().findFirst().orElse(null);
+		if(openOrderManInfo2 == null || openOrderManInfo2.getEndTime().before(nowTime)){
+		throw new BusinessException(ErrorType.APPLY_ERROR2);
+	}
+	//判断申请表存在未审核记录时不能重复邀请会员
+//	AuthenticationApply currentAuthenticationApply = new AuthenticationApply();
+//		currentAuthenticationApply.setUserId(uid);
+//		currentAuthenticationApply.setAuthenticationType("MEMBER");
+//		currentAuthenticationApply.setStatus("WAIT_AUDIT");
+//	AuthenticationApply AuthenticationApply1 = authenticationApplyMapper.selectAuthenticationApplyList(currentAuthenticationApply).stream().findFirst().orElse(null);
+//		if(AuthenticationApply1 != null){
+//		throw new BusinessException(ErrorType.MEMBER_NOT_AUDIT);
 //	}
 
-	//邀请开通会员提交审核版本
-	@Override
-	public Integer updateValidTimeById(Integer uid,Integer userId,String memberLevel,Integer promoterDuration) {
-		Date nowTime = new Date();
-		//判断邀请人是否在有效期内
-		OpenOrderManInfo openOrderManInfo2 = openOrderManInfoMapper.getOpenOrderManInfoByOrderManId(userId).stream().findFirst().orElse(null);
-		if(openOrderManInfo2 == null || openOrderManInfo2.getEndTime().before(nowTime)){
-			throw new BusinessException(ErrorType.APPLY_ERROR2);
-		}
-		//判断申请表存在未审核记录时不能重复邀请会员
-		AuthenticationApply currentAuthenticationApply = new AuthenticationApply();
-		currentAuthenticationApply.setUserId(uid);
-		currentAuthenticationApply.setAuthenticationType("MEMBER");
-		currentAuthenticationApply.setStatus("WAIT_AUDIT");
-		AuthenticationApply AuthenticationApply1 = authenticationApplyMapper.selectAuthenticationApplyList(currentAuthenticationApply).stream().findFirst().orElse(null);
-		if(AuthenticationApply1 != null){
-			throw new BusinessException(ErrorType.MEMBER_NOT_AUDIT);
-		}
-		//判断用户已经是有效期内的会员时不能邀请
-		OpenMemberInfo openMemberInfo1 = openMemberInfoMapper.getOpenMemberInfo(uid);
+	//判断用户已经是有效期内的会员时不能邀请
+	OpenMemberInfo openMemberInfo1 = openMemberInfoMapper.getOpenMemberInfo(uid);
 		if(openMemberInfo1 != null){
-			throw new BusinessException(ErrorType.MEMBER_EXIST);
-		}
+		throw new BusinessException(ErrorType.MEMBER_EXIST);
+	}
 
 		Integer openOrderManInfoId = userMapper.getOpenOrderManInfoIdByUserId(userId);
 
-		//插入申请表
-		AuthenticationApply authenticationApply = new AuthenticationApply();
-		authenticationApply.setUserId(uid);
-		authenticationApply.setAuthenticationType("MEMBER");
-		User user1 = userMapper.selectUserByuserId(uid);
-		if(user1.getMobile() != null){
-			authenticationApply.setMobile(user1.getMobile());
-		}
-		if(user1.getRealName() != null){
-			authenticationApply.setRealName(user1.getRealName());
-		}
-		authenticationApply.setStatus("WAIT_AUDIT");
-		authenticationApply.setCreateTime(nowTime);
-		authenticationApply.setNickname(user1.getNickname());
-		authenticationApply.setOrderManId(userId);
-		authenticationApply.setUpdateTime(nowTime);
-		authenticationApplyMapper.insert(authenticationApply);
-
-
-		//TODO 判断会员表和关联表，如果有数据就修改，没有才新
-		OpenMemberInfo paramOenMemberInfo = new OpenMemberInfo();
+	//判断会员表和关联表，如果有数据就修改，没有才新增
+	OpenMemberInfo paramOenMemberInfo = new OpenMemberInfo();
 		paramOenMemberInfo.setUserId(uid);
-		OpenMemberInfo currentOpenMemberInfo = openMemberInfoMapper.getMemberStartTimeByUserId(paramOenMemberInfo).stream().findFirst().orElse(null);
-		if(currentOpenMemberInfo == null){
-			//插入会员表
-			OpenMemberInfo openMemberInfo = new OpenMemberInfo();
-//		Calendar cal = Calendar.getInstance();
-//		cal.set(Calendar.HOUR_OF_DAY, 0);
-//		cal.set(Calendar.MINUTE, 0);
-//		cal.set(Calendar.SECOND, 0);
-//		cal.set(Calendar.MILLISECOND,0);
-//		Date startTime = cal.getTime();
-//		openMemberInfo .setStartTime(startTime);
-//
-//		cal.add(Calendar.MONTH, promoterDuration);
-//		cal.set(Calendar.HOUR_OF_DAY,23);
-//		cal.set(Calendar.MINUTE, 59);
-//		cal.set(Calendar.SECOND, 59);
-//		cal.set(Calendar.MILLISECOND,0);
-//		Date endTime = cal.getTime();
-//		openMemberInfo.setEndTime(endTime);
+	OpenMemberInfo currentOpenMemberInfo = openMemberInfoMapper.getMemberStartTimeByUserId(paramOenMemberInfo).stream().findFirst().orElse(null);
 
-			openMemberInfo.setFreeTimes(0);
-			openMemberInfo.setUserId(uid);
-			openMemberInfo.setOrderManId(userId);
-			openMemberInfo.setCreateTime(new Date());
-			openMemberInfo.setMemberLevel("SENIOR");
-			openMemberInfo.setOpenOrderManInfoId(openOrderManInfoId);
-			openMemberInfoMapper.insert(openMemberInfo);
-		}else{
-			OpenMemberInfo openMemberInfo = new OpenMemberInfo();
-			openMemberInfo.setOpenMemberInfoId(currentOpenMemberInfo.getOpenMemberInfoId());
-			openMemberInfo.setMemberLevel("1");
-			openMemberInfo.setStartTime(null);
-			openMemberInfo.setEndTime(null);
-			openMemberInfo.setFreeTimes(0);
-			openMemberInfo.setOrderManId(userId);
-			openMemberInfo.setOpenOrderManInfoId(openOrderManInfoId);
-			openMemberInfoMapper.updateById(openMemberInfo);
-		}
+	if(currentOpenMemberInfo == null){
+		OpenMemberInfo openMemberInfo = new OpenMemberInfo();
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND,0);
+		Date startTime = cal.getTime();
+		openMemberInfo .setStartTime(startTime);
 
-		OrderManMember orderManMember = new OrderManMember();
+		cal.add(Calendar.MONTH, promoterDuration);
+		cal.set(Calendar.HOUR_OF_DAY,23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		cal.set(Calendar.MILLISECOND,0);
+		Date endTime = cal.getTime();
+		openMemberInfo.setEndTime(endTime);
+
+		openMemberInfo.setFreeTimes(0);
+		openMemberInfo.setUserId(uid);
+		openMemberInfo.setOrderManId(userId);
+		openMemberInfo.setCreateTime(new Date());
+		openMemberInfo.setMemberLevel("SENIOR");
+		openMemberInfo.setOpenOrderManInfoId(openOrderManInfoId);
+		openMemberInfoMapper.insert(openMemberInfo);
+	}else{
+		OpenMemberInfo openMemberInfo = new OpenMemberInfo();
+		openMemberInfo.setOpenMemberInfoId(currentOpenMemberInfo.getOpenMemberInfoId());
+		openMemberInfo.setMemberLevel("1");
+		openMemberInfo.setStartTime(null);
+		openMemberInfo.setEndTime(null);
+		openMemberInfo.setFreeTimes(0);
+		openMemberInfo.setOrderManId(userId);
+		openMemberInfo.setOpenOrderManInfoId(openOrderManInfoId);
+		openMemberInfoMapper.updateById(openMemberInfo);
+	}
+
+	OrderManMember orderManMember = new OrderManMember();
 		orderManMember.setMemberId(uid);
 		orderManMember.setOrderManId(userId);
-		OrderManMember currentOrderManMember = orderManMemberMapper.selectByAll(orderManMember).stream().findFirst().orElse(null);
+	OrderManMember currentOrderManMember = orderManMemberMapper.selectByAll(orderManMember).stream().findFirst().orElse(null);
 		if(currentOrderManMember == null){
-			//插入下单员会员表
-			OrderManMember record = new OrderManMember();
-			record.setMemberId(uid);
-			record.setOrderManId(userId);
-			record.setCreateTime(new Date());
-			orderManMemberMapper.insert(record );
-		}else{
-			OrderManMember record = new OrderManMember();
-			record.setOrderManMemberId(currentOrderManMember.getOrderManMemberId());
-			record.setUpdateTime(nowTime);
-			orderManMemberMapper.updateByPrimaryKeySelective(record);
-		}
+		OrderManMember record = new OrderManMember();
+		record.setMemberId(uid);
+		record.setOrderManId(userId);
+		record.setCreateTime(new Date());
+		orderManMemberMapper.insert(record );
+	}else{
+		OrderManMember record = new OrderManMember();
+		record.setOrderManMemberId(currentOrderManMember.getOrderManMemberId());
+		record.setUpdateTime(nowTime);
+		orderManMemberMapper.updateByPrimaryKeySelective(record);
+	}
 
+		User user = new User();
+		user.setUserId(uid);
+		user.setIsMember("TRUE");
+		user.setOpenMemberInfoId(uid);
+		userMapper.updateUserByuserId(user);
 		return null;
 	}
+
+
+	//邀请开通会员提交审核版本
+//	@Override
+//	public Integer updateValidTimeById(Integer uid,Integer userId,String memberLevel,Integer promoterDuration) {
+//		Date nowTime = new Date();
+//		//判断邀请人是否在有效期内
+//		OpenOrderManInfo openOrderManInfo2 = openOrderManInfoMapper.getOpenOrderManInfoByOrderManId(userId).stream().findFirst().orElse(null);
+//		if(openOrderManInfo2 == null || openOrderManInfo2.getEndTime().before(nowTime)){
+//			throw new BusinessException(ErrorType.APPLY_ERROR2);
+//		}
+//		//判断申请表存在未审核记录时不能重复邀请会员
+//		AuthenticationApply currentAuthenticationApply = new AuthenticationApply();
+//		currentAuthenticationApply.setUserId(uid);
+//		currentAuthenticationApply.setAuthenticationType("MEMBER");
+//		currentAuthenticationApply.setStatus("WAIT_AUDIT");
+//		AuthenticationApply AuthenticationApply1 = authenticationApplyMapper.selectAuthenticationApplyList(currentAuthenticationApply).stream().findFirst().orElse(null);
+//		if(AuthenticationApply1 != null){
+//			throw new BusinessException(ErrorType.MEMBER_NOT_AUDIT);
+//		}
+//		//判断用户已经是有效期内的会员时不能邀请
+//		OpenMemberInfo openMemberInfo1 = openMemberInfoMapper.getOpenMemberInfo(uid);
+//		if(openMemberInfo1 != null){
+//			throw new BusinessException(ErrorType.MEMBER_EXIST);
+//		}
+//
+//		Integer openOrderManInfoId = userMapper.getOpenOrderManInfoIdByUserId(userId);
+//
+//		//插入申请表
+//		AuthenticationApply authenticationApply = new AuthenticationApply();
+//		authenticationApply.setUserId(uid);
+//		authenticationApply.setAuthenticationType("MEMBER");
+//		User user1 = userMapper.selectUserByuserId(uid);
+//		if(user1.getMobile() != null){
+//			authenticationApply.setMobile(user1.getMobile());
+//		}
+//		if(user1.getRealName() != null){
+//			authenticationApply.setRealName(user1.getRealName());
+//		}
+//		authenticationApply.setStatus("WAIT_AUDIT");
+//		authenticationApply.setCreateTime(nowTime);
+//		authenticationApply.setNickname(user1.getNickname());
+//		authenticationApply.setOrderManId(userId);
+//		authenticationApply.setUpdateTime(nowTime);
+//		authenticationApplyMapper.insert(authenticationApply);
+//
+//
+//		//判断会员表和关联表，如果有数据就修改，没有才新曾
+//		OpenMemberInfo paramOenMemberInfo = new OpenMemberInfo();
+//		paramOenMemberInfo.setUserId(uid);
+//		OpenMemberInfo currentOpenMemberInfo = openMemberInfoMapper.getMemberStartTimeByUserId(paramOenMemberInfo).stream().findFirst().orElse(null);
+//		if(currentOpenMemberInfo == null){
+//			//插入会员表
+//			OpenMemberInfo openMemberInfo = new OpenMemberInfo();
+////		Calendar cal = Calendar.getInstance();
+////		cal.set(Calendar.HOUR_OF_DAY, 0);
+////		cal.set(Calendar.MINUTE, 0);
+////		cal.set(Calendar.SECOND, 0);
+////		cal.set(Calendar.MILLISECOND,0);
+////		Date startTime = cal.getTime();
+////		openMemberInfo .setStartTime(startTime);
+////
+////		cal.add(Calendar.MONTH, promoterDuration);
+////		cal.set(Calendar.HOUR_OF_DAY,23);
+////		cal.set(Calendar.MINUTE, 59);
+////		cal.set(Calendar.SECOND, 59);
+////		cal.set(Calendar.MILLISECOND,0);
+////		Date endTime = cal.getTime();
+////		openMemberInfo.setEndTime(endTime);
+//
+//			openMemberInfo.setFreeTimes(0);
+//			openMemberInfo.setUserId(uid);
+//			openMemberInfo.setOrderManId(userId);
+//			openMemberInfo.setCreateTime(new Date());
+//			openMemberInfo.setMemberLevel("SENIOR");
+//			openMemberInfo.setOpenOrderManInfoId(openOrderManInfoId);
+//			openMemberInfoMapper.insert(openMemberInfo);
+//		}else{
+//			OpenMemberInfo openMemberInfo = new OpenMemberInfo();
+//			openMemberInfo.setOpenMemberInfoId(currentOpenMemberInfo.getOpenMemberInfoId());
+//			openMemberInfo.setMemberLevel("1");
+//			openMemberInfo.setStartTime(null);
+//			openMemberInfo.setEndTime(null);
+//			openMemberInfo.setFreeTimes(0);
+//			openMemberInfo.setOrderManId(userId);
+//			openMemberInfo.setOpenOrderManInfoId(openOrderManInfoId);
+//			openMemberInfoMapper.updateById(openMemberInfo);
+//		}
+//
+//		OrderManMember orderManMember = new OrderManMember();
+//		orderManMember.setMemberId(uid);
+//		orderManMember.setOrderManId(userId);
+//		OrderManMember currentOrderManMember = orderManMemberMapper.selectByAll(orderManMember).stream().findFirst().orElse(null);
+//		if(currentOrderManMember == null){
+//			//插入下单员会员表
+//			OrderManMember record = new OrderManMember();
+//			record.setMemberId(uid);
+//			record.setOrderManId(userId);
+//			record.setCreateTime(new Date());
+//			orderManMemberMapper.insert(record );
+//		}else{
+//			OrderManMember record = new OrderManMember();
+//			record.setOrderManMemberId(currentOrderManMember.getOrderManMemberId());
+//			record.setUpdateTime(nowTime);
+//			orderManMemberMapper.updateByPrimaryKeySelective(record);
+//		}
+//
+//		return null;
+//	}
 
 	@Override
 	@Transactional
