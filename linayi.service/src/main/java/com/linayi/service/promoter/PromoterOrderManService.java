@@ -100,4 +100,20 @@ public interface PromoterOrderManService {
      * @return
      */
     PromoterOrderMan getPersonalOrderProfit(PromoterOrderMan promoterOrderMan);
+
+
+    /**
+     * 获取下级会员列表
+     * @param
+     * @return
+     */
+    List<PromoterOrderMan> getMemberData(Integer userId);
+
+
+
+    /**
+     * 根据家庭服务师id获取订单数据和date
+     * @return
+     */
+    PromoterOrderMan getOrderManData(PromoterOrderMan PromoterOrderMan);
 }
