@@ -190,7 +190,7 @@ public class PromoterController extends BaseController {
 		}
 	}
 
-	@ApiOperation(value = "新增会员的有效时间", notes = "根据会员ID",produces = "application/xml,application/json")
+	@ApiOperation(value = "提交邀请会员的申请", notes = "根据会员ID",produces = "application/xml,application/json")
 	@RequestMapping(value ="openPromoterDuration.do",method=RequestMethod.POST)
 	public Object openPromoterDuration(@RequestBody PromoterVo.openPromoterDuration param){
 		ResponseData rr = null;
@@ -250,16 +250,12 @@ public class PromoterController extends BaseController {
 	})
 	@RequestMapping(value ="statisticalOrder.do",method=RequestMethod.POST)
 	public Object statisticalOrder( @RequestBody PromoterVo.statisticalOrder param){
-		ResponseData rr = null;
 		try {
-			String range = param.getDate();
-			PromoterOrderMan promoterOrderMan = promoterOrderManService.getStatisALL(getUserId(), range,"CUSTOMER",null);
-			promoterOrderMan.setOrderStatisticsData3(promoterOrderMan.getNumberOfMembers());
-			if(promoterOrderMan.getNumberOfMembers() == null){
-				promoterOrderMan.setOrderStatisticsData3(0);
-			}
-			rr = new ResponseData(promoterOrderMan);
-			return rr;
+			ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(param);
+			PromoterOrderMan promoterOrderMan = pv.transObject(PromoterOrderMan.class);
+			promoterOrderMan.setUserId(getUserId());
+			PromoterOrderMan promoterOrder= promoterOrderManService.getPersonalOrderProfit(promoterOrderMan);
+			return new ResponseData(promoterOrder);
 		} catch (Exception e) {
 			return new ResponseData(ErrorType.SYSTEM_ERROR);
 		}

@@ -33,4 +33,10 @@ public interface OpenOrderManInfoMapper {
      * @return
      */
    PromoterOrderMan getPersonalOrder(Integer userId);
+
+    /**
+     * 代顾客下单数据统计
+     * @return
+     */
+    PromoterOrderMan getPersonalOrderProfit(PromoterOrderMan promoterOrderMan);
 }

@@ -44,4 +44,7 @@ public interface AuthenticationApplyMapper {
 	 */
 	void updateApplyOrederManInfoById(AuthenticationApply apply);
 
+	AuthenticationApply selectByApplyId(AuthenticationApply apply);
+
+	Integer updateStatusByApplyId2(AuthenticationApply apply);
 }

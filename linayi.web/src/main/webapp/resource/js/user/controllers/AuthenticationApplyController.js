@@ -72,8 +72,10 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 			            	}else if(cellvalue == "PROCURER"){
 			            		return "采买员";
 			            	}else if(cellvalue == "DELIVERER"){
-			            		return "配送员";
-			            	}else if(cellvalue == "SPOKESMAN"){
+								return "配送员";
+							}else if(cellvalue == "MEMBER"){
+								return "会员";
+							}else if(cellvalue == "SPOKESMAN"){
 								return "代言人";
 							}else if(cellvalue == "ORDER_MAN"){
 								return "家庭服务师";

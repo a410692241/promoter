@@ -211,7 +211,7 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 		//判断邀请人是否在有效期内
 		OpenOrderManInfo openOrderManInfo2 = openOrderManInfoMapper.getOpenOrderManInfoByOrderManId(userId).stream().findFirst().orElse(null);
 		if(openOrderManInfo2 == null || openOrderManInfo2.getEndTime().before(nowTime)){
-			throw new BusinessException(ErrorType.APPLY_ERROR);
+			throw new BusinessException(ErrorType.APPLY_ERROR2);
 		}
 		//判断申请表存在未审核记录时不能重复邀请会员
 		AuthenticationApply currentAuthenticationApply = new AuthenticationApply();
@@ -245,11 +245,17 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 		authenticationApply.setCreateTime(nowTime);
 		authenticationApply.setNickname(user1.getNickname());
 		authenticationApply.setOrderManId(userId);
+		authenticationApply.setUpdateTime(nowTime);
 		authenticationApplyMapper.insert(authenticationApply);
 
 
-		//插入会员表
-		OpenMemberInfo openMemberInfo = new OpenMemberInfo();
+		//TODO 判断会员表和关联表，如果有数据就修改，没有才新
+		OpenMemberInfo paramOenMemberInfo = new OpenMemberInfo();
+		paramOenMemberInfo.setUserId(uid);
+		OpenMemberInfo currentOpenMemberInfo = openMemberInfoMapper.getMemberStartTimeByUserId(paramOenMemberInfo).stream().findFirst().orElse(null);
+		if(currentOpenMemberInfo == null){
+			//插入会员表
+			OpenMemberInfo openMemberInfo = new OpenMemberInfo();
 //		Calendar cal = Calendar.getInstance();
 //		cal.set(Calendar.HOUR_OF_DAY, 0);
 //		cal.set(Calendar.MINUTE, 0);
@@ -266,23 +272,103 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 //		Date endTime = cal.getTime();
 //		openMemberInfo.setEndTime(endTime);
 
-		openMemberInfo.setFreeTimes(0);
-		openMemberInfo.setUserId(uid);
-		openMemberInfo.setOrderManId(userId);
-		openMemberInfo.setCreateTime(new Date());
-		openMemberInfo.setMemberLevel("SENIOR");
-		openMemberInfo.setOpenOrderManInfoId(openOrderManInfoId);
-		openMemberInfoMapper.insert(openMemberInfo);
+			openMemberInfo.setFreeTimes(0);
+			openMemberInfo.setUserId(uid);
+			openMemberInfo.setOrderManId(userId);
+			openMemberInfo.setCreateTime(new Date());
+			openMemberInfo.setMemberLevel("SENIOR");
+			openMemberInfo.setOpenOrderManInfoId(openOrderManInfoId);
+			openMemberInfoMapper.insert(openMemberInfo);
+		}else{
+			OpenMemberInfo openMemberInfo = new OpenMemberInfo();
+			openMemberInfo.setOpenMemberInfoId(currentOpenMemberInfo.getOpenMemberInfoId());
+			openMemberInfo.setMemberLevel("1");
+			openMemberInfo.setStartTime(null);
+			openMemberInfo.setEndTime(null);
+			openMemberInfo.setFreeTimes(0);
+			openMemberInfo.setOrderManId(userId);
+			openMemberInfo.setOpenOrderManInfoId(openOrderManInfoId);
+			openMemberInfoMapper.updateById(openMemberInfo);
+		}
 
-		//插入下单员会员表
-		OrderManMember record = new OrderManMember();
-		record.setMemberId(uid);
-		record.setOrderManId(userId);
-		record.setCreateTime(new Date());
-		orderManMemberMapper.insert(record );
+		OrderManMember orderManMember = new OrderManMember();
+		orderManMember.setMemberId(uid);
+		orderManMember.setOrderManId(userId);
+		OrderManMember currentOrderManMember = orderManMemberMapper.selectByAll(orderManMember).stream().findFirst().orElse(null);
+		if(currentOrderManMember == null){
+			//插入下单员会员表
+			OrderManMember record = new OrderManMember();
+			record.setMemberId(uid);
+			record.setOrderManId(userId);
+			record.setCreateTime(new Date());
+			orderManMemberMapper.insert(record );
+		}else{
+			OrderManMember record = new OrderManMember();
+			record.setOrderManMemberId(currentOrderManMember.getOrderManMemberId());
+			record.setUpdateTime(nowTime);
+			orderManMemberMapper.updateByPrimaryKeySelective(record);
+		}
 
 		return null;
 	}
+
+	@Override
+	@Transactional
+	public void auditMember(AuthenticationApply authenticationApply) {
+		//判断记录是否为“待审核”状态
+		AuthenticationApply currentAuthenticationApply = new AuthenticationApply();
+		currentAuthenticationApply.setApplyId(authenticationApply.getApplyId());
+		AuthenticationApply authenticationApply2 = authenticationApplyMapper.selectByApplyId(currentAuthenticationApply);
+		if(!("WAIT_AUDIT".equals(authenticationApply2.getStatus()))){
+			throw new BusinessException(ErrorType.AUDIT_ERROR);
+		}
+
+		if("AUDIT_SUCCESS".equals(authenticationApply.getAuditStr())){
+			//修改申请表的状态为“审核通过”
+			AuthenticationApply authenticationApply1 = new AuthenticationApply();
+			authenticationApply1.setApplyId(authenticationApply2.getApplyId());
+			authenticationApply1.setAuditStr(authenticationApply.getAuditStr());
+			authenticationApplyMapper.updateStatusByApplyId2(authenticationApply1);
+
+			//修改会员表的开始结束时间
+			OpenMemberInfo openMemberInfo = new OpenMemberInfo();
+			openMemberInfo.setUserId(authenticationApply2.getUserId());
+			openMemberInfo.setOrderManId(authenticationApply2.getOrderManId());
+			Calendar cal = Calendar.getInstance();
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND,0);
+			Date startTime = cal.getTime();
+			openMemberInfo .setStartTime(startTime);
+
+			cal.add(Calendar.MONTH, 12);
+			cal.set(Calendar.HOUR_OF_DAY,23);
+			cal.set(Calendar.MINUTE, 59);
+			cal.set(Calendar.SECOND, 59);
+			cal.set(Calendar.MILLISECOND,0);
+			Date endTime = cal.getTime();
+			openMemberInfo.setEndTime(endTime);
+			openMemberInfoMapper.updateByuserIdAndOrderManId(openMemberInfo);
+
+			//user表修改is_member字段为TRUE
+			User user = new User();
+			user.setUserId(authenticationApply2.getUserId());
+			user.setIsMember("TRUE");
+			user.setOpenMemberInfoId(openMemberInfo.getOpenMemberInfoId());
+			userMapper.updateUserByuserId(user);
+		}
+		if("AUDIT_FAIL".equals(authenticationApply.getAuditStr())){
+			//修改申请表的状态为“审核不通过”
+			AuthenticationApply authenticationApply1 = new AuthenticationApply();
+			authenticationApply1.setApplyId(authenticationApply2.getApplyId());
+			authenticationApply1.setAuditStr(authenticationApply.getAuditStr());
+			authenticationApplyMapper.updateStatusByApplyId2(authenticationApply1);
+		}
+
+
+	}
+
 
 	@Override
 	public OrderManMember memberDetails(OrderManMember orderManMember) {

@@ -1,7 +1,9 @@
 package com.linayi.controller.user;
 
 import com.linayi.entity.user.AuthenticationApply;
+import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
+import com.linayi.service.promoter.OrderManMemberService;
 import com.linayi.service.user.AuthenticationApplyService;
 import com.linayi.util.ImageUtil;
 import com.linayi.util.PageResult;
@@ -25,6 +27,9 @@ public class AuthenticationApplyController {
 
 	@Resource
 	private AuthenticationApplyService authenticationApplyService;
+	@Resource
+	private OrderManMemberService orderManMemberService;
+
 
 
 	@RequestMapping("/list.do")
@@ -55,7 +60,7 @@ public class AuthenticationApplyController {
 	@RequestMapping(value = "/authenticationAudit.do",produces = {"text/html;charset=utf-8"})
 	@ResponseBody
 	public Object authenticationApplyAudit(AuthenticationApply apply) {
-		try {
+//		try {
 			if("家庭服务师".equals(apply.getAuthenticationType())&&"AUDIT_SUCCESS".equals(apply.getStatus())){
 				if("undefined".equals(apply.getIdentity()) || "".equals(apply.getIdentity())){
 					return new ResponseData(ErrorType.ERROR_ONE).toString();
@@ -63,10 +68,26 @@ public class AuthenticationApplyController {
 			}
 			authenticationApplyService.updateAuthenticationApplyAndUserInfo(apply);
 			return new ResponseData("S").toString();
-		} catch (NullPointerException e) {
-			return new ResponseData(ErrorType.ERROR_ONE).toString();
-		} catch (Exception e) {
-			return new ResponseData(ErrorType.ERROR_TWO).toString();
-		}
+//		} catch (NullPointerException e) {
+//			return new ResponseData(ErrorType.ERROR_ONE).toString();
+//		} catch (Exception e) {
+//			return new ResponseData(ErrorType.ERROR_TWO).toString();
+//		}
+	}
+
+	@RequestMapping("/audit.do")
+	@ResponseBody
+	public Object auditMember(AuthenticationApply authenticationApply) {
+//		try {
+			orderManMemberService.auditMember(authenticationApply);
+
+			return new ResponseData("审核成功！").toString();
+//		} catch (BusinessException e) {
+//			return new ResponseData(e.getErrorType()).toString();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+//		}
+
 	}
 }
