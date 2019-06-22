@@ -656,11 +656,14 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     @Override
     public void inviteOrderMan(AuthenticationApply apply, MultipartFile[] file) throws Exception {
         Date nowTime = new Date();
-        //判断邀请人是否在有效期内
-        OpenOrderManInfo openOrderManInfo2 = openOrderManInfoMapper.getOpenOrderManInfoByOrderManId(apply.getUserId()).stream().findFirst().orElse(null);
-        if(openOrderManInfo2 == null || openOrderManInfo2.getEndTime().before(nowTime)){
-            throw new BusinessException(ErrorType.APPLY_ERROR);
+        if(apply.getUserId() != null){
+            //判断邀请人是否在有效期内
+            OpenOrderManInfo openOrderManInfo2 = openOrderManInfoMapper.getOpenOrderManInfoByOrderManId(apply.getUserId()).stream().findFirst().orElse(null);
+            if(openOrderManInfo2 == null || openOrderManInfo2.getEndTime().before(nowTime)){
+                throw new BusinessException(ErrorType.APPLY_ERROR);
+            }
         }
+
         //判断是否已经存在家庭服务师
         OpenOrderManInfo openOrderManInfo1 = openOrderManInfoMapper.getOpenOrderManInfoByOrderManId(apply.getApplierId()).stream().findFirst().orElse(null);
         if(openOrderManInfo1 != null && openOrderManInfo1.getEndTime().after(nowTime)){
@@ -679,7 +682,9 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         authenticationApply.setCreateTime(new Date());
         authenticationApply.setUpdateTime(new Date());
         authenticationApply.setStatus("WAIT_AUDIT");
-        authenticationApply.setOrderManId(apply.getUserId());
+        if(apply.getUserId() != null){
+            authenticationApply.setOrderManId(apply.getUserId());
+        }
         authenticationApply.setAuthenticationType("ORDER_MAN");
         int rows = authenticationApplyMapper.insert(authenticationApply);
 
@@ -712,8 +717,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             //判断如果已经有家庭服务师信息，则修改信息，否则才新增家庭服务师信息
             OpenOrderManInfo paramOpenOrderManInfo = new OpenOrderManInfo();
             paramOpenOrderManInfo.setOrderManId(apply.getUserId());
-            paramOpenOrderManInfo.setSalesId(apply.getOrderManId());
-            OpenOrderManInfo currentOpenOrderManInfo = openOrderManInfoMapper.selectByOrderManIdAndSalesId(paramOpenOrderManInfo).stream().findFirst().orElse(null);
+            OpenOrderManInfo currentOpenOrderManInfo = openOrderManInfoMapper.selectByOrderManId(paramOpenOrderManInfo).stream().findFirst().orElse(null);
             if(currentOpenOrderManInfo == null){
                 //插入家庭服务师相关表
                 openOrderManInfo.setStartTime(startTime);
@@ -724,7 +728,9 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
                     openOrderManInfo.setPromoterId(openOrderManInfo2.getPromoterId());
                 }
                 openOrderManInfo.setOrderManId(apply.getUserId());
-                openOrderManInfo.setSalesId(apply.getOrderManId());
+                if(apply.getOrderManId() != null){
+                    openOrderManInfo.setSalesId(apply.getOrderManId());
+                }
                 openOrderManInfo.setIdentity("ORDER_MAN");
                 openOrderManInfoMapper.insert(openOrderManInfo);
             }else{

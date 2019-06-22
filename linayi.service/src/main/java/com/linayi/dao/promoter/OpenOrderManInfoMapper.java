@@ -47,7 +47,7 @@ public interface OpenOrderManInfoMapper {
      * @param promoterOrderMan
      * @return
      */
-    List<OpenOrderManInfo> selectByOrderManIdAndSalesId(OpenOrderManInfo openOrderManInfo);
+    List<OpenOrderManInfo> selectByOrderManId(OpenOrderManInfo openOrderManInfo);
 
     /**
      * 修改下单员表信息

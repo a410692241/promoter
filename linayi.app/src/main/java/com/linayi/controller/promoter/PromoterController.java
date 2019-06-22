@@ -323,7 +323,9 @@ public class PromoterController extends BaseController {
 			apply.setAddress(address);
 			apply.setRealName(realName);
 			apply.setMobile(mobile);
-			apply.setUserId(userId);
+			if(userId != null){
+				apply.setUserId(userId);
+			}
 			apply.setAreaCode(areaCode);
 			apply.setApplierId(getUserId());
 			//判断对象和数组是否为null
