@@ -72,4 +72,16 @@ public class CategoryController {
     	
 
 	}
+
+	@RequestMapping("/categoryList.do")
+	@ResponseBody
+	public Object getCategoryIdList(){
+		try {
+			List<Category> allCategory = categoryService.getCategorysByLevel(2);
+			return new ResponseData(allCategory);
+		} catch (Exception e) {
+			return new ResponseData(ErrorType.SYSTEM_ERROR);
+
+		}
+	}
 }

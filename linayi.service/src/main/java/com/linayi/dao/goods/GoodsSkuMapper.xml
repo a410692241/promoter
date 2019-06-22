@@ -550,6 +550,9 @@
         FROM
            goods_sku
         <where>
+            <if test="categoryId!=null and categoryId!=''">
+                and category_id = #{categoryId}
+            </if>
             <if test="brandName!=null and brandName!=''">
                 and full_name like concat('%',#{brandName},'%')
             </if>
@@ -855,6 +858,9 @@
                       gs.STATUS='NORMAL'
                 AND   cc.goods_sku_id is null
                 AND   (sgr.goods_sku_id is null AND sgr.supermarket_id is null)
+                <if test="categoryId!=null and categoryId!=''">
+                    and gs.category_id = #{categoryId}
+                </if>
                 <if test="brandName!=null and brandName!=''">
                     and gs.full_name like concat('%',#{brandName},'%')
                 </if>
@@ -889,6 +895,9 @@
                          open="(" separator="," close=")">
                     ${item}
                 </foreach>
+            </if>
+            <if test="categoryId!=null and categoryId!=''">
+                and gs.category_id = #{categoryId}
             </if>
             <if test="brandName!=null and brandName!=''">
                 and gs.full_name like concat('%',#{brandName},'%')
