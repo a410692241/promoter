@@ -67,6 +67,12 @@ public interface PromoterOrderManService {
      */
     public void inviteOrderMan(AuthenticationApply apply, MultipartFile[] file) throws Exception;
 
+    /**
+     * 审核家庭服务师（2019.6.22更新）
+     * @param apply
+     */
+    void auditOrderMan(AuthenticationApply apply);
+
 
     /**
      * 家庭服务师列表(新)

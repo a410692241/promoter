@@ -140,7 +140,10 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 	@Override
 	public void updateAuthenticationApplyAndUserInfo(AuthenticationApply apply) {
 		if("家庭服务师".equals(apply.getAuthenticationType())){
-			promoterOrderManService.applyOrderManInWeb(apply.getStatus(), apply.getApplyId(), apply.getUserId(), apply.getPromoterId(), apply.getIdentity());
+//旧的家庭服务师审核方法	promoterOrderManService.applyOrderManInWeb(apply.getStatus(), apply.getApplyId(), apply.getUserId(), apply.getPromoterId(), apply.getIdentity());
+			AuthenticationApply authenticationApply = authenticationApplyMapper.selectByApplyId(apply);
+			authenticationApply.setAuditStr(apply.getStatus());
+			promoterOrderManService.auditOrderMan(authenticationApply);
 		}
 		if("AUDIT_SUCCESS".equals(apply.getStatus())&&!"家庭服务师".equals(apply.getAuthenticationType())){
 			if("会员".equals(apply.getAuthenticationType())){

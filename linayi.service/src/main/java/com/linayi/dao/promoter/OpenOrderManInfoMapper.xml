@@ -106,4 +106,45 @@
                 AND ra.create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
             </if>
     </select>
+
+    <select id="selectByOrderManIdAndSalesId" resultType="com.linayi.entity.promoter.OpenOrderManInfo">
+        select <include refid="base_column"/> from open_order_man_info
+        where order_man_id = #{orderManId} AND sales_id=#{salesId}
+    </select>
+
+    <update id="updateOpenOrderManInfo" parameterType="com.linayi.entity.promoter.OpenOrderManInfo">
+        update open_order_man_info
+        <set>
+            <if test="promoterId != null">
+                promoter_id = #{promoterId,jdbcType=INTEGER},
+            </if>
+            <if test="orderManId != null">
+                order_man_id = #{orderManId,jdbcType=INTEGER},
+            </if>
+            <if test="salesId != null">
+                sales_id = #{salesId,jdbcType=INTEGER},
+            </if>
+            <if test="identity != null">
+                identity = #{identity,jdbcType=VARCHAR},
+            </if>
+            <if test="orderManLevel != null">
+                order_man_level = #{orderManLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </set>
+        where open_order_man_info_id = #{openOrderManInfoId,jdbcType=INTEGER}
+    </update>
+
+
 </mapper>

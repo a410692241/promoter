@@ -160,7 +160,7 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 		}
 	}
 
-	//邀请开通会员无需审核版本（作废！）
+	//邀请开通会员无需审核版本
 	@Override
 	@Transactional
 	public Integer updateValidTimeById(Integer uid,Integer userId,String memberLevel,Integer promoterDuration) {
@@ -193,8 +193,8 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 		paramOenMemberInfo.setUserId(uid);
 	OpenMemberInfo currentOpenMemberInfo = openMemberInfoMapper.getMemberStartTimeByUserId(paramOenMemberInfo).stream().findFirst().orElse(null);
 
+	OpenMemberInfo openMemberInfo = new OpenMemberInfo();
 	if(currentOpenMemberInfo == null){
-		OpenMemberInfo openMemberInfo = new OpenMemberInfo();
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
@@ -219,14 +219,14 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 		openMemberInfo.setOpenOrderManInfoId(openOrderManInfoId);
 		openMemberInfoMapper.insert(openMemberInfo);
 	}else{
-		OpenMemberInfo openMemberInfo = new OpenMemberInfo();
-		openMemberInfo.setOpenMemberInfoId(currentOpenMemberInfo.getOpenMemberInfoId());
-		openMemberInfo.setMemberLevel("1");
-		openMemberInfo.setStartTime(null);
-		openMemberInfo.setEndTime(null);
-		openMemberInfo.setFreeTimes(0);
-		openMemberInfo.setOrderManId(userId);
-		openMemberInfo.setOpenOrderManInfoId(openOrderManInfoId);
+		OpenMemberInfo openMemberInfo2 = new OpenMemberInfo();
+		openMemberInfo2.setOpenMemberInfoId(currentOpenMemberInfo.getOpenMemberInfoId());
+		openMemberInfo2.setMemberLevel("1");
+		openMemberInfo2.setStartTime(null);
+		openMemberInfo2.setEndTime(null);
+		openMemberInfo2.setFreeTimes(0);
+		openMemberInfo2.setOrderManId(userId);
+		openMemberInfo2.setOpenOrderManInfoId(openOrderManInfoId);
 		openMemberInfoMapper.updateById(openMemberInfo);
 	}
 
@@ -250,7 +250,7 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 		User user = new User();
 		user.setUserId(uid);
 		user.setIsMember("TRUE");
-		user.setOpenMemberInfoId(uid);
+		user.setOpenMemberInfoId(openMemberInfo.getOpenMemberInfoId());
 		userMapper.updateUserByuserId(user);
 		return null;
 	}
