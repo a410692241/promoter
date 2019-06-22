@@ -190,7 +190,7 @@ public class PromoterController extends BaseController {
 		}
 	}
 
-	@ApiOperation(value = "提交邀请会员的申请", notes = "根据会员ID",produces = "application/xml,application/json")
+	@ApiOperation(value = "提交邀请会员开通", notes = "根据会员ID",produces = "application/xml,application/json")
 	@RequestMapping(value ="openPromoterDuration.do",method=RequestMethod.POST)
 	public Object openPromoterDuration(@RequestBody PromoterVo.openPromoterDuration param){
 		ResponseData rr = null;
@@ -200,7 +200,7 @@ public class PromoterController extends BaseController {
 			Integer userId = getUserId();
 			Integer uid = param.getUserId();
 			orderManMemberService.updateValidTimeById(uid,userId,memberLevel,promoterDuration);
-			rr=new ResponseData("邀请会员申请成功，等待后台审核！");
+			rr=new ResponseData("邀请会员申请成功！");
 			return rr;
 		}catch (BusinessException e) {
 			return new ResponseData(e.getErrorType()).toString();

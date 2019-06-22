@@ -95,7 +95,7 @@
     		open_member_info omi
     	JOIN user u ON omi.user_id=u.user_id
     	WHERE
-    		omi.user_id=#{userId} and omi.end_time >=  now()
+    		omi.user_id=#{userId} and omi.end_time &gt;  now()
     		and u.is_member='TRUE'
     </select>
 
