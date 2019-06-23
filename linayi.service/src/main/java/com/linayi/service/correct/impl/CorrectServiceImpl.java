@@ -164,7 +164,7 @@ public class CorrectServiceImpl implements CorrectService {
         paramSamePrice.setCorrectId(correct.getParentId());
         Correct currentCorrect2 = correctMapper.query(paramSamePrice).stream().findFirst().orElse(null);
         if(correct.getPrice() == currentCorrect2.getPrice()){
-            throw new BusinessException(ErrorType.NOT_SHARER);
+            throw new BusinessException(ErrorType.CORRECT_SAME_PRICE);
         }
         // 线程安全并发处理
         SupermarketGoodsVersion param1 = new SupermarketGoodsVersion();
