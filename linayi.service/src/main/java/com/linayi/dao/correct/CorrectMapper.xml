@@ -631,7 +631,11 @@
             AND
             c.status = 'WAIT_AUDIT'
             <if test="categoryId!=null and categoryId!=''">
-                and g.category_id = #{categoryId}
+                and g.category_id in(SELECT
+                c3.category_id
+                FROM
+                category c1 JOIN category c2 ON c2.parent_id=c1.category_id JOIN category c3  ON c3.parent_id=c2.category_id
+                where c1.category_id=#{categoryId})
             </if>
         </where>
         ORDER BY
@@ -833,7 +837,11 @@
         WHERE
             g.STATUS="NORMAL"
             <if test="categoryId!=null and categoryId!=''">
-                and g.category_id = #{categoryId}
+                and g.category_id in(SELECT
+                c3.category_id
+                FROM
+                category c1 JOIN category c2 ON c2.parent_id=c1.category_id JOIN category c3  ON c3.parent_id=c2.category_id
+                where c1.category_id=#{categoryId})
             </if>
         AND
             c.supermarket_id = #{supermarketId}

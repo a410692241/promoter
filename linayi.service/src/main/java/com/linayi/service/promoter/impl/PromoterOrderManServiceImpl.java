@@ -968,4 +968,20 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     }
 
 
+    //会员订单统计
+    @Override
+    public PromoterOrderMan getMemberOrderData(PromoterOrderMan PromoterOrderMan) {
+        PromoterOrderMan.setUserId(PromoterOrderMan.getMemberId());
+        PromoterOrderMan promoterOrderMan = openOrderManInfoMapper.getOrderManData(PromoterOrderMan);
+        User user = userService.selectUserByuserId(promoterOrderMan.getMemberId());
+        if(user.getHeadImage() == null) {
+            promoterOrderMan.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
+        }else {
+            String headImage = ImageUtil.dealToShow(user.getHeadImage());
+            promoterOrderMan.setHeadImage(headImage);
+            promoterOrderMan.setNickname(user.getNickname());
+        }
+        return promoterOrderMan;
+
+    }
 }

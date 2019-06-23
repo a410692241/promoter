@@ -216,8 +216,8 @@
          FROM
               orders o JOIN orders_goods og ON o.orders_id = og.orders_id JOIN goods_sku gs ON  gs.goods_sku_id=og.goods_sku_id
          WHERE
-            order_man_id = #{orderManId}
-            AND user_id = #{userId}
+            o.order_man_id = #{orderManId}
+            AND o.user_id = #{memberId}
             AND (o.community_status='PROCURE_FINISHED' OR o.community_status='DELIVER_FINISHED')
     </select>
 

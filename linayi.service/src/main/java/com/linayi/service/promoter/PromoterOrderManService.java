@@ -132,4 +132,11 @@ public interface PromoterOrderManService {
      * @return
      */
     List<Orders> getMemberOrderList(PromoterOrderMan PromoterOrderMan);
+
+    /**
+     * 会员订单统计
+     * @param PromoterOrderMan
+     * @return
+     */
+    PromoterOrderMan getMemberOrderData(PromoterOrderMan PromoterOrderMan);
 }
