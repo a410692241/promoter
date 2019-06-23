@@ -117,4 +117,11 @@ public interface CorrectService {
      * @return
      */
     List<Correct> getAffectedPrice(Correct correct);
+
+
+    /**
+     * App审核价格生效前2月
+     * @param correct
+     */
+    void updatePriceAudit(Correct correct);
 }

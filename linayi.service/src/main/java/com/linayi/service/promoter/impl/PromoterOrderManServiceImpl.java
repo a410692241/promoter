@@ -6,6 +6,8 @@ import com.linayi.dao.promoter.*;
 import com.linayi.dao.user.AuthenticationApplyMapper;
 import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.order.Orders;
+import com.linayi.entity.order.OrdersGoods;
+import com.linayi.entity.order.OrdersSku;
 import com.linayi.entity.promoter.*;
 import com.linayi.entity.user.AuthenticationApply;
 import com.linayi.entity.user.ReceiveAddress;
@@ -905,6 +907,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     }
 
 
+
     //获取下级会员列表
     @Override
     public List<PromoterOrderMan> getMemberData(PromoterOrderMan PromoterOrderMan) {
@@ -949,6 +952,19 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         promoterOrderMan.setOrderProfit(personalProfit);
         promoterOrderMan.setNumberOfMembers(orderMan.size());
         return promoterOrderMan;
+    }
+
+
+    //会员订单列表
+    @Override
+    public List<Orders> getMemberOrderList(PromoterOrderMan PromoterOrderMan) {
+        List<Orders> ordersList = openOrderManInfoMapper.getMemberOrderList(PromoterOrderMan);
+        for (Orders orders : ordersList) {
+            for (OrdersGoods ordersGoods :orders.getOrdersGoodsList()){
+                ordersGoods.setImage(ImageUtil.dealToShow(ordersGoods.getImage()));
+            }
+        }
+        return ordersList;
     }
 
 

@@ -197,5 +197,47 @@
         where open_order_man_info_id = #{openOrderManInfoId,jdbcType=INTEGER}
     </update>
 
+    <select id="getMemberOrderList" resultMap="BaseResultMapList">
+        SELECT
+              gs.goods_sku_id,
+              gs.full_name goodsSkuName,
+              gs.image,
+              og.max_price,
+              og.price,
+              og.max_price,
+              round(((og.max_price- og.price)/og.price*100),2) spreadRate,
+              og.quantity,
+              og.supermarket_id,
+              og.max_supermarket_id,
+              (og.price *og.quantity) totalPrice,
+              o.amount payPrice,
+              o.quantity  totalQuantity,
+              o.orders_id
+         FROM
+              orders o JOIN orders_goods og ON o.orders_id = og.orders_id JOIN goods_sku gs ON  gs.goods_sku_id=og.goods_sku_id
+         WHERE
+            order_man_id = #{orderManId}
+            AND user_id = #{userId}
+            AND (o.community_status='PROCURE_FINISHED' OR o.community_status='DELIVER_FINISHED')
+    </select>
 
+    <resultMap id="BaseResultMapList" type="com.linayi.entity.order.Orders" >
+        <id column="orders_id" property="ordersId" jdbcType="BIGINT" />
+        <result column="orders_id" property="ordersId" />
+        <result column="amount" property="payPrice" />
+        <result column="totalQuantity" property="totalQuantity" />
+        <collection property="ordersGoodsList"  ofType="com.linayi.entity.order.OrdersGoods">
+            <id column="orders_goods_id" property="ordersGoodsId"  />
+            <result column="goods_sku_id" property="goodsSkuId" />
+            <result column="full_name" property="goodsSkuName" />
+            <result column="image" property="image" />
+            <result column="max_price" property="maxPrice" />
+            <result column="price" property="price" />
+            <result column="spreadRate" property="spreadRate" />
+            <result column="quantity" property="quantity" />
+            <result column="supermarket_id" property="supermarketId" />
+            <result column="max_supermarket_id" property="maxSupermarketId" />
+            <result column="totalPrice" property="totalPrice" />
+        </collection>
+    </resultMap>
 </mapper>

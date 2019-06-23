@@ -1,5 +1,6 @@
 package com.linayi.dao.promoter;
 
+import com.linayi.entity.order.Orders;
 import com.linayi.entity.promoter.OpenOrderManInfo;
 import com.linayi.entity.promoter.PromoterOrderMan;
 
@@ -71,4 +72,10 @@ public interface OpenOrderManInfoMapper {
     PromoterOrderMan getOrderManData(PromoterOrderMan PromoterOrderMan);
 
 
+    /**
+     * 会员订单列表
+     * @param PromoterOrderMan
+     * @return
+     */
+    List<Orders> getMemberOrderList(PromoterOrderMan PromoterOrderMan);
 }
