@@ -124,4 +124,19 @@ public interface PromoterOrderManService {
      * @return
      */
     Map getMemberAndOrderMan(Integer userId);
+
+
+    /**
+     * 会员订单列表
+     * @param PromoterOrderMan
+     * @return
+     */
+    List<Orders> getMemberOrderList(PromoterOrderMan PromoterOrderMan);
+
+    /**
+     * 会员订单统计
+     * @param PromoterOrderMan
+     * @return
+     */
+    PromoterOrderMan getMemberOrderData(PromoterOrderMan PromoterOrderMan);
 }

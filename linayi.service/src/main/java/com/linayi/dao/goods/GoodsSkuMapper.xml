@@ -551,8 +551,13 @@
         FROM
            goods_sku
         <where>
+            1=1
             <if test="categoryId!=null and categoryId!=''">
-                and category_id = #{categoryId}
+                and category_id in(SELECT
+                c3.category_id
+                FROM
+                category c1 JOIN category c2 ON c2.parent_id=c1.category_id JOIN category c3  ON c3.parent_id=c2.category_id
+                where c1.category_id=#{categoryId})
             </if>
             <if test="brandName!=null and brandName!=''">
                 and full_name like concat('%',#{brandName},'%')
@@ -860,7 +865,11 @@
                 AND   cc.goods_sku_id is null
                 AND   (sgr.goods_sku_id is null AND sgr.supermarket_id is null)
                 <if test="categoryId!=null and categoryId!=''">
-                    and gs.category_id = #{categoryId}
+                    and gs.category_id in(SELECT
+                    c3.category_id
+                    FROM
+                    category c1 JOIN category c2 ON c2.parent_id=c1.category_id JOIN category c3  ON c3.parent_id=c2.category_id
+                    where c1.category_id=#{categoryId})
                 </if>
                 <if test="brandName!=null and brandName!=''">
                     and gs.full_name like concat('%',#{brandName},'%')
@@ -898,7 +907,11 @@
                 </foreach>
             </if>
             <if test="categoryId!=null and categoryId!=''">
-                and gs.category_id = #{categoryId}
+                and gs.category_id in(SELECT
+                c3.category_id
+                FROM
+                category c1 JOIN category c2 ON c2.parent_id=c1.category_id JOIN category c3  ON c3.parent_id=c2.category_id
+                where c1.category_id=#{categoryId})
             </if>
             <if test="brandName!=null and brandName!=''">
                 and gs.full_name like concat('%',#{brandName},'%')

@@ -72,7 +72,8 @@ public enum ErrorType {
     APPLY_ERROR(2035,"邀请人信息错误，开通家庭服务师失败！"),
     APPLY_ERROR2(2035,"邀请人信息错误，邀请会员失败！"),
     MEMBER_NOT_AUDIT(2036,"此用户有未审核的会员申请，暂时不能邀请!"),
-    MEMBER_EXIST(2037,"此用户已经是会员且在有效期内，邀请失败！");
+    MEMBER_EXIST(2037,"此用户已经是会员且在有效期内，邀请失败！"),
+    CORRECT_SAME_PRICE(2038,"商品价格已存在生效记录，请勿重复纠错！");
 
 
 

@@ -391,4 +391,27 @@ public class CorrectController extends BaseController {
 		}
 	}
 
+
+	/**
+	 * 审核2个月前生效最低价
+	 * @param correct
+	 * @return
+	 */
+	@RequestMapping("/updatePriceAudit.do")
+	@ResponseBody
+	public Object updatePriceAudit(@RequestBody Correct correct){
+		try {
+			correct.setUserId(getUserId());
+			correct.setAuditType(OperatorType.USER.toString());
+			correctService.updatePriceAudit(correct);
+			correct.setResultStr("审核成功！");
+			return new ResponseData(correct);
+		}catch (BusinessException e) {
+			return new ResponseData(e.getErrorType()).toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+		}
+
+	}
 }

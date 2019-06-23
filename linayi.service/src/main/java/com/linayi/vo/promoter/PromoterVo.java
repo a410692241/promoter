@@ -21,8 +21,8 @@ public class PromoterVo {
     @Getter
     @Setter
     public static class OrdersObj extends PageVo {
-        @ApiModelProperty(value = "用户Id",required = false,example = "1")
-        public Integer userId;
+        @ApiModelProperty(value = "用户Id",required = true,example = "1")
+        public Integer memberId;
         @ApiModelProperty(value = "接受地址Id",required = false,example = "1")
         public Integer receiveAddressId;
         @ApiModelProperty(value = "查询范围",required = false,example = "ALL:全部,MONTH:本月")

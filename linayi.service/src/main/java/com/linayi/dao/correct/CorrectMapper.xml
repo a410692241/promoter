@@ -499,6 +499,12 @@
             <if test="statusBeforeAffect !=null ">
                 `status_before_affect` = #{statusBeforeAffect,jdbcType=TIMESTAMP},
             </if>
+            <if test="auditerIdAfterAffect !=null ">
+                `auditer_id_after_affect` = #{auditerIdAfterAffect},
+            </if>
+            <if test="auditTimeAfterAffect !=null ">
+                `audit_time_after_affect` = #{auditTimeAfterAffect},
+            </if>
         </trim>
         where `correct_id` = #{correctId}
     </update>
@@ -625,7 +631,11 @@
             AND
             c.status = 'WAIT_AUDIT'
             <if test="categoryId!=null and categoryId!=''">
-                and g.category_id = #{categoryId}
+                and g.category_id in(SELECT
+                c3.category_id
+                FROM
+                category c1 JOIN category c2 ON c2.parent_id=c1.category_id JOIN category c3  ON c3.parent_id=c2.category_id
+                where c1.category_id=#{categoryId})
             </if>
         </where>
         ORDER BY
@@ -821,13 +831,17 @@
     <select id="getAffectedPrice" resultType="com.linayi.entity.correct.Correct">
         SELECT
             c.correct_id,c.parent_id,g.goods_sku_id,c.supermarket_id,c.price,c.create_time,g.full_name,g.image goodsImage,
-            (select round(((max(price)-min(price))/min(price)*100),2)  from correct where goods_sku_id=c.goods_sku_id and (status='AFFECTED'  or status='AUDIT_SUCCESS' or status='WAIT_AUDIT') group by goods_sku_id) spreadRate
+            round(((cg.max_price-cg.min_price)/cg.min_price*100),2)  spreadRate
         FROM
-           goods_sku  g LEFT JOIN correct c ON g.goods_sku_id=c.goods_sku_id
+            community_goods cg JOIN correct c ON cg.goods_sku_id=c.goods_sku_id  AND cg.min_supermarket_id = c.supermarket_id join goods_sku g ON g.goods_sku_id=c.goods_sku_id
         WHERE
             g.STATUS="NORMAL"
             <if test="categoryId!=null and categoryId!=''">
-                and g.category_id = #{categoryId}
+                and g.category_id in(SELECT
+                c3.category_id
+                FROM
+                category c1 JOIN category c2 ON c2.parent_id=c1.category_id JOIN category c3  ON c3.parent_id=c2.category_id
+                where c1.category_id=#{categoryId})
             </if>
         AND
             c.supermarket_id = #{supermarketId}
@@ -835,6 +849,8 @@
             c.status="AFFECTED"
         AND
             (c.audit_last_time &lt;  DATE_ADD(NOW(),INTERVAL -2 MONTH) OR c.status_after_affect="WAIT_AUDIT")
+        GROUP BY
+            g.goods_sku_id
         ORDER BY
              c.audit_last_time ASC
     </select>

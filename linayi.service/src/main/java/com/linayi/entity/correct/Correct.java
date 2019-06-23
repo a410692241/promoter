@@ -5,11 +5,13 @@ import com.linayi.entity.account.AdminAccount;
 import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.entity.user.User;
+import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
 
+@Data
 public class Correct extends BaseEntity {
 
     private Date auditLastTime;
@@ -22,6 +24,8 @@ public class Correct extends BaseEntity {
     public String getStatusBeforeAffect() { return statusBeforeAffect; }
     public void setStatusBeforeAffect(String statusBeforeAffect) { this.statusBeforeAffect = statusBeforeAffect; }
 
+    private Integer auditerIdAfterAffect;
+    private Date auditTimeAfterAffect;
     public String getRealName() {
         return realName;
     }
