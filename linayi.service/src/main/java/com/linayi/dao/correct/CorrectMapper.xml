@@ -499,6 +499,12 @@
             <if test="statusBeforeAffect !=null ">
                 `status_before_affect` = #{statusBeforeAffect,jdbcType=TIMESTAMP},
             </if>
+            <if test="auditerIdAfterAffect !=null ">
+                `auditer_id_after_affect` = #{auditerIdAfterAffect},
+            </if>
+            <if test="auditTimeAfterAffect !=null ">
+                `audit_time_after_affect` = #{auditTimeAfterAffect},
+            </if>
         </trim>
         where `correct_id` = #{correctId}
     </update>

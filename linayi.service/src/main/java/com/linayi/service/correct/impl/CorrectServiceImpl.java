@@ -1005,6 +1005,7 @@ public class CorrectServiceImpl implements CorrectService {
     }
 
     @Override
+    @Transactional
     public void updatePriceAudit(Correct correct) {
         Correct newCorrect = correctMapper.selectByPrimaryKey(correct.getCorrectId());
 
@@ -1015,26 +1016,14 @@ public class CorrectServiceImpl implements CorrectService {
         SupermarketGoodsVersion version = supermarketGoodsVersionService.getVersion(param1);
 
         Date now = new Date();
-        if (CorrectStatus.WAIT_AUDIT.toString().equals(newCorrect.getStatus())) {
+        if (CorrectStatus.AFFECTED.toString().equals(newCorrect.getStatus())) {
             Correct param = new Correct();
             param.setCorrectId(correct.getCorrectId());
-            param.setStatus(correct.getStatus());
-            param.setUpdateTime(now);
-            param.setAuditLastTime(now);
             param.setStatusAfterAffect(correct.getStatus());
-            param.setAuditTime(now);
-            param.setAuditerId(correct.getUserId());
-            param.setAuditType(correct.getAuditType());
+            param.setAuditLastTime(now);
+            param.setAuditerIdAfterAffect(correct.getUserId());
+            param.setAuditTimeAfterAffect(now);
             correctMapper.updateCorrect(param);
-
-            //插入correct_log表
-            CorrectLog correctLog = new CorrectLog();
-            correctLog.setCorrectId(correct.getCorrectId());
-            correctLog.setOperateStatus(correct.getStatus());
-            correctLog.setOperatorId(correct.getUserId());
-            correctLog.setOperatorType(OperatorType.ADMIN.toString());
-            correctLog.setCreateTime(now);
-            correctLogMapper.insert(correctLog);
 
             if (CorrectStatus.AUDIT_FAIL.toString().equals(correct.getStatus()) && OperatorType.USER.toString().equals(correct.getAuditType())) {
                 if (correct.getParentId() == null) {
