@@ -89,12 +89,8 @@ public interface SupermarketMapper {
     Integer getSupermarketCommunityId(Integer userId);
 
 
-	/**
-	 * 根据名称模糊查询超市
-	 * @param supermarketName
-	 * @return
-	 */
-	List<Supermarket> getSupermarketByName(String supermarketName);
+
+/*	List<Supermarket> getSupermarketByName(String supermarketName);*/
 
     Integer getSupermarketIdByName(String name);
 

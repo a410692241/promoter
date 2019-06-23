@@ -47,12 +47,7 @@
 									ng-model="search.spreadRate" type="text" class="form-control">
 							</div>
 						</div>
-						<div class="form-group form-group-margin">
-							<div class="input-group">
-								<span class="input-group-addon">价差率 ></span> <input
-									ng-model="search.spreadRate" type="text" class="form-control">
-							</div>
-						</div>
+
 				<%--		<div class="form-group form-group-margin">
 							<div class="input-group">
 								<span class="input-group-addon">最高价</span> <input

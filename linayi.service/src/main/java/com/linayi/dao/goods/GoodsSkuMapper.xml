@@ -823,11 +823,6 @@
         <if test="spreadRate!=null and spreadRate!=''">
             and spreadRate &gt; #{spreadRate}
         </if>
-        HAVING
-                1=1
-                <if test="spreadRate!=null and spreadRate!=''">
-                    and spreadRate &gt; #{spreadRate}
-                </if>
         ORDER BY spreadRate desc
     </select>
 
