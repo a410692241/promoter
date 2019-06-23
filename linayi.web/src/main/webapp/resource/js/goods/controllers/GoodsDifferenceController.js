@@ -9,8 +9,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 		$scope.exportData = exportData;
 		$scope.search={
 			goodsSkuId:'',
-			fullName:'',
-			barcode:'',
+			name:'',
 			spreadRate:''
 		};
 		$scope.list();
@@ -31,10 +30,10 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 			url : urls.ms+"/goods/goods/getBackstageDifference.do",
 /*			postData:$scope.search,*/
 			pager : "#GoodsDifferenceListPager",
-			multiselect :true,
+	/*		multiselect :true,*/
 			rownumWidth: 100,
 			colModel : [
-			            {name:'goodsSkuId',label:'商品ID',width:80},
+			            {name:'goodsSkuId',label:'商品ID',width:80,sortable:false},
 			            {name:'fullName',label:'商品名称',sortable:false,width:200},
 						{name:'barcode',label:'商品条码',sortable:false,width:80},
 			            {name:'maxPrice',label:'最高价(单位:元)',sortable:false,
@@ -45,6 +44,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 							formatter: function (cellvalue, options, rowObject) {
 								return cellvalue / 100;
 							},},
+
 						{name:'spreadRate',label:'价差率(%)',sortable:false,
 							formatter: function (cellvalue, options, rowObject) {
 								return   cellvalue>100? "<a style='color: red;text-decoration:none;font-weight: bold;' href='javascript:void(0);' ng-click='otherPrice( " + rowObject.goodsSkuId + " )' class='btn-sm td-compile'>"+cellvalue +"%"+"</a>":"<a style='font-weight: bold;' href='javascript:void(0);' ng-click='otherPrice( " + rowObject.goodsSkuId + " )' class='btn-sm td-compile'>"+cellvalue+"%"+"</a>";
@@ -80,12 +80,15 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 		});
 	}
 
+
+
+
 	//导出数据
 	function exportData() {
 		var goodsSkuId = $scope.search.goodsSkuId;
+		var spreadRate = $scope.search.spreadRate;
 		var fullName = $scope.search.fullName;
 		var barcode = $scope.search.barcode;
-		var spreadRate = $scope.search.spreadRate;
 		var data = '';
 		if (goodsSkuId === undefined || goodsSkuId == '') {
 			goodsSkuId = null;
@@ -109,10 +112,8 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 		} else {
 			data += '&spreadRate=' + spreadRate;
 		}
-
 		location.href = urls.ms + "/goods/goods/exportDifferenceRanking.do?" + data.replace("&", "");
 		toaster.success("", "导出成功!", 1000);
-
 
 	}
 

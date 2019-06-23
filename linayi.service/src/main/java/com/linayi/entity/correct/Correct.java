@@ -277,6 +277,8 @@ public class Correct extends BaseEntity {
 
     private Double spreadRate;
 
+    private Integer categoryId;
+
     public Double getSpreadRate() {
         return spreadRate;
     }
@@ -589,6 +591,14 @@ public class Correct extends BaseEntity {
 
     public void setSupermarketGoodsId(Long supermarketGoodsId) {
         this.supermarketGoodsId = supermarketGoodsId;
+    }
+
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 
     @Override

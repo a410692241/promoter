@@ -88,6 +88,10 @@ public interface SupermarketMapper {
 	 */
     Integer getSupermarketCommunityId(Integer userId);
 
+
+
+/*	List<Supermarket> getSupermarketByName(String supermarketName);*/
+
     Integer getSupermarketIdByName(String name);
 
 
