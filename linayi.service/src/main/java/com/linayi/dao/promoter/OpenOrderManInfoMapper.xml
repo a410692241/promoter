@@ -153,6 +153,9 @@
         <if test="userId!=null and userId!=''">
             AND user_id = #{userId}
         </if>
+        <if test="receiveAddressId!=null and receiveAddressId!=''">
+            AND receive_address_id = #{receiveAddressId}
+        </if>
         <if test="date!=null and date=='MONTH'">
             AND create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
         </if>
