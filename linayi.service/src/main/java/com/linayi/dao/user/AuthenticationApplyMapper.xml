@@ -157,7 +157,7 @@
 		authentication_apply
 		SET
 		<if test="status != null">
-			status=#{auditStr},
+			status=#{status},
 		</if>
 
 		status=status,

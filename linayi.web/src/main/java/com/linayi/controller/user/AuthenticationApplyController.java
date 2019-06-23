@@ -60,7 +60,7 @@ public class AuthenticationApplyController {
 	@RequestMapping(value = "/authenticationAudit.do",produces = {"text/html;charset=utf-8"})
 	@ResponseBody
 	public Object authenticationApplyAudit(AuthenticationApply apply) {
-//		try {
+		try {
 //			if("家庭服务师".equals(apply.getAuthenticationType())&&"AUDIT_SUCCESS".equals(apply.getStatus())){
 //				if("undefined".equals(apply.getIdentity()) || "".equals(apply.getIdentity())){
 //					return new ResponseData(ErrorType.ERROR_ONE).toString();
@@ -68,11 +68,11 @@ public class AuthenticationApplyController {
 //			}
 			authenticationApplyService.updateAuthenticationApplyAndUserInfo(apply);
 			return new ResponseData("S").toString();
-//		} catch (NullPointerException e) {
-//			return new ResponseData(ErrorType.ERROR_ONE).toString();
-//		} catch (Exception e) {
-//			return new ResponseData(ErrorType.ERROR_TWO).toString();
-//		}
+		} catch (NullPointerException e) {
+			return new ResponseData(ErrorType.ERROR_ONE).toString();
+		} catch (Exception e) {
+			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+		}
 	}
 
 	@RequestMapping("/audit.do")
