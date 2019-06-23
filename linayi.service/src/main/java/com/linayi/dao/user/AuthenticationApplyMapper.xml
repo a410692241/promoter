@@ -157,7 +157,7 @@
 		authentication_apply
 		SET
 		<if test="status != null">
-			status=#{auditStr},
+			status=#{status},
 		</if>
 
 		status=status,
@@ -173,7 +173,7 @@
 		apply_id=#{applyId}
 	</update>
 
-	<update id="updateApplyOrederManInfoById">
+	<update id="updateApplyOrederManInfoById" parameterType="com.linayi.entity.user.AuthenticationApply">
 		update
 			authentication_apply
 		set
@@ -183,6 +183,9 @@
 			<if test="identity != null and identity !='' ">
 				identity=#{identity},
 			</if>
+        <if test="updateTime != null ">
+            update_time=#{updateTime},
+        </if>
 			<if test="status != null and status!=''">
 				status=#{status}
 			</if>

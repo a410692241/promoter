@@ -752,6 +752,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             AuthenticationApply authenticationApply = new AuthenticationApply();
             authenticationApply.setApplyId(apply.getApplyId());
             authenticationApply.setStatus(apply.getAuditStr());
+            authenticationApply.setUpdateTime(nowTime);
             authenticationApplyMapper.updateApplyOrederManInfoById(authenticationApply);
 
 //        User userInfo = userMapper.selectUserByuserId(apply.getApplierId());
@@ -779,6 +780,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             AuthenticationApply authenticationApply = new AuthenticationApply();
             authenticationApply.setApplyId(apply.getApplyId());
             authenticationApply.setStatus(apply.getAuditStr());
+            authenticationApply.setUpdateTime(nowTime);
             authenticationApplyMapper.updateApplyOrederManInfoById(authenticationApply);
         }
 
@@ -905,10 +907,10 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
 
     //获取下级会员列表
     @Override
-    public List<PromoterOrderMan> getMemberData(Integer userId) {
-        List<PromoterOrderMan> promoterOrderMan = openOrderManInfoMapper.getMemberData(userId);
+    public List<PromoterOrderMan> getMemberData(PromoterOrderMan PromoterOrderMan) {
+        List<PromoterOrderMan> promoterOrderMan = openOrderManInfoMapper.getMemberData(PromoterOrderMan);
         PromoterOrderMan promoterOrderMan1 = new PromoterOrderMan();
-        promoterOrderMan1.setOrderManId(userId);
+        promoterOrderMan1.setOrderManId(PromoterOrderMan.getUserId());
         for (PromoterOrderMan orderMan : promoterOrderMan) {
             promoterOrderMan1.setUserId(orderMan.getUserId());
             PromoterOrderMan promoterOrder = openOrderManInfoMapper.getOrderManData(promoterOrderMan1);
@@ -920,6 +922,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             }
             orderMan.setNumberOfOrders(promoterOrder.getNumberOfOrders());
             orderMan.setTotalSum(promoterOrder.getTotalSum());
+            orderMan.setMemberId(orderMan.getUserId());
         }
         return promoterOrderMan;
     }
@@ -929,6 +932,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     @Override
     public PromoterOrderMan getOrderManData(PromoterOrderMan PromoterOrderMan) {
         PromoterOrderMan promoterOrderMan = openOrderManInfoMapper.getOrderManData(PromoterOrderMan);
+        List<PromoterOrderMan> orderMan = openOrderManInfoMapper.getMemberData(PromoterOrderMan);
         OpenOrderManInfo openOrderManInfo = openOrderManInfoMapper.getOpenOrderManInfoByOrderManId(PromoterOrderMan.getOrderManId()).stream().findFirst().orElse(null);
         String openOrderManLevel = openOrderManInfo.getOrderManLevel();
         int personalProfit = 0;
@@ -943,6 +947,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             personalProfit = (int) (promoterOrderMan.getNumberOfOrders() * 300 + promoterOrderMan.getPersonalSales() * 0.012 + (promoterOrderMan.getNumberOfOrders() >= 10 ? 10000 : 0));
         }
         promoterOrderMan.setOrderProfit(personalProfit);
+        promoterOrderMan.setNumberOfMembers(orderMan.size());
         return promoterOrderMan;
     }
 

@@ -367,12 +367,6 @@
             <if test="createTimeEnd != null and createTimeEnd != ''">
                 and gs.create_time <![CDATA[ <= ]]> #{createTimeEnd}
             </if>
-            <if test="goodsSkuIdList != null and goodsSkuIdList.size() > 0">
-                AND gs.goods_sku_id in
-                <foreach collection="goodsSkuIdList" index="index" item="item1" open="(" separator="," close=")">
-                    ${item1}
-                </foreach>
-            </if>
         </where>
         order by gs.goods_sku_id desc
     </select>
@@ -472,7 +466,7 @@
     </select>
 
 
-   <!-- &lt;!&ndash; 价差排行 &ndash;&gt;
+    <!--&lt;!&ndash; 价差排行 &ndash;&gt;
     &lt;!&ndash;List<GoodsSku> getDifferenceRanking()&ndash;&gt;
     <select id="getDifferenceRanking" resultType="com.linayi.entity.goods.GoodsSku">
         SELECT
@@ -530,8 +524,8 @@
                 ORDER BY ((cg.max_price_super-cg.min_price_super)/cg.min_price_super) DESC
             </if>
         </where>
-    </select>-->
-
+    </select>
+-->
 
 
     <!-- 根据商品名称模糊查询商品列表 -->
@@ -546,10 +540,20 @@
             brand_id,
             image,
             update_time,
-            create_time
+            create_time,
+            model,
+            function,
+            produce_address,
+            produce_date,
+            valid_date,
+            manufacturer,
+            other_attribute
         FROM
            goods_sku
         <where>
+            <if test="categoryId!=null and categoryId!=''">
+                and category_id = #{categoryId}
+            </if>
             <if test="brandName!=null and brandName!=''">
                 and full_name like concat('%',#{brandName},'%')
             </if>
@@ -815,10 +819,10 @@
              </if>
         GROUP BY gs.goods_sku_id
         HAVING
-                1=1
-                <if test="spreadRate!=null and spreadRate!=''">
-                    and spreadRate &gt; #{spreadRate}
-                </if>
+              1=1
+        <if test="spreadRate!=null and spreadRate!=''">
+            and spreadRate &gt; #{spreadRate}
+        </if>
         ORDER BY spreadRate desc
     </select>
 
@@ -855,6 +859,9 @@
                       gs.STATUS='NORMAL'
                 AND   cc.goods_sku_id is null
                 AND   (sgr.goods_sku_id is null AND sgr.supermarket_id is null)
+                <if test="categoryId!=null and categoryId!=''">
+                    and gs.category_id = #{categoryId}
+                </if>
                 <if test="brandName!=null and brandName!=''">
                     and gs.full_name like concat('%',#{brandName},'%')
                 </if>
@@ -890,6 +897,9 @@
                     ${item}
                 </foreach>
             </if>
+            <if test="categoryId!=null and categoryId!=''">
+                and gs.category_id = #{categoryId}
+            </if>
             <if test="brandName!=null and brandName!=''">
                 and gs.full_name like concat('%',#{brandName},'%')
             </if>
@@ -910,6 +920,4 @@
         </foreach>
         )
     </select>
-
-
 </mapper>

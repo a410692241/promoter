@@ -411,7 +411,7 @@ public class GoodsSkuController extends BaseController {
      * @param supermarketGoodsRecord
      * @return
      */
-    @RequestMapping("insertRecode.do")
+    @RequestMapping("/insertRecode.do")
     @ResponseBody
     public Object insertRecode(@RequestBody SupermarketGoodsRecord supermarketGoodsRecord) {
         try {

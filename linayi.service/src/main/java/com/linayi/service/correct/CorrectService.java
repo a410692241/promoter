@@ -109,4 +109,12 @@ public interface CorrectService {
     void priceImmediatelyAffect(Correct correct, MultipartFile file);
 
     void adjustPriceMaxAndMin(Correct corrects);
+
+
+    /**
+     * 生效最后时间大于2个月的
+     * @param correct
+     * @return
+     */
+    List<Correct> getAffectedPrice(Correct correct);
 }

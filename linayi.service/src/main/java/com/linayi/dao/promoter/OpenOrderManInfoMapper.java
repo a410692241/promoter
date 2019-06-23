@@ -62,7 +62,7 @@ public interface OpenOrderManInfoMapper {
      * @param
      * @return
      */
-    List<PromoterOrderMan> getMemberData(Integer userId);
+    List<PromoterOrderMan> getMemberData(PromoterOrderMan PromoterOrderMan);
 
     /**
      * 根据家庭服务师id获取订单数据和date

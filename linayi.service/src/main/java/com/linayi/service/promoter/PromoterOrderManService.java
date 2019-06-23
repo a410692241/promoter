@@ -108,7 +108,7 @@ public interface PromoterOrderManService {
      * @param
      * @return
      */
-    List<PromoterOrderMan> getMemberData(Integer userId);
+    List<PromoterOrderMan> getMemberData(PromoterOrderMan PromoterOrderMan);
 
 
 
