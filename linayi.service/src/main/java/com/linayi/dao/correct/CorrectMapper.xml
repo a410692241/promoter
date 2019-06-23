@@ -804,4 +804,27 @@
         where correct_id = #{correctId,jdbcType=BIGINT}
     </update>
 
+
+    <!--生效最后时间大于2个月的-->
+    <select id="getAffectedPrice" resultType="com.linayi.entity.correct.Correct">
+        SELECT
+            c.correct_id,c.parent_id,g.goods_sku_id,c.supermarket_id,c.price,c.create_time,g.full_name,g.image goodsImage,
+            (select round(((max(price)-min(price))/min(price)*100),2)  from correct where goods_sku_id=c.goods_sku_id and (status='AFFECTED'  or status='AUDIT_SUCCESS' or status='WAIT_AUDIT') group by goods_sku_id) spreadRate
+        FROM
+           goods_sku  g LEFT JOIN correct c ON g.goods_sku_id=c.goods_sku_id
+        WHERE
+            g.STATUS="NORMAL"
+            <if test="categoryId!=null and categoryId!=''">
+                and g.category_id = #{categoryId}
+            </if>
+        AND
+            c.supermarket_id = #{supermarketId}
+        AND
+            c.status="AFFECTED"
+        AND
+            (c.audit_last_time &lt;  DATE_ADD(NOW(),INTERVAL -2 MONTH) OR c.status_after_affect="WAIT_AUDIT")
+        ORDER BY
+             c.audit_last_time ASC
+    </select>
+
 </mapper>

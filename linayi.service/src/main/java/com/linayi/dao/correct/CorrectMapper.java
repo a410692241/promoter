@@ -102,5 +102,11 @@ public interface CorrectMapper {
 
     List<Correct> selectByAll(Correct correct);
 
+    /**
+     * 生效最后时间大于2个月的
+     * @param correct
+     * @return
+     */
+    List<Correct> getAffectedPrice(Correct correct);
 
 }

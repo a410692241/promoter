@@ -903,7 +903,9 @@ public class CorrectServiceImpl implements CorrectService {
         }
     }
 
-        public void initVersion(Correct correct) {
+
+
+    public void initVersion(Correct correct) {
             try {
                 SupermarketGoodsVersion version = new SupermarketGoodsVersion();
                 version.setSupermarketId(correct.getSupermarketId());
@@ -977,4 +979,22 @@ public class CorrectServiceImpl implements CorrectService {
         }
 
 
+    /**
+     * 生效最后时间大于2个月的
+     * @param correct
+     * @return
+     */
+    @Override
+    public List<Correct> getAffectedPrice(Correct correct) {
+        //获取待审核列表
+        List<Correct> correctList = correctMapper.getAffectedPrice(correct);
+
+        //图片处理
+        for (Correct currentCorrect : correctList) {
+            String Image = ImageUtil.dealToShow(currentCorrect.getGoodsImage());
+            currentCorrect.setGoodsImage(Image);
+
+        }
+        return correctList;
+    }
 }
