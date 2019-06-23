@@ -1027,38 +1027,9 @@ public class CorrectServiceImpl implements CorrectService {
             correctMapper.updateCorrect(param);
 
             if (CorrectStatus.AUDIT_FAIL.toString().equals(correct.getStatus()) && OperatorType.USER.toString().equals(correct.getAuditType())) {
-                if (correct.getParentId() == null) {
-                    Correct param2 = new Correct();
-                    param2.setSupermarketId(correct.getSupermarketId());
-                    param2.setGoodsSkuId(correct.getGoodsSkuId());
-                    List<String> statusList = new ArrayList<>();
-                    statusList.add(CorrectStatus.WAIT_AUDIT.toString());
-                    statusList.add(CorrectStatus.AUDIT_SUCCESS.toString());
-                    statusList.add(CorrectStatus.AFFECTED.toString());
-                    param2.setStatusList(statusList);
-                    Correct currentCorrect = correctMapper.query(param2).stream().findFirst().orElse(null);
-                    if (currentCorrect != null) {
-                        throw new BusinessException(ErrorType.HAVE_MAN_SHARE_ERROR);
-                    } else {
-                        correct.setType(CorrectType.SHARE.toString());
-                    }
-                }
 
-
-                if (correct.getParentId() != null) {
-                    Correct param3 = new Correct();
-                    param3.setCorrectId(correct.getParentId());
-                    Correct currentCorrect2 = correctMapper.query(param3).stream().findFirst().orElse(null);
-                    if (!CorrectStatus.AFFECTED.toString().equals(currentCorrect2.getStatus())) {
-                        throw new BusinessException(ErrorType.HAVE_MAN_CORRECT_ERROR);
-                    } else {
                         correct.setType(CorrectType.CORRECT.toString());
                     }
-                }
-
-            }
-
-
         } else {
             throw new BusinessException(ErrorType.AUDIT_ERROR);
         }
