@@ -752,6 +752,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             AuthenticationApply authenticationApply = new AuthenticationApply();
             authenticationApply.setApplyId(apply.getApplyId());
             authenticationApply.setStatus(apply.getAuditStr());
+            authenticationApply.setUpdateTime(nowTime);
             authenticationApplyMapper.updateApplyOrederManInfoById(authenticationApply);
 
 //        User userInfo = userMapper.selectUserByuserId(apply.getApplierId());
@@ -779,6 +780,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             AuthenticationApply authenticationApply = new AuthenticationApply();
             authenticationApply.setApplyId(apply.getApplyId());
             authenticationApply.setStatus(apply.getAuditStr());
+            authenticationApply.setUpdateTime(nowTime);
             authenticationApplyMapper.updateApplyOrederManInfoById(authenticationApply);
         }
 
