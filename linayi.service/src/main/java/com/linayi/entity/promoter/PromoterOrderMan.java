@@ -99,4 +99,5 @@ public class PromoterOrderMan extends BaseEntity {
     @ApiModelProperty(name = "memberId", value = "会员Id")
     private Integer memberId;
 
+    private Integer receiveAddressId;
 }

@@ -282,29 +282,29 @@ public class PromoterController extends BaseController {
 	@ApiOperation(value = "查询订单列表",notes = "根据用户Id或者接受地址Id,不能同时都传")
 	@RequestMapping(value = "/getOrdersList.do", method = RequestMethod.POST)
 	public Object getOrdersList(@RequestBody PromoterVo.OrdersObj orders){
-		PageResult<Orders> ordersList = new PageResult<>();
 		try {
-			ParamValidUtil<Orders> pv = new ParamValidUtil<>(orders);
-			Orders orders1 = pv.transObject(Orders.class);
-			orders1.setOrderManId(getUserId());
-			ordersList = orderService.getOrdersList(orders1);
-			return new ResponseData(ordersList);
+			ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(orders);
+			PromoterOrderMan promoterOrderMan = pv.transObject(PromoterOrderMan.class);
+			promoterOrderMan.setOrderManId(getUserId());
+			List<Orders> ordersList = promoterOrderManService.getMemberOrderList(promoterOrderMan);
+			return new PageResult<Orders>(ordersList,promoterOrderMan);
 		} catch (Exception e) {
-			e.printStackTrace();
+			return new ResponseData(ErrorType.SYSTEM_ERROR);
 		}
-		return new ResponseData(ErrorType.SYSTEM_ERROR);
 	}
 
 	// 订单列表-用户详情
 	@ApiOperation(value = "订单列表-订单统计", produces = "application/xml,application/json")
 	@RequestMapping(value = "/memberDetails.do", method = RequestMethod.POST)
 	public Object memberDetails(@RequestBody PromoterVo.MemberDetailsObj orderManMember) {
-		OrderManMember currentOrderManMember = new OrderManMember();
 		try {
-			ParamValidUtil<OrderManMember> pv = new ParamValidUtil<>(orderManMember);
-			OrderManMember orderManMember2 = pv.transObject(OrderManMember.class);
-			orderManMember2.setOrderManId(getUserId());
-			currentOrderManMember = orderManMemberService.memberDetails(orderManMember2);
+			ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(orderManMember);
+			PromoterOrderMan promoterOrderMan = pv.transObject(PromoterOrderMan.class);
+			promoterOrderMan.setOrderManId(getUserId());
+			if (null!=promoterOrderMan.getMemberId()){
+				promoterOrderMan.setUserId(promoterOrderMan.getMemberId());
+			}
+			PromoterOrderMan currentOrderManMember = promoterOrderManService.getMemberOrderData(promoterOrderMan);
 			return new ResponseData(currentOrderManMember);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -340,6 +340,8 @@ public class PromoterController extends BaseController {
 		}
 
 	}
+
+
 
 
 }

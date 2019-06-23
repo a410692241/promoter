@@ -59,14 +59,14 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         //会员数
         currentPromoterOrderMan.setNumberOfMembers(currentPromoterOrderMan2.getNumberOfMembers() == null ? 0 : currentPromoterOrderMan2.getNumberOfMembers());
 
-        if(currentPromoterOrderMan2.getNumberOfMembers() == null) {
+        if(null==currentPromoterOrderMan2.getNumberOfMembers()) {
             currentPromoterOrderMan.setNumberOfMembers(0);
         }
 
         //获取头像
         User user = userService.selectUserByuserId(promoterOrderMan.getOrderManId());
         //图片处理
-        if(user.getHeadImage() == null) {
+        if(null==user.getHeadImage()) {
             currentPromoterOrderMan.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
         }else {
             String headImage = ImageUtil.dealToShow(user.getHeadImage());
@@ -101,7 +101,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             // 获取下单员昵称头像
             User user = userService.selectUserByuserId(orderMan.getOrderManId());
             orderMan.setNickname(user.getNickname());
-            if(user.getHeadImage() == null) {
+            if(null==user.getHeadImage() ) {
                 orderMan.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
             }else {
                 String headImage = ImageUtil.dealToShow(user.getHeadImage());
@@ -531,7 +531,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     public List<PromoterOrderMan> getOpenOrderManInfoList(PromoterOrderMan promoterOrderMan) {
         List<PromoterOrderMan> promoterOrderMEN = openOrderManInfoMapper.getOpenOrderManInfoList(promoterOrderMan);
         for (PromoterOrderMan promoterOrderMAN : promoterOrderMEN) {
-            if(promoterOrderMAN.getHeadImage() == null) {
+            if(null==promoterOrderMAN.getHeadImage() ) {
                 promoterOrderMAN.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
             }else {
                 String headImage = ImageUtil.dealToShow(promoterOrderMAN.getHeadImage());
@@ -857,7 +857,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         //个人总收益
         promoterOrder.setPersonalTotalProfit(promoterOrder.getTeamProfit()+promoterOrder.getPersonalProfit());
         User user = userService.selectUserByuserId(promoterOrderMan.getUserId());
-        if(user.getHeadImage() == null) {
+        if(null==user.getHeadImage()) {
             promoterOrder.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
         }else {
             String headImage = ImageUtil.dealToShow(user.getHeadImage());
@@ -917,7 +917,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         for (PromoterOrderMan orderMan : promoterOrderMan) {
             promoterOrderMan1.setUserId(orderMan.getUserId());
             PromoterOrderMan promoterOrder = openOrderManInfoMapper.getOrderManData(promoterOrderMan1);
-            if(orderMan.getHeadImage() == null) {
+            if(null==orderMan.getHeadImage() ) {
                 orderMan.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
             }else {
                 String headImage = ImageUtil.dealToShow(orderMan.getHeadImage());
@@ -971,10 +971,14 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     //会员订单统计
     @Override
     public PromoterOrderMan getMemberOrderData(PromoterOrderMan PromoterOrderMan) {
-        PromoterOrderMan.setUserId(PromoterOrderMan.getMemberId());
         PromoterOrderMan promoterOrderMan = openOrderManInfoMapper.getOrderManData(PromoterOrderMan);
-        User user = userService.selectUserByuserId(promoterOrderMan.getMemberId());
-        if(user.getHeadImage() == null) {
+        if (PromoterOrderMan.getReceiveAddressId()!=null){
+            PromoterOrderMan.setUserId(PromoterOrderMan.getOrderManId());
+        }else {
+            PromoterOrderMan.setUserId(PromoterOrderMan.getMemberId());
+        }
+        User user = userService.selectUserByuserId(PromoterOrderMan.getUserId());
+        if(null==user.getHeadImage()) {
             promoterOrderMan.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
         }else {
             String headImage = ImageUtil.dealToShow(user.getHeadImage());
