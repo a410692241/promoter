@@ -24,6 +24,9 @@
         <result property="auditType" column="audit_type"/>
         <result property="updateTime" column="update_time"/>
         <result property="createTime" column="create_time"/>
+        <result property="auditLastTime" column="audit_last_time"/>
+        <result property="statusAfterAffect" column="status_after_affect"/>
+        <result property="statusBeforeAffect" column="status_before_affect"/>
         <association property="user" resultMap="com.linayi.dao.user.UserMapper.BaseResultMap"/>
         <association property="supermarket" resultMap="com.linayi.dao.supermarket.SupermarketMapper.BaseResultMap"/>
         <association property="goodsSku" resultMap="com.linayi.dao.goods.GoodsSkuMapper.BaseResultMap"/>
@@ -35,7 +38,7 @@
     -->
     <sql id="Base_Column_List">
         correct_id, supermarket_id, goods_sku_id, price, start_time, end_time, user_id, user_type, parent_id, image, price_type,
-        status, actual_start_time, actual_end_time, type, update_time, create_time
+        status, actual_start_time, actual_end_time, type, update_time, create_time, audit_last_time, status_after_affect, status_before_affect
     </sql>
 
     <!--
@@ -486,6 +489,15 @@
             </if>
             <if test="auditType !=null ">
                 `audit_type` = #{auditType,jdbcType=TIMESTAMP},
+            </if>
+            <if test="auditLastTime !=null ">
+                `audit_last_time` = #{auditLastTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="statusAfterAffect !=null ">
+                `status_after_affect` = #{statusAfterAffect,jdbcType=TIMESTAMP},
+            </if>
+            <if test="statusBeforeAffect !=null ">
+                `status_before_affect` = #{statusBeforeAffect,jdbcType=TIMESTAMP},
             </if>
         </trim>
         where `correct_id` = #{correctId}
