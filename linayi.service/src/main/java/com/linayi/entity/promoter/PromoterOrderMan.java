@@ -96,4 +96,7 @@ public class PromoterOrderMan extends BaseEntity {
     @ApiModelProperty(name = "personalTotalProfit", value = "个人总收益")
     private Integer personalTotalProfit;
 
+    @ApiModelProperty(name = "memberId", value = "会员Id")
+    private Integer memberId;
+
 }

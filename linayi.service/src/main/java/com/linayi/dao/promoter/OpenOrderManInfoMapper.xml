@@ -117,7 +117,7 @@
 
 
     <!--获取下级会员列表-->
-    <select id="getMemberData" resultType="com.linayi.entity.promoter.PromoterOrderMan">
+        <select id="getMemberData" resultType="com.linayi.entity.promoter.PromoterOrderMan">
             SELECT
                   omi.create_time openMemberTime,
                   omi.open_member_info_id,
@@ -131,6 +131,9 @@
             WHERE
                  omi.order_man_id = #{userId}
                  AND  omi.end_time &gt; now()
+                 <if test="date!=null and date=='MONTH'">
+                 AND  omi.create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
+                 </if>
             GROUP BY
                  omi.open_member_info_id
             ORDER BY
