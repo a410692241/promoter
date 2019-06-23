@@ -18,7 +18,10 @@ public enum ErrorType {
     SYSTEM_ERROR(1000, "系统繁忙!"),
     PARAM_ERROR(1901, "请求参数错误!"),
     WECHAT_CALL_ERROR(1902, "微信调用出错!"),
+    THE_ACCOUNT_HAS_BEAN_CHANGED(1903, "该账号数据已被转移,请使用新账号!"),
     THE_PHONE_NUMBER_HAS_BEEN_BOUND(1904, "该手机号已被绑定!"),
+    THE_ACCOUNT_HAS_BEEN_BOUND_TO_THE_PHONE_NUMBER(1904, "该账号已绑定手机号!"),
+    THE_MOBILE_PHONE_NUMBER_HAS_BEEN_BOUND_TO_WECHAT(1904, "该手机号已经绑定微信!"),
     THE_PHONE_NUMBER_HAS_BEEN_REGIST(1904, "该手机号已被注册!"),
     MESSAGE_FAILED_TO_SEND(1905, "短信发送失败!"),
     TOKEN_DISABLED(1906, "accessToken失效!"),
@@ -27,7 +30,7 @@ public enum ErrorType {
     UPDATE_STATUS(1910,"修改状态异常"),
     ADD_ERROR(1911,"添加失败!"),
     VERIFICATION_CODE_ERROR(1912,"验证码错误"),
-    AUDIT_ERROR(1913,"审核失败，已有人审核!"),
+    AUDIT_ERROR(1913,"审核失败，已被审核!"),
     USERNAME_DOES_NOT_EXIST(1914,"用户名不存在!"),
     UNFILLED_SHIPPING_ADDRESS(1915,"未填写收货地址!"),
     REDIS_DATA_ERROR(1916,"redis数据出错!"),
@@ -56,14 +59,20 @@ public enum ErrorType {
     TIME_SEQUENCE_ERROR(2022,"结束时间要大于开始时间!"),
     ORDER_CANCELED(2024,"存在订单已经取消，请重新采买!"),
     NOT_MEMBER(2023,"您还不是会员，请先成为会员再来下单!"),
-	ERROR_ONE(2025,"请输入部门类型以及家庭服务师级别!"),
-	ERROR_TWO(2026,"请勿重复申请!"),
+    ERROR_ONE(2025,"请输入部门类型以及家庭服务师级别!"),
+    ERROR_TWO(2026,"请勿重复申请!"),
     RECEIVEADDTOOMUCH(2027,"您只能拥有两个收货地址，不能新增!"),
     NO_PRICE(2028,"该商品暂无价格，加入购物车失败!"),
     USER_IS_DISABLED(2029,"该用户已禁用!"),
     NOT_PROCURER_NO_AUDIT(2030,"请先联系管理员绑定采买超市！"),
     MOBILE_SAME(2031,"手机号等信息已经存在"),
-    PASSWORDCONSISTENCY(2032,"不能与原密码一致");
+    PASSWORDCONSISTENCY(2032,"不能与原密码一致"),
+    SHAREPRICEOVERFLOW(2033,"分享价格溢出"),
+    ORDER_MAN_ALREADY_EXIST(2034,"您已经是家庭服务师且在有效期内，不能重复开通！"),
+    APPLY_ERROR(2035,"邀请人信息错误，开通家庭服务师失败！"),
+    APPLY_ERROR2(2035,"邀请人信息错误，邀请会员失败！"),
+    MEMBER_NOT_AUDIT(2036,"此用户有未审核的会员申请，暂时不能邀请!"),
+    MEMBER_EXIST(2037,"此用户已经是会员且在有效期内，邀请失败！");
 
 
 

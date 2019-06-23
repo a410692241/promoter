@@ -298,7 +298,7 @@ public class CorrectController extends BaseController {
 	@RequestMapping("/audithistory.do")
 	@ResponseBody
 	public Object auditHistory(@RequestBody Correct correct){
-		try {
+//		try {
 			if(correct.getPageSize() == null){
 				correct.setPageSize(8);
 			}
@@ -323,12 +323,37 @@ public class CorrectController extends BaseController {
 			map.put("currentPage",correct.getCurrentPage() );
 
 			return new ResponseData(map);
-		} catch (BusinessException e) {
-			return new ResponseData(e.getErrorType()).toString();
-		} catch (Exception e) {
-			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
-		}
+//		} catch (Exception e) {
+//			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+//		}
 	}
 
+
+	/**
+	 * 分享纠错查看按钮合并
+	 * @param correct
+	 * @param file
+	 * @return
+	 */
+	@RequestMapping("/updatePriceByApp.do")
+	@ResponseBody
+	public Object updatePriceByApp(Correct correct, MultipartFile file){
+		try {
+			correct.setUserId(getUserId());
+			correct.setAuditType(OperatorType.USER.toString());
+			correctService.updatePriceByApp(correct,file);
+			if("CORRECT".equals(correct.getCorrectType())){
+				return new ResponseData("价格修改成功");
+			}else {
+				return new ResponseData("价格分享成功");
+			}
+		}catch (BusinessException e) {
+			return new ResponseData(e.getErrorType()).toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+		}
+
+	}
 
 }

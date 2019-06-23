@@ -97,4 +97,12 @@ public interface SupermarketMapper {
 	List<Supermarket> getSupermarketByName(String supermarketName);
 
     Integer getSupermarketIdByName(String name);
+
+
+	/**
+	 * 根据超市名称模糊查询超市列表
+	 * @param name
+	 * @return
+	 */
+	List<Supermarket> getSupermarketByName(Supermarket supermarket);
 }

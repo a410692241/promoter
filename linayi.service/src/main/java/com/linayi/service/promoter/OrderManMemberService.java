@@ -3,6 +3,7 @@ package com.linayi.service.promoter;
 import java.util.Date;
 
 import com.linayi.entity.promoter.OrderManMember;
+import com.linayi.entity.user.AuthenticationApply;
 import com.linayi.entity.user.User;
 
 public interface OrderManMemberService {
@@ -27,6 +28,8 @@ public interface OrderManMemberService {
      * @return
      */
     Integer updateValidTimeById(Integer uid,Integer userId,String memberLevel,Integer promoterDuration);
+
+    void auditMember(AuthenticationApply authenticationApply);
     
     /**
 	 * 用户列表-用户详情

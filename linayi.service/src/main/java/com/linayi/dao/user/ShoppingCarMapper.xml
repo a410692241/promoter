@@ -24,9 +24,6 @@
             <if test="receiveAddressId != null">
                 AND receive_address_id = #{receiveAddressId}
             </if>
-            <if test="selectStatus != null and selectStatus != ''">
-                AND select_status = #{selectStatus}
-            </if>
         </where>
     </select>
     <select id="getShopCarById" resultMap="BaseResultMap">
@@ -112,4 +109,26 @@
             </if>
         </trim>
     </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.linayi.entity.user.ShoppingCar">
+        <!--@mbg.generated-->
+        update shopping_car
+        <set>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="goodsSkuId != null">
+                goods_sku_id = #{goodsSkuId,jdbcType=INTEGER},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity,jdbcType=INTEGER},
+            </if>
+            <if test="receiveAddressId != null">
+                receive_address_id = #{receiveAddressId,jdbcType=INTEGER},
+            </if>
+            <if test="selectStatus != null">
+                select_status = #{selectStatus,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where shopping_car_id = #{shoppingCarId,jdbcType=BIGINT}
+    </update>
 </mapper>

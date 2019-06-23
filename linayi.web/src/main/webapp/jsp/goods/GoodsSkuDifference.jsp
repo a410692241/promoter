@@ -32,7 +32,19 @@
 						<div class="form-group form-group-margin">
 							<div class="input-group">
 								<span class="input-group-addon">商品名称</span> <input
-									ng-model="search.name" type="text" class="form-control">
+									ng-model="search.fullName" type="text" class="form-control">
+							</div>
+						</div>
+						<div class="form-group form-group-margin">
+							<div class="input-group">
+								<span class="input-group-addon">商品条码</span> <input
+									ng-model="search.barcode" type="text" class="form-control">
+							</div>
+						</div>
+						<div class="form-group form-group-margin">
+							<div class="input-group">
+								<span class="input-group-addon">价差率 ></span> <input
+									ng-model="search.spreadRate" type="text" class="form-control">
 							</div>
 						</div>
 						<div class="form-group form-group-margin">

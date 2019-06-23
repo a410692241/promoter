@@ -203,14 +203,14 @@ public class AccountController extends BaseController {
      */
     @RequestMapping("/bindMobile.do")
     @ResponseBody
-    @Transactional
     public Object bindMobile(@RequestBody Map<String, Object> param) {
         try {
             Integer accountId = getAccountId();
             ParamValidUtil<Map> pa = new ParamValidUtil<>(param);
-            pa.Exist("mobile");
+            pa.Exist("mobile","validCode");
             String mobile = param.get("mobile") + "";
-            return new ResponseData(accountService.bindMobile(accountId,mobile));
+            String validCode = param.get("validCode") + "";
+            return new ResponseData(accountService.bindMobile(accountId,mobile,validCode));
         } catch (BusinessException e) {
             return new ResponseData(e.getErrorType());
         } catch (Exception e) {
@@ -263,5 +263,5 @@ public class AccountController extends BaseController {
             return new ResponseData(ErrorType.SYSTEM_ERROR);
         }
     }
-  
+
 }

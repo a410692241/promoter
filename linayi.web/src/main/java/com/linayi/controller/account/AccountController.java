@@ -3,6 +3,7 @@ package com.linayi.controller.account;
 import com.alibaba.fastjson.JSON;
 import com.linayi.dao.role.RoleEnumMapper;
 import com.linayi.entity.account.Account;
+import com.linayi.entity.account.AccountRole;
 import com.linayi.entity.account.AdminAccount;
 import com.linayi.entity.account.TreeNodeBO;
 import com.linayi.exception.BusinessException;
@@ -131,7 +132,6 @@ public class AccountController {
         ServletInputStream input = null;
         try {
             input = request.getInputStream();
-            System.out.println(input);
             int nRead = 1;
             int nTotalRead = 0;
             byte[] bytes = new byte[10240];
@@ -162,7 +162,13 @@ public class AccountController {
     @ResponseBody
     @RequestMapping("/getRoleListByUser.do")
     public Object selectSameURole(Integer accountId) {
-        return null;
+        List<AccountRole> accountRoleLists = accountService.getAccountRoleLists(accountId);
+        if (accountRoleLists.size() != 0){
+            return accountRoleLists;
+        }else {
+            return new ResponseData(ErrorType.SYSTEM_ERROR);
+        }
+
     }
 
     //修改密码

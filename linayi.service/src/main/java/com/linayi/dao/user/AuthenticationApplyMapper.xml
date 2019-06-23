@@ -24,7 +24,8 @@
 		specialty,
 		hobby,
 		motto,
-		image
+		image,
+		order_man_id
 		)
 		values (
 		#{applyId,jdbcType=INTEGER},
@@ -45,7 +46,8 @@
 		#{specialty,jdbcType=VARCHAR},
 		#{hobby,jdbcType=VARCHAR},
 		#{motto,jdbcType=VARCHAR},
-		#{image,jdbcType=VARCHAR}
+		#{image,jdbcType=VARCHAR},
+		#{orderManId,jdbcType=INTEGER}
 		)
 	</insert>
 
@@ -155,7 +157,7 @@
 		authentication_apply
 		SET
 		<if test="status != null">
-			status=#{status},
+			status=#{auditStr},
 		</if>
 
 		status=status,
@@ -188,4 +190,39 @@
 			apply_id=#{applyId}
 	</update>
 
+
+	<select id="selectByApplyId" resultType="com.linayi.entity.user.AuthenticationApply">
+		select
+		apply_id applyId,
+		user_id userId,
+		authentication_type authenticationType,
+		real_name realName,
+		mobile,
+		id_card_front idCardFront,
+		id_card_back idCardBack,
+		status,
+		update_time updateTime,
+		create_time createTime,
+		order_man_id
+		from
+		authentication_apply
+		WHERE
+		apply_id = #{applyId}
+	</select>
+
+	<update id="updateStatusByApplyId2" parameterType="com.linayi.entity.user.AuthenticationApply">
+		UPDATE
+		authentication_apply
+		SET
+		<trim suffixOverrides=",">
+		<if test="auditStr != null">
+			status=#{auditStr},
+		</if>
+		<if test="updateTime != null">
+			update_time=#{updateTime},
+		</if>
+		</trim>
+		WHERE
+		apply_id=#{applyId}
+	</update>
 </mapper>

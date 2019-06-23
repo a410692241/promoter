@@ -3,7 +3,9 @@
 app.controller('userCtrl', function($scope,toaster,userService,messager,templateform ) {
 
 	function init(){
+
 		$scope.list = list;
+		$scope.otherPrice = otherPrice;
 		$scope.exportData = exportData;
 		$scope.search={
 			goodsSkuId:'',
@@ -11,6 +13,12 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 			spreadRate:''
 		};
 		$scope.list();
+			fullName:'',
+			barcode:'',
+			spreadRate:''
+		};
+		$scope.list();
+
 	}
 
 	/**列表查询*/
@@ -32,6 +40,7 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 			colModel : [
 			            {name:'goodsSkuId',label:'商品ID',width:80,sortable:false},
 			            {name:'fullName',label:'商品名称',sortable:false,width:200},
+						{name:'barcode',label:'商品条码',sortable:false,width:80},
 			            {name:'maxPrice',label:'最高价(单位:元)',sortable:false,
 							formatter: function (cellvalue, options, rowObject) {
 								return cellvalue / 100;
@@ -44,8 +53,38 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 						{name:'spreadRate',label:'价差率(%)',sortable:false,
 							formatter: function (cellvalue, options, rowObject) {
 								return   cellvalue>100? "<span style='color: #ff0d20;text-decoration:none;font-weight: bold;'>"+cellvalue +"%"+"</span>":"<span style='font-weight: bold;' >"+cellvalue+"%"+"</a>";
+								return   cellvalue>100? "<a style='color: red;text-decoration:none;font-weight: bold;' href='javascript:void(0);' ng-click='otherPrice( " + rowObject.goodsSkuId + " )' class='btn-sm td-compile'>"+cellvalue +"%"+"</a>":"<a style='font-weight: bold;' href='javascript:void(0);' ng-click='otherPrice( " + rowObject.goodsSkuId + " )' class='btn-sm td-compile'>"+cellvalue+"%"+"</a>";
 							}},
 			            ],
+			            onSelectRow:function(rowId,status){
+			            	var rows = $( this ).jqGrid( "getRowData" , rowId);
+			            	if(status){
+			            		$scope.checkUserId.add(rows.userId);
+			            	}else{
+			            		$scope.checkUserId.deletes(rows.userId);
+			            	}
+			            }
+		});
+	}
+
+	//查看其它价格
+	function otherPrice(goodsSkuId) {
+		var url = urls.ms + "/correct/correct/getSupermarketPrice.do?";
+		if (goodsSkuId) {
+			url = url + $.param({goodsSkuId: goodsSkuId});
+		}
+		templateform.open({
+			title: "其它价格",
+			url: url,
+			scope: $scope,
+			buttons: [],
+			onOpen: function ($modalInstance, data, $scope) {
+
+			}
+		}, function (modalInstance, data) {
+			$scope.correct = data.data;
+		});
+	}
 
 		});
 	}
@@ -56,16 +95,31 @@ app.controller('userCtrl', function($scope,toaster,userService,messager,template
 		var goodsSkuId = $scope.search.goodsSkuId;
 		var name = $scope.search.name;
 		var spreadRate = $scope.search.spreadRate;
+		var fullName = $scope.search.fullName;
+		var barcode = $scope.search.barcode;
+		var spreadRate = $scope.search.spreadRate;
 		var data = '';
 		if (goodsSkuId === undefined || goodsSkuId == '') {
 			goodsSkuId = null;
 		} else {
 			data += '&goodsSkuId=' + goodsSkuId;
 		}
-		if (name === undefined || name == '') {
-			name = null;
+		if (fullName === undefined || fullName == '') {
+			fullName = null;
 		} else {
-			data += '&name=' + name;
+			data += '&fullName=' + fullName;
+		}
+
+		if (barcode === undefined || barcode == '') {
+			barcode = null;
+		} else {
+			data += '&barcode=' + barcode;
+		}
+
+		if (spreadRate === undefined || spreadRate == '') {
+			spreadRate = null;
+		} else {
+			data += '&spreadRate=' + spreadRate;
 		}
 		if (spreadRate === undefined || spreadRate == '') {
 			name = null;

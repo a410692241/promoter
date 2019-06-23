@@ -1,41 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.linayi.dao.promoter.OrderManMemberMapper">
-  <insert id="insert" parameterType="com.linayi.entity.promoter.OrderManMember">
+    <resultMap id="BaseResultMap" type="com.linayi.entity.promoter.OrderManMember">
+        <!--@mbg.generated-->
+        <id column="order_man_member_id" jdbcType="INTEGER" property="orderManMemberId" />
+        <result column="order_man_id" jdbcType="INTEGER" property="orderManId" />
+        <result column="member_id" jdbcType="INTEGER" property="memberId" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    </resultMap>
+
+    <insert id="insert" parameterType="com.linayi.entity.promoter.OrderManMember">
     insert into order_man_member (order_man_member_id, order_man_id, member_id,
       update_time, create_time)
     values (#{orderManMemberId,jdbcType=INTEGER}, #{orderManId,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER},
       #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
-  <sql id="base_column">
+    <sql id="base_column">
     order_man_member_id, order_man_id, member_id, update_time, create_time
   </sql>
-  
-  <select id="getOrderManMemberList" resultType="com.linayi.entity.promoter.OrderManMember">
-    select member_id memberId from order_man_member
-    <where>
-      <if test="orderManId != null">
-        AND order_man_id  = #{orderManId}
-      </if>
-      <if test="createTimeStart != null and createTimeStart != ''">
-        AND create_time  <![CDATA[ >= ]]> #{createTimeStart}
-      </if>
-       <if test="createTimeEnd != null and createTimeEnd != ''">
-        AND create_time  <![CDATA[ <= ]]> #{createTimeEnd}
-      </if>
-    </where>
-  </select>
 
- <select id="getOrderManMemberListByOrderManId" resultType="com.linayi.entity.promoter.OrderManMember">
+    <select id="getOrderManMemberList" resultType="com.linayi.entity.promoter.OrderManMember">
+        select member_id memberId from order_man_member
+        <where>
+            <if test="orderManId != null">
+                AND order_man_id  = #{orderManId}
+            </if>
+            <if test="createTimeStart != null and createTimeStart != ''">
+                AND create_time  <![CDATA[ >= ]]> #{createTimeStart}
+            </if>
+            <if test="createTimeEnd != null and createTimeEnd != ''">
+                AND create_time  <![CDATA[ <= ]]> #{createTimeEnd}
+            </if>
+        </where>
+    </select>
+
+    <select id="getOrderManMemberListByOrderManId" resultType="com.linayi.entity.promoter.OrderManMember">
  	select omm.member_id memberId from order_man_member omm
     left join user u on omm.member_id = u.user_id AND u.is_member = 'TRUE'
+    join open_member_info omi on u.user_id=omi.user_id AND omi.end_time &gt; now()
  	WHERE
  		omm.order_man_id=#{orderManId}
  		order by omm.create_time DESC
  </select>
- <select id="getOrderManMemberListByPromoterId" resultType="com.linayi.entity.promoter.OrderManMember">
+    <select id="getOrderManMemberListByPromoterId" resultType="com.linayi.entity.promoter.OrderManMember">
      select omm.member_id memberId from order_man_member omm
      left join promoter_order_man pom on pom.order_man_id = omm.order_man_id and pom.promoter_id = #{promoterId}
      left join user u on u.is_member = 'TRUE' and u.user_id = omm.member_id
  </select>
+
+    <select id="selectByAll" resultMap="BaseResultMap">
+        select
+        order_man_member_id,order_man_id,member_id,update_time,create_time
+
+        from order_man_member
+        where 1=1
+        <if test="orderManMemberId != null">
+            and order_man_member_id=#{orderManMemberId,jdbcType=INTEGER}
+        </if>
+        <if test="orderManId != null">
+            and order_man_id=#{orderManId,jdbcType=INTEGER}
+        </if>
+        <if test="memberId != null">
+            and member_id=#{memberId,jdbcType=INTEGER}
+        </if>
+        <if test="updateTime != null">
+            and update_time=#{updateTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="createTime != null">
+            and create_time=#{createTime,jdbcType=TIMESTAMP}
+        </if>
+    </select>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.linayi.entity.promoter.OrderManMember">
+        <!--@mbg.generated-->
+        update order_man_member
+        <set>
+            <if test="orderManId != null">
+                order_man_id = #{orderManId,jdbcType=INTEGER},
+            </if>
+            <if test="memberId != null">
+                member_id = #{memberId,jdbcType=INTEGER},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where order_man_member_id = #{orderManMemberId,jdbcType=INTEGER}
+    </update>
+
 </mapper>

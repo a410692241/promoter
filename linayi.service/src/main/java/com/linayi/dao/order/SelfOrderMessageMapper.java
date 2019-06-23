@@ -1,11 +1,11 @@
 package com.linayi.dao.order;
 
 
-import java.util.Date;
-import java.util.List;
-
 import com.linayi.entity.order.SelfOrderMessage;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.Date;
+import java.util.List;
 
 public interface SelfOrderMessageMapper {
 
@@ -15,15 +15,15 @@ public interface SelfOrderMessageMapper {
      * @return
      */
     Integer sendBuyerMessage(SelfOrderMessage selfOrderMessage);
-    
+
     /**
      * 通过用户id查询自定义下单消息表
      * @param userId
      * @return
      */
     List<SelfOrderMessage> selectByUserId(SelfOrderMessage selfOrderMessage);
-    
-    
+
+
 
     /**
      * 通过主键修改状态
@@ -39,5 +39,12 @@ public interface SelfOrderMessageMapper {
      * @return
      */
     List<SelfOrderMessage> selectSelfOrderMessageBySelfOrderId(Long selfOrderMessageId);
+
+    void insert(SelfOrderMessage selfOrderMessage);
+
+    List<SelfOrderMessage> selectByAll(SelfOrderMessage selfOrderMessage);
+
+    int updateByPrimaryKey(SelfOrderMessage record);
+
 
 }

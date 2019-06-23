@@ -57,6 +57,9 @@ public class Correct extends BaseEntity {
      */
     private String name;
 
+    private String barcode; //条形码
+
+
     /**
      * [商品ID]
      */
@@ -121,6 +124,14 @@ public class Correct extends BaseEntity {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endTim;
+
+    public String getBarcode() {
+        return barcode;
+    }
+
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
+    }
 
     public String getCreateTimeStart() {
         return createTimeStart;
@@ -265,6 +276,8 @@ public class Correct extends BaseEntity {
     private String correctType;//按钮类型
 
     private Double spreadRate;
+
+    private Integer categoryId;
 
     public Double getSpreadRate() {
         return spreadRate;
@@ -578,6 +591,14 @@ public class Correct extends BaseEntity {
 
     public void setSupermarketGoodsId(Long supermarketGoodsId) {
         this.supermarketGoodsId = supermarketGoodsId;
+    }
+
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 
     @Override

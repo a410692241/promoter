@@ -16,7 +16,7 @@ public class CorrectLog {
     }
 
     private Long correctLogId;
-
+    private String operation;
     private Long correctId;
 
     private String operateStatus;
@@ -73,5 +73,13 @@ public class CorrectLog {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getOperation() {
+        return operation;
+    }
+
+    public void setOperation(String operation) {
+        this.operation = operation;
     }
 }

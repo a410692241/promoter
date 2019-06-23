@@ -64,4 +64,12 @@ public interface SupermarketService {
     Supermarket getSupermarketByUserId(Integer userId);
 
     Supermarket getSupermarketById(Integer SupermarketId);
+
+
+    /**
+     * 根据超市名称模糊查询超市列表
+     * @param name
+     * @return
+     */
+    List<Supermarket> getSupermarketByName(Supermarket supermarket);
 }

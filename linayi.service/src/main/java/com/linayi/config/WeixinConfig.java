@@ -23,6 +23,7 @@ public class WeixinConfig {
     public static final String REDICT_INDEX_URL = "redict_index_url";
     //邻生商户端首页
     public static final String LINSHENG_REDICT_INDEX_URL = "linsheng_redict_index_url";
+    public static final String BIND_MOBILE_URL = "bind_mobile_url";
 
 
 }

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.recode.SupermarketGoodsRecordMapper">
+  <resultMap id="BaseResultMap" type="com.linayi.entity.recode.SupermarketGoodsRecord">
+    <!--@mbg.generated-->
+    <id column="supermarket_goods_record_id" jdbcType="INTEGER" property="supermarketGoodsRecordId" />
+    <result column="goods_sku_id" jdbcType="INTEGER" property="goodsSkuId" />
+    <result column="supermarket_id" jdbcType="INTEGER" property="supermarketId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    supermarket_goods_record_id, goods_sku_id, supermarket_id,create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select 
+    <include refid="Base_Column_List" />
+    from supermarket_goods_record
+    where supermarket_goods_record_id = #{supermarketGoodsRecordId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <!--@mbg.generated-->
+    delete from supermarket_goods_record
+    where supermarket_goods_record_id = #{supermarketGoodsRecordId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="supermarket_goods_record_id" keyProperty="supermarketGoodsRecordId" parameterType="com.linayi.entity.recode.SupermarketGoodsRecord" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into supermarket_goods_record (goods_sku_id, supermarket_id,create_time)
+    values (#{goodsSkuId,jdbcType=INTEGER}, #{supermarketId,jdbcType=INTEGER},#{createTime})
+  </insert>
+  <insert id="insertSelective" keyColumn="supermarket_goods_record_id" keyProperty="supermarketGoodsRecordId" parameterType="com.linayi.entity.recode.SupermarketGoodsRecord" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into supermarket_goods_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="goodsSkuId != null">
+        goods_sku_id,
+      </if>
+      <if test="supermarketId != null">
+        supermarket_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="goodsSkuId != null">
+        #{goodsSkuId,jdbcType=INTEGER},
+      </if>
+      <if test="supermarketId != null">
+        #{supermarketId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linayi.entity.recode.SupermarketGoodsRecord">
+    <!--@mbg.generated-->
+    update supermarket_goods_record
+    <set>
+      <if test="goodsSkuId != null">
+        goods_sku_id = #{goodsSkuId,jdbcType=INTEGER},
+      </if>
+      <if test="supermarketId != null">
+        supermarket_id = #{supermarketId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where supermarket_goods_record_id = #{supermarketGoodsRecordId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linayi.entity.recode.SupermarketGoodsRecord">
+    <!--@mbg.generated-->
+    update supermarket_goods_record
+    set goods_sku_id = #{goodsSkuId,jdbcType=INTEGER},
+      supermarket_id = #{supermarketId,jdbcType=INTEGER}
+    where supermarket_goods_record_id = #{supermarketGoodsRecordId,jdbcType=INTEGER}
+  </update>
+  <select id="getSupermarketGoodsRecord" resultType="com.linayi.entity.recode.SupermarketGoodsRecord">
+      SELECT
+            supermarket_goods_record_id, goods_sku_id, supermarket_id
+      FROM
+            supermarket_goods_record
+      WHERE
+            goods_sku_id=#{goodsSkuId}
+      AND
+            supermarket_id=#{supermarketId}
+  </select>
+</mapper>

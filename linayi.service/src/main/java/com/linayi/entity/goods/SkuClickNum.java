@@ -6,13 +6,13 @@ import java.util.Date;
 
 public class SkuClickNum {
     /**
-    * [商品id]
-    */
-    private Integer goodsSkuId;
+     * [商品id]
+     */
+    private Long goodsSkuId;
 
     /**
-    * [点击日期]
-    */
+     * [点击日期]
+     */
     @DateTimeFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
     private Date clickDate;
     @DateTimeFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
@@ -21,15 +21,15 @@ public class SkuClickNum {
     private Date endTime;
 
     /**
-    * [点击量]
-    */
+     * [点击量]
+     */
     private Integer num;
 
-    public Integer getGoodsSkuId() {
+    public Long getGoodsSkuId() {
         return goodsSkuId;
     }
 
-    public void setGoodsSkuId(Integer goodsSkuId) {
+    public void setGoodsSkuId(Long goodsSkuId) {
         this.goodsSkuId = goodsSkuId;
     }
 
