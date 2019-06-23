@@ -160,6 +160,12 @@ public class CorrectServiceImpl implements CorrectService {
     @Override
     @Transactional
     public Correct correct(Correct correct, MultipartFile file, String userType) {
+        Correct paramSamePrice = new Correct();
+        paramSamePrice.setCorrectId(correct.getParentId());
+        Correct currentCorrect2 = correctMapper.query(paramSamePrice).stream().findFirst().orElse(null);
+        if(correct.getPrice() == currentCorrect2.getPrice()){
+            throw new BusinessException(ErrorType.NOT_SHARER);
+        }
         // 线程安全并发处理
         SupermarketGoodsVersion param1 = new SupermarketGoodsVersion();
         param1.setSupermarketId(correct.getSupermarketId());
