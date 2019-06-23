@@ -11,6 +11,17 @@ import java.util.Date;
 import java.util.List;
 
 public class Correct extends BaseEntity {
+
+    private Date auditLastTime;
+    private String statusAfterAffect;
+    private String statusBeforeAffect;
+    public Date getAuditLastTime() { return auditLastTime; }
+    public void setAuditLastTime(Date auditLastTime) { this.auditLastTime = auditLastTime; }
+    public String getStatusAfterAffect() { return statusAfterAffect; }
+    public void setStatusAfterAffect(String statusAfterAffect) { this.statusAfterAffect = statusAfterAffect; }
+    public String getStatusBeforeAffect() { return statusBeforeAffect; }
+    public void setStatusBeforeAffect(String statusBeforeAffect) { this.statusBeforeAffect = statusBeforeAffect; }
+
     public String getRealName() {
         return realName;
     }
