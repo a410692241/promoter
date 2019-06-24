@@ -1453,20 +1453,20 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
        //设置开始结束时间为昨天开始往前推七天
         Date nowTime = new Date();
 
-        Calendar cal2 = Calendar.getInstance();
-        cal2.setTime(nowTime);//设置起时间
-        cal2.set(Calendar.DAY_OF_YEAR,cal2.get(Calendar.DAY_OF_YEAR)-1);//昨天
-        Date yesterday = cal2.getTime();
+//        Calendar cal2 = Calendar.getInstance();
+//        cal2.setTime(nowTime);//设置起时间
+//        cal2.set(Calendar.DAY_OF_YEAR,cal2.get(Calendar.DAY_OF_YEAR)-1);//昨天
+//        Date yesterday = cal2.getTime();
 
         Calendar cal = Calendar.getInstance();
-        cal.setTime(yesterday);//设置起时间
+        cal.setTime(nowTime);//设置起时间
         cal.set(Calendar.DAY_OF_YEAR,cal.get(Calendar.DAY_OF_YEAR)-7);//昨天往前推7天
         Date eightDaysAgo = cal.getTime();
 
         //获取点击率前100的商品id集合
         SkuClickNum skuClickNum = new SkuClickNum();
         skuClickNum.setStartTime(eightDaysAgo);
-        skuClickNum.setEndTime(yesterday);
+        skuClickNum.setEndTime(nowTime);
 //        List<Long> skuIdsByClientNum = skuClickNumService.getSkuIdsByClientNum(skuClickNum);
         Map<Long, Integer> skuClickNumMap = skuClickNumService.getSkuIdsByClientNum(skuClickNum);
         Set<Long> skuIdsByClientNumSet = skuClickNumMap.keySet();
