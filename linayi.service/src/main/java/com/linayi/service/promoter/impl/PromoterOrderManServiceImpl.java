@@ -3,6 +3,7 @@ package com.linayi.service.promoter.impl;
 import com.linayi.dao.address.ReceiveAddressMapper;
 import com.linayi.dao.order.OrdersMapper;
 import com.linayi.dao.promoter.*;
+import com.linayi.dao.supermarket.SupermarketMapper;
 import com.linayi.dao.user.AuthenticationApplyMapper;
 import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.order.Orders;
@@ -48,6 +49,8 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     private PromoterMapper promoterMapper;
     @Autowired
     private AuthenticationApplyMapper authenticationApplyMapper;
+    @Autowired
+    private SupermarketMapper supermarketMapper;
 
     @Override
     public PromoterOrderMan promoterIndex(PromoterOrderMan promoterOrderMan) {
@@ -961,6 +964,8 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         List<Orders> ordersList = openOrderManInfoMapper.getMemberOrderList(PromoterOrderMan);
         for (Orders orders : ordersList) {
             for (OrdersGoods ordersGoods :orders.getOrdersGoodsList()){
+                ordersGoods.setMaxSupermarketName(supermarketMapper.selectSupermarketBysupermarketId(ordersGoods.getMaxSupermarketId()).getName());
+                ordersGoods.setMinSupermarketName(supermarketMapper.selectSupermarketBysupermarketId(ordersGoods.getSupermarketId()).getName());
                 ordersGoods.setImage(ImageUtil.dealToShow(ordersGoods.getImage()));
             }
         }
@@ -972,11 +977,6 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     @Override
     public PromoterOrderMan getMemberOrderData(PromoterOrderMan PromoterOrderMan) {
         PromoterOrderMan promoterOrderMan = openOrderManInfoMapper.getOrderManData(PromoterOrderMan);
-        if (PromoterOrderMan.getReceiveAddressId()!=null){
-            PromoterOrderMan.setUserId(PromoterOrderMan.getOrderManId());
-        }else {
-            PromoterOrderMan.setUserId(PromoterOrderMan.getMemberId());
-        }
         User user = userService.selectUserByuserId(PromoterOrderMan.getUserId());
         if(null==user.getHeadImage()) {
             promoterOrderMan.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");

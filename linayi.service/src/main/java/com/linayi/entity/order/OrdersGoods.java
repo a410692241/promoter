@@ -1,6 +1,7 @@
 package com.linayi.entity.order;
 
 import com.linayi.entity.BaseEntity;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
@@ -48,6 +49,14 @@ public class OrdersGoods extends BaseEntity {
 
     private String supermarketName;
 
+    @ApiModelProperty(value = "价差率")
     private Double spreadRate;
+
+    @ApiModelProperty(value = "最高价超市")
+    private String  maxSupermarketName;
+
+
+    @ApiModelProperty(value = "最低价超市")
+    private String  minSupermarketName;
 
 }

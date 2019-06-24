@@ -149,7 +149,7 @@
         FROM
               orders
         WHERE
-              order_man_id = #{orderManId}
+            order_man_id = #{orderManId}
         <if test="userId!=null and userId!=''">
             AND user_id = #{userId}
         </if>
@@ -200,6 +200,7 @@
         where open_order_man_info_id = #{openOrderManInfoId,jdbcType=INTEGER}
     </update>
 
+    <!--会员进入的订单列表-->
     <select id="getMemberOrderList" resultMap="BaseResultMapList">
         SELECT
               gs.goods_sku_id,
@@ -207,7 +208,6 @@
               gs.image,
               og.max_price,
               og.price,
-              og.max_price,
               round(((og.max_price- og.price)/og.price*100),2) spreadRate,
               og.quantity,
               og.supermarket_id,
@@ -219,15 +219,20 @@
          FROM
               orders o JOIN orders_goods og ON o.orders_id = og.orders_id JOIN goods_sku gs ON  gs.goods_sku_id=og.goods_sku_id
          WHERE
-            o.order_man_id = #{orderManId}
-            AND o.user_id = #{memberId}
-            AND (o.community_status='PROCURE_FINISHED' OR o.community_status='DELIVER_FINISHED')
+           (o.community_status='PROCURE_FINISHED' OR o.community_status='DELIVER_FINISHED')
+              and  o.order_man_id = #{orderManId}
+            <if test="memberId!=null and memberId!=''">
+              and o.user_id = #{memberId}
+            </if>
+            <if test="receiveAddressId!=null and receiveAddressId!=''">
+              AND o.receive_address_id = #{receiveAddressId}
+            </if>
     </select>
 
     <resultMap id="BaseResultMapList" type="com.linayi.entity.order.Orders" >
         <id column="orders_id" property="ordersId" jdbcType="BIGINT" />
         <result column="orders_id" property="ordersId" />
-        <result column="amount" property="payPrice" />
+        <result column="payPrice" property="payPrice" />
         <result column="totalQuantity" property="totalQuantity" />
         <collection property="ordersGoodsList"  ofType="com.linayi.entity.order.OrdersGoods">
             <id column="orders_goods_id" property="ordersGoodsId"  />

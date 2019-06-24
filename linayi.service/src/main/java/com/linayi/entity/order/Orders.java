@@ -74,7 +74,7 @@ public class Orders extends BaseEntity {
     private List<GoodsSku> goodsSkuList;
     @ApiModelProperty(value = "合计价格")
     private String totalPrice;//合计价格
-    @ApiModelProperty(value = "实付价格")
+    @ApiModelProperty(value = "实付价格/订单的总金额")
     private String payPrice;//实付价格
     @ApiModelProperty(value = "商品总价")
     private String goodsTotalPrice;//商品总价
