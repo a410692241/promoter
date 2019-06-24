@@ -204,7 +204,7 @@
     <select id="getMemberOrderList" resultMap="BaseResultMapList">
         SELECT
               gs.goods_sku_id,
-              gs.full_name goodsSkuName,
+              gs.full_name goodsName,
               gs.image,
               og.max_price,
               og.price,
@@ -237,7 +237,7 @@
         <collection property="ordersGoodsList"  ofType="com.linayi.entity.order.OrdersGoods">
             <id column="orders_goods_id" property="ordersGoodsId"  />
             <result column="goods_sku_id" property="goodsSkuId" />
-            <result column="full_name" property="goodsSkuName" />
+            <result column="goodsName" property="goodsName" />
             <result column="image" property="image" />
             <result column="max_price" property="maxPrice" />
             <result column="price" property="price" />
