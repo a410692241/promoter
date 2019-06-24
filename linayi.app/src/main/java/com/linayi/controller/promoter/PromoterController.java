@@ -115,11 +115,11 @@ public class PromoterController extends BaseController {
             ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(promoterOrderMan);
             PromoterOrderMan promoterOrderMan1 = pv.transObject(PromoterOrderMan.class);
 
-            if (promoterOrderMan1.getOrderManId() == null) {
+        /*    if (promoterOrderMan1.getOrderManId() == null) {
                 Integer userId = getUserId();
                 promoterOrderMan1.setOrderManId(userId);
-            }
-			promoterOrderMan1.setUserId(getUserId());
+            }*/
+			promoterOrderMan1.setUserId(promoterOrderMan1.getOrderManId());
             /*PromoterOrderMan currentPromoterOrderMan = promoterOrderManService.memberListOrderStatistics(promoterOrderMan1);*/
 
 			PromoterOrderMan currentPromoterOrderMan = promoterOrderManService.getOrderManData(promoterOrderMan1);
