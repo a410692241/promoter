@@ -112,6 +112,7 @@ public class OrderManMemberServiceImpl implements OrderManMemberService {
 	@Override
 	public OrderManMember getOrderDatail(Integer receiveAddressId, String range) {
 		Orders orders = new Orders();
+		orders.setCommunityStatus("FINISHED");
 		int totalSum = 0;	//订单合计金额(通用)
 		orders.setReceiveAddressId(receiveAddressId);
 		if ("MONTH".equals(range)){
