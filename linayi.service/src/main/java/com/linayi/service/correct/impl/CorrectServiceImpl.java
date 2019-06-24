@@ -121,7 +121,7 @@ public class CorrectServiceImpl implements CorrectService {
             correct.setStatus(CorrectStatus.AFFECTED.toString());
             correct.setActualStartTime(new Date());
         }
-
+        correct.setAuditLastTime(now);
         correct.setCreateTime(now);
         correct.setUpdateTime(now);
         correct.setType(CorrectType.SHARE.toString());
@@ -235,7 +235,7 @@ public class CorrectServiceImpl implements CorrectService {
             correctLog.setCreateTime(now);
             correctLogMapper.insert(correctLog);
         }
-
+        correct.setAuditLastTime(now);
         correct.setCreateTime(now);
         correct.setUpdateTime(now);
         correct.setType(CorrectType.CORRECT.toString());
