@@ -59,4 +59,5 @@ public class OrdersGoods extends BaseEntity {
     @ApiModelProperty(value = "最低价超市")
     private String  minSupermarketName;
 
+    private String goodsName;
 }
