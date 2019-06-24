@@ -345,13 +345,15 @@ public class PromoterController extends BaseController {
 	@ApiOperation(value = "会员列表进入的订单列表",notes = "会员列表进入的订单列表")
 	@RequestMapping(value = "/getMemberOrderList.do", method = RequestMethod.POST)
 	public Object getMemberOrderList(@RequestBody PromoterVo.MemberOrderList orders){
+		PageResult<Orders> promoterOrder = new PageResult<>();
 		try {
 			ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(orders);
 			PromoterOrderMan promoterOrderMan = pv.transObject(PromoterOrderMan.class);
 			promoterOrderMan.setOrderManId(getUserId());
 			promoterOrderMan.setUserId(promoterOrderMan.getMemberId());
 			List<Orders> ordersList = promoterOrderManService.getMemberOrderList(promoterOrderMan);
-			return new PageResult<Orders>(ordersList,promoterOrderMan);
+			PageResult<Orders> pr = new PageResult<>(ordersList,promoterOrderMan);
+			return new ResponseData(pr);
 		} catch (Exception e) {
 			return new ResponseData(ErrorType.SYSTEM_ERROR);
 		}
