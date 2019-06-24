@@ -283,20 +283,12 @@ public class PromoterController extends BaseController {
 	@RequestMapping(value = "/getOrdersList.do", method = RequestMethod.POST)
 	public Object getOrdersList(@RequestBody PromoterVo.OrdersObj orders){
 		PageResult<Orders> ordersList = new PageResult<>();
-
 		try {
-
-				ParamValidUtil<Orders> pv = new ParamValidUtil<>(orders);
+			ParamValidUtil<Orders> pv = new ParamValidUtil<>(orders);
 				Orders orders1 = pv.transObject(Orders.class);
 				orders1.setOrderManId(getUserId());
 				ordersList = orderService.getOrdersList(orders1);
 				return new ResponseData(ordersList);
-
-		/*	ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(orders);
-			PromoterOrderMan promoterOrderMan = pv.transObject(PromoterOrderMan.class);
-			promoterOrderMan.setOrderManId(getUserId());
-			List<Orders> ordersList = promoterOrderManService.getMemberOrderList(promoterOrderMan);
-			return new PageResult<Orders>(ordersList,orders1);*/
 		} catch (Exception e) {
 			return new ResponseData(ErrorType.SYSTEM_ERROR);
 		}
@@ -306,19 +298,6 @@ public class PromoterController extends BaseController {
 	@ApiOperation(value = "订单列表-订单统计", produces = "application/xml,application/json")
 	@RequestMapping(value = "/memberDetails.do", method = RequestMethod.POST)
 	public Object memberDetails(@RequestBody PromoterVo.MemberDetailsObj orderManMember) {
-		/*try {
-			ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(orderManMember);
-			PromoterOrderMan promoterOrderMan = pv.transObject(PromoterOrderMan.class);
-			promoterOrderMan.setOrderManId(getUserId());
-			if (null!=promoterOrderMan.getMemberId()){
-				promoterOrderMan.setUserId(promoterOrderMan.getMemberId());
-			}
-			PromoterOrderMan currentOrderManMember = promoterOrderManService.getMemberOrderData(promoterOrderMan);
-			return new ResponseData(currentOrderManMember);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return new ResponseData(ErrorType.SYSTEM_ERROR);*/
 		OrderManMember currentOrderManMember = new OrderManMember();
 		try {
 			ParamValidUtil<OrderManMember> pv = new ParamValidUtil<>(orderManMember);
@@ -361,6 +340,40 @@ public class PromoterController extends BaseController {
 
 	}
 
+
+
+	@ApiOperation(value = "会员列表进入的订单列表",notes = "会员列表进入的订单列表")
+	@RequestMapping(value = "/getMemberOrderList.do", method = RequestMethod.POST)
+	public Object getMemberOrderList(@RequestBody PromoterVo.MemberOrderList orders){
+		try {
+			ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(orders);
+			PromoterOrderMan promoterOrderMan = pv.transObject(PromoterOrderMan.class);
+			promoterOrderMan.setOrderManId(getUserId());
+			promoterOrderMan.setUserId(promoterOrderMan.getMemberId());
+			List<Orders> ordersList = promoterOrderManService.getMemberOrderList(promoterOrderMan);
+			return new PageResult<Orders>(ordersList,promoterOrderMan);
+		} catch (Exception e) {
+			return new ResponseData(ErrorType.SYSTEM_ERROR);
+		}
+	}
+
+	// 会员进入的订单列表-订单统计
+	@ApiOperation(value = "会员列表进入的订单列表-订单统计", produces = "application/xml,application/json")
+	@RequestMapping(value = "/getMemberOrderData.do", method = RequestMethod.POST)
+	public Object getMemberOrderData(@RequestBody PromoterVo.MemberOrderData orderManMember) {
+		try {
+			ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(orderManMember);
+			PromoterOrderMan promoterOrderMan = pv.transObject(PromoterOrderMan.class);
+			promoterOrderMan.setOrderManId(getUserId());
+			promoterOrderMan.setUserId(promoterOrderMan.getMemberId());
+			PromoterOrderMan currentOrderManMember = promoterOrderManService.getMemberOrderData(promoterOrderMan);
+			return new ResponseData(currentOrderManMember);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseData(ErrorType.SYSTEM_ERROR);
+
+	}
 
 
 

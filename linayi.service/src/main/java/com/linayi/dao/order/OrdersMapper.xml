@@ -248,7 +248,10 @@
             <if test="amount != null">
                 AND amount = #{amount}
             </if>
-            <if test="communityStatus != null and communityStatus != ''">
+            <if test="communityStatus != null and communityStatus == 'FINISHED'">
+                AND community_status in ('PROCURE_FINISHED','DELIVER_FINISHED')
+            </if>
+            <if test="communityStatus != null and communityStatus != 'FINISHED'">
                 AND community_status = #{communityStatus}
             </if>
             <if test="communityId != null">
@@ -289,6 +292,7 @@
             <if test="receiveAddressId != null">
                 where o.receive_address_id = #{receiveAddressId} AND o.address_type = 'CUSTOMER' AND o.user_id = #{orderManId}
             </if>
+            and o.community_status in ('PROCURE_FINISHED','DELIVER_FINISHED')
     </select>
 
   <insert id="insert" parameterType="com.linayi.entity.order.Orders" useGeneratedKeys="true" keyProperty="ordersId">

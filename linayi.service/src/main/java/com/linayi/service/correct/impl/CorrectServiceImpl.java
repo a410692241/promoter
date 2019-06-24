@@ -380,9 +380,10 @@ public class CorrectServiceImpl implements CorrectService {
             param.setStatus(correct.getStatus());
             param.setUpdateTime(now);
             param.setAuditTime(now);
+            param.setAuditLastTime(now);
             param.setAuditerId(correct.getUserId());
             param.setAuditType(correct.getAuditType());
-            param.setStatusBeforeAffect(correct.getStatus());
+            param.setStatusAfterAffect(correct.getStatus());
             correctMapper.updateCorrect(param);
 
             //插入correct_log表
@@ -1010,12 +1011,6 @@ public class CorrectServiceImpl implements CorrectService {
     public void updatePriceAudit(Correct correct) {
         Correct newCorrect = correctMapper.selectByPrimaryKey(correct.getCorrectId());
 
-        // 线程安全并发处理
-        SupermarketGoodsVersion param1 = new SupermarketGoodsVersion();
-        param1.setSupermarketId(newCorrect.getSupermarketId());
-        param1.setGoodsSkuId(Integer.parseInt(newCorrect.getGoodsSkuId() + ""));
-        SupermarketGoodsVersion version = supermarketGoodsVersionService.getVersion(param1);
-
         Date now = new Date();
         if (CorrectStatus.AFFECTED.toString().equals(newCorrect.getStatus())) {
             Correct param = new Correct();
@@ -1034,11 +1029,6 @@ public class CorrectServiceImpl implements CorrectService {
             throw new BusinessException(ErrorType.AUDIT_ERROR);
         }
 
-        // 线程安全并发处理
-        int count = supermarketGoodsVersionService.updateVersion(version);
-        if (count <= 0) {
-            throw new BusinessException(ErrorType.OPERATION_FAIL);
-        }
 
     }
 }

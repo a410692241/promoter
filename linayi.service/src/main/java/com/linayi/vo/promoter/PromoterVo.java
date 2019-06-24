@@ -83,8 +83,8 @@ public class PromoterVo {
          public String date;
     	 @ApiModelProperty(name = "type", value = "memberInfo(下单员列表进入)或者addressInfo(地址列表进入)",required = false,example = "addressInfo")
          public String type;
-       
-       
+
+
     }
 
   
@@ -241,6 +241,26 @@ public class PromoterVo {
 		public Integer pageSize;
 		@ApiModelProperty(value = "当前页(不要小于1)",example = "1")
 		public Integer currentPage;
+	}
+
+
+
+
+	@Getter
+	@Setter //会员列表进入的订单统计
+	public static class MemberOrderData{
+		@ApiModelProperty(name = "memberId", value = "会员id",required = true,example = "1")
+		public String memberId;
+		@ApiModelProperty(name = "date", value = "本月(MONTH)、全部(ALL)",required = true,example = "ALL")
+		public String date;
+	}
+
+
+	@Getter
+	@Setter //会员进入的订单列表
+	public static class MemberOrderList extends PageVo {
+		@ApiModelProperty(value = "用户Id",required = true,example = "1")
+		public Integer memberId;
 	}
 
 }
