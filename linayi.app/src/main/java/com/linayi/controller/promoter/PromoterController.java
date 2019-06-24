@@ -140,7 +140,7 @@ public class PromoterController extends BaseController {
             if (promoterOrderMan1.getPageSize() == null) {
                 promoterOrderMan1.setPageSize(8);
             }
-			promoterOrderMan1.setUserId(getUserId());
+			promoterOrderMan1.setUserId(promoterOrderMan1.getOrderManId());
 			List<PromoterOrderMan> orderManMemberList = promoterOrderManService.getMemberData(promoterOrderMan1);
            /* List<OrderManMember> orderManMemberList = promoterOrderManService.getMemberData(promoterOrderMan1);*/
             pageResult = new PageResult<>(orderManMemberList, promoterOrderMan1);
