@@ -119,7 +119,6 @@ public class PromoterController extends BaseController {
                 Integer userId = getUserId();
                 promoterOrderMan1.setOrderManId(userId);
             }*/
-			promoterOrderMan1.setUserId(promoterOrderMan1.getOrderManId());
             /*PromoterOrderMan currentPromoterOrderMan = promoterOrderManService.memberListOrderStatistics(promoterOrderMan1);*/
 
 			PromoterOrderMan currentPromoterOrderMan = promoterOrderManService.getOrderManData(promoterOrderMan1);
