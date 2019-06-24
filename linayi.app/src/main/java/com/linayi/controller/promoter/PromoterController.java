@@ -342,7 +342,7 @@ public class PromoterController extends BaseController {
 
 
 
-	@ApiOperation(value = "查询会员订单列表",notes = "会员列表进入的订单列表")
+	@ApiOperation(value = "会员列表进入的订单列表",notes = "会员列表进入的订单列表")
 	@RequestMapping(value = "/getMemberOrderList.do", method = RequestMethod.POST)
 	public Object getMemberOrderList(@RequestBody PromoterVo.MemberOrderList orders){
 		try {
@@ -358,7 +358,7 @@ public class PromoterController extends BaseController {
 	}
 
 	// 会员进入的订单列表-订单统计
-	@ApiOperation(value = "会员进入的订单列表-订单统计", produces = "application/xml,application/json")
+	@ApiOperation(value = "会员列表进入的订单列表-订单统计", produces = "application/xml,application/json")
 	@RequestMapping(value = "/getMemberOrderData.do", method = RequestMethod.POST)
 	public Object getMemberOrderData(@RequestBody PromoterVo.MemberOrderData orderManMember) {
 		try {
