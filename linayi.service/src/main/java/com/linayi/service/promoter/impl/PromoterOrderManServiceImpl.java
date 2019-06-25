@@ -8,7 +8,6 @@ import com.linayi.dao.user.AuthenticationApplyMapper;
 import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.order.Orders;
 import com.linayi.entity.order.OrdersGoods;
-import com.linayi.entity.order.OrdersSku;
 import com.linayi.entity.promoter.*;
 import com.linayi.entity.user.AuthenticationApply;
 import com.linayi.entity.user.ReceiveAddress;
@@ -19,7 +18,6 @@ import com.linayi.service.promoter.PromoterOrderManService;
 import com.linayi.service.user.UserService;
 import com.linayi.util.DateUtil;
 import com.linayi.util.ImageUtil;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -859,7 +857,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         }
         promoterOrder.setTeamOfOrders(teamOfOrders);
         promoterOrder.setTeamTotalSum(teamTotalSum);
-        promoterOrder.setTeamProfit(teamProfit - (count * 10000)); //减去订单数大于10单以上的
+//        promoterOrder.setTeamProfit(teamProfit - (count * 10000)); //减去订单数大于10单以上的
         if(promoterOrder.getTeamProfit()<0){
             promoterOrder.setTeamProfit(0);
         }
@@ -1002,4 +1000,9 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         return promoterOrderMan;
 
     }
+
+//    @Override
+//    public List<OpenOrderManInfo> getOrderManListForWeb(OpenOrderManInfo openOrderManInfo) {
+//        return (openOrderManInfoMapper.getOrderManList(openOrderManInfo));
+//    }
 }
