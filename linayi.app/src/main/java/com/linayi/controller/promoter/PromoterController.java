@@ -348,8 +348,10 @@ public class PromoterController extends BaseController {
 		try {
 			ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(orders);
 			PromoterOrderMan promoterOrderMan = pv.transObject(PromoterOrderMan.class);
-			promoterOrderMan.setOrderManId(getUserId());
-			promoterOrderMan.setUserId(promoterOrderMan.getMemberId());
+			if (null==promoterOrderMan.getReceiveAddressId()){
+				promoterOrderMan.setOrderManId(getUserId());
+				promoterOrderMan.setUserId(promoterOrderMan.getMemberId());
+			}
 			List<Orders> ordersList = promoterOrderManService.getMemberOrderList(promoterOrderMan);
 			PageResult<Orders> pr = new PageResult<>(ordersList,promoterOrderMan);
 			return new ResponseData(pr);
@@ -365,8 +367,10 @@ public class PromoterController extends BaseController {
 		try {
 			ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(orderManMember);
 			PromoterOrderMan promoterOrderMan = pv.transObject(PromoterOrderMan.class);
-			promoterOrderMan.setOrderManId(getUserId());
-			promoterOrderMan.setUserId(promoterOrderMan.getMemberId());
+			if (null==promoterOrderMan.getReceiveAddressId()) {
+				promoterOrderMan.setOrderManId(getUserId());
+				promoterOrderMan.setUserId(promoterOrderMan.getMemberId());
+			}
 			PromoterOrderMan currentOrderManMember = promoterOrderManService.getMemberOrderData(promoterOrderMan);
 			return new ResponseData(currentOrderManMember);
 		} catch (Exception e) {

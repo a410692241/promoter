@@ -980,12 +980,16 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     public PromoterOrderMan getMemberOrderData(PromoterOrderMan PromoterOrderMan) {
         PromoterOrderMan promoterOrderMan = openOrderManInfoMapper.getOrderManData(PromoterOrderMan);
         User user = userService.selectUserByuserId(PromoterOrderMan.getUserId());
-        if(null==user.getHeadImage()) {
+        if (user!=null) {
+            if(null==user.getHeadImage()) {
+                promoterOrderMan.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
+            }else {
+                String headImage = ImageUtil.dealToShow(user.getHeadImage());
+                promoterOrderMan.setHeadImage(headImage);
+                promoterOrderMan.setNickname(user.getNickname());
+            }
+        }else{
             promoterOrderMan.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
-        }else {
-            String headImage = ImageUtil.dealToShow(user.getHeadImage());
-            promoterOrderMan.setHeadImage(headImage);
-            promoterOrderMan.setNickname(user.getNickname());
         }
         return promoterOrderMan;
 
