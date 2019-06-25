@@ -661,14 +661,22 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     @Override
     public void inviteOrderMan(AuthenticationApply apply, MultipartFile[] file) throws Exception {
         Date nowTime = new Date();
+        AuthenticationApply authenticationApply = new AuthenticationApply();
+        //判断是否已经有申请记录未审核
+        authenticationApply.setUserId(apply.getApplierId());
+        authenticationApply.setAuthenticationType("ORDER_MAN");
+        authenticationApply.setStatus("WAIT_AUDIT");
+        AuthenticationApply currentAuthenticationApply = authenticationApplyMapper.getAuthenticationApplyByUserIdAndType(authenticationApply).stream().findFirst().orElse(null);
+        if(currentAuthenticationApply != null){
+            throw new BusinessException(ErrorType.APPLY_NOT_AUDTI);
+        }
+        //判断邀请人是否在有效期内
         if(apply.getUserId() != null){
-            //判断邀请人是否在有效期内
             OpenOrderManInfo openOrderManInfo2 = openOrderManInfoMapper.getOpenOrderManInfoByOrderManId(apply.getUserId()).stream().findFirst().orElse(null);
             if(openOrderManInfo2 == null || openOrderManInfo2.getEndTime().before(nowTime)){
                 throw new BusinessException(ErrorType.APPLY_ERROR);
             }
         }
-
         //判断是否已经存在家庭服务师
         OpenOrderManInfo openOrderManInfo1 = openOrderManInfoMapper.getOpenOrderManInfoByOrderManId(apply.getApplierId()).stream().findFirst().orElse(null);
         if(openOrderManInfo1 != null && openOrderManInfo1.getEndTime().after(nowTime)){
@@ -676,7 +684,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         }
 
         //插入申请表
-        AuthenticationApply authenticationApply = new AuthenticationApply();
+
         authenticationApply.setAddress(apply.getAddress());
         authenticationApply.setRealName(apply.getRealName());
         authenticationApply.setMobile(apply.getMobile());
