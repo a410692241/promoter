@@ -149,7 +149,11 @@
         FROM
               orders
         WHERE
-            order_man_id = #{orderManId}
+        (community_status='PROCURE_FINISHED' OR community_status='DELIVER_FINISHED')
+         <if test="orderManId!=null and orderManId!=''">
+            AND    order_man_id = #{orderManId}
+         </if>
+
         <if test="userId!=null and userId!=''">
             AND user_id = #{userId}
         </if>
@@ -220,7 +224,9 @@
               orders o JOIN orders_goods og ON o.orders_id = og.orders_id JOIN goods_sku gs ON  gs.goods_sku_id=og.goods_sku_id
          WHERE
            (o.community_status='PROCURE_FINISHED' OR o.community_status='DELIVER_FINISHED')
-              and  o.order_man_id = #{orderManId}
+            <if test="orderManId!=null and orderManId!=''">
+               and  o.order_man_id = #{orderManId}
+            </if>
             <if test="memberId!=null and memberId!=''">
               and o.user_id = #{memberId}
             </if>
@@ -249,4 +255,12 @@
             <result column="totalPrice" property="totalPrice" />
         </collection>
     </resultMap>
+
+ <!--   &lt;!&ndash;获取家庭服务师列表(后台用)&ndash;&gt;
+    <select id="getOrderManList">
+      SELECT
+
+
+
+    </select>-->
 </mapper>
