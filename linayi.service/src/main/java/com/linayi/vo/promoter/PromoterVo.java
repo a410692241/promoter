@@ -255,6 +255,8 @@ public class PromoterVo {
 		public String date;
 		@ApiModelProperty(name = "receiveAddressId", value = "顾客的地址ID",required = false,example = "1")
 		public Integer receiveAddressId;
+		@ApiModelProperty(name = "orderManId", value = "下单员id",required = false,example = "10")
+		public String orderManId;
 	}
 
 
@@ -265,6 +267,8 @@ public class PromoterVo {
 		public Integer memberId;
 		@ApiModelProperty(name = "receiveAddressId", value = "顾客的地址ID",required = false,example = "1")
 		public Integer receiveAddressId;
+		@ApiModelProperty(name = "orderManId", value = "下单员id",required = false,example = "10")
+		public String orderManId;
 	}
 
 }
