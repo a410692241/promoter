@@ -147,8 +147,13 @@
 		create_time createTime
 		from
 		authentication_apply
-		WHERE
-		user_id = #{userId} and authentication_type = #{authenticationType}
+		<where>
+			user_id = #{userId} and authentication_type = #{authenticationType}
+			<if test="status!=null and status!=''">
+				and status=#{status}
+			</if>
+		</where>
+
 	</select>
 
 	<!-- 根据主键categoryId修改信息 -->

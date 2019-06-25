@@ -76,13 +76,13 @@ public class ApplyAuthenticationController extends BaseController{
 		return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
 	}
 
-	@RequestMapping("/applySpokesman.do" )
-	@ResponseBody
-	public Object applySpokesman(AuthenticationApply authenticationApply, MultipartFile file) {
-		authenticationApply.setUserId(getUserId());
-		Object responseData = authenticationApplyService.applySpokesman(authenticationApply,file);
-		return responseData;
-	}
+//	@RequestMapping("/applySpokesman.do" )
+//	@ResponseBody
+//	public Object applySpokesman(AuthenticationApply authenticationApply, MultipartFile file) {
+//		authenticationApply.setUserId(getUserId());
+//		Object responseData = authenticationApplyService.applySpokesman(authenticationApply,file);
+//		return responseData;
+//	}
 	
 	@RequestMapping("/applyOrderMan.do")
 	@ResponseBody
