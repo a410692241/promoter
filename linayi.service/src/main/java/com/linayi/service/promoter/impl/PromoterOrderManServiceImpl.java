@@ -938,7 +938,9 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     @Override
     public PromoterOrderMan getOrderManData(PromoterOrderMan PromoterOrderMan) {
         PromoterOrderMan promoterOrderMan = openOrderManInfoMapper.getOrderManData(PromoterOrderMan);
-        List<PromoterOrderMan> orderMan = openOrderManInfoMapper.getMemberData(PromoterOrderMan);
+        PromoterOrderMan promoterOrderMan1 = new PromoterOrderMan();
+        promoterOrderMan1.setUserId(PromoterOrderMan.getOrderManId());
+        List<PromoterOrderMan> orderMan = openOrderManInfoMapper.getMemberData(promoterOrderMan1);
         OpenOrderManInfo openOrderManInfo = openOrderManInfoMapper.getOpenOrderManInfoByOrderManId(PromoterOrderMan.getOrderManId()).stream().findFirst().orElse(null);
         String openOrderManLevel = openOrderManInfo.getOrderManLevel();
         int personalProfit = 0;

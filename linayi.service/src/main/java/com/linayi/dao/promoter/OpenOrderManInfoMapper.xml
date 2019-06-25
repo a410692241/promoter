@@ -227,6 +227,7 @@
             <if test="receiveAddressId!=null and receiveAddressId!=''">
               AND o.receive_address_id = #{receiveAddressId}
             </if>
+            ORDER BY o.orders_id DESC
     </select>
 
     <resultMap id="BaseResultMapList" type="com.linayi.entity.order.Orders" >
