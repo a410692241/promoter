@@ -78,4 +78,12 @@ public interface OpenOrderManInfoMapper {
      * @return
      */
     List<Orders> getMemberOrderList(PromoterOrderMan PromoterOrderMan);
+
+
+    /**
+     * 获取家庭服务师列表(后台用)
+     * @param PromoterOrderMan
+     * @return
+     */
+    List<PromoterOrderMan> getOrderManList(PromoterOrderMan PromoterOrderMan);
 }

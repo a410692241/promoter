@@ -349,7 +349,6 @@ public class PromoterController extends BaseController {
 			ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(orders);
 			PromoterOrderMan promoterOrderMan = pv.transObject(PromoterOrderMan.class);
 			if (null==promoterOrderMan.getReceiveAddressId()){
-				promoterOrderMan.setOrderManId(getUserId());
 				promoterOrderMan.setUserId(promoterOrderMan.getMemberId());
 			}
 			List<Orders> ordersList = promoterOrderManService.getMemberOrderList(promoterOrderMan);
@@ -368,7 +367,6 @@ public class PromoterController extends BaseController {
 			ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(orderManMember);
 			PromoterOrderMan promoterOrderMan = pv.transObject(PromoterOrderMan.class);
 			if (null==promoterOrderMan.getReceiveAddressId()) {
-				promoterOrderMan.setOrderManId(getUserId());
 				promoterOrderMan.setUserId(promoterOrderMan.getMemberId());
 			}
 			PromoterOrderMan currentOrderManMember = promoterOrderManService.getMemberOrderData(promoterOrderMan);

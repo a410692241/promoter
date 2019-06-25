@@ -122,6 +122,7 @@
                   omi.create_time openMemberTime,
                   omi.open_member_info_id,
                   omi.user_id,
+                  omi.order_man_id,
                   u.mobile,
                   u.head_image headImage,
                   u.nickname
@@ -151,7 +152,7 @@
         WHERE
         (community_status='PROCURE_FINISHED' OR community_status='DELIVER_FINISHED')
          <if test="orderManId!=null and orderManId!=''">
-            AND    order_man_id = #{orderManId}
+            AND   order_man_id = #{orderManId}
          </if>
 
         <if test="userId!=null and userId!=''">
@@ -256,11 +257,17 @@
         </collection>
     </resultMap>
 
- <!--   &lt;!&ndash;获取家庭服务师列表(后台用)&ndash;&gt;
-    <select id="getOrderManList">
+    <!--获取家庭服务师列表(后台用)-->
+    <select id="getOrderManList" resultType="com.linayi.entity.promoter.PromoterOrderMan">
       SELECT
-
-
-
-    </select>-->
+            u.user_id,
+            u.nickname,
+            u.mobile,
+            u.is_member,
+            u.is_order_man,
+            oomi.start_time,
+            oomi.end_time
+       FROM
+            open_order_man_info oomi LEFT JOIN  user u ON oomi.order_man_id=u.user_id
+    </select>
 </mapper>
