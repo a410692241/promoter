@@ -41,7 +41,7 @@ app.controller('smallCommunityReqCtrl', function ($scope, toaster, smallCommunit
                         if (cellvalue == "PROCESSED") {
                             return "已查看";
                         } else if (cellvalue == "NOTVIEWED") {
-                            return "<span style='color:red;border: 1px solid red;'>未查看</span>";
+                            return "<span style='color:red;border: 1px solid red;padding-left: 10px;padding-right: 10px'>未查看</span>";
                         }
                     }
                 },

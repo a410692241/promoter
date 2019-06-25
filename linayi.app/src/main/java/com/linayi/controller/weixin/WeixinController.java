@@ -42,9 +42,9 @@ public class WeixinController {
     public Object getAuthUrl(@RequestBody Map<String, Object> param)  {
         try {
             ParamValidUtil pa = new ParamValidUtil(param);
-            pa.Exist();
+            String redirectUrl = param.get("redirectUrl") + "";
             String appId = Configuration.getConfig().getValue(WeixinConfig.APPID);
-            String url = WeixinConfig.GET_CODE_URL + "appid=" + appId + "&redirect_uri=" + URLEncoder.encode(Configuration.getConfig().getValue(WeixinConfig.REDIRECT_URI), "UTF-8") + "&response_type=code" + "&scope=" + WeixinConfig.SCOPE + "&state=STATE#wechat_redirect";
+            String url = WeixinConfig.GET_CODE_URL + "appid=" + appId + "&redirect_uri=" + URLEncoder.encode(Configuration.getConfig().getValue(WeixinConfig.REDIRECT_URI), "UTF-8") + "&response_type=code" + "&scope=" + WeixinConfig.SCOPE + "&state="+redirectUrl+"#wechat_redirect";
             return new ResponseData(url).toString();
         } catch (BusinessException e) {
             return new ResponseData(e.getErrorType()).toString();
@@ -56,9 +56,9 @@ public class WeixinController {
 
     @RequestMapping("getCode.do")
     @Transactional
-    public Object getCode(String code, HttpServletRequest request, HttpServletResponse response) {
+    public Object getCode(String code,String redictUrl, HttpServletRequest request, HttpServletResponse response) {
         try {
-            return weixinService.getCode(code,request,response,false);
+            return weixinService.getCode(code,redictUrl,response,false);
         } catch (BusinessException e) {
             return new ResponseData(e.getErrorType()).toString();
         } catch (Exception e) {
@@ -71,7 +71,7 @@ public class WeixinController {
     @Transactional
     public Object getLinShengCode(String code, HttpServletRequest request,HttpServletResponse response) {
         try {
-            return weixinService.getCode(code,request,response,true);
+            return weixinService.getCode(code, code,response,true);
         } catch (BusinessException e) {
             return new ResponseData(e.getErrorType()).toString();
         } catch (Exception e) {
