@@ -33,6 +33,7 @@ import com.linayi.entity.user.ShoppingCar;
 import com.linayi.entity.user.User;
 import com.linayi.enums.MemberLevel;
 import com.linayi.enums.OrderStatus;
+import com.linayi.exception.ErrorType;
 import com.linayi.service.goods.BrandService;
 import com.linayi.service.goods.CommunityGoodsService;
 import com.linayi.service.goods.SupermarketGoodsService;
@@ -135,10 +136,9 @@ public class OrderServiceImpl implements OrderService {
                         openMemberInfo.setFreeTimes(freeTimes);
                         openMemberInfoMapper.updateById(openMemberInfo);
                 }
+            }else {
+                return new ResponseData(ErrorType.NOT_MEMBER);
             }
-//            else {
-//                return new ResponseData(ErrorType.NOT_MEMBER);
-//            }
         }
 
         //获取所有的购物车
