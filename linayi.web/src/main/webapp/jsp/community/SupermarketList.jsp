@@ -30,7 +30,13 @@
                     </div>
                     <div class="form-group form-group-margin">
                         <div class="input-group">
-                            <span class="input-group-addon">采买员ID</span>
+                            <span class="input-group-addon">分享员编号</span>
+                            <input ng-model="search.userId" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group form-group-margin">
+                        <div class="input-group">
+                            <span class="input-group-addon">采买员编号</span>
                             <input ng-model="search.procurerId" type="text" class="form-control">
                         </div>
                     </div>
