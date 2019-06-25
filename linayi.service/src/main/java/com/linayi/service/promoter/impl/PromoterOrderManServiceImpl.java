@@ -857,7 +857,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         }
         promoterOrder.setTeamOfOrders(teamOfOrders);
         promoterOrder.setTeamTotalSum(teamTotalSum);
-        promoterOrder.setTeamProfit(teamProfit - (count * 10000)+(count * 10000)); //减去订单数大于10单以上的
+        promoterOrder.setTeamProfit(teamProfit - (count * 10000)); //减去订单数大于10单以上的
         if(promoterOrder.getTeamProfit()<0){
             promoterOrder.setTeamProfit(0);
         }
