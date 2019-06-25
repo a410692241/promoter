@@ -128,14 +128,14 @@ public class OrderServiceImpl implements OrderService {
             if (openMemberInfos != null && openMemberInfos.size() > 0){
                 openMemberInfo = openMemberInfos.get(0);
                 isVIP = true;
-                    //是会员
-                    Integer freeTimes = openMemberInfo.getFreeTimes();
-                    if (freeTimes != null && freeTimes > 0){
-                        freeTimes --;
-                        serviceFee = 0;
-                        openMemberInfo.setFreeTimes(freeTimes);
-                        openMemberInfoMapper.updateById(openMemberInfo);
-                }
+                //是会员
+//                Integer freeTimes = openMemberInfo.getFreeTimes();
+//                if (freeTimes != null && freeTimes > 0){
+//                    freeTimes --;
+//                    serviceFee = 0;
+//                    openMemberInfo.setFreeTimes(freeTimes);
+//                    openMemberInfoMapper.updateById(openMemberInfo);
+//                }
             }else {
                 return new ResponseData(ErrorType.NOT_MEMBER);
             }
