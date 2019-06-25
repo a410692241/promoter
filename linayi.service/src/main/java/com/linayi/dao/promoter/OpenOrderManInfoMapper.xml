@@ -31,7 +31,6 @@
         oomi1.end_time,
         oomi1.promoter_id,
         oomi1.create_time,
-        oomi1.order_man_id,
         IFNULL(COUNT(o.orders_id), 0) numberOfOrders,
         IFNULL(sum(IF(o.amount&gt;=10000,o.amount-1000,0)),0) personalSales,
         IFNULL(
