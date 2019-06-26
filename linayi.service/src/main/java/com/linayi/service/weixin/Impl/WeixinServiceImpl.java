@@ -18,6 +18,8 @@ import com.linayi.service.redis.RedisService;
 import com.linayi.service.user.UserService;
 import com.linayi.service.weixin.WeixinService;
 import com.linayi.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,10 +46,13 @@ public class WeixinServiceImpl implements WeixinService {
     private UserService userService;
     private static EmojiConverter emojiConverter = EmojiConverter.getInstance();
     private static final String NONCESTR = "linayi";
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Override
     public Object getCode( String code,String redictUrl, HttpServletResponse response, boolean linsheng) {
         //获取access_token
         String getTokenUrl = WeixinConfig.GET_TOKEN_URL + "appid=" + Configuration.getConfig().getValue(WeixinConfig.APPID) + "&secret=" + Configuration.getConfig().getValue(WeixinConfig.APPSECRET) + "&code=" + code + "&grant_type=authorization_code";
+        logger.info(redictUrl);
         String responseStr = HttpClientUtil.sendGetRequest(getTokenUrl, "utf-8");
         TypeToken<Map> type = new TypeToken<Map>() {
         };
