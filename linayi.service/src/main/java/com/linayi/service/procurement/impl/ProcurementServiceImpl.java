@@ -29,11 +29,13 @@ import com.linayi.service.order.OrderService;
 import com.linayi.service.procurement.ProcurementService;
 import com.linayi.service.supermarket.SupermarketService;
 import com.linayi.util.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -889,6 +891,56 @@ public class ProcurementServiceImpl implements ProcurementService {
         }
         String formatSeq = String.format("%1$02d", seq);
         return (year - 2000) + dayFmt + hourFmt + minuteFmt + formatSeq + secondFmt;
+	}
+
+	@Transactional
+	@Override
+	public void packingSkuGoods(String procureMergeNo, Integer quantity,String box_no) {
+		//需要修改查询采买任务列表的sql语句  条件改成pt.box_status == 'WAIT_BOX'
+		ProcurementTask procurementTask = new ProcurementTask();
+		procurementTask.setProcureMergeNo(procureMergeNo);
+		procurementTask.setCreateTime(new Date());
+		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurementTask);
+		if (Optional.ofNullable(procurementTaskList).isPresent()) {
+			for (ProcurementTask task : procurementTaskList) {
+					if(quantity >= task.getProcureQuantity()){
+						task.setBoxQuantity(task.getProcureQuantity());
+						task.setBoxNo(box_no);
+						quantity -= task.getProcureQuantity();
+					}else if(quantity > 0){
+						task.setBoxQuantity(quantity);
+						task.setBoxNo(box_no);
+						ProcurementTask procurementTask1 = new ProcurementTask();
+						BeanUtils.copyProperties(task,procurementTask1);
+						procurementTask1.setBoxNo(null);
+						procurementTask1.setBoxQuantity(null);
+						procurementTask1.setProcurementTaskId(null);
+						procurementTaskMapper.insert(procurementTask1);
+					}
+				task.setBoxStatus("BOXED");
+				procurementTaskMapper.updateProcurementTaskById(task);
+
+				ProcurementTask procurementTask1 = new ProcurementTask();
+				procurementTask1.setOrdersId(task.getOrdersId());
+				List<ProcurementTask> procurementTaskList1 = procurementTaskMapper.getProcurementTaskList(procurementTask1);
+				Boolean isFinished = true;
+				if(Optional.ofNullable(procurementTaskList1).isPresent()){
+					for (ProcurementTask procurementTask2 : procurementTaskList1) {
+						String boxStatus = procurementTask2.getBoxStatus();
+						if(!StringUtils.equals("BOXED",boxStatus)){
+							isFinished = false;
+						}
+					}
+				}
+				if(isFinished){
+					//订单全部装箱完修改订单状态
+					Orders orders = new Orders();
+					orders.setOrdersId(task.getOrdersId());
+//					orders.setCommunityStatus();
+					ordersMapper.updateOrderById(orders);
+				}
+			}
+		}
 	}
 
 }

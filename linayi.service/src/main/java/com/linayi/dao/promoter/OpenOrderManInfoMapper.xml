@@ -110,7 +110,7 @@
       WHERE
             ra.STATUS = 'NORMAL' AND ra.address_type = 'CUSTOMER' AND ra.user_id = #{userId}
             <if test="date!=null and date=='MONTH'">
-                AND ra.create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
+                AND o.create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
             </if>
     </select>
 
@@ -238,7 +238,9 @@
               (og.price *og.quantity) totalPrice,
               o.amount payPrice,
               o.quantity  totalQuantity,
-              o.orders_id
+              o.orders_id,
+              o.user_status,
+              o.community_status
          FROM
               orders o JOIN orders_goods og ON o.orders_id = og.orders_id JOIN goods_sku gs ON  gs.goods_sku_id=og.goods_sku_id
          WHERE
@@ -259,7 +261,7 @@
                 ${item}
             </foreach>
             </if>
-            ORDER BY o.orders_id DESC
+            ORDER BY o.create_time DESC
     </select>
 
     <resultMap id="BaseResultMapList" type="com.linayi.entity.order.Orders" >
@@ -267,6 +269,8 @@
         <result column="orders_id" property="ordersId" />
         <result column="payPrice" property="payPrice" />
         <result column="totalQuantity" property="totalQuantity" />
+        <result column="user_status" property="userStatus" />
+        <result column="community_status" property="communityStatus" />
         <collection property="ordersGoodsList"  ofType="com.linayi.entity.order.OrdersGoods">
             <id column="orders_goods_id" property="ordersGoodsId"  />
             <result column="goods_sku_id" property="goodsSkuId" />
