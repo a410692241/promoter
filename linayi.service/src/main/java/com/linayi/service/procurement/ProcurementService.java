@@ -3,11 +3,9 @@ package com.linayi.service.procurement;
 import com.linayi.entity.community.Community;
 import com.linayi.entity.procurement.ProcurementTask;
 import com.linayi.util.ResponseData;
-import org.apache.ibatis.annotations.Param;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 import java.util.List;
 
 public interface ProcurementService {
@@ -148,4 +146,11 @@ public interface ProcurementService {
     List<ProcurementTask> getProcurements(ProcurementTask procurementTask);
 
     String createProcureMergeNo();
+
+    /**
+     * 采买任务商品装箱
+     * @param procureMergeNo
+     * @param quantity
+     */
+    void packingSkuGoods(String procureMergeNo, Integer quantity,String box_no);
 }

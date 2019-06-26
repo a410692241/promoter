@@ -34,6 +34,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -889,6 +890,35 @@ public class ProcurementServiceImpl implements ProcurementService {
         }
         String formatSeq = String.format("%1$02d", seq);
         return (year - 2000) + dayFmt + hourFmt + minuteFmt + formatSeq + secondFmt;
+	}
+
+	@Override
+	public void packingSkuGoods(String procureMergeNo, Integer quantity,String box_no) {
+		//需要修改查询采买任务列表的sql语句  条件改成pt.box_status == 'WAIT_BOX'
+		ProcurementTask procurementTask = new ProcurementTask();
+		procurementTask.setProcureMergeNo(procureMergeNo);
+		procurementTask.setCreateTime(new Date());
+		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurementTask);
+		if (Optional.ofNullable(procurementTaskList).isPresent()) {
+			for (ProcurementTask task : procurementTaskList) {
+					if(quantity >= task.getProcureQuantity()){
+						task.setBoxQuantity(task.getProcureQuantity());
+						task.setBoxNo(box_no);
+						quantity -= task.getProcureQuantity();
+					}else if(quantity > 0){
+						task.setBoxQuantity(quantity);
+						task.setBoxNo(box_no);
+						ProcurementTask procurementTask1 = new ProcurementTask();
+						BeanUtils.copyProperties(task,procurementTask1);
+						procurementTask1.setBoxNo(null);
+						procurementTask1.setBoxQuantity(null);
+						procurementTask1.setProcurementTaskId(null);
+						procurementTaskMapper.insert(procurementTask1);
+					}
+				task.setBoxStatus("BOXED");
+				procurementTaskMapper.updateProcurementTaskById(task);
+			}
+		}
 	}
 
 }
