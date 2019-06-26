@@ -969,7 +969,13 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     //会员订单列表
     @Override
     public List<Orders> getMemberOrderList(PromoterOrderMan PromoterOrderMan) {
-        List<Orders> ordersList = openOrderManInfoMapper.getMemberOrderList(PromoterOrderMan);
+        List<Integer> orderIdList = openOrderManInfoMapper.getOrdersIdByOrderManId(PromoterOrderMan);
+        if (orderIdList==null){
+            return new ArrayList<Orders>();
+        }
+        PromoterOrderMan promoterOrderMan = new PromoterOrderMan();
+        promoterOrderMan.setOrdersIdList(orderIdList);
+        List<Orders> ordersList = openOrderManInfoMapper.getMemberOrderList(promoterOrderMan);
         for (Orders orders : ordersList) {
             for (OrdersGoods ordersGoods :orders.getOrdersGoodsList()){
                 ordersGoods.setMaxSupermarketName(supermarketMapper.selectSupermarketBysupermarketId(ordersGoods.getMaxSupermarketId()).getName());
