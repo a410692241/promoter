@@ -204,8 +204,27 @@
         where open_order_man_info_id = #{openOrderManInfoId,jdbcType=INTEGER}
     </update>
 
+    <select id="getOrdersIdByOrderManId" resultType="java.lang.Integer" parameterType="com.linayi.entity.promoter.PromoterOrderMan">
+        SELECT
+              orders_id
+        FROM
+              orders
+        WHERE
+            (community_status='PROCURE_FINISHED' OR community_status='DELIVER_FINISHED')
+            <if test="orderManId!=null and orderManId!=''">
+                and  order_man_id = #{orderManId}
+            </if>
+            <if test="memberId!=null and memberId!=''">
+                and user_id = #{memberId}
+            </if>
+            <if test="receiveAddressId!=null and receiveAddressId!=''">
+                AND receive_address_id = #{receiveAddressId}
+            </if>
+    </select>
+
+
     <!--会员进入的订单列表-->
-    <select id="getMemberOrderList" resultMap="BaseResultMapList">
+    <select id="getMemberOrderList" resultMap="BaseResultMapList" parameterType="com.linayi.entity.promoter.PromoterOrderMan">
         SELECT
               gs.goods_sku_id,
               gs.full_name goodsName,
@@ -223,15 +242,22 @@
          FROM
               orders o JOIN orders_goods og ON o.orders_id = og.orders_id JOIN goods_sku gs ON  gs.goods_sku_id=og.goods_sku_id
          WHERE
-           (o.community_status='PROCURE_FINISHED' OR o.community_status='DELIVER_FINISHED')
+            (o.community_status='PROCURE_FINISHED' OR o.community_status='DELIVER_FINISHED')
             <if test="orderManId!=null and orderManId!=''">
-               and  o.order_man_id = #{orderManId}
+                and  o.order_man_id = #{orderManId}
             </if>
             <if test="memberId!=null and memberId!=''">
-              and o.user_id = #{memberId}
+                and o.user_id = #{memberId}
             </if>
             <if test="receiveAddressId!=null and receiveAddressId!=''">
-              AND o.receive_address_id = #{receiveAddressId}
+                AND o.receive_address_id = #{receiveAddressId}
+            </if>
+            <if test="ordersIdList!=null and ordersIdList.size()>0">
+            AND  o.orders_id in
+            <foreach collection="ordersIdList" item="item" index="index"
+                     open="(" separator="," close=")">
+                ${item}
+            </foreach>
             </if>
             ORDER BY o.orders_id DESC
     </select>

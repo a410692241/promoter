@@ -6,6 +6,8 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
+
 @Data
 public class PromoterOrderMan extends BaseEntity {
     private Integer promoterOrderManId;
@@ -100,4 +102,7 @@ public class PromoterOrderMan extends BaseEntity {
     private Integer memberId;
 
     private Integer receiveAddressId;
+
+
+    private List<Integer> ordersIdList;
 }
