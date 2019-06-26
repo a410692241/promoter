@@ -367,14 +367,6 @@ public class CorrectController extends BaseController {
 			if(correct.getPageSize() == null){
 				correct.setPageSize(8);
 			}
-			Integer userId = getUserId();
-			correct.setUserId(userId);
-			//校验是否绑定超市
-			Supermarket supermarket = supermarketService.getSupermarketByProcurerId(userId);
-			if(supermarket == null){
-				throw new BusinessException(ErrorType.NOT_PROCURER_NO_AUDIT);
-			}
-			correct.setSupermarketId(supermarket.getSupermarketId());
 			List<Correct> correctList = correctService.getAffectedPrice(correct);
 			Integer totalPage = (int) Math.ceil(Double.valueOf(correct.getTotal())/Double.valueOf(correct.getPageSize()));
 			if(totalPage <= 0){
@@ -382,7 +374,7 @@ public class CorrectController extends BaseController {
 			}
 			Map<String , Object> map = new HashMap<>();
 			map.put("data", correctList);
-			map.put("supermarketName", supermarket.getName());
+			/*map.put("supermarketName", supermarket.getName());*/
 			map.put("totalPage", totalPage);
 			map.put("currentPage",correct.getCurrentPage() );
 

@@ -827,52 +827,71 @@
     </update>
 
 
-    <!--生效最后时间大于2个月的-->
+    <!--H5端价格审核-->
     <select id="getAffectedPrice" resultType="com.linayi.entity.correct.Correct">
         SELECT
-        c.correct_id,c.parent_id,c.goods_sku_id,c.supermarket_id,c.price,c.create_time,g.full_name,g.image goodsImage,
-        (select round(((max(price)-min(price))/min(price)*100),2)  from correct where goods_sku_id=c.goods_sku_id and (status='AFFECTED'  or status='AUDIT_SUCCESS' or status='WAIT_AUDIT') group by goods_sku_id) spreadRate
+        * from(
+        (SELECT
+            c.correct_id,c.parent_id,g.goods_sku_id,c.supermarket_id,c.price,c.create_time,g.full_name,g.image goodsImage,g.barcode,
+            (select round(((max(price)-min(price))/min(price)*100),2) from correct where goods_sku_id=c.goods_sku_id and
+            (status='AFFECTED' or status='AUDIT_SUCCESS' or status='WAIT_AUDIT') group by goods_sku_id) spreadRate
         FROM
-        correct c join goods_sku g on c.goods_sku_id = g.goods_sku_id
-        <where>
-            c.supermarket_id = #{supermarketId}
-            AND
-            c.status = 'WAIT_AUDIT'
-            <if test="categoryId!=null and categoryId!=''">
-                and g.category_id in(SELECT
-                c3.category_id
-                FROM
-                category c1 JOIN category c2 ON c2.parent_id=c1.category_id JOIN category c3  ON c3.parent_id=c2.category_id
-                where c1.category_id=#{categoryId})
-            </if>
-        </where>
-        ORDER BY
-        c.create_time DESC
-        UNION ALL
-        SELECT
-            c.correct_id,c.parent_id,g.goods_sku_id,c.supermarket_id,c.price,c.create_time,g.full_name,g.image goodsImage,
-            round(((cg.max_price-cg.min_price)/cg.min_price*100),2)  spreadRate
-        FROM
-            community_goods cg JOIN correct c ON cg.goods_sku_id=c.goods_sku_id  AND cg.min_supermarket_id = c.supermarket_id join goods_sku g ON g.goods_sku_id=c.goods_sku_id
+             correct c join goods_sku g on c.goods_sku_id = g.goods_sku_id
         WHERE
-            g.STATUS="NORMAL"
-            <if test="categoryId!=null and categoryId!=''">
-                and g.category_id in(SELECT
-                c3.category_id
-                FROM
-                category c1 JOIN category c2 ON c2.parent_id=c1.category_id JOIN category c3  ON c3.parent_id=c2.category_id
-                where c1.category_id=#{categoryId})
-            </if>
-        AND
             c.supermarket_id = #{supermarketId}
-        AND
-            c.status="AFFECTED"
-        AND
-            (c.audit_last_time &lt;  DATE_ADD(NOW(),INTERVAL -2 MONTH) OR c.status_after_affect="WAIT_AUDIT")
-        GROUP BY
-            g.goods_sku_id
-        ORDER BY
-             c.audit_last_time ASC
+            AND  g.STATUS='NORMAL'
+            AND  c.status ='WAIT_AUDIT'
+            <if test="categoryId!=null and categoryId!=''">
+                    and g.category_id in(SELECT
+                    c3.category_id
+                    FROM
+                    category c1 JOIN category c2 ON c2.parent_id=c1.category_id JOIN category c3  ON c3.parent_id=c2.category_id
+                    where c1.category_id=#{categoryId})
+                </if>
+           )
+            UNION ALL
+         (SELECT
+                c.correct_id,c.parent_id,g.goods_sku_id,c.supermarket_id,c.price,c.create_time,g.full_name,g.image goodsImage,g.barcode,
+                round(((cg.max_price-cg.min_price)/cg.min_price*100),2)  spreadRate
+            FROM
+                community_goods cg JOIN correct c ON cg.goods_sku_id=c.goods_sku_id  AND cg.min_supermarket_id = c.supermarket_id join goods_sku g ON g.goods_sku_id=c.goods_sku_id
+            WHERE
+                g.STATUS="NORMAL"
+                <if test="categoryId!=null and categoryId!=''">
+                    and g.category_id in(SELECT
+                    c3.category_id
+                    FROM
+                    category c1 JOIN category c2 ON c2.parent_id=c1.category_id JOIN category c3  ON c3.parent_id=c2.category_id
+                    where c1.category_id=#{categoryId})
+                </if>
+            AND
+                c.supermarket_id = #{supermarketId}
+            AND
+                c.status="AFFECTED"
+            AND
+                (c.audit_last_time &lt;  DATE_ADD(NOW(),INTERVAL -2 MONTH) OR c.status_after_affect="WAIT_AUDIT")
+            GROUP BY
+                g.goods_sku_id)) t
+            ORDER BY
+                 create_time DESC
     </select>
 
+
+    <!--获取未完成的任务商品列表-->
+    <select id="getTaskGoodsSkuList" resultType="com.linayi.entity.correct.Correct">
+        SELECT
+              c.correct_id,c.parent_id,g.goods_sku_id,c.supermarket_id,c.price,c.create_time,g.full_name,g.image goodsImage,g.barcode,
+            (select round(((max(price)-min(price))/min(price)*100),2) from correct where goods_sku_id=c.goods_sku_id and
+            (status='AFFECTED' or status='AUDIT_SUCCESS' or status='WAIT_AUDIT') group by goods_sku_id) spreadRate
+        FROM
+            price_audit_task pat JOIN correct c ON  c.correct_id=pat.correct_id JOIN goods_sku gs ON gs.goods_sku_id=c.goods_sku_id
+        WHERE
+            g.status="NORMAL"
+        AND
+            c.supermarket_id=#{supermarketId}
+        AND
+            pat.task_date=curdate()
+        AND
+            c.status_after_affect="WAIT_AUDIT"
+    </select>
 </mapper>

@@ -994,9 +994,9 @@ public class CorrectServiceImpl implements CorrectService {
      */
     @Override
     public List<Correct> getAffectedPrice(Correct correct) {
+
         //获取待审核列表
         List<Correct> correctList = correctMapper.getAffectedPrice(correct);
-
         //图片处理
         for (Correct currentCorrect : correctList) {
             String Image = ImageUtil.dealToShow(currentCorrect.getGoodsImage());
