@@ -622,10 +622,10 @@
 
     <select id="getWaitAuditCorrectBySupermerketId"  resultType="com.linayi.entity.correct.Correct">
         SELECT
-          c.correct_id,c.parent_id,c.goods_sku_id,c.supermarket_id,c.price,c.create_time,g.full_name,g.image goodsImage,
-          (select round(((max(price)-min(price))/min(price)*100),2)  from correct where goods_sku_id=c.goods_sku_id and (status='AFFECTED'  or status='AUDIT_SUCCESS' or status='WAIT_AUDIT') group by goods_sku_id) spreadRate
+        c.correct_id,c.parent_id,c.goods_sku_id,c.supermarket_id,c.price,c.create_time,g.full_name,g.image goodsImage,
+        (select round(((max(price)-min(price))/min(price)*100),2)  from correct where goods_sku_id=c.goods_sku_id and (status='AFFECTED'  or status='AUDIT_SUCCESS' or status='WAIT_AUDIT') group by goods_sku_id) spreadRate
         FROM
-          correct c join goods_sku g on c.goods_sku_id = g.goods_sku_id
+        correct c join goods_sku g on c.goods_sku_id = g.goods_sku_id
         <where>
             c.supermarket_id = #{supermarketId}
             AND
@@ -829,6 +829,26 @@
 
     <!--生效最后时间大于2个月的-->
     <select id="getAffectedPrice" resultType="com.linayi.entity.correct.Correct">
+        SELECT
+        c.correct_id,c.parent_id,c.goods_sku_id,c.supermarket_id,c.price,c.create_time,g.full_name,g.image goodsImage,
+        (select round(((max(price)-min(price))/min(price)*100),2)  from correct where goods_sku_id=c.goods_sku_id and (status='AFFECTED'  or status='AUDIT_SUCCESS' or status='WAIT_AUDIT') group by goods_sku_id) spreadRate
+        FROM
+        correct c join goods_sku g on c.goods_sku_id = g.goods_sku_id
+        <where>
+            c.supermarket_id = #{supermarketId}
+            AND
+            c.status = 'WAIT_AUDIT'
+            <if test="categoryId!=null and categoryId!=''">
+                and g.category_id in(SELECT
+                c3.category_id
+                FROM
+                category c1 JOIN category c2 ON c2.parent_id=c1.category_id JOIN category c3  ON c3.parent_id=c2.category_id
+                where c1.category_id=#{categoryId})
+            </if>
+        </where>
+        ORDER BY
+        c.create_time DESC
+        UNION ALL
         SELECT
             c.correct_id,c.parent_id,g.goods_sku_id,c.supermarket_id,c.price,c.create_time,g.full_name,g.image goodsImage,
             round(((cg.max_price-cg.min_price)/cg.min_price*100),2)  spreadRate
