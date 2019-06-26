@@ -261,7 +261,7 @@
                 ${item}
             </foreach>
             </if>
-            ORDER BY o.orders_id DESC
+            ORDER BY o.create_time DESC
     </select>
 
     <resultMap id="BaseResultMapList" type="com.linayi.entity.order.Orders" >
