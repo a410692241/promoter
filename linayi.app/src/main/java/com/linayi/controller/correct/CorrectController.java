@@ -338,6 +338,9 @@ public class CorrectController extends BaseController {
 	@RequestMapping("/updatePriceByApp.do")
 	@ResponseBody
 	public Object updatePriceByApp(Correct correct, MultipartFile file){
+		if(correct.getEndTime().before(correct.getStartTime())){
+			throw new BusinessException(ErrorType.TIME_SEQUENCE_ERROR);
+		}
 		try {
 			correct.setUserId(getUserId());
 			correct.setAuditType(OperatorType.USER.toString());
