@@ -220,6 +220,7 @@
             <if test="receiveAddressId!=null and receiveAddressId!=''">
                 AND receive_address_id = #{receiveAddressId}
             </if>
+         ORDER BY  orders_id DESC
     </select>
 
 
@@ -261,7 +262,12 @@
                 ${item}
             </foreach>
             </if>
-            ORDER BY o.create_time DESC
+            ORDER BY field(o.orders_id,
+            <foreach collection="ordersIdList" item="item" index="index"
+                     separator=",">
+                ${item}
+            </foreach>
+        )
     </select>
 
     <resultMap id="BaseResultMapList" type="com.linayi.entity.order.Orders" >
