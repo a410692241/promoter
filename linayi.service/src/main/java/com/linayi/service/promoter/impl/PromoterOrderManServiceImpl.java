@@ -857,7 +857,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         }
         promoterOrder.setTeamOfOrders(teamOfOrders);
         promoterOrder.setTeamTotalSum(teamTotalSum);
-        promoterOrder.setTeamProfit(teamProfit - (count * 10000)+(count * 10000)); //减去订单数大于10单以上的
+        promoterOrder.setTeamProfit(teamProfit - (count * 10000)); //减去订单数大于10单以上的
         if(promoterOrder.getTeamProfit()<0){
             promoterOrder.setTeamProfit(0);
         }
@@ -969,7 +969,13 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     //会员订单列表
     @Override
     public List<Orders> getMemberOrderList(PromoterOrderMan PromoterOrderMan) {
-        List<Orders> ordersList = openOrderManInfoMapper.getMemberOrderList(PromoterOrderMan);
+        List<Integer> orderIdList = openOrderManInfoMapper.getOrdersIdByOrderManId(PromoterOrderMan);
+        if (orderIdList==null){
+            return new ArrayList<Orders>();
+        }
+        PromoterOrderMan promoterOrderMan = new PromoterOrderMan();
+        promoterOrderMan.setOrdersIdList(orderIdList);
+        List<Orders> ordersList = openOrderManInfoMapper.getMemberOrderList(promoterOrderMan);
         for (Orders orders : ordersList) {
             for (OrdersGoods ordersGoods :orders.getOrdersGoodsList()){
                 ordersGoods.setMaxSupermarketName(supermarketMapper.selectSupermarketBysupermarketId(ordersGoods.getMaxSupermarketId()).getName());

@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.Cookie;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -46,10 +46,13 @@ public class WeixinServiceImpl implements WeixinService {
     private UserService userService;
     private static EmojiConverter emojiConverter = EmojiConverter.getInstance();
     private static final String NONCESTR = "linayi";
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Override
-    public Object getCode(String code, HttpServletRequest request, HttpServletResponse response, boolean linsheng) {
+    public Object getCode( String code,String redictUrl, HttpServletResponse response, boolean linsheng) {
         //获取access_token
         String getTokenUrl = WeixinConfig.GET_TOKEN_URL + "appid=" + Configuration.getConfig().getValue(WeixinConfig.APPID) + "&secret=" + Configuration.getConfig().getValue(WeixinConfig.APPSECRET) + "&code=" + code + "&grant_type=authorization_code";
+        logger.info(redictUrl);
         String responseStr = HttpClientUtil.sendGetRequest(getTokenUrl, "utf-8");
         TypeToken<Map> type = new TypeToken<Map>() {
         };
@@ -115,7 +118,7 @@ public class WeixinServiceImpl implements WeixinService {
                     if (!accountService.isBindMobile(accountId)) {
                         response.sendRedirect(Configuration.getConfig().getValue(WeixinConfig.BIND_MOBILE_URL) + "&accessToken=" + sysetemAccessToken);
                     } else {
-                        response.sendRedirect(Configuration.getConfig().getValue(WeixinConfig.REDICT_INDEX_URL) + "?accessToken=" + sysetemAccessToken+ "&accountId=" + accountId+"&userId="+userId+"&loginType="+1);
+                        response.sendRedirect(redictUrl + "?accessToken=" + sysetemAccessToken+ "&accountId=" + accountId+"&userId="+userId+"&loginType="+1);
                     }
                     return new ResponseData("登录成功");
                 }
