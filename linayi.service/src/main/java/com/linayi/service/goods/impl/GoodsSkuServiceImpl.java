@@ -253,6 +253,9 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
             if (file != null) {
                 String image = null;
                 image = ImageUtil.handleUpload(file);
+                if(image == null || "".equals(image)){
+                    return "fileNotExist";
+                }
                 goods.setImage(image);
             }
             goods.setFullName(fullName);

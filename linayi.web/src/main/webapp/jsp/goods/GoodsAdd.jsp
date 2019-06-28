@@ -522,7 +522,9 @@
                     alert("商品条形码已存在！");
                 }else if(data.respCode == "nameRepeat"){
                    alert("商品名称已存在！");
-               }else{
+               }else if(data.respCode == "fileNotExist"){
+                   alert("图片不能为空！");
+               }else {
                    alert("添加失败！");
                }
             },
