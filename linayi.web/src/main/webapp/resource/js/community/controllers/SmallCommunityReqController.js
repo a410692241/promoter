@@ -14,6 +14,8 @@ app.controller('smallCommunityReqCtrl', function ($scope, toaster, smallCommunit
             smallCommunityReqId: '',
             status: '',
             smallCommunity: '',
+            nickname: '',
+            mobile: '',
             createTime: ''
         }
     }
@@ -35,7 +37,6 @@ app.controller('smallCommunityReqCtrl', function ($scope, toaster, smallCommunit
             multiselect: true,
             colModel: [
                 {name: 'smallCommunityReqId', label: '主键', hidden: true},
-                {name: 'smallCommunity', label: '小区', sortable: false},
                 {
                     name: 'status', label: '状态', sortable: false, formatter: function (cellvalue, options, rowObject) {
                         if (cellvalue == "PROCESSED") {
@@ -45,6 +46,9 @@ app.controller('smallCommunityReqCtrl', function ($scope, toaster, smallCommunit
                         }
                     }
                 },
+                {name: 'smallCommunity', label: '小区', sortable: false},
+                {name: 'nickname', label: '申请人昵称', sortable: false},
+                {name: 'mobile', label: '申请人手机号', sortable: false},
                 {
                     name: 'createTime',
                     label: '创建时间',

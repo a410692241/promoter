@@ -26,6 +26,28 @@
                 </div>
                 <div class="col-sm-12">
                     <div class="form-group">
+                        <label>申请人昵称</label>
+                        <span class="input-icon icon-right">
+                                <input type="text" disabled
+                                       ng-model="smallCommunityReq.nickname"
+                                       class="form-control">
+                                <i class="fa fa-bookmark blue"></i>
+                            </span>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>申请人手机号</label>
+                        <span class="input-icon icon-right">
+                                <input type="text" disabled
+                                       ng-model="smallCommunityReq.mobile"
+                                       class="form-control">
+                                <i class="fa fa-bookmark blue"></i>
+                            </span>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
                         <label>查看状态</label>
                         <span class="input-icon icon-right" ng-switch on="smallCommunityReq.status">
 

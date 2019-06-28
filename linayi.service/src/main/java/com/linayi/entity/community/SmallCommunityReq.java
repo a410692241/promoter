@@ -24,17 +24,22 @@ public class SmallCommunityReq extends BaseEntity {
     @ApiModelProperty(value = "PROCESSED:已处理;NOTVIEWED:未查看")
     private String status;
 
-    /**
-     * 创建时间
-     */
-    @DateTimeFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
-    private Date createTime;
+    @ApiModelProperty(value = "null")
+    private String mobile;
+
+    @ApiModelProperty(value = "null")
+    private String nickname;
 
     @DateTimeFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
     private Date startTime;
 
     @DateTimeFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
     private Date endTime;
+    /**
+     * 创建时间
+     */
+    @DateTimeFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
+    private Date createTime;
 
     public Integer getSmallCommunityReqId() {
         return smallCommunityReqId;
@@ -58,6 +63,22 @@ public class SmallCommunityReq extends BaseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public Date getCreateTime() {

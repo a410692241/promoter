@@ -237,6 +237,8 @@ public class PromoterVo {
 	public static class SearchSmallCommunityByKey {
 		@ApiModelProperty(value = "搜索框查询的关键字",required = true,example = "中航")
 		public String key;
+		@ApiModelProperty(hidden = true)
+		public Integer userId;
 		@ApiModelProperty(value = "每页大小",example = "10")
 		public Integer pageSize;
 		@ApiModelProperty(value = "当前页(不要小于1)",example = "1")

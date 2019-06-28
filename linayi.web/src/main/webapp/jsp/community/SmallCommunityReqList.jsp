@@ -47,6 +47,12 @@
                     </div>
                     <div class="form-group form-group-margin">
                         <div class="input-group">
+                            <span class="input-group-addon">申请人手机号</span>
+                            <input ng-model="search.mobile" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group form-group-margin">
+                        <div class="input-group">
                             <span class="input-group-addon">时间</span>
                             <input type="text" class="form-control" datetimepicker ng-model="search.startTime"/>
                         </div>

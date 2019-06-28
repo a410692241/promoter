@@ -37,6 +37,8 @@ app.service('smallCommunityReqService', [function() {
             smallCommunityReqId:data.smallCommunityReqId,
 			createTime:new Date( data.createTime ).format('yyyy-MM-dd HH:mm:ss'),
             status:data.status,
+			nickname:data.nickname,
+			mobile:data.mobile,
             smallCommunity:data.smallCommunity,
 		}
 		options.url = urls.ms+"/community/smallCommunityReq/save.do";
