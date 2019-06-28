@@ -38,5 +38,11 @@ public class PriceAuditTask implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    //任务总数量
     private Integer totalQuantity;
+
+    private Integer supermarketId;
+
+    //已完成数量
+    private Integer completeQuantity;
 }

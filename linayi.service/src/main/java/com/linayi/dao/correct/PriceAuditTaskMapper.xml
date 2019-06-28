@@ -211,7 +211,21 @@
     where task_id = #{taskId,jdbcType=INTEGER}
   </update>
 
+  <!--获取任务总数量-->
   <select id="getTotalQuantity" resultType="com.linayi.entity.correct.PriceAuditTask">
+    SELECT
+          IFNULL(count(c.correct_id ),0) totalQuantity,
+          task_date
+     FROM
+          price_audit_task pat JOIN correct c ON  c.correct_id=pat.correct_id
+     WHERE
+          c.supermarket_id=#{supermarketId}
+     GROUP BY
+           pat.task_date
+  </select>
+
+  <!--获取未完成任务总数量-->
+  <select id="getCompleteQuantity" resultType="java.lang.Integer">
     SELECT
           IFNULL(count(c.correct_id ),0) totalQuantity
      FROM
@@ -221,7 +235,7 @@
      AND
           (c.status="AFFECTED" OR c.status="WAIT_AUDIT")
      AND
-          (c.audit_last_time &lt;  DATE_ADD(NOW(),INTERVAL -2 MONTH) OR c.status_after_affect="WAIT_AUDIT")
+          (c.audit_time &lt;  DATE_ADD(NOW(),INTERVAL -2 MONTH) OR c.manual_audit_status="WAIT_AUDIT")
      GROUP BY
            pat.task_date
   </select>

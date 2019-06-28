@@ -27,4 +27,18 @@ public interface PriceAuditTaskMapper {
     int updateByPrimaryKeySelective(PriceAuditTask record);
 
     int updateByPrimaryKey(PriceAuditTask record);
+
+    /**
+     * 任务数量和完成数量
+     * @param priceAuditTask
+     * @return
+     */
+    PriceAuditTask getTotalQuantity(PriceAuditTask priceAuditTask);
+
+    /**
+     * 获取未完成任务数量
+     * @param priceAuditTask
+     * @return
+     */
+    Integer getCompleteQuantity(PriceAuditTask priceAuditTask);
 }

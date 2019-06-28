@@ -24,7 +24,7 @@ public class Correct extends BaseEntity {
     public String getStatusBeforeAffect() { return statusBeforeAffect; }
     public void setStatusBeforeAffect(String statusBeforeAffect) { this.statusBeforeAffect = statusBeforeAffect; }
 
-    private Integer auditerIdAfterAffect;
+    private Integer auditerAfterAffect;
     private Date auditTimeAfterAffect;
     public String getRealName() {
         return realName;
@@ -293,6 +293,12 @@ public class Correct extends BaseEntity {
     private Double spreadRate;
 
     private Integer categoryId;
+
+    private String taskDate;//任务日期
+
+    private Integer taskId; //任务id
+
+    private String manualAuditStatus; //人工审核状态
 
     public Double getSpreadRate() {
         return spreadRate;

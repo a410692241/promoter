@@ -27,6 +27,8 @@
         <result property="auditLastTime" column="audit_last_time"/>
         <result property="statusAfterAffect" column="status_after_affect"/>
         <result property="statusBeforeAffect" column="status_before_affect"/>
+        <result property="auditerAfterAffect" column="auditer_after_affect"/>
+        <result property="manualAuditStatus" column="manual_audit_status"/>
         <association property="user" resultMap="com.linayi.dao.user.UserMapper.BaseResultMap"/>
         <association property="supermarket" resultMap="com.linayi.dao.supermarket.SupermarketMapper.BaseResultMap"/>
         <association property="goodsSku" resultMap="com.linayi.dao.goods.GoodsSkuMapper.BaseResultMap"/>
@@ -38,7 +40,7 @@
     -->
     <sql id="Base_Column_List">
         correct_id, supermarket_id, goods_sku_id, price, start_time, end_time, user_id, user_type, parent_id, image, price_type,
-        status, actual_start_time, actual_end_time, type, update_time, create_time, audit_last_time, status_after_affect, status_before_affect
+        status, actual_start_time, actual_end_time, type, update_time, create_time, audit_last_time, status_after_affect, status_before_affect,manual_audit_status,audit_time
     </sql>
 
     <!--
@@ -168,7 +170,10 @@
                 update_time = #{updateTime,jdbcType=TIMESTAMP},
             </if>
             <if test="createTime != null">
-                create_time = #{createTime,jdbcType=TIMESTAMP}
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="manualAuditStatus != null">
+                manual_audit_status = #{manualAuditStatus}
             </if>
         </set>
         where correct_id = #{correctId,jdbcType=BIGINT}
@@ -499,11 +504,14 @@
             <if test="statusBeforeAffect !=null ">
                 `status_before_affect` = #{statusBeforeAffect,jdbcType=TIMESTAMP},
             </if>
-            <if test="auditerIdAfterAffect !=null ">
-                `auditer_id_after_affect` = #{auditerIdAfterAffect},
+            <if test="auditerAfterAffect !=null ">
+                `auditer_after_affect` = #{auditerAfterAffect},
             </if>
             <if test="auditTimeAfterAffect !=null ">
                 `audit_time_after_affect` = #{auditTimeAfterAffect},
+            </if>
+            <if test="manualAuditStatus != null">
+                manual_audit_status = #{manualAuditStatus}
             </if>
         </trim>
         where `correct_id` = #{correctId}
@@ -827,71 +835,68 @@
     </update>
 
 
-    <!--H5端价格审核-->
+    <!--任务记录(定时器)-->
     <select id="getAffectedPrice" resultType="com.linayi.entity.correct.Correct">
         SELECT
-        * from(
+          correctId,status,createTime
+         from(
         (SELECT
-            c.correct_id,c.parent_id,g.goods_sku_id,c.supermarket_id,c.price,c.create_time,g.full_name,g.image goodsImage,g.barcode,
-            (select round(((max(price)-min(price))/min(price)*100),2) from correct where goods_sku_id=c.goods_sku_id and
-            (status='AFFECTED' or status='AUDIT_SUCCESS' or status='WAIT_AUDIT') group by goods_sku_id) spreadRate
+            correct_id correctId,status status,create_time createTime
         FROM
-             correct c join goods_sku g on c.goods_sku_id = g.goods_sku_id
+             correct
         WHERE
-            c.supermarket_id = #{supermarketId}
-            AND  g.STATUS='NORMAL'
-            AND  c.status ='WAIT_AUDIT'
-            <if test="categoryId!=null and categoryId!=''">
-                    and g.category_id in(SELECT
-                    c3.category_id
-                    FROM
-                    category c1 JOIN category c2 ON c2.parent_id=c1.category_id JOIN category c3  ON c3.parent_id=c2.category_id
-                    where c1.category_id=#{categoryId})
-                </if>
+             status ='WAIT_AUDIT'
            )
             UNION ALL
          (SELECT
-                c.correct_id,c.parent_id,g.goods_sku_id,c.supermarket_id,c.price,c.create_time,g.full_name,g.image goodsImage,g.barcode,
-                round(((cg.max_price-cg.min_price)/cg.min_price*100),2)  spreadRate
+                c.correct_id correctId,c.status status,c.create_time createTime
             FROM
-                community_goods cg JOIN correct c ON cg.goods_sku_id=c.goods_sku_id  AND cg.min_supermarket_id = c.supermarket_id join goods_sku g ON g.goods_sku_id=c.goods_sku_id
+                community_goods cg JOIN correct c ON cg.goods_sku_id=c.goods_sku_id  AND cg.min_supermarket_id = c.supermarket_id
             WHERE
-                g.STATUS="NORMAL"
-                <if test="categoryId!=null and categoryId!=''">
-                    and g.category_id in(SELECT
-                    c3.category_id
-                    FROM
-                    category c1 JOIN category c2 ON c2.parent_id=c1.category_id JOIN category c3  ON c3.parent_id=c2.category_id
-                    where c1.category_id=#{categoryId})
-                </if>
+                c.status='AFFECTED'
             AND
-                c.supermarket_id = #{supermarketId}
-            AND
-                c.status="AFFECTED"
-            AND
-                (c.audit_last_time &lt;  DATE_ADD(NOW(),INTERVAL -2 MONTH) OR c.status_after_affect="WAIT_AUDIT")
+                (c.audit_time &lt;  DATE_ADD(NOW(),INTERVAL -2 MONTH) OR c.manual_audit_status='WAIT_AUDIT')
             GROUP BY
-                g.goods_sku_id)) t
-            ORDER BY
-                 create_time DESC
+                 c.goods_sku_id)) t
+            WHERE
+                 correctId not in (
+                 SELECT cc.correct_id FROM price_audit_task pat JOIN correct cc ON pat.correct_id=cc.correct_id WHERE
+                   (cc.status='AFFECTED' OR cc.status='WAIT_AUDIT')
+                 AND
+                   (cc.audit_time &lt;  DATE_ADD(NOW(),INTERVAL -2 MONTH) OR cc.manual_audit_status='WAIT_AUDIT')
+                 )
+            ORDER BY FIELD(`status`,'WAIT_AUDIT','AFFECTED')
+
     </select>
 
 
-    <!--获取未完成的任务商品列表-->
+    <!--根据超市id和任务日期获取待审核商品列表-->
     <select id="getTaskGoodsSkuList" resultType="com.linayi.entity.correct.Correct">
         SELECT
-              c.correct_id,c.parent_id,g.goods_sku_id,c.supermarket_id,c.price,c.create_time,g.full_name,g.image goodsImage,g.barcode,
+            c.correct_id,c.parent_id,gs.goods_sku_id,c.supermarket_id,c.price,c.create_time,gs.full_name,gs.image goodsImage,gs.barcode,
+            pat.task_id,c.status,
             (select round(((max(price)-min(price))/min(price)*100),2) from correct where goods_sku_id=c.goods_sku_id and
             (status='AFFECTED' or status='AUDIT_SUCCESS' or status='WAIT_AUDIT') group by goods_sku_id) spreadRate
         FROM
             price_audit_task pat JOIN correct c ON  c.correct_id=pat.correct_id JOIN goods_sku gs ON gs.goods_sku_id=c.goods_sku_id
         WHERE
-            g.status="NORMAL"
+            gs.status="NORMAL"
         AND
             c.supermarket_id=#{supermarketId}
         AND
-            pat.task_date=curdate()
+            pat.task_date=#{taskDate}
         AND
-            c.status_after_affect="WAIT_AUDIT"
+            (c.status='AFFECTED' OR c.status='WAIT_AUDIT')
+        AND
+            (c.audit_time &lt;  DATE_ADD(NOW(),INTERVAL -2 MONTH) OR c.manual_audit_status='NOT_AUDIT')
+        <if test="categoryId!=null and categoryId!=''">
+            and gs.category_id in(SELECT
+                 category_id
+            FROM
+                 category
+            WHERE
+                 parent_id=#{categoryId})
+        </if>
+        ORDER BY  FIELD(c.status,'WAIT_AUDIT','AFFECTED')
     </select>
 </mapper>

@@ -2,7 +2,9 @@ package com.linayi.controller.correct;
 
 
 import com.linayi.controller.BaseController;
+import com.linayi.dao.correct.PriceAuditTaskMapper;
 import com.linayi.entity.correct.Correct;
+import com.linayi.entity.correct.PriceAuditTask;
 import com.linayi.entity.correct.SupermarketGoodsVersion;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.enums.OperatorType;
@@ -33,6 +35,7 @@ public class CorrectController extends BaseController {
 	private SupermarketService supermarketService;
 	@Autowired
 	private CorrectService correctService;
+
 
 	@Resource
 	private SupermarketGoodsVersionService supermarketGoodsVersionService;
@@ -295,6 +298,7 @@ public class CorrectController extends BaseController {
 
 	}
 
+	//审核历史
 	@RequestMapping("/audithistory.do")
 	@ResponseBody
 	public Object auditHistory(@RequestBody Correct correct){
@@ -360,25 +364,17 @@ public class CorrectController extends BaseController {
 	}
 
 
-	@RequestMapping("/getAffectedPrice.do")
+	/**
+	 * 获取任务总数量和完成数量
+	 * @param priceAuditTask
+	 * @return
+	 */
+	@RequestMapping("/getTotalQuantity.do")
 	@ResponseBody
-	public Object getAffectedPrice(@RequestBody Correct correct){
+	public Object getTotalQuantity(@RequestBody PriceAuditTask priceAuditTask){
 		try {
-			if(correct.getPageSize() == null){
-				correct.setPageSize(8);
-			}
-			List<Correct> correctList = correctService.getAffectedPrice(correct);
-			Integer totalPage = (int) Math.ceil(Double.valueOf(correct.getTotal())/Double.valueOf(correct.getPageSize()));
-			if(totalPage <= 0){
-				totalPage++;
-			}
-			Map<String , Object> map = new HashMap<>();
-			map.put("data", correctList);
-			/*map.put("supermarketName", supermarket.getName());*/
-			map.put("totalPage", totalPage);
-			map.put("currentPage",correct.getCurrentPage() );
-
-			return new ResponseData(map);
+			PriceAuditTask priceAudit = correctService.getTotalQuantity(priceAuditTask);
+			return new ResponseData(priceAudit);
 		}catch (BusinessException e) {
 			return new ResponseData(e.getErrorType()).toString();
 		} catch (Exception e) {
@@ -409,4 +405,98 @@ public class CorrectController extends BaseController {
 		}
 
 	}
+
+	/**
+	 * 根据超市id和任务日期获取待审核商品列表
+	 * @param correct
+	 * @return
+	 */
+	@RequestMapping("/taskGoodsSkuList.do")
+	@ResponseBody
+	public Object getTaskGoodsSkuList(@RequestBody Correct correct){
+		try {
+		if(correct.getPageSize() == null){
+			correct.setPageSize(8);
+		}
+		List<Correct> correctList = correctService.getTaskGoodsSkuList(correct);
+		Integer totalPage = (int) Math.ceil(Double.valueOf(correct.getTotal())/Double.valueOf(correct.getPageSize()));
+		if(totalPage <= 0){
+			totalPage++;
+		}
+		Map<String , Object> map = new HashMap<>();
+		map.put("data", correctList);
+		map.put("totalPage", totalPage);
+		map.put("currentPage",correct.getCurrentPage() );
+		return new ResponseData(map);
+		} catch (Exception e) {
+			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+		}
+	}
+
+
+	/**
+	 * 任务点击审核通过
+	 * @param correct
+	 * @return
+	 */
+	@RequestMapping("/taskAuditSuccess.do")
+	@ResponseBody
+	public Object taskAuditSuccess(@RequestBody Correct correct) {
+		try {
+			correct.setUserId(getUserId());
+			correctService.taskAuditSuccess(correct);
+			return new ResponseData("审核成功");
+		} catch (BusinessException e) {
+			return new ResponseData(e.getErrorType()).toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+		}
+	}
+
+
+
+	/**
+	 * 任务点击价格错误
+	 * @param correct
+	 * @return
+	 */
+	@RequestMapping("/taskAuditPriceError.do")
+	@ResponseBody
+	public Object taskAuditPriceError(@RequestBody Correct correct) {
+		try {
+			correct.setUserId(getUserId());
+			Correct correct1 = correctService.taskAuditPriceError(correct);
+			correct1.setResultStr("审核成功！");
+			return new ResponseData(correct1);
+		} catch (BusinessException e) {
+			return new ResponseData(e.getErrorType()).toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+		}
+	}
+
+
+	/**
+	 * 任务点击暂无价格
+	 * @param correct
+	 * @return
+	 */
+	@RequestMapping("/noTimePrice.do")
+	@ResponseBody
+	public Object noTimePrice(@RequestBody Correct correct) {
+		try {
+			correct.setUserId(getUserId());
+			 correctService.noTimePrice(correct);
+			return new ResponseData("操作成功");
+		} catch (BusinessException e) {
+			return new ResponseData(e.getErrorType()).toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+		}
+	}
+
+
 }
