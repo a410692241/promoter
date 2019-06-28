@@ -19,5 +19,4 @@ public interface SmallCommunityReqMapper {
 
     List<SmallCommunityReq> selectByAll(SmallCommunityReq smallCommunityReq);
 
-
 }

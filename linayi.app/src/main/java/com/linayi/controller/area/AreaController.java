@@ -1,5 +1,6 @@
 package com.linayi.controller.area;
 
+import com.linayi.controller.BaseController;
 import com.linayi.entity.area.Area;
 import com.linayi.entity.promoter.Promoter;
 import com.linayi.exception.BusinessException;
@@ -17,7 +18,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/area/area")
-public class AreaController {
+public class AreaController extends BaseController {
 
     @Autowired
     private AreaService areaService;
@@ -41,6 +42,7 @@ public class AreaController {
     @PostMapping("/getSmallCommunityByKey.do")
     public Object getSmallCommunityByKey(@RequestBody PromoterVo.SearchSmallCommunityByKey search) {
         try {
+            search.setUserId(getUserId());
             return new ResponseData(areaService.getSmallCommunityByKey(search)).toString();
         } catch (BusinessException e) {
             return new ResponseData(e.getErrorType());

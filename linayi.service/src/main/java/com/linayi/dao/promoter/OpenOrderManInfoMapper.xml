@@ -245,7 +245,7 @@
          FROM
               orders o JOIN orders_goods og ON o.orders_id = og.orders_id JOIN goods_sku gs ON  gs.goods_sku_id=og.goods_sku_id
          WHERE
-            (o.community_status='PROCURE_FINISHED' OR o.community_status='DELIVER_FINISHED')
+            1=1
             <if test="orderManId!=null and orderManId!=''">
                 and  o.order_man_id = #{orderManId}
             </if>
