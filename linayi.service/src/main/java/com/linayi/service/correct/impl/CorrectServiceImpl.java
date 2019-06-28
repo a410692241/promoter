@@ -1051,6 +1051,12 @@ public class CorrectServiceImpl implements CorrectService {
             return new ArrayList<>();
         }
         List<PriceAuditTask> completeQuantity = priceAuditTaskMapper.getCompleteQuantity(correct);
+        if (completeQuantity.size()==0) {
+            for (PriceAuditTask priceAuditTask : totalQuantity) {
+                priceAuditTask.setCompleteQuantity(0);
+                return totalQuantity;
+            }
+        }
         for (PriceAuditTask priceAuditTask : totalQuantity) {
             for (PriceAuditTask auditTask : completeQuantity) {
                 if (priceAuditTask.getTaskDate().getTime()-auditTask.getTaskDate().getTime()==0){
