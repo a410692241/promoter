@@ -1047,10 +1047,13 @@ public class CorrectServiceImpl implements CorrectService {
     @Override
     public PriceAuditTask getTotalQuantity(PriceAuditTask priceAuditTask) {
         PriceAuditTask priceAudit = priceAuditTaskMapper.getTotalQuantity(priceAuditTask);
+        if (priceAudit==null){
+            return new  PriceAuditTask();
+        }
         PriceAuditTask priceAuditTasks = new PriceAuditTask();
         priceAuditTasks.setTaskDate(priceAudit.getTaskDate());
         priceAuditTasks.setTotalQuantity(priceAudit.getTotalQuantity());
-        priceAuditTasks.setCompleteQuantity(priceAudit.getTotalQuantity()-priceAuditTaskMapper.getCompleteQuantity(priceAuditTask));
+        priceAuditTasks.setCompleteQuantity(priceAudit.getTotalQuantity()-(priceAuditTaskMapper.getCompleteQuantity(priceAuditTask)));
         return priceAuditTasks;
     }
 
@@ -1113,7 +1116,7 @@ public class CorrectServiceImpl implements CorrectService {
 
 
     /**
-     * 审核任务点击价格错误
+     * 审核任务点击价格错误/修改价格
      * @param correct
      */
     @Override
@@ -1121,35 +1124,8 @@ public class CorrectServiceImpl implements CorrectService {
         //通过任务id获取原来的状态
         PriceAuditTask priceAuditTask = priceAuditTaskMapper.selectByPrimaryKey(correct.getTaskId());
         //通过纠错id获取状态
-        Correct correct1 = correctMapper.selectByPrimaryKey(correct.getCorrectId());
-        Correct correct2 = new Correct();
-        Date now = new Date();
-        if (CorrectStatus.WAIT_AUDIT.toString().equals(priceAuditTask.getPriceType())) { //如果任务状态是待审核
-            if (CorrectStatus.WAIT_AUDIT.toString().equals(correct1.getStatus())) { //如果纠错状态没改变
-                correct2.setCorrectId(correct.getCorrectId());
-                correct2.setStatus(CorrectStatus.AUDIT_FAIL.toString());
-                correct2.setAuditerId(correct.getUserId());
-                correct2.setAuditTime(now);
-                correct2.setAuditType("USER");
-                correct2.setManualAuditStatus(CorrectStatus.AUDIT_SUCCESS.toString());
-            }else{
-                throw new BusinessException(ErrorType.AUDIT_ERROR); //已经被审核
-            }
-        }else if(CorrectStatus.AFFECTED.toString().equals(priceAuditTask.getPriceType())){
-            Calendar c = Calendar.getInstance();
-            c.setTime(now);
-            c.add(Calendar.MONTH, -2);
-            Date m3 = c.getTime();
-            if (CorrectStatus.AFFECTED.toString().equals(correct1.getStatus()) && correct1.getAuditTime().compareTo(m3)<0){
-                correct2.setCorrectId(correct.getCorrectId());
-                correct2.setManualAuditStatus(CorrectStatus.AUDIT_FAIL.toString());
-                correct2.setAuditTime(now);
-                correct2.setAuditerAfterAffect(correct.getUserId());
-            }else{
-                throw new BusinessException(ErrorType.AUDIT_ERROR); //已经被审核
-            }
-        }
-        correctMapper.updateCorrect(correct2); //更新纠错表
+        Correct correct2 = correctMapper.selectByPrimaryKey(correct.getCorrectId());
+        priceError(correct,correct2,priceAuditTask); //调用通用方法修改状态
         Correct correct3 = new Correct(); //返回状态
         Correct param = new Correct();
         param.setSupermarketId(correct.getSupermarketId());
@@ -1208,12 +1184,18 @@ public class CorrectServiceImpl implements CorrectService {
 
 
     /**
-     * 点击暂无价格
+     * 点击价格错误/暂无价格
      * @param correct
      */
     @Override
     @Transactional
     public void noTimePrice(Correct correct) {
+        //通过任务id获取原来的状态
+        PriceAuditTask priceAuditTask = priceAuditTaskMapper.selectByPrimaryKey(correct.getTaskId());
+        //通过纠错id获取状态
+        Correct correct2 = correctMapper.selectByPrimaryKey(correct.getCorrectId());
+        priceError(correct,correct2,priceAuditTask); //调用通用方法修改状态
+        if(CorrectStatus.AFFECTED.toString().equals(priceAuditTask.getPriceType())){//如果原来是已生效的状态
         Correct correct1 = new Correct();
         correct1.setCorrectId(correct.getCorrectId());
         correct1.setStatus(CorrectStatus.RECALL.toString());
@@ -1228,8 +1210,47 @@ public class CorrectServiceImpl implements CorrectService {
 
         //更新社区价格表信息
         for (Integer integer : communityIdList) {
-            communitySupermarketService.toUpdateCommunityPrice(integer,correct.getGoodsSkuId().intValue());
+            communitySupermarketService.toUpdateCommunityPrice(integer, correct.getGoodsSkuId().intValue());
+        }
         }
     }
+
+
+    /**
+     * 价格审核通用方法
+     * @param correct
+     */
+    public void priceError(Correct correct,Correct correct1,PriceAuditTask priceAuditTask) {
+
+        Correct correct2 = new Correct();
+        Date now = new Date();
+        if (CorrectStatus.WAIT_AUDIT.toString().equals(priceAuditTask.getPriceType())) { //如果任务状态是待审核
+            if (CorrectStatus.WAIT_AUDIT.toString().equals(correct1.getStatus())) { //如果纠错状态没改变
+                correct2.setCorrectId(correct.getCorrectId());
+                correct2.setStatus(CorrectStatus.AUDIT_FAIL.toString());
+                correct2.setAuditerId(correct.getUserId());
+                correct2.setAuditTime(now);
+                correct2.setAuditType("USER");
+                correct2.setManualAuditStatus(CorrectStatus.AUDIT_SUCCESS.toString());
+            }else{
+                throw new BusinessException(ErrorType.AUDIT_ERROR); //已经被审核
+            }
+        }else if(CorrectStatus.AFFECTED.toString().equals(priceAuditTask.getPriceType())){
+            Calendar c = Calendar.getInstance();
+            c.setTime(now);
+            c.add(Calendar.MONTH, -2);
+            Date m3 = c.getTime();
+            if (CorrectStatus.AFFECTED.toString().equals(correct1.getStatus()) && correct1.getAuditTime().compareTo(m3)<0){
+                correct2.setCorrectId(correct.getCorrectId());
+                correct2.setManualAuditStatus(CorrectStatus.AUDIT_FAIL.toString());
+                correct2.setAuditTime(now);
+                correct2.setAuditerAfterAffect(correct.getUserId());
+            }else{
+                throw new BusinessException(ErrorType.AUDIT_ERROR); //已经被审核
+            }
+        }
+        correctMapper.updateCorrect(correct2); //更新纠错表
+        }
+
 
 }

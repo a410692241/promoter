@@ -457,7 +457,7 @@ public class CorrectController extends BaseController {
 
 
 	/**
-	 * 任务点击价格错误
+	 * 任务点击价格错误/分享价格
 	 * @param correct
 	 * @return
 	 */
@@ -479,7 +479,7 @@ public class CorrectController extends BaseController {
 
 
 	/**
-	 * 任务点击暂无价格
+	 * 任务点击价格错误/暂无价格
 	 * @param correct
 	 * @return
 	 */
