@@ -179,7 +179,7 @@
                     <td colspan="3"><div id="preview"></div></td>
                 </tr>
                 <tr>
-                    <td style="width: 80px">图片:</td>
+                    <td style="width: 80px"><span style="color: red">*</span>图片:</td>
                     <td><input type="file" name="file" style="display: inline-block" id="file" value="上传图片" onchange="preview(this)"/></td>
                     <td></td>
                 </tr>
