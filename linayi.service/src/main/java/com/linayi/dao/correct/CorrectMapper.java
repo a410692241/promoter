@@ -103,10 +103,24 @@ public interface CorrectMapper {
     List<Correct> selectByAll(Correct correct);
 
     /**
-     * 生效最后时间大于2个月的
+     * -任务记录(定时器)
      * @param correct
      * @return
      */
-    List<Correct> getAffectedPrice(Correct correct);
+    List<Correct> getAffectedPrice();
+
+    /**
+     * 根据超市id和任务日期获取待审核商品列表
+     * @return
+     */
+    List<Correct> getTaskGoodsSkuList(Correct correct);
+
+
+    /**
+     * 审核历史列表
+     * @param correct
+     * @return
+     */
+    List<Correct> getAuditHistory(Correct correct);
 
 }
