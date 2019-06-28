@@ -706,6 +706,10 @@ public class OrderServiceImpl implements OrderService {
             community = communityMapper.getCommunity(community);
             o.setCommunityName(community.getName());
             o.setAddressOne(getAreaNameByAreaCode(o.getAddressOne()));
+            String communityStatus = o.getCommunityStatus();
+            if("DELIVER_FINISHED".equals(communityStatus)){
+                o.setUserStatus("FINISHED");
+            }
             List<OrdersGoods> ordersGoodsList = ordersGoodsMapper.getOrdersGoodsByOrdersId(o.getOrdersId());
             if (ordersGoodsList != null && ordersGoodsList.size() > 0){
                 Integer total = 0;
