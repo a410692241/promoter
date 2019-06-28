@@ -1,5 +1,6 @@
 package com.linayi.test;
 
+import com.linayi.service.correct.CorrectService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ public class AuthenticationTest {
 	
 	@Autowired
 	private AuthenticationApplyMapper authenticationApplyMapper;
+	@Autowired
+	private CorrectService correctService;
+
 	
 	@Test
 	public void AuthenticationMapper(){
@@ -26,5 +30,12 @@ public class AuthenticationTest {
 		authenticationApply.setIdCardBack("2.png");
 		authenticationApplyMapper.insert(authenticationApply);
 	}
+
+
+	@Test
+	public void AuditPrice(){
+		correctService.priceAudit();
+	}
+
 	
 }
