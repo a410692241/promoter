@@ -376,6 +376,7 @@ public class CorrectController extends BaseController {
             if(correct.getPageSize() == null){
                 correct.setPageSize(8);
             }
+			correct.setUserId(getUserId());
             List<PriceAuditTask> correctList = correctService.getTotalQuantity(correct);
             Integer totalPage = (int) Math.ceil(Double.valueOf(correct.getTotal())/Double.valueOf(correct.getPageSize()));
             if(totalPage <= 0){
