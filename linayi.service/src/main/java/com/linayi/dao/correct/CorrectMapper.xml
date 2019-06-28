@@ -915,6 +915,14 @@
               price_audit_task pat JOIN correct c ON  c.correct_id=pat.correct_id JOIN goods_sku gs ON gs.goods_sku_id=c.goods_sku_id
          WHERE
               c.manual_audit_status!='NOT_AUDIT'
+                <if test="categoryId!=null and categoryId!=''">
+                    and gs.category_id in(SELECT
+                    category_id
+                    FROM
+                    category
+                    WHERE
+                    parent_id=#{categoryId})
+                </if>
          AND  if(pat.price_type=='WAIT_AUDIT',c.auditer_id=#{userId},c.auditer_after_affect=#{userId})
          ORDER BY c.audit_time DESC
     </select>
