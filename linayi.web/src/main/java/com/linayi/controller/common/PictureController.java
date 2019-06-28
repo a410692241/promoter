@@ -1,5 +1,6 @@
 package com.linayi.controller.common;
 
+import com.alibaba.fastjson.JSON;
 import com.linayi.util.ConstantUtil;
 import com.linayi.util.DateUtil;
 import com.linayi.util.PropertiesUtil;
@@ -101,6 +102,6 @@ public class PictureController {
             }
 
         }
-        return responseData;
+        return JSON.toJSONString(responseData);
     }
 }
