@@ -61,11 +61,11 @@ public class ImageUtil {
             HttpEntity entity = response.getEntity();
             result = EntityUtils.toString(entity);
             JSONObject jsonObject = JSON.parseObject(result);
-            String respCode = (String) jsonObject.get("respCode");
+            String respCode =  jsonObject.getString("respCode");
             if(StringUtils.equals("F",respCode)){
-                throw new IOException((String) jsonObject.get("errorMsg"));
+                throw new IOException(jsonObject.getString("errorMsg"));
             }
-            result = (String) jsonObject.get("data");
+            result = jsonObject.getString("data");
         }
         finally {
             if (response != null) {
