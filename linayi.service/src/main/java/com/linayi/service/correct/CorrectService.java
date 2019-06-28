@@ -128,10 +128,10 @@ public interface CorrectService {
 
     /**
      * 任务数量和完成数量
-     * @param priceAuditTask
+     * @param
      * @return
      */
-    PriceAuditTask getTotalQuantity(PriceAuditTask priceAuditTask);
+    List<PriceAuditTask> getTotalQuantity(Correct correct);
 
 
     /**
@@ -156,5 +156,13 @@ public interface CorrectService {
      * 点击暂无价格
      */
     void noTimePrice(Correct correct);
+
+
+    /**
+     * 已审核
+     * @param correct
+     * @return
+     */
+    List<Correct> getAuditHistory(Correct correct);
 
 }

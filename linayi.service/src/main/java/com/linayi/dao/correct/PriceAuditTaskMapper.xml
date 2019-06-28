@@ -220,26 +220,33 @@
           price_audit_task pat JOIN correct c ON  c.correct_id=pat.correct_id
      WHERE
           c.supermarket_id=#{supermarketId}
-            <if test="priceType!=null and priceType!=''">
-            AND pat.price_type=#{priceType}
+            <if test="priceType!=null and priceType=='WAIT_AUDIT'">
+            AND pat.price_type=#{priceType} AND c.user_id=#{userId} AND c.user_type='USER'
+            </if>
+            <if test="priceType!=null and priceType=='AFFECTED'">
+              AND pat.price_type=#{priceType}
             </if>
      GROUP BY
            pat.task_date
   </select>
 
   <!--获取未完成任务总数量-->
-  <select id="getCompleteQuantity" resultType="java.lang.Integer">
+  <select id="getCompleteQuantity" resultType="com.linayi.entity.correct.PriceAuditTask">
     SELECT
-          count(c.correct_id)
+          IFNULL(count(c.correct_id ),0) totalQuantity,
+          pat.task_date
      FROM
           price_audit_task pat JOIN correct c ON  c.correct_id=pat.correct_id
      WHERE
           c.supermarket_id=#{supermarketId}
      AND
-          (c.status="AFFECTED" OR c.status="WAIT_AUDIT")
+          (c.status="AFFECTED" OR c.status='WAIT_AUDIT')
      AND
-          (c.audit_time &lt;  DATE_ADD(NOW(),INTERVAL -2 MONTH) OR c.manual_audit_status="WAIT_AUDIT")
-          <if test="priceType!=null and priceType!=''">
+          (c.audit_time &lt;  DATE_ADD(NOW(),INTERVAL -2 MONTH) OR c.manual_audit_status="NOT_AUDIT")
+          <if test="priceType!=null and priceType=='WAIT_AUDIT'">
+            AND pat.price_type=#{priceType} AND c.user_id=#{userId} AND c.user_type='USER'
+          </if>
+          <if test="priceType!=null and priceType=='AFFECTED'">
             AND pat.price_type=#{priceType}
           </if>
      GROUP BY

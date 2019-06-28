@@ -1041,20 +1041,25 @@ public class CorrectServiceImpl implements CorrectService {
 
     /**
      * 获取任务总数和完成数量
-     * @param priceAuditTask
+     * @param
      * @return
      */
     @Override
-    public PriceAuditTask getTotalQuantity(PriceAuditTask priceAuditTask) {
-        PriceAuditTask priceAudit = priceAuditTaskMapper.getTotalQuantity(priceAuditTask);
-        if (priceAudit==null){
-            return new  PriceAuditTask();
+    public List<PriceAuditTask> getTotalQuantity(Correct correct) {
+        List<PriceAuditTask> totalQuantity = priceAuditTaskMapper.getTotalQuantity(correct);
+        if (totalQuantity.size()==0){
+            return new ArrayList<>();
         }
-        PriceAuditTask priceAuditTasks = new PriceAuditTask();
-        priceAuditTasks.setTaskDate(priceAudit.getTaskDate());
-        priceAuditTasks.setTotalQuantity(priceAudit.getTotalQuantity());
-        priceAuditTasks.setCompleteQuantity(priceAudit.getTotalQuantity()-(priceAuditTaskMapper.getCompleteQuantity(priceAuditTask)));
-        return priceAuditTasks;
+        List<PriceAuditTask> completeQuantity = priceAuditTaskMapper.getCompleteQuantity(correct);
+        for (PriceAuditTask priceAuditTask : totalQuantity) {
+            for (PriceAuditTask auditTask : completeQuantity) {
+                if (priceAuditTask.getTaskDate().getTime()-auditTask.getTaskDate().getTime()==0){
+                    priceAuditTask.setCompleteQuantity(priceAuditTask.getTotalQuantity()-auditTask.getTotalQuantity());
+                }
+            }
+
+        }
+        return totalQuantity;
     }
 
 
@@ -1252,5 +1257,19 @@ public class CorrectServiceImpl implements CorrectService {
         correctMapper.updateCorrect(correct2); //更新纠错表
         }
 
+
+    /**
+     * 已审核
+     * @param correct
+     * @return
+     */
+    @Override
+    public List<Correct> getAuditHistory(Correct correct) {
+        List<Correct> corrects = correctMapper.getAuditHistory(correct);
+        for (Correct correct1 : corrects) {
+            correct1.setGoodsImage(ImageUtil.dealToShow(correct1.getGoodsImage()));
+        }
+        return corrects;
+    }
 
 }

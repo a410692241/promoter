@@ -115,4 +115,12 @@ public interface CorrectMapper {
      */
     List<Correct> getTaskGoodsSkuList(Correct correct);
 
+
+    /**
+     * 审核历史列表
+     * @param correct
+     * @return
+     */
+    List<Correct> getAuditHistory(Correct correct);
+
 }

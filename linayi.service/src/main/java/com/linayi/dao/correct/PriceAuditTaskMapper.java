@@ -1,5 +1,6 @@
 package com.linayi.dao.correct;
 
+import com.linayi.entity.correct.Correct;
 import com.linayi.entity.correct.PriceAuditTask;
 import com.linayi.entity.correct.PriceAuditTaskExample;
 import java.util.List;
@@ -30,15 +31,15 @@ public interface PriceAuditTaskMapper {
 
     /**
      * 任务数量和完成数量
-     * @param priceAuditTask
+     * @param
      * @return
      */
-    PriceAuditTask getTotalQuantity(PriceAuditTask priceAuditTask);
+    List<PriceAuditTask> getTotalQuantity(Correct correct);
 
     /**
      * 获取未完成任务数量
-     * @param priceAuditTask
+     * @param
      * @return
      */
-    Integer getCompleteQuantity(PriceAuditTask priceAuditTask);
+    List<PriceAuditTask> getCompleteQuantity(Correct correct);
 }

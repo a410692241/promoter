@@ -1,5 +1,6 @@
 package com.linayi.entity.correct;
 
+import com.linayi.entity.BaseEntity;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -10,7 +11,7 @@ import java.util.Date;
  * @author 
  */
 @Data
-public class PriceAuditTask implements Serializable {
+public class PriceAuditTask extends BaseEntity {
     /**
      * [任务ID]
      */
@@ -36,7 +37,6 @@ public class PriceAuditTask implements Serializable {
      */
     private Date createTime;
 
-    private static final long serialVersionUID = 1L;
 
     //任务总数量
     private Integer totalQuantity;

@@ -899,4 +899,23 @@
         </if>
         ORDER BY  FIELD(c.status,'WAIT_AUDIT','AFFECTED')
     </select>
+
+    <!--审核历史(已审核)-->
+    <select id="getAuditHistory" resultType="com.linayi.entity.correct.Correct">
+        SELECT
+              c.audit_time,
+              gs.full_name,
+              gs.image goodsImage,
+              gs.barcode,
+              c.price,
+              c.manual_audit_status,
+              (select round(((max(price)-min(price))/min(price)*100),2) from correct where goods_sku_id=c.goods_sku_id and
+              (status='AFFECTED' or status='AUDIT_SUCCESS' or status='WAIT_AUDIT') group by goods_sku_id) spreadRate
+         FROM
+              price_audit_task pat JOIN correct c ON  c.correct_id=pat.correct_id JOIN goods_sku gs ON gs.goods_sku_id=c.goods_sku_id
+         WHERE
+              c.manual_audit_status!='NOT_AUDIT'
+         AND  if(pat.price_type=='WAIT_AUDIT',c.auditer_id=#{userId},c.auditer_after_affect=#{userId})
+         ORDER BY c.audit_time DESC
+    </select>
 </mapper>

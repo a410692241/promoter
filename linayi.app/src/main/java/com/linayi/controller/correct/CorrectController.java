@@ -366,24 +366,34 @@ public class CorrectController extends BaseController {
 
 	/**
 	 * 获取任务总数量和完成数量
-	 * @param priceAuditTask
+	 * @param
 	 * @return
 	 */
-	@RequestMapping("/getTotalQuantity.do")
-	@ResponseBody
-	public Object getTotalQuantity(@RequestBody PriceAuditTask priceAuditTask){
-		try {
-			PriceAuditTask priceAudit = correctService.getTotalQuantity(priceAuditTask);
-			return new ResponseData(priceAudit);
-		}catch (BusinessException e) {
-			return new ResponseData(e.getErrorType()).toString();
-		} catch (Exception e) {
-			return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
-		}
-	}
+    @RequestMapping("/getTotalQuantity.do")
+    @ResponseBody
+    public Object getTotalQuantity(@RequestBody Correct correct){
+        try {
+            if(correct.getPageSize() == null){
+                correct.setPageSize(8);
+            }
+            List<PriceAuditTask> correctList = correctService.getTotalQuantity(correct);
+            Integer totalPage = (int) Math.ceil(Double.valueOf(correct.getTotal())/Double.valueOf(correct.getPageSize()));
+            if(totalPage <= 0){
+                totalPage++;
+            }
+            Map<String , Object> map = new HashMap<>();
+            map.put("data", correctList);
+            map.put("totalPage", totalPage);
+            map.put("currentPage",correct.getCurrentPage() );
+            return new ResponseData(map);
+        } catch (Exception e) {
+            return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+        }
+    }
 
 
-	/**
+
+    /**
 	 * 审核2个月前生效最低价
 	 * @param correct
 	 * @return
@@ -498,5 +508,32 @@ public class CorrectController extends BaseController {
 		}
 	}
 
+
+    /**
+     * 已审核(审核历史)
+     * @param correct
+     * @return
+     */
+    @RequestMapping("/getAuditHistory.do")
+    @ResponseBody
+    public Object getAuditHistory(@RequestBody Correct correct){
+        try {
+            if(correct.getPageSize() == null){
+                correct.setPageSize(8);
+            }
+            List<Correct> correctList = correctService.getAuditHistory(correct);
+            Integer totalPage = (int) Math.ceil(Double.valueOf(correct.getTotal())/Double.valueOf(correct.getPageSize()));
+            if(totalPage <= 0){
+                totalPage++;
+            }
+            Map<String , Object> map = new HashMap<>();
+            map.put("data", correctList);
+            map.put("totalPage", totalPage);
+            map.put("currentPage",correct.getCurrentPage() );
+            return new ResponseData(map);
+        } catch (Exception e) {
+            return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
+        }
+    }
 
 }
