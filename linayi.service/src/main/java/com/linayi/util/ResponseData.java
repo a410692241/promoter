@@ -21,6 +21,10 @@ public class ResponseData {
 	private Object data;
 
 
+	public ResponseData() {
+
+	}
+
 	/**
 	 * 成功的方法
 	 * this.respCode = "S";this.errorType = "无";
