@@ -114,13 +114,13 @@
       and small_community_req_id=#{smallCommunityReqId,jdbcType=INTEGER}
     </if>
     <if test="smallCommunity != null">
-      and small_community IKE concat('%',#{smallCommunity,jdbcType=VARCHAR},'%')
+      and small_community LIKE concat('%',#{smallCommunity,jdbcType=VARCHAR},'%')
     </if>
     <if test="status != null">
       and `status`=#{status,jdbcType=VARCHAR}
     </if>
     <if test="mobile != null">
-      and mobile=#{mobile,jdbcType=VARCHAR}
+      and mobile like concat('%',#{mobile,jdbcType=VARCHAR},'%')
     </if>
     <if test="nickname != null">
       and nickname=#{nickname,jdbcType=VARCHAR}
