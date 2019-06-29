@@ -1051,8 +1051,8 @@ public class CorrectServiceImpl implements CorrectService {
         }
         List<PriceAuditTask> completeQuantity = priceAuditTaskMapper.getCompleteQuantity(correct);
         if (completeQuantity.size()==0) {
-            for (PriceAuditTask priceAuditTask : totalQuantity) {
-                priceAuditTask.setCompleteQuantity(0);
+           for (PriceAuditTask priceAuditTask : totalQuantity) {
+                priceAuditTask.setCompleteQuantity(priceAuditTask.getTotalQuantity());
                 return totalQuantity;
             }
         }
@@ -1275,6 +1275,14 @@ public class CorrectServiceImpl implements CorrectService {
             correct1.setGoodsImage(ImageUtil.dealToShow(correct1.getGoodsImage()));
         }
         return corrects;
+    }
+
+
+    //后台任务列表
+    @Override
+    public List<Correct> getTaskList(Correct correct) {
+
+        return correctMapper.getTaskList(correct);
     }
 
 }

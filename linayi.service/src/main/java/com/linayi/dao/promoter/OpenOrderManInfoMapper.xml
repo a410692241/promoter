@@ -210,7 +210,7 @@
         FROM
               orders
         WHERE
-            (community_status='PROCURE_FINISHED' OR community_status='DELIVER_FINISHED')
+            1=1
             <if test="orderManId!=null and orderManId!=''">
                 and  order_man_id = #{orderManId}
             </if>
