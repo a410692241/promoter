@@ -248,13 +248,8 @@
             <if test="amount != null">
                 AND amount = #{amount}
             </if>
-            <if test="communityStatus != null and communityStatus != ''">
-                <if test="communityStatus == 'FINISHED'">
-                    AND community_status in ('PROCURE_FINISHED','DELIVER_FINISHED')
-                </if>
-                <if test="communityStatus != 'FINISHED'">
-                    AND community_status = #{communityStatus}
-                </if>
+            <if test="communityStatus != null">
+                AND community_status = #{communityStatus}
             </if>
             <if test="communityId != null">
                 AND community_id = #{communityId}
