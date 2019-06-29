@@ -5,12 +5,27 @@ import com.linayi.entity.account.AdminAccount;
 import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.supermarket.Supermarket;
 import com.linayi.entity.user.User;
+import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
 
+@Data
 public class Correct extends BaseEntity {
+
+    private Date auditLastTime;
+    private String statusAfterAffect;
+    private String statusBeforeAffect;
+    public Date getAuditLastTime() { return auditLastTime; }
+    public void setAuditLastTime(Date auditLastTime) { this.auditLastTime = auditLastTime; }
+    public String getStatusAfterAffect() { return statusAfterAffect; }
+    public void setStatusAfterAffect(String statusAfterAffect) { this.statusAfterAffect = statusAfterAffect; }
+    public String getStatusBeforeAffect() { return statusBeforeAffect; }
+    public void setStatusBeforeAffect(String statusBeforeAffect) { this.statusBeforeAffect = statusBeforeAffect; }
+
+    private Integer auditerAfterAffect;
+    private Date auditTimeAfterAffect;
     public String getRealName() {
         return realName;
     }
@@ -276,6 +291,14 @@ public class Correct extends BaseEntity {
     private String correctType;//按钮类型
 
     private Double spreadRate;
+
+    private Integer categoryId;
+
+    private String taskDate;//任务日期
+
+    private Integer taskId; //任务id
+
+    private String manualAuditStatus; //人工审核状态
 
     public Double getSpreadRate() {
         return spreadRate;
@@ -589,6 +612,14 @@ public class Correct extends BaseEntity {
 
     public void setSupermarketGoodsId(Long supermarketGoodsId) {
         this.supermarketGoodsId = supermarketGoodsId;
+    }
+
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 
     @Override

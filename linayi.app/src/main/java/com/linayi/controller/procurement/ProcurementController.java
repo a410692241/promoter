@@ -314,4 +314,21 @@ public class ProcurementController extends BaseController {
             return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
         }
     }
+
+
+	/**
+	 * 采买任务商品装箱
+	 * @param procureMergeNo
+	 * @param quantity
+	 * @return
+	 */
+	@RequestMapping("/packingSkuGoods.do")
+	public Object packingSkuGoods(String procureMergeNo, Integer quantity,String box_no){
+		try {
+			procurementService.packingSkuGoods(procureMergeNo,quantity,box_no);
+			return new ResponseData("SUCCESS");
+		} catch (Exception e) {
+			return new ResponseData(ErrorType.SYSTEM_ERROR);
+		}
+	}
 }

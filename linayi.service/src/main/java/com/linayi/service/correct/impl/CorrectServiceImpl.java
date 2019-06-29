@@ -2,11 +2,13 @@ package com.linayi.service.correct.impl;
 
 import com.linayi.dao.correct.CorrectLogMapper;
 import com.linayi.dao.correct.CorrectMapper;
+import com.linayi.dao.correct.PriceAuditTaskMapper;
 import com.linayi.dao.goods.SupermarketGoodsMapper;
 import com.linayi.dao.supermarket.SupermarketMapper;
 import com.linayi.entity.account.AdminAccount;
 import com.linayi.entity.correct.Correct;
 import com.linayi.entity.correct.CorrectLog;
+import com.linayi.entity.correct.PriceAuditTask;
 import com.linayi.entity.correct.SupermarketGoodsVersion;
 import com.linayi.entity.goods.SupermarketGoods;
 import com.linayi.entity.supermarket.Supermarket;
@@ -61,6 +63,8 @@ public class CorrectServiceImpl implements CorrectService {
     private SupermarketGoodsVersionService supermarketGoodsVersionService;
     @Autowired
     private SupermarketGoodsService supermarketGoodsService;
+    @Autowired
+    private PriceAuditTaskMapper priceAuditTaskMapper;
 
 
     /*添加分享价格申请*/
@@ -121,7 +125,7 @@ public class CorrectServiceImpl implements CorrectService {
             correct.setStatus(CorrectStatus.AFFECTED.toString());
             correct.setActualStartTime(new Date());
         }
-
+        correct.setAuditLastTime(now);
         correct.setCreateTime(now);
         correct.setUpdateTime(now);
         correct.setType(CorrectType.SHARE.toString());
@@ -160,6 +164,12 @@ public class CorrectServiceImpl implements CorrectService {
     @Override
     @Transactional
     public Correct correct(Correct correct, MultipartFile file, String userType) {
+//        Correct paramSamePrice = new Correct();
+//        paramSamePrice.setCorrectId(correct.getParentId());
+//        Correct currentCorrect2 = correctMapper.query(paramSamePrice).stream().findFirst().orElse(null);
+//        if(correct.getPrice() == currentCorrect2.getPrice()){
+//            throw new BusinessException(ErrorType.CORRECT_SAME_PRICE);
+//        }
         // 线程安全并发处理
         SupermarketGoodsVersion param1 = new SupermarketGoodsVersion();
         param1.setSupermarketId(correct.getSupermarketId());
@@ -229,7 +239,7 @@ public class CorrectServiceImpl implements CorrectService {
             correctLog.setCreateTime(now);
             correctLogMapper.insert(correctLog);
         }
-
+        correct.setAuditLastTime(now);
         correct.setCreateTime(now);
         correct.setUpdateTime(now);
         correct.setType(CorrectType.CORRECT.toString());
@@ -374,8 +384,10 @@ public class CorrectServiceImpl implements CorrectService {
             param.setStatus(correct.getStatus());
             param.setUpdateTime(now);
             param.setAuditTime(now);
+            param.setAuditLastTime(now);
             param.setAuditerId(correct.getUserId());
             param.setAuditType(correct.getAuditType());
+            param.setStatusAfterAffect(correct.getStatus());
             correctMapper.updateCorrect(param);
 
             //插入correct_log表
@@ -404,7 +416,6 @@ public class CorrectServiceImpl implements CorrectService {
                         correct.setType(CorrectType.SHARE.toString());
                     }
                 }
-
 
                 if (correct.getParentId() != null) {
                     Correct param3 = new Correct();
@@ -903,7 +914,9 @@ public class CorrectServiceImpl implements CorrectService {
         }
     }
 
-        public void initVersion(Correct correct) {
+
+
+    public void initVersion(Correct correct) {
             try {
                 SupermarketGoodsVersion version = new SupermarketGoodsVersion();
                 version.setSupermarketId(correct.getSupermarketId());
@@ -976,5 +989,303 @@ public class CorrectServiceImpl implements CorrectService {
 
         }
 
+
+    /**
+     * 获取任务(定时器)
+     * @param
+     * @return
+     */
+    @Override
+    @Transactional
+    public List<Correct> priceAudit() {
+        //获取待审核列表
+        List<Correct> correctList = correctMapper.getAffectedPrice();
+        Date now = new Date();
+        for (Correct correct1 : correctList) {
+            PriceAuditTask priceAuditTask = new PriceAuditTask();
+            priceAuditTask.setCorrectId(correct1.getCorrectId());
+            priceAuditTask.setPriceType(correct1.getStatus());
+            priceAuditTask.setTaskDate(now);
+            priceAuditTask.setCreateTime(now);
+            priceAuditTaskMapper.insert(priceAuditTask);
+        }
+        return correctList;
+    }
+
+    @Override
+    @Transactional
+    public void updatePriceAudit(Correct correct) {
+        Correct newCorrect = correctMapper.selectByPrimaryKey(correct.getCorrectId());
+
+        Date now = new Date();
+        if (CorrectStatus.AFFECTED.toString().equals(newCorrect.getStatus())) {
+            Correct param = new Correct();
+            param.setCorrectId(correct.getCorrectId());
+            param.setStatusAfterAffect(correct.getStatus());
+            param.setAuditLastTime(now);
+            param.setAuditerAfterAffect(correct.getUserId());
+            param.setAuditTimeAfterAffect(now);
+            correctMapper.updateCorrect(param);
+
+            if (CorrectStatus.AUDIT_FAIL.toString().equals(correct.getStatus()) && OperatorType.USER.toString().equals(correct.getAuditType())) {
+
+                        correct.setType(CorrectType.CORRECT.toString());
+                    }
+        } else {
+            throw new BusinessException(ErrorType.AUDIT_ERROR);
+        }
+
+
+    }
+
+    /**
+     * 获取任务总数和完成数量
+     * @param
+     * @return
+     */
+    @Override
+    public List<PriceAuditTask> getTotalQuantity(Correct correct) {
+        List<PriceAuditTask> totalQuantity = priceAuditTaskMapper.getTotalQuantity(correct);
+        if (totalQuantity.size()==0){
+            return new ArrayList<>();
+        }
+        List<PriceAuditTask> completeQuantity = priceAuditTaskMapper.getCompleteQuantity(correct);
+        if (completeQuantity.size()==0) {
+           for (PriceAuditTask priceAuditTask : totalQuantity) {
+                priceAuditTask.setCompleteQuantity(priceAuditTask.getTotalQuantity());
+                return totalQuantity;
+            }
+        }
+        for (PriceAuditTask priceAuditTask : totalQuantity) {
+            if (!completeQuantity.contains(priceAuditTask.getTaskDate())){
+                priceAuditTask.setCompleteQuantity(priceAuditTask.getTotalQuantity());
+            }
+            for (PriceAuditTask auditTask : completeQuantity) {
+                if (priceAuditTask.getTaskDate().getTime()-auditTask.getTaskDate().getTime()==0){
+                    priceAuditTask.setCompleteQuantity(priceAuditTask.getTotalQuantity()-auditTask.getTotalQuantity());
+                }
+            }
+
+        }
+        return totalQuantity;
+    }
+
+
+    /**
+     * 根据超市id和任务日期获取待审核商品列表
+     * @param correct
+     * @return
+     */
+    @Override
+    public List<Correct> getTaskGoodsSkuList(Correct correct) {
+        List<Correct> corrects = correctMapper.getTaskGoodsSkuList(correct);
+        for (Correct correct1 : corrects) {
+            correct1.setGoodsImage(ImageUtil.dealToShow(correct1.getGoodsImage()));
+        }
+        return corrects;
+    }
+
+
+    /**
+     * 审核任务点击审核通过
+     * @param correct
+     */
+    @Override
+    @Transactional
+    public void taskAuditSuccess(Correct correct) {
+        //通过任务id获取原来的状态
+        PriceAuditTask priceAuditTask = priceAuditTaskMapper.selectByPrimaryKey(correct.getTaskId());
+        //通过纠错id获取状态
+        Correct correct1 = correctMapper.selectByPrimaryKey(correct.getCorrectId());
+        Correct correct2 = new Correct();
+        Date now = new Date();
+        if (CorrectStatus.WAIT_AUDIT.toString().equals(priceAuditTask.getPriceType())) { //如果任务状态是待审核
+            if (CorrectStatus.WAIT_AUDIT.toString().equals(correct1.getStatus())) { //如果纠错状态没改变
+                correct2.setCorrectId(correct.getCorrectId());
+                correct2.setStatus(CorrectStatus.AUDIT_SUCCESS.toString());
+                correct2.setAuditerId(correct.getUserId());
+                correct2.setAuditTime(now);
+                correct2.setAuditType("USER");
+                correct2.setManualAuditStatus(CorrectStatus.AUDIT_SUCCESS.toString());
+            }else{
+                throw new BusinessException(ErrorType.AUDIT_ERROR); //已经被审核
+            }
+        }else if(CorrectStatus.AFFECTED.toString().equals(priceAuditTask.getPriceType())){
+            Calendar c = Calendar.getInstance();
+            c.setTime(now);
+            c.add(Calendar.MONTH, -2);
+            Date m3 = c.getTime();
+            if (CorrectStatus.AFFECTED.toString().equals(correct1.getStatus()) && correct1.getAuditTime().compareTo(m3)<0){
+                correct2.setCorrectId(correct.getCorrectId());
+                correct2.setManualAuditStatus(CorrectStatus.AUDIT_SUCCESS.toString());
+                correct2.setAuditTime(now);
+                correct2.setAuditerAfterAffect(correct.getUserId());
+            }else{
+                throw new BusinessException(ErrorType.AUDIT_ERROR); //已经被审核
+            }
+        }
+        correctMapper.updateCorrect(correct2); //更新纠错表
+    }
+
+
+    /**
+     * 审核任务点击价格错误/修改价格
+     * @param correct
+     */
+    @Override
+    public Correct taskAuditPriceError(Correct correct) {
+        //通过任务id获取原来的状态
+        PriceAuditTask priceAuditTask = priceAuditTaskMapper.selectByPrimaryKey(correct.getTaskId());
+        //通过纠错id获取状态
+        Correct correct2 = correctMapper.selectByPrimaryKey(correct.getCorrectId());
+        priceError(correct,correct2,priceAuditTask); //调用通用方法修改状态
+        Correct correct3 = new Correct(); //返回状态
+        Correct param = new Correct();
+        param.setSupermarketId(correct.getSupermarketId());
+        param.setGoodsSkuId(Long.valueOf(correct.getGoodsSkuId()));
+        param.setStatus(CorrectStatus.AFFECTED.toString());
+        Correct currentCorrect = correctMapper.query(param).stream().findFirst().orElse(null);
+        // 当查询结果不为null时，表示该商品有价格
+        if (currentCorrect != null) {
+            Correct param1 = new Correct();
+            param1.setSupermarketId(correct.getSupermarketId());
+            param1.setGoodsSkuId(Long.valueOf(correct.getGoodsSkuId()));
+            List<String> statusList = new ArrayList<>();
+            statusList.add(CorrectStatus.WAIT_AUDIT.toString());
+            statusList.add(CorrectStatus.AUDIT_SUCCESS.toString());
+            param1.setStatusList(statusList);
+            Correct currentCorrect1 = correctMapper.query(param1).stream().findFirst().orElse(null);
+            if (currentCorrect1 != null) {
+                correct3.setCorrectType("VIEW");
+                correct3.setCorrectId(currentCorrect1.getCorrectId());
+            } else {
+                correct3.setCorrectType("CORRECT");
+                //获取该商品的超市价格
+                SupermarketGoods currentSupermarketGoods = supermarketGoodsMapper.getSupermarketGoodsBysupermarketIdAndgoodsSkuId(currentCorrect.getGoodsSkuId().intValue(),currentCorrect.getSupermarketId());
+                if (currentSupermarketGoods!=null) {
+                    correct3.setCorrectId(currentCorrect.getCorrectId());
+                    correct3.setGoodsSkuId(currentCorrect.getGoodsSkuId());
+                }
+            }
+            // 否则表示该商品无价格
+        } else {
+            // 通过超市id和商品id查询纠错表，如果结果为null则显示分享按钮
+            List<Correct> correctList = correctMapper.selectCorrect(correct.getSupermarketId(),
+                    Long.valueOf(correct.getGoodsSkuId()));
+            if (correctList.size() <= 0) {
+                correct3.setCorrectType("SHARE");
+                // 否则遍历集合
+            } else {
+                Correct param2 = new Correct();
+                param2.setSupermarketId(correct.getSupermarketId());
+                param2.setGoodsSkuId(Long.valueOf(correct.getGoodsSkuId()));
+                List<String> statusList = new ArrayList<>();
+                statusList.add(CorrectStatus.WAIT_AUDIT.toString());
+                statusList.add(CorrectStatus.AUDIT_SUCCESS.toString());
+                param2.setStatusList(statusList);
+                Correct currentCorrect2 = correctMapper.query(param2).stream().findFirst().orElse(null);
+                if (currentCorrect2 != null) {
+                    correct3.setCorrectType("VIEW");
+                    correct3.setCorrectId(currentCorrect2.getCorrectId());
+                } else {
+                    correct3.setCorrectType("SHARE");
+                }
+            }
+        }
+        return  correct3;
+    }
+
+
+    /**
+     * 点击价格错误/暂无价格
+     * @param correct
+     */
+    @Override
+    @Transactional
+    public void noTimePrice(Correct correct) {
+        //通过任务id获取原来的状态
+        PriceAuditTask priceAuditTask = priceAuditTaskMapper.selectByPrimaryKey(correct.getTaskId());
+        //通过纠错id获取状态
+        Correct correct2 = correctMapper.selectByPrimaryKey(correct.getCorrectId());
+        priceError(correct,correct2,priceAuditTask); //调用通用方法修改状态
+        if(CorrectStatus.AFFECTED.toString().equals(priceAuditTask.getPriceType())){//如果原来是已生效的状态
+        Correct correct1 = new Correct();
+        correct1.setCorrectId(correct.getCorrectId());
+        correct1.setStatus(CorrectStatus.RECALL.toString());
+        //撤回本条记录
+        correctMapper.updateCorrect(correct1);
+
+        //根据超市id商品id删除超市商品表信息
+        supermarketGoodsMapper.deleteSupermarketGoods(correct.getSupermarketId(),correct.getGoodsSkuId());
+
+        //根据超市id获取绑定的社区id集合
+        List<Integer> communityIdList = communitySupermarketService.getCommunityIdBysupermarketId(correct.getSupermarketId());
+
+        //更新社区价格表信息
+        for (Integer integer : communityIdList) {
+            communitySupermarketService.toUpdateCommunityPrice(integer, correct.getGoodsSkuId().intValue());
+        }
+        }
+    }
+
+
+    /**
+     * 价格审核通用方法
+     * @param correct
+     */
+    public void priceError(Correct correct,Correct correct1,PriceAuditTask priceAuditTask) {
+
+        Correct correct2 = new Correct();
+        Date now = new Date();
+        if (CorrectStatus.WAIT_AUDIT.toString().equals(priceAuditTask.getPriceType())) { //如果任务状态是待审核
+            if (CorrectStatus.WAIT_AUDIT.toString().equals(correct1.getStatus())) { //如果纠错状态没改变
+                correct2.setCorrectId(correct.getCorrectId());
+                correct2.setStatus(CorrectStatus.AUDIT_FAIL.toString());
+                correct2.setAuditerId(correct.getUserId());
+                correct2.setAuditTime(now);
+                correct2.setAuditType("USER");
+                correct2.setManualAuditStatus(CorrectStatus.AUDIT_SUCCESS.toString());
+            }else{
+                throw new BusinessException(ErrorType.AUDIT_ERROR); //已经被审核
+            }
+        }else if(CorrectStatus.AFFECTED.toString().equals(priceAuditTask.getPriceType())){
+            Calendar c = Calendar.getInstance();
+            c.setTime(now);
+            c.add(Calendar.MONTH, -2);
+            Date m3 = c.getTime();
+            if (CorrectStatus.AFFECTED.toString().equals(correct1.getStatus()) && correct1.getAuditTime().compareTo(m3)<0){
+                correct2.setCorrectId(correct.getCorrectId());
+                correct2.setManualAuditStatus(CorrectStatus.AUDIT_FAIL.toString());
+                correct2.setAuditTime(now);
+                correct2.setAuditerAfterAffect(correct.getUserId());
+            }else{
+                throw new BusinessException(ErrorType.AUDIT_ERROR); //已经被审核
+            }
+        }
+        correctMapper.updateCorrect(correct2); //更新纠错表
+        }
+
+
+    /**
+     * 已审核
+     * @param correct
+     * @return
+     */
+    @Override
+    public List<Correct> getAuditHistory(Correct correct) {
+        List<Correct> corrects = correctMapper.getAuditHistory(correct);
+        for (Correct correct1 : corrects) {
+            correct1.setGoodsImage(ImageUtil.dealToShow(correct1.getGoodsImage()));
+        }
+        return corrects;
+    }
+
+
+    //后台任务列表
+    @Override
+    public List<Correct> getTaskList(Correct correct) {
+
+        return correctMapper.getTaskList(correct);
+    }
 
 }

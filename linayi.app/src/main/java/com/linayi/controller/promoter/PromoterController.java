@@ -115,12 +115,13 @@ public class PromoterController extends BaseController {
             ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(promoterOrderMan);
             PromoterOrderMan promoterOrderMan1 = pv.transObject(PromoterOrderMan.class);
 
-            if (promoterOrderMan1.getOrderManId() == null) {
+        /*    if (promoterOrderMan1.getOrderManId() == null) {
                 Integer userId = getUserId();
                 promoterOrderMan1.setOrderManId(userId);
-            }
-            PromoterOrderMan currentPromoterOrderMan = promoterOrderManService.memberListOrderStatistics(promoterOrderMan1);
+            }*/
+            /*PromoterOrderMan currentPromoterOrderMan = promoterOrderManService.memberListOrderStatistics(promoterOrderMan1);*/
 
+			PromoterOrderMan currentPromoterOrderMan = promoterOrderManService.getOrderManData(promoterOrderMan1);
             return new ResponseData(currentPromoterOrderMan);
         } catch (Exception e) {
             return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
@@ -131,18 +132,16 @@ public class PromoterController extends BaseController {
     @ApiOperation(value = "会员列表-会员列表", produces = "application/xml,application/json")
     @RequestMapping(value = "/memberList.do", method = RequestMethod.POST)
     public Object memberList(@RequestBody PromoterVo.MemberListObj promoterOrderMan) {
-        PageResult<OrderManMember> pageResult = new PageResult<>();
+        PageResult<PromoterOrderMan> pageResult = new PageResult<>();
         try {
             ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(promoterOrderMan);
             PromoterOrderMan promoterOrderMan1 = pv.transObject(PromoterOrderMan.class);
             if (promoterOrderMan1.getPageSize() == null) {
                 promoterOrderMan1.setPageSize(8);
             }
-            if (promoterOrderMan1.getOrderManId() == null) {
-                Integer userId = getUserId();
-                promoterOrderMan1.setOrderManId (userId);
-            }
-            List<OrderManMember> orderManMemberList = promoterOrderManService.memberList(promoterOrderMan1);
+			promoterOrderMan1.setUserId(promoterOrderMan1.getOrderManId());
+			List<PromoterOrderMan> orderManMemberList = promoterOrderManService.getMemberData(promoterOrderMan1);
+           /* List<OrderManMember> orderManMemberList = promoterOrderManService.getMemberData(promoterOrderMan1);*/
             pageResult = new PageResult<>(orderManMemberList, promoterOrderMan1);
             return new ResponseData(pageResult);
         } catch (Exception e) {
@@ -285,14 +284,13 @@ public class PromoterController extends BaseController {
 		PageResult<Orders> ordersList = new PageResult<>();
 		try {
 			ParamValidUtil<Orders> pv = new ParamValidUtil<>(orders);
-			Orders orders1 = pv.transObject(Orders.class);
-			orders1.setOrderManId(getUserId());
-			ordersList = orderService.getOrdersList(orders1);
-			return new ResponseData(ordersList);
+				Orders orders1 = pv.transObject(Orders.class);
+				orders1.setOrderManId(getUserId());
+				ordersList = orderService.getOrdersList(orders1);
+				return new ResponseData(ordersList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			return new ResponseData(ErrorType.SYSTEM_ERROR);
 		}
-		return new ResponseData(ErrorType.SYSTEM_ERROR);
 	}
 
 	// 订单列表-用户详情
@@ -340,6 +338,46 @@ public class PromoterController extends BaseController {
 		}
 
 	}
+
+
+
+	@ApiOperation(value = "会员列表进入的订单列表",notes = "会员列表进入的订单列表")
+	@RequestMapping(value = "/getMemberOrderList.do", method = RequestMethod.POST)
+	public Object getMemberOrderList(@RequestBody PromoterVo.MemberOrderList orders){
+		PageResult<Orders> promoterOrder = new PageResult<>();
+		try {
+			ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(orders);
+			PromoterOrderMan promoterOrderMan = pv.transObject(PromoterOrderMan.class);
+			if (null==promoterOrderMan.getReceiveAddressId()){
+				promoterOrderMan.setUserId(promoterOrderMan.getMemberId());
+			}
+			List<Orders> ordersList = promoterOrderManService.getMemberOrderList(promoterOrderMan);
+			PageResult<Orders> pr = new PageResult<>(ordersList,promoterOrderMan);
+			return new ResponseData(pr);
+		} catch (Exception e) {
+			return new ResponseData(ErrorType.SYSTEM_ERROR);
+		}
+	}
+
+	// 会员进入的订单列表-订单统计
+	@ApiOperation(value = "会员列表进入的订单列表-订单统计", produces = "application/xml,application/json")
+	@RequestMapping(value = "/getMemberOrderData.do", method = RequestMethod.POST)
+	public Object getMemberOrderData(@RequestBody PromoterVo.MemberOrderData orderManMember) {
+		try {
+			ParamValidUtil<PromoterOrderMan> pv = new ParamValidUtil<>(orderManMember);
+			PromoterOrderMan promoterOrderMan = pv.transObject(PromoterOrderMan.class);
+			if (null==promoterOrderMan.getReceiveAddressId()) {
+				promoterOrderMan.setUserId(promoterOrderMan.getMemberId());
+			}
+			PromoterOrderMan currentOrderManMember = promoterOrderManService.getMemberOrderData(promoterOrderMan);
+			return new ResponseData(currentOrderManMember);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseData(ErrorType.SYSTEM_ERROR);
+
+	}
+
 
 
 }

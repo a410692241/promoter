@@ -1,8 +1,10 @@
 package com.linayi.controller.common;
 
+import com.alibaba.fastjson.JSON;
 import com.linayi.util.ConstantUtil;
 import com.linayi.util.DateUtil;
 import com.linayi.util.PropertiesUtil;
+import com.linayi.util.ResponseData;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -53,20 +55,22 @@ public class PictureController {
 
     @RequestMapping("/upload.do")
     @ResponseBody
-    public String savePicture(HttpServletRequest request){
+    public Object savePicture(HttpServletRequest request){
         InputStream inputStream = null;
         String type = request.getHeader("fileType");
         String datePath = DateUtil.date2String(new Date(), "yyyy/MM/dd/HH");
         String fileName = UUID.randomUUID().toString();
         String result = datePath + "/" + fileName + "." + type;
+        ResponseData responseData = new ResponseData();
+        File file;
         try {
             inputStream = request.getInputStream();
             File imageFile = new File(PropertiesUtil.getValueByKey(ConstantUtil.IMAGE_PATH));
             File srcfile = new File(imageFile + "/" + datePath);
-           if (!srcfile.exists()){
-               srcfile.mkdirs();
-           }
-            File file = new File(srcfile + "/" + fileName + "." + type);
+            if (!srcfile.exists()){
+                srcfile.mkdirs();
+            }
+            file = new File(srcfile + "/" + fileName + "." + type);
             FileOutputStream outputStream = new FileOutputStream(file);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             byte[] bytes = new byte[1024];
@@ -80,8 +84,14 @@ public class PictureController {
             outputStream.flush();
             bos.close();
             outputStream.close();
+            if(!file.exists()){
+                throw new IOException("File upload failed!");
+            }
+            responseData.setData(result);
+            responseData.setRespCode("S");
         } catch (IOException e) {
             e.printStackTrace();
+            responseData.setRespCode("F");
         }finally {
             if(inputStream != null){
                 try {
@@ -92,6 +102,6 @@ public class PictureController {
             }
 
         }
-        return result;
+        return JSON.toJSONString(responseData);
     }
 }

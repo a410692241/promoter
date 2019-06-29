@@ -108,7 +108,7 @@ public interface PromoterOrderManService {
      * @param
      * @return
      */
-    List<PromoterOrderMan> getMemberData(Integer userId);
+    List<PromoterOrderMan> getMemberData(PromoterOrderMan PromoterOrderMan);
 
 
 
@@ -124,4 +124,26 @@ public interface PromoterOrderManService {
      * @return
      */
     Map getMemberAndOrderMan(Integer userId);
+
+
+    /**
+     * 会员订单列表
+     * @param PromoterOrderMan
+     * @return
+     */
+    List<Orders> getMemberOrderList(PromoterOrderMan PromoterOrderMan);
+
+    /**
+     * 会员订单统计
+     * @param PromoterOrderMan
+     * @return
+     */
+    PromoterOrderMan getMemberOrderData(PromoterOrderMan PromoterOrderMan);
+
+    /**
+     * 家庭服务师列表（后台管理系统）
+     * @param openOrderManInfo
+     * @return
+     */
+    List<OpenOrderManInfo> getOrderManListForWeb(OpenOrderManInfo openOrderManInfo);
 }

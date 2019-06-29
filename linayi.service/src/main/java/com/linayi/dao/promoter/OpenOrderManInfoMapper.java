@@ -1,5 +1,6 @@
 package com.linayi.dao.promoter;
 
+import com.linayi.entity.order.Orders;
 import com.linayi.entity.promoter.OpenOrderManInfo;
 import com.linayi.entity.promoter.PromoterOrderMan;
 
@@ -62,7 +63,7 @@ public interface OpenOrderManInfoMapper {
      * @param
      * @return
      */
-    List<PromoterOrderMan> getMemberData(Integer userId);
+    List<PromoterOrderMan> getMemberData(PromoterOrderMan PromoterOrderMan);
 
     /**
      * 根据家庭服务师id获取订单数据和date
@@ -70,5 +71,33 @@ public interface OpenOrderManInfoMapper {
      */
     PromoterOrderMan getOrderManData(PromoterOrderMan PromoterOrderMan);
 
+
+    /**
+     * 会员订单列表
+     * @param PromoterOrderMan
+     * @return
+     */
+    List<Orders> getMemberOrderList(PromoterOrderMan PromoterOrderMan);
+
+
+    /**
+     * 获取家庭服务师列表(后台用)
+     * @param PromoterOrderMan
+     * @return
+     */
+    List<OpenOrderManInfo> getOrderManList(OpenOrderManInfo openOrderManInfo);
+
+
+    /**
+     * 获取家庭服务师的订单Id(分页用)
+     */
+   List<Integer> getOrdersIdByOrderManId(PromoterOrderMan PromoterOrderMan);
+
+    /**
+     * 获取家庭服务师数量
+     * @param PromoterOrderMan
+     * @return
+     */
+    PromoterOrderMan getOrderManCount(PromoterOrderMan PromoterOrderMan);
 
 }

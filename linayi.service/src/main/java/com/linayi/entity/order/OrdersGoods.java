@@ -1,9 +1,11 @@
 package com.linayi.entity.order;
 
 import com.linayi.entity.BaseEntity;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.util.Date;
-
+@Data
 public class OrdersGoods extends BaseEntity {
     private Long ordersGoodsId;
 
@@ -47,171 +49,15 @@ public class OrdersGoods extends BaseEntity {
 
     private String supermarketName;
 
-    public String getSupermarketName() {
-        return supermarketName;
-    }
+    @ApiModelProperty(value = "价差率")
+    private Double spreadRate;
 
-    public void setSupermarketName(String supermarketName) {
-        this.supermarketName = supermarketName;
-    }
+    @ApiModelProperty(value = "最高价超市")
+    private String  maxSupermarketName;
 
-    public String getTwoStatus() {
-        return twoStatus;
-    }
 
-    public void setTwoStatus(String twoStatus) {
-        this.twoStatus = twoStatus;
-    }
+    @ApiModelProperty(value = "最低价超市")
+    private String  minSupermarketName;
 
-    public Long getOrdersGoodsId() {
-        return ordersGoodsId;
-    }
-
-    public void setOrdersGoodsId(Long ordersGoodsId) {
-        this.ordersGoodsId = ordersGoodsId;
-    }
-
-    public Long getOrdersId() {
-        return ordersId;
-    }
-
-    public void setOrdersId(Long ordersId) {
-        this.ordersId = ordersId;
-    }
-
-    public Integer getSupermarketId() {
-        return supermarketId;
-    }
-
-    public void setSupermarketId(Integer supermarketId) {
-        this.supermarketId = supermarketId;
-    }
-
-    public Integer getGoodsSkuId() {
-        return goodsSkuId;
-    }
-
-    public void setGoodsSkuId(Integer goodsSkuId) {
-        this.goodsSkuId = goodsSkuId;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public Integer getActualQuantity() {
-        return actualQuantity;
-    }
-
-    public void setActualQuantity(Integer actualQuantity) {
-        this.actualQuantity = actualQuantity;
-    }
-
-    public String getSupermarketList() {
-        return supermarketList;
-    }
-
-    public void setSupermarketList(String supermarketList) {
-        this.supermarketList = supermarketList == null ? null : supermarketList.trim();
-    }
-
-    public Integer getMaxSupermarketId() {
-        return maxSupermarketId;
-    }
-
-    public void setMaxSupermarketId(Integer maxSupermarketId) {
-        this.maxSupermarketId = maxSupermarketId;
-    }
-
-    public Integer getMaxPrice() {
-        return maxPrice;
-    }
-
-    public void setMaxPrice(Integer maxPrice) {
-        this.maxPrice = maxPrice;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(String totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
-
-    public String getGoodsSkuName() {
-        return goodsSkuName;
-    }
-
-    public void setGoodsSkuName(String goodsSkuName) {
-        this.goodsSkuName = goodsSkuName;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public String getCommunityName() {
-        return communityName;
-    }
-
-    public void setCommunityName(String communityName) {
-        this.communityName = communityName;
-    }
-
-    public String getProcureStatus() {
-        return procureStatus;
-    }
-
-    public void setProcureStatus(String procureStatus) {
-        this.procureStatus = procureStatus;
-    }
+    private String goodsName;
 }

@@ -21,8 +21,8 @@ public class PromoterVo {
     @Getter
     @Setter
     public static class OrdersObj extends PageVo {
-        @ApiModelProperty(value = "用户Id",required = false,example = "1")
-        public Integer userId;
+        @ApiModelProperty(value = "用户Id",required = true,example = "1")
+        public Integer memberId;
         @ApiModelProperty(value = "接受地址Id",required = false,example = "1")
         public Integer receiveAddressId;
         @ApiModelProperty(value = "查询范围",required = false,example = "ALL:全部,MONTH:本月")
@@ -83,8 +83,8 @@ public class PromoterVo {
          public String date;
     	 @ApiModelProperty(name = "type", value = "memberInfo(下单员列表进入)或者addressInfo(地址列表进入)",required = false,example = "addressInfo")
          public String type;
-       
-       
+
+
     }
 
   
@@ -237,10 +237,40 @@ public class PromoterVo {
 	public static class SearchSmallCommunityByKey {
 		@ApiModelProperty(value = "搜索框查询的关键字",required = true,example = "中航")
 		public String key;
+		@ApiModelProperty(hidden = true)
+		public Integer userId;
 		@ApiModelProperty(value = "每页大小",example = "10")
 		public Integer pageSize;
 		@ApiModelProperty(value = "当前页(不要小于1)",example = "1")
 		public Integer currentPage;
+	}
+
+
+
+
+	@Getter
+	@Setter //会员列表进入的订单统计
+	public static class MemberOrderData{
+		@ApiModelProperty(name = "memberId", value = "会员id",required = false,example = "1")
+		public String memberId;
+		@ApiModelProperty(name = "date", value = "本月(MONTH)、全部(ALL)",required = true,example = "ALL")
+		public String date;
+		@ApiModelProperty(name = "receiveAddressId", value = "顾客的地址ID",required = false,example = "1")
+		public Integer receiveAddressId;
+		@ApiModelProperty(name = "orderManId", value = "下单员id",required = false,example = "10")
+		public String orderManId;
+	}
+
+
+	@Getter
+	@Setter //会员进入的订单列表
+	public static class MemberOrderList extends PageVo {
+		@ApiModelProperty(value = "用户Id",required = false,example = "1")
+		public Integer memberId;
+		@ApiModelProperty(name = "receiveAddressId", value = "顾客的地址ID",required = false,example = "1")
+		public Integer receiveAddressId;
+		@ApiModelProperty(name = "orderManId", value = "下单员id",required = false,example = "10")
+		public String orderManId;
 	}
 
 }

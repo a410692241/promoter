@@ -102,5 +102,32 @@ public interface CorrectMapper {
 
     List<Correct> selectByAll(Correct correct);
 
+    /**
+     * -任务记录(定时器)
+     * @param correct
+     * @return
+     */
+    List<Correct> getAffectedPrice();
+
+    /**
+     * 根据超市id和任务日期获取待审核商品列表
+     * @return
+     */
+    List<Correct> getTaskGoodsSkuList(Correct correct);
+
+
+    /**
+     * 审核历史列表
+     * @param correct
+     * @return
+     */
+    List<Correct> getAuditHistory(Correct correct);
+
+    /**
+     * 获取任务列表(后台用)
+     * @param correct
+     * @return
+     */
+    List<Correct> getTaskList(Correct correct);
 
 }

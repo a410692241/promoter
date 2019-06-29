@@ -501,4 +501,17 @@ public class GoodsSkuController extends BaseController{
     public void exportAffectedPriceData(Correct correct, HttpServletRequest request, HttpServletResponse response) throws Exception {
         goodsService.exportAffectedPriceData(correct,request,response);
     }
+
+    /**
+     * 审核任务导出
+     * @param correct
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping("/viewTask.do")
+    @ResponseBody
+    public void viewTask(Correct correct, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        goodsService.exportAffectedPriceData(correct,request,response);
+    }
 }

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linayi.dao.correct.PriceAuditTaskMapper">
+  <resultMap id="BaseResultMap" type="com.linayi.entity.correct.PriceAuditTask">
+    <id column="task_id" jdbcType="INTEGER" property="taskId" />
+    <result column="price_type" jdbcType="VARCHAR" property="priceType" />
+    <result column="correct_id" jdbcType="BIGINT" property="correctId" />
+    <result column="task_date" jdbcType="DATE" property="taskDate" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    task_id, price_type, correct_id, task_date, create_time
+  </sql>
+  <select id="selectByExample" parameterType="com.linayi.entity.correct.PriceAuditTaskExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from price_audit_task
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from price_audit_task
+    where task_id = #{taskId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from price_audit_task
+    where task_id = #{taskId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.linayi.entity.correct.PriceAuditTaskExample">
+    delete from price_audit_task
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="task_id" keyProperty="taskId" parameterType="com.linayi.entity.correct.PriceAuditTask" useGeneratedKeys="true">
+    insert into price_audit_task (price_type, correct_id, task_date, 
+      create_time)
+    values (#{priceType,jdbcType=VARCHAR}, #{correctId,jdbcType=BIGINT}, #{taskDate,jdbcType=DATE}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="task_id" keyProperty="taskId" parameterType="com.linayi.entity.correct.PriceAuditTask" useGeneratedKeys="true">
+    insert into price_audit_task
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="priceType != null">
+        price_type,
+      </if>
+      <if test="correctId != null">
+        correct_id,
+      </if>
+      <if test="taskDate != null">
+        task_date,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="priceType != null">
+        #{priceType,jdbcType=VARCHAR},
+      </if>
+      <if test="correctId != null">
+        #{correctId,jdbcType=BIGINT},
+      </if>
+      <if test="taskDate != null">
+        #{taskDate,jdbcType=DATE},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.linayi.entity.correct.PriceAuditTaskExample" resultType="java.lang.Long">
+    select count(*) from price_audit_task
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update price_audit_task
+    <set>
+      <if test="record.taskId != null">
+        task_id = #{record.taskId,jdbcType=INTEGER},
+      </if>
+      <if test="record.priceType != null">
+        price_type = #{record.priceType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.correctId != null">
+        correct_id = #{record.correctId,jdbcType=BIGINT},
+      </if>
+      <if test="record.taskDate != null">
+        task_date = #{record.taskDate,jdbcType=DATE},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update price_audit_task
+    set task_id = #{record.taskId,jdbcType=INTEGER},
+      price_type = #{record.priceType,jdbcType=VARCHAR},
+      correct_id = #{record.correctId,jdbcType=BIGINT},
+      task_date = #{record.taskDate,jdbcType=DATE},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linayi.entity.correct.PriceAuditTask">
+    update price_audit_task
+    <set>
+      <if test="priceType != null">
+        price_type = #{priceType,jdbcType=VARCHAR},
+      </if>
+      <if test="correctId != null">
+        correct_id = #{correctId,jdbcType=BIGINT},
+      </if>
+      <if test="taskDate != null">
+        task_date = #{taskDate,jdbcType=DATE},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where task_id = #{taskId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linayi.entity.correct.PriceAuditTask">
+    update price_audit_task
+    set price_type = #{priceType,jdbcType=VARCHAR},
+      correct_id = #{correctId,jdbcType=BIGINT},
+      task_date = #{taskDate,jdbcType=DATE},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where task_id = #{taskId,jdbcType=INTEGER}
+  </update>
+
+  <!--获取任务总数量-->
+  <select id="getTotalQuantity" resultType="com.linayi.entity.correct.PriceAuditTask">
+    SELECT
+          IFNULL(count(c.correct_id ),0) totalQuantity,
+          pat.task_date
+     FROM
+          price_audit_task pat JOIN correct c ON  c.correct_id=pat.correct_id
+     WHERE
+          c.supermarket_id=#{supermarketId}
+            <if test="priceType!=null and priceType=='WAIT_AUDIT'">
+            AND pat.price_type=#{priceType} AND c.user_id=#{userId} AND c.user_type='USER'
+            </if>
+            <if test="priceType!=null and priceType=='AFFECTED'">
+              AND pat.price_type=#{priceType}
+            </if>
+     GROUP BY
+           pat.task_date
+  </select>
+
+  <!--获取未完成任务总数量-->
+  <select id="getCompleteQuantity" resultType="com.linayi.entity.correct.PriceAuditTask">
+    SELECT
+          IFNULL(count(c.correct_id ),0) totalQuantity,
+          pat.task_date
+     FROM
+          price_audit_task pat JOIN correct c ON  c.correct_id=pat.correct_id
+     WHERE
+          c.supermarket_id=#{supermarketId}
+     AND
+          (c.status="AFFECTED" OR c.status='WAIT_AUDIT')
+     AND
+          (c.audit_time &lt;  DATE_ADD(NOW(),INTERVAL -2 MONTH) OR c.manual_audit_status="NOT_AUDIT")
+          <if test="priceType!=null and priceType=='WAIT_AUDIT'">
+            AND pat.price_type=#{priceType} AND c.user_id=#{userId} AND c.user_type='USER'
+          </if>
+          <if test="priceType!=null and priceType=='AFFECTED'">
+            AND pat.price_type=#{priceType}
+          </if>
+     GROUP BY
+           pat.task_date
+  </select>
+</mapper>

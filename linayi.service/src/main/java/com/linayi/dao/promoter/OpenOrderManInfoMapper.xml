@@ -31,7 +31,6 @@
         oomi1.end_time,
         oomi1.promoter_id,
         oomi1.create_time,
-        oomi1.order_man_id,
         IFNULL(COUNT(o.orders_id), 0) numberOfOrders,
         IFNULL(sum(IF(o.amount&gt;=10000,o.amount-1000,0)),0) personalSales,
         IFNULL(
@@ -53,7 +52,7 @@
         u.nickname
     FROM
         open_order_man_info oomi1
-        LEFT JOIN orders o ON oomi1.order_man_id = o.order_man_id AND (o.community_status='PROCURE_FINISHED' or o.community_status='DELIVER_FINISHED')
+        LEFT JOIN orders o ON oomi1.order_man_id = o.order_man_id AND o.community_status in ('PROCURE_FINISHED','DELIVER_FINISHED','RECEIVED','PACKED','DELIVERING')
           <if test="date!=null and date=='MONTH'">
               AND  o.create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
           </if>
@@ -61,13 +60,14 @@
     WHERE
              oomi1.start_time &lt; NOW()
          AND oomi1.end_time &gt; NOW()
-        <if test="date==null  or date!='MONTH'">
+         AND   (oomi1.sales_id = #{userId} or oomi1.order_man_id=#{userId})
+   <!--     <if test="date==null  or date!='MONTH'">
          AND   (oomi1.sales_id = #{userId} or oomi1.order_man_id=#{userId})
         </if>
         <if test="date!=null and date=='MONTH'">
          AND  oomi1.create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
          AND  (oomi1.sales_id = #{userId} or oomi1.order_man_id=#{userId})
-        </if>
+        </if>-->
     GROUP BY
         oomi1.open_order_man_info_id
     ORDER BY oomi1.order_man_id &lt;&gt; #{userId},oomi1.open_order_man_info_id DESC
@@ -87,7 +87,7 @@
        FROM
             receive_address ra
             JOIN orders o ON o.receive_address_id = ra.receive_address_id
-            AND (o.community_status='PROCURE_FINISHED' OR o.community_status='DELIVER_FINISHED')
+            AND o.community_status in ('PROCURE_FINISHED','DELIVER_FINISHED','RECEIVED','PACKED','DELIVERING')
             AND o.create_time >  timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
       WHERE
             (ra.STATUS = 'NORMAL'AND ra.address_type = 'CUSTOMER'AND ra.user_id = #{userId})
@@ -104,24 +104,25 @@
        FROM
             receive_address ra LEFT
             JOIN orders o ON o.receive_address_id = ra.receive_address_id
-            AND (o.community_status='PROCURE_FINISHED' OR o.community_status='DELIVER_FINISHED')
+            AND  o.community_status in ('PROCURE_FINISHED','DELIVER_FINISHED','RECEIVED','PACKED','DELIVERING')
             <if test="date!=null and date=='MONTH'">
                 AND o.create_time &gt;  timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
             </if>
       WHERE
             ra.STATUS = 'NORMAL' AND ra.address_type = 'CUSTOMER' AND ra.user_id = #{userId}
             <if test="date!=null and date=='MONTH'">
-                AND ra.create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
+                AND o.create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
             </if>
     </select>
 
 
     <!--获取下级会员列表-->
-    <select id="getMemberData" resultType="com.linayi.entity.promoter.PromoterOrderMan">
+        <select id="getMemberData" resultType="com.linayi.entity.promoter.PromoterOrderMan">
             SELECT
                   omi.create_time openMemberTime,
                   omi.open_member_info_id,
                   omi.user_id,
+                  omi.order_man_id,
                   u.mobile,
                   u.head_image headImage,
                   u.nickname
@@ -131,6 +132,9 @@
             WHERE
                  omi.order_man_id = #{userId}
                  AND  omi.end_time &gt; now()
+                 <if test="date!=null and date=='MONTH'">
+                 AND  omi.create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
+                 </if>
             GROUP BY
                  omi.open_member_info_id
             ORDER BY
@@ -146,9 +150,16 @@
         FROM
               orders
         WHERE
-              order_man_id = #{orderManId}
+         community_status in ('PROCURE_FINISHED','DELIVER_FINISHED','RECEIVED','PACKED','DELIVERING')
+         <if test="orderManId!=null and orderManId!=''">
+            AND   order_man_id = #{orderManId}
+         </if>
+
         <if test="userId!=null and userId!=''">
             AND user_id = #{userId}
+        </if>
+        <if test="receiveAddressId!=null and receiveAddressId!=''">
+            AND receive_address_id = #{receiveAddressId}
         </if>
         <if test="date!=null and date=='MONTH'">
             AND create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
@@ -194,5 +205,147 @@
         where open_order_man_info_id = #{openOrderManInfoId,jdbcType=INTEGER}
     </update>
 
+    <select id="getOrdersIdByOrderManId" resultType="java.lang.Integer" parameterType="com.linayi.entity.promoter.PromoterOrderMan">
+        SELECT
+              orders_id
+        FROM
+              orders
+        WHERE
+            1=1
+            <if test="orderManId!=null and orderManId!=''">
+                and  order_man_id = #{orderManId}
+            </if>
+            <if test="memberId!=null and memberId!=''">
+                and user_id = #{memberId}
+            </if>
+            <if test="receiveAddressId!=null and receiveAddressId!=''">
+                AND receive_address_id = #{receiveAddressId}
+            </if>
+         ORDER BY  orders_id DESC
+    </select>
 
+
+    <!--会员进入的订单列表-->
+    <select id="getMemberOrderList" resultMap="BaseResultMapList" parameterType="com.linayi.entity.promoter.PromoterOrderMan">
+        SELECT
+              gs.goods_sku_id,
+              gs.full_name goodsName,
+              gs.image,
+              og.max_price,
+              og.price,
+              round(((og.max_price- og.price)/og.price*100),2) spreadRate,
+              og.quantity,
+              og.supermarket_id,
+              og.max_supermarket_id,
+              (og.price *og.quantity) totalPrice,
+              o.amount payPrice,
+              o.quantity  totalQuantity,
+              o.orders_id,
+              o.user_status,
+              o.community_status
+         FROM
+              orders o JOIN orders_goods og ON o.orders_id = og.orders_id JOIN goods_sku gs ON  gs.goods_sku_id=og.goods_sku_id
+         WHERE
+            1=1
+            <if test="orderManId!=null and orderManId!=''">
+                and  o.order_man_id = #{orderManId}
+            </if>
+            <if test="memberId!=null and memberId!=''">
+                and o.user_id = #{memberId}
+            </if>
+            <if test="receiveAddressId!=null and receiveAddressId!=''">
+                AND o.receive_address_id = #{receiveAddressId}
+            </if>
+            <if test="ordersIdList!=null and ordersIdList.size()>0">
+            AND  o.orders_id in
+            <foreach collection="ordersIdList" item="item" index="index"
+                     open="(" separator="," close=")">
+                ${item}
+            </foreach>
+            </if>
+            ORDER BY field(o.orders_id,
+            <foreach collection="ordersIdList" item="item" index="index"
+                     separator=",">
+                ${item}
+            </foreach>
+        )
+    </select>
+
+    <resultMap id="BaseResultMapList" type="com.linayi.entity.order.Orders" >
+        <id column="orders_id" property="ordersId" jdbcType="BIGINT" />
+        <result column="orders_id" property="ordersId" />
+        <result column="payPrice" property="payPrice" />
+        <result column="totalQuantity" property="totalQuantity" />
+        <result column="user_status" property="userStatus" />
+        <result column="community_status" property="communityStatus" />
+        <collection property="ordersGoodsList"  ofType="com.linayi.entity.order.OrdersGoods">
+            <id column="orders_goods_id" property="ordersGoodsId"  />
+            <result column="goods_sku_id" property="goodsSkuId" />
+            <result column="goodsName" property="goodsName" />
+            <result column="image" property="image" />
+            <result column="max_price" property="maxPrice" />
+            <result column="price" property="price" />
+            <result column="spreadRate" property="spreadRate" />
+            <result column="quantity" property="quantity" />
+            <result column="supermarket_id" property="supermarketId" />
+            <result column="max_supermarket_id" property="maxSupermarketId" />
+            <result column="totalPrice" property="totalPrice" />
+        </collection>
+    </resultMap>
+
+    <!--获取家庭服务师列表(后台用)-->
+    <select id="getOrderManList" resultType="com.linayi.entity.promoter.OpenOrderManInfo" parameterType="com.linayi.entity.promoter.OpenOrderManInfo">
+      SELECT
+           oomi.open_order_man_info_id,
+            oomi.order_man_id,
+            u.nickname,
+            aa.mobile,
+            (select real_name from authentication_apply where user_id = oomi.sales_id and authentication_type='ORDER_MAN' GROUP BY user_id) salesName,
+            aa.real_name,
+            u.is_order_man,
+            oomi.start_time,
+            oomi.end_time,
+			oomi.create_time
+      FROM
+            open_order_man_info oomi LEFT JOIN  user u ON oomi.order_man_id=u.user_id
+             LEFT JOIN authentication_apply aa ON oomi.order_man_id=aa.user_id AND aa.status="AUDIT_SUCCESS" AND aa.authentication_type="ORDER_MAN"
+      GROUP BY
+            oomi.open_order_man_info_id
+      HAVING
+        1=1
+        <if test="mobile !=null and mobile !=''">
+            AND aa.mobile = #{mobile,jdbcType=VARCHAR}
+        </if>
+        <if test="nickName !=null and nickName !=''">
+            AND u.nickname = #{nickName,jdbcType=VARCHAR}
+        </if>
+        <if test="realName !=null and realName !=''">
+            AND  aa.real_name = #{realName,jdbcType=VARCHAR}
+        </if>
+        <if test="orderManId !=null ">
+            AND  oomi.order_man_id = #{orderManId,jdbcType=INTEGER}
+        </if>
+        <if test="salesName !=null and salesName !=''">
+            AND salesName = #{salesName,jdbcType=VARCHAR}
+        </if>
+        <if test="createTimeStart != null">
+            and oomi.create_time &gt; #{createTimeStart}
+        </if>
+        <if test="createTimeEnd != null">
+            and oomi.create_time &lt; #{createTimeEnd}
+        </if>
+
+      ORDER BY
+            oomi.create_time desc
+
+    </select>
+
+    <select id="getOrderManCount" resultType="com.linayi.entity.promoter.PromoterOrderMan">
+        select IFNULL(count(open_order_man_info_id),0) numberOfOrderMan
+        from open_order_man_info
+         where sales_id = #{userId}
+        <if test="date!=null and date=='MONTH'">
+        AND  create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
+      </if>
+    </select>
 </mapper>

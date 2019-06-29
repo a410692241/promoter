@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.linayi.dao.procurement.ProcurementTaskMapper" >
     <sql id="Base_Column_List">
-    procurement_task_id, orders_id, supermarket_id, orders_goods_id, goods_sku_id, price, quantity, actual_quantity, procure_quantity, receive_status, procure_status, community_id, user_id, update_time, create_time, procure_time,  receive_time,box_no
+    procurement_task_id, orders_id, supermarket_id, orders_goods_id, goods_sku_id, price, quantity, actual_quantity, procure_quantity, receive_status, procure_status, community_id, user_id, update_time, create_time, procure_time,  receive_time,box_no,procure_merge_no
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultType="com.linayi.entity.procurement.ProcurementTask">
         select <include refid="Base_Column_List"/> from procurement_task
@@ -306,8 +306,11 @@
             <if test="createTime != null">
                 AND create_time = #{createTime}
             </if>
+            <if test="procureMergeNo != null">
+                AND procure_merge_no = #{procureMergeNo}
+            </if>
         </where>
-        order by procurement_task_id DESC
+        order by create_time DESC
     </select>
 
     <select id="getProcurementTaskStatus" resultType="com.linayi.entity.procurement.ProcurementTask">

@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
@@ -24,7 +25,7 @@
 					<form class="form-inline">
 						<div class="form-group form-group-margin">
 							<div class="input-group">
-								<span class="input-group-addon">商品ID</span> <input
+								<span class="input-group-addon">商品id</span> <input
 									ng-model="search.goodsSkuId" type="text" class="form-control">
 							</div>
 						</div>
@@ -46,6 +47,7 @@
 									ng-model="search.spreadRate" type="text" class="form-control">
 							</div>
 						</div>
+
 				<%--		<div class="form-group form-group-margin">
 							<div class="input-group">
 								<span class="input-group-addon">最高价</span> <input

@@ -403,31 +403,31 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 
 
 
-	@Override
-	public Object applySpokesman(AuthenticationApply apply, MultipartFile file) {
-		apply.setAuthenticationType("SPOKESMAN");
-		AuthenticationApply authenticationApply = authenticationApplyMapper.getAuthenticationApplyByUserIdAndType(apply);
-		if(authenticationApply == null) {
-			try {
-				Date now = new Date();
-				apply.setStatus("WAIT_AUDIT");
-				apply.setAuthenticationType("SPOKESMAN");
-				apply.setCreateTime(now);
-				apply.setUpdateTime(now);
-				apply.setImage(ImageUtil.handleUpload(file));
-				authenticationApplyMapper.insert(apply);
-				return new ResponseData("操作成功！").toString();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}else{
-			if("SPOKESMAN".equals(authenticationApply.getAuthenticationType())){
-				return new ResponseData("F","已申请！").toString();
-			}
-			return new ResponseData("操作成功！").toString();
-		}
-		return null;
-	}
+//	@Override
+//	public Object applySpokesman(AuthenticationApply apply, MultipartFile file) {
+//		apply.setAuthenticationType("SPOKESMAN");
+//		AuthenticationApply authenticationApply = authenticationApplyMapper.getAuthenticationApplyByUserIdAndType(apply);
+//		if(authenticationApply == null) {
+//			try {
+//				Date now = new Date();
+//				apply.setStatus("WAIT_AUDIT");
+//				apply.setAuthenticationType("SPOKESMAN");
+//				apply.setCreateTime(now);
+//				apply.setUpdateTime(now);
+//				apply.setImage(ImageUtil.handleUpload(file));
+//				authenticationApplyMapper.insert(apply);
+//				return new ResponseData("操作成功！").toString();
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}else{
+//			if("SPOKESMAN".equals(authenticationApply.getAuthenticationType())){
+//				return new ResponseData("F","已申请！").toString();
+//			}
+//			return new ResponseData("操作成功！").toString();
+//		}
+//		return null;
+//	}
 
 	@Override
 	public Object applyOrderMan(AuthenticationApply apply, MultipartFile[] file) {
@@ -452,5 +452,17 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 		}
 		return new ResponseData("操作成功！").toString();
 	}
+
+	@Override
+	public String save(AuthenticationApply authenticationApply) {
+		try {
+			authenticationApplyMapper.update(authenticationApply);
+			return "success";
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "fail";
+	}
+
 
 }

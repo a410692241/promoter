@@ -46,7 +46,7 @@ public class SkuClickNumServiceImpl implements SkuClickNumService {
         //时间清为当天00:00:00
         if (startTime != null && endTime != null) {
             skuClickNum.setStartTime(setTimeZero(startTime));
-            skuClickNum.setStartTime(setTimeZero(endTime));
+            skuClickNum.setEndTime(setTimeZero(endTime));
         }
 
         List<SkuClickNum> skuClickNums = skuClickNumMapper.selectConcatNum(skuClickNum);

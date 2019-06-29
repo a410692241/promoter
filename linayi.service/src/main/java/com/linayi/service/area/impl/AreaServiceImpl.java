@@ -3,17 +3,26 @@ package com.linayi.service.area.impl;
 import com.linayi.dao.area.AreaMapper;
 import com.linayi.dao.area.SmallCommunityMapper;
 import com.linayi.dao.community.CommunityMapper;
+import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.area.Area;
 import com.linayi.entity.area.SmallCommunity;
 import com.linayi.entity.area.SmallCommunityFullName;
 import com.linayi.entity.community.Community;
+import com.linayi.entity.community.SmallCommunityReq;
+import com.linayi.entity.user.User;
+import com.linayi.enums.SmallCommunityReqType;
 import com.linayi.service.area.AreaService;
+import com.linayi.service.community.SmallCommunityReqService;
 import com.linayi.service.order.OrderService;
+import com.linayi.service.user.UserService;
 import com.linayi.util.CheckUtil;
 import com.linayi.util.PageResult;
 import com.linayi.vo.promoter.PromoterVo;
+import org.omg.PortableInterceptor.USER_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -29,6 +38,10 @@ public class AreaServiceImpl implements AreaService {
     private CommunityMapper communityMapper;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private SmallCommunityReqService smallCommunityReqService;
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public Map<String, List<Area>> getArea() {
@@ -196,6 +209,7 @@ public class AreaServiceImpl implements AreaService {
         return provinceList;
     }
 
+    @Transactional
     @Override
     public PageResult<SmallCommunityFullName> getSmallCommunityByKey(PromoterVo.SearchSmallCommunityByKey searchSmallCommunityByKey) {
         String key = searchSmallCommunityByKey.getKey();
@@ -227,6 +241,18 @@ public class AreaServiceImpl implements AreaService {
             smallCommunityFullNames.add(smallCommunityFullName);
 
         });
+        //保存空查询结果,统计到小区申请表(small_community_req)
+        if (smallCommunityFullNames.size() == 0) {
+            Integer userId = searchSmallCommunityByKey.getUserId();
+            User user = userMapper.selectUserByuserId(userId);
+            SmallCommunityReq smallCommunityReq = new SmallCommunityReq();
+            smallCommunityReq.setNickname(user.getNickname());
+            smallCommunityReq.setMobile(user.getMobile());
+            smallCommunityReq.setSmallCommunity(key);
+            smallCommunityReq.setCreateTime(new Date());
+            smallCommunityReq.setStatus(SmallCommunityReqType.NOTVIEWED.name());
+            smallCommunityReqService.addSmallCommunityReq(smallCommunityReq);
+        }
         PageResult<SmallCommunityFullName> goodsSkuPageResult = new PageResult<>(smallCommunityFullNames, smallCommunity);
 //        goodsSkuPageResult.setTotalPage(smallCommunity.getTotal()/pageSize);
         return goodsSkuPageResult;

@@ -36,7 +36,7 @@ public interface AuthenticationApplyMapper {
 	 *	根据userId查询AuthenticationApply对象
 	 * @param	apply
 	 */
-	AuthenticationApply getAuthenticationApplyByUserIdAndType(AuthenticationApply apply);
+	List<AuthenticationApply> getAuthenticationApplyByUserIdAndType(AuthenticationApply apply);
 
 	/**
 	 * 根据ID修改通过审核的家庭服务师信息
@@ -47,4 +47,6 @@ public interface AuthenticationApplyMapper {
 	AuthenticationApply selectByApplyId(AuthenticationApply apply);
 
 	Integer updateStatusByApplyId2(AuthenticationApply apply);
+
+	void update(AuthenticationApply authenticationApply);
 }

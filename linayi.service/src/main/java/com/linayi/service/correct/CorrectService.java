@@ -1,6 +1,7 @@
 package com.linayi.service.correct;
 
 import com.linayi.entity.correct.Correct;
+import com.linayi.entity.correct.PriceAuditTask;
 import com.linayi.entity.goods.SupermarketGoods;
 import com.linayi.util.PageResult;
 
@@ -109,4 +110,67 @@ public interface CorrectService {
     void priceImmediatelyAffect(Correct correct, MultipartFile file);
 
     void adjustPriceMaxAndMin(Correct corrects);
+
+
+    /**
+     * priceAudit
+     * @param correct
+     * @return
+     */
+    List<Correct> priceAudit();
+
+
+    /**
+     * App审核价格生效前2月
+     * @param correct
+     */
+    void updatePriceAudit(Correct correct);
+
+    /**
+     * 任务数量和完成数量
+     * @param
+     * @return
+     */
+    List<PriceAuditTask> getTotalQuantity(Correct correct);
+
+
+    /**
+     * 根据超市id和任务日期获取待审核商品列表
+     * @return
+     */
+    List<Correct> getTaskGoodsSkuList(Correct correct);
+
+    /**
+     * 审核任务点击审核通过
+     */
+    void taskAuditSuccess(Correct correct);
+
+
+    /**
+     * 审核任务点击价格错误
+     */
+    Correct taskAuditPriceError(Correct correct);
+
+
+    /**
+     * 点击暂无价格
+     */
+    void noTimePrice(Correct correct);
+
+
+    /**
+     * 已审核
+     * @param correct
+     * @return
+     */
+    List<Correct> getAuditHistory(Correct correct);
+
+
+    /**
+     * 获取任务列表(后台用)
+     * @param correct
+     * @return
+     */
+    List<Correct> getTaskList(Correct correct);
+
 }

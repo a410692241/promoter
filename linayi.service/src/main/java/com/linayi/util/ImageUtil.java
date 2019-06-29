@@ -1,5 +1,8 @@
 package com.linayi.util;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -57,6 +60,12 @@ public class ImageUtil {
             response = httpclient.execute(httpPost);
             HttpEntity entity = response.getEntity();
             result = EntityUtils.toString(entity);
+            JSONObject jsonObject = JSON.parseObject(result);
+            String respCode =  jsonObject.getString("respCode");
+            if(StringUtils.equals("F",respCode)){
+                throw new IOException(jsonObject.getString("errorMsg"));
+            }
+            result = jsonObject.getString("data");
         }
         finally {
             if (response != null) {

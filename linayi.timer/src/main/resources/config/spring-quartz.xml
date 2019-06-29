@@ -23,10 +23,23 @@
 		<property name="cronExpression" value="${priceExpireTimerCronExpression}"/>
 	</bean>
 
+	<bean id="PriceAuditTaskTimerJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.linayi.timer.PriceAuditTaskTimer"></property>
+	</bean>
+
+	<bean id="PriceAuditTaskTimerCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="PriceAuditTaskTimerJobDetail"/>
+		<property name="startDelay" value="10000"></property>
+		<property name="cronExpression" value="${PriceAuditTaskTimerCronExpression}"/>
+	</bean>
+
+
+
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
 		             <ref bean="priceAffectTimerCronTrigger"/>
+				     <ref bean="PriceAuditTaskTimerCronTrigger"/>
 		            <!-- <ref bean="priceExpireTimerCronTrigger"/> -->
 		    </list>
 		</property>

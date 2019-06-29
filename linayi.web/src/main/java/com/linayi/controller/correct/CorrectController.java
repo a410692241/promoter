@@ -531,4 +531,19 @@ public class CorrectController extends BaseController {
         }
     }
 
+
+    //后台任务列表
+    @RequestMapping("/getTaskList.do")
+    @ResponseBody
+    public Object getTaskList(Correct correct) {
+        /*try {*/
+            List<Correct> correctList = correctService.getTaskList(correct);
+            PageResult<Correct> page = new PageResult<>(correctList, correct.getTotal());
+            return page;
+      /*  } catch (Exception e) {
+            return new ResponseData(ErrorType.SYSTEM_ERROR);
+
+        }*/
+    }
+
 }

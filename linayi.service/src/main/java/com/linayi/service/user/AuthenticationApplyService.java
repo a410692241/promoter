@@ -52,8 +52,10 @@ public interface AuthenticationApplyService {
 	 */
 	public Object applyDeliverer(AuthenticationApply apply, MultipartFile[] file);
 
-	public Object applySpokesman(AuthenticationApply apply, MultipartFile file);
+//	public Object applySpokesman(AuthenticationApply apply, MultipartFile file);
 
 	public Object applyOrderMan(AuthenticationApply apply, MultipartFile[] file);
+
+	String save(AuthenticationApply authenticationApply);
 
 }

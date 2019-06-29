@@ -147,8 +147,13 @@
 		create_time createTime
 		from
 		authentication_apply
-		WHERE
-		user_id = #{userId} and authentication_type = #{authenticationType}
+		<where>
+			user_id = #{userId} and authentication_type = #{authenticationType}
+			<if test="status!=null and status!=''">
+				and status=#{status}
+			</if>
+		</where>
+
 	</select>
 
 	<!-- 根据主键categoryId修改信息 -->
@@ -157,7 +162,7 @@
 		authentication_apply
 		SET
 		<if test="status != null">
-			status=#{auditStr},
+			status=#{status},
 		</if>
 
 		status=status,
@@ -173,7 +178,7 @@
 		apply_id=#{applyId}
 	</update>
 
-	<update id="updateApplyOrederManInfoById">
+	<update id="updateApplyOrederManInfoById" parameterType="com.linayi.entity.user.AuthenticationApply">
 		update
 			authentication_apply
 		set
@@ -183,6 +188,9 @@
 			<if test="identity != null and identity !='' ">
 				identity=#{identity},
 			</if>
+        <if test="updateTime != null ">
+            update_time=#{updateTime},
+        </if>
 			<if test="status != null and status!=''">
 				status=#{status}
 			</if>
@@ -222,6 +230,28 @@
 			update_time=#{updateTime},
 		</if>
 		</trim>
+		WHERE
+		apply_id=#{applyId}
+	</update>
+
+	<!-- 根据主键categoryId修改信息 -->
+	<update id="update">
+		UPDATE
+		authentication_apply
+		<set>
+			<if test="realName != null">
+				real_name=#{realName},
+			</if>
+			<if test="mobile != null">
+				mobile=#{mobile},
+			</if>
+			<if test="idCardFront != null">
+				id_card_front=#{idCardFront},
+			</if>
+			<if test="idCardBack != null">
+				id_card_back=#{idCardBack}
+			</if>
+		</set>
 		WHERE
 		apply_id=#{applyId}
 	</update>

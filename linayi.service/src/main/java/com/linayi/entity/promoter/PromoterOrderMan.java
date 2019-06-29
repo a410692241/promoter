@@ -6,6 +6,8 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
+
 @Data
 public class PromoterOrderMan extends BaseEntity {
     private Integer promoterOrderManId;
@@ -96,4 +98,11 @@ public class PromoterOrderMan extends BaseEntity {
     @ApiModelProperty(name = "personalTotalProfit", value = "个人总收益")
     private Integer personalTotalProfit;
 
+    @ApiModelProperty(name = "memberId", value = "会员Id")
+    private Integer memberId;
+
+    private Integer receiveAddressId;
+
+
+    private List<Integer> ordersIdList;
 }
