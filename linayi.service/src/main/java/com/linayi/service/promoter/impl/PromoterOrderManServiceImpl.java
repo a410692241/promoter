@@ -1006,19 +1006,14 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             }
 
             String userStatus = orders.getUserStatus();
-            String communityStatus = orders.getCommunityStatus();
-
-        /*    //已取消：CANCELED
+            //已取消：CANCELED
             if("CANCELED".equals(userStatus)){
-                orders.setStatus("CANCELED");
-            }else if("FINISHED".equals(userStatus)){
-                orders.setStatus("FINISHED");
-            }else {
-                if("RECEIVED".equals(communityStatus) || "PACKED".equals(communityStatus)){
-                    communityStatus = "DELIVERING";
-                }
-                orders.setStatus(communityStatus);
-            }*/
+                orders.setCommunityStatus("CANCELED");
+            }else if("CONFIRM_RECEIVE".equals(userStatus)){
+                orders.setCommunityStatus("DELIVER_FINISHED");
+            }else if ("FINISHED".equals(userStatus)){
+                orders.setCommunityStatus("DELIVER_FINISHED");
+            }
 
         }
         return ordersList;
