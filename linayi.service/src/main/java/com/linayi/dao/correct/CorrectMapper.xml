@@ -855,7 +855,7 @@
             WHERE
                 c.status='AFFECTED'
             AND
-                (c.audit_time &lt;  DATE_ADD(NOW(),INTERVAL -2 MONTH) OR c.manual_audit_status='WAIT_AUDIT')
+                (c.audit_time &lt;  DATE_ADD(NOW(),INTERVAL -2 MONTH) OR c.manual_audit_status='NOT_AUDIT')
             GROUP BY
                  c.goods_sku_id)) t
             WHERE
@@ -863,7 +863,7 @@
                  SELECT cc.correct_id FROM price_audit_task pat JOIN correct cc ON pat.correct_id=cc.correct_id WHERE
                    (cc.status='AFFECTED' OR cc.status='WAIT_AUDIT')
                  AND
-                   (cc.audit_time &lt;  DATE_ADD(NOW(),INTERVAL -2 MONTH) OR cc.manual_audit_status='WAIT_AUDIT')
+                   (cc.audit_time &lt;  DATE_ADD(NOW(),INTERVAL -2 MONTH) OR cc.manual_audit_status='NOT_AUDIT')
                  )
             ORDER BY FIELD(`status`,'WAIT_AUDIT','AFFECTED')
 
