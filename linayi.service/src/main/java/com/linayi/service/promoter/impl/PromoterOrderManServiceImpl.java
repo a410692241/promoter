@@ -992,7 +992,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     @Override
     public List<Orders> getMemberOrderList(PromoterOrderMan PromoterOrderMan) {
         List<Integer> orderIdList = openOrderManInfoMapper.getOrdersIdByOrderManId(PromoterOrderMan);
-        if (orderIdList==null){
+        if (orderIdList.size()==0){
             return new ArrayList<Orders>();
         }
         PromoterOrderMan promoterOrderMan = new PromoterOrderMan();
@@ -1008,7 +1008,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             String userStatus = orders.getUserStatus();
             String communityStatus = orders.getCommunityStatus();
 
-            //已取消：CANCELED
+        /*    //已取消：CANCELED
             if("CANCELED".equals(userStatus)){
                 orders.setStatus("CANCELED");
             }else if("FINISHED".equals(userStatus)){
@@ -1018,7 +1018,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
                     communityStatus = "DELIVERING";
                 }
                 orders.setStatus(communityStatus);
-            }
+            }*/
 
         }
         return ordersList;
