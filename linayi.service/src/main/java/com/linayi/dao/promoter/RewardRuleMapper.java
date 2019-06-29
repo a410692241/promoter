@@ -27,4 +27,11 @@ public interface RewardRuleMapper {
     int updateByPrimaryKeySelective(RewardRule record);
 
     int updateByPrimaryKey(RewardRule record);
+
+    /**
+     * 根据一级奖励id查询最低级所有奖励规则（非通用）
+     * @param rewardId
+     * @return
+     */
+    List<RewardRule> selectRewardRuleByReward(Integer rewardId);
 }

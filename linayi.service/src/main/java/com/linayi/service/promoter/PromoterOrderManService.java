@@ -139,4 +139,11 @@ public interface PromoterOrderManService {
      * @return
      */
     PromoterOrderMan getMemberOrderData(PromoterOrderMan PromoterOrderMan);
+
+    /**
+     * 家庭服务师列表（后台管理系统）
+     * @param openOrderManInfo
+     * @return
+     */
+    List<OpenOrderManInfo> getOrderManListForWeb(OpenOrderManInfo openOrderManInfo);
 }

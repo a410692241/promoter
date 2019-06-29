@@ -233,4 +233,26 @@
 		WHERE
 		apply_id=#{applyId}
 	</update>
+
+	<!-- 根据主键categoryId修改信息 -->
+	<update id="update">
+		UPDATE
+		authentication_apply
+		<set>
+			<if test="realName != null">
+				real_name=#{realName},
+			</if>
+			<if test="mobile != null">
+				mobile=#{mobile},
+			</if>
+			<if test="idCardFront != null">
+				id_card_front=#{idCardFront},
+			</if>
+			<if test="idCardBack != null">
+				id_card_back=#{idCardBack}
+			</if>
+		</set>
+		WHERE
+		apply_id=#{applyId}
+	</update>
 </mapper>

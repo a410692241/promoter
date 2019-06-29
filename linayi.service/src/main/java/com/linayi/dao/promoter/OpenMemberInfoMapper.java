@@ -45,4 +45,11 @@ public interface OpenMemberInfoMapper {
 
     void updateByuserIdAndOrderManId(OpenMemberInfo openMemberInfo);
 
+    /**
+     * 根据根据下单员id获取下级会员列表（过期会员也获取）（非通用）
+     * @param orderManId
+     * @return
+     */
+    Integer getOpenMemberCountByOrderManId(Integer orderManId);
+
 }

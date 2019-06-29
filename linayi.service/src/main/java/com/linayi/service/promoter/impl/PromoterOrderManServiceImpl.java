@@ -49,6 +49,11 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     private AuthenticationApplyMapper authenticationApplyMapper;
     @Autowired
     private SupermarketMapper supermarketMapper;
+    @Autowired
+    private OrderManRewardMapper OrderManRewardMapper;
+    @Autowired
+    private RewardRuleMapper rewardRuleMapper;
+
 
     @Override
     public PromoterOrderMan promoterIndex(PromoterOrderMan promoterOrderMan) {
@@ -723,9 +728,9 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             Date startTime = c.getTime();
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.YEAR,1);
-            cal.set(Calendar.HOUR_OF_DAY, 23);
-            cal.set(Calendar.SECOND, 59);
-            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MINUTE, 0);
             cal.set(Calendar.MILLISECOND,0);
             Date endTime = cal.getTime();
             //判断如果已经有家庭服务师信息，则修改信息，否则才新增家庭服务师信息
@@ -750,6 +755,23 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
                 }
                 openOrderManInfo.setIdentity("ORDER_MAN");
                 openOrderManInfoMapper.insert(openOrderManInfo);
+
+                //插入一次性奖励初始化数据
+//                initOrderManRewardData(openOrderManInfo.getOrderManId());
+
+                //插入推广商下单员表（前期有用到此表，怕影响之前的接口，所以还是插入此表比较保险）
+                PromoterOrderMan promoterOrderMan = new PromoterOrderMan();
+                promoterOrderMan.setOrderManId(apply.getUserId());
+                if(openOrderManInfo2 != null){
+                    promoterOrderMan.setPromoterId(openOrderManInfo2.getPromoterId());
+                }
+                if(apply.getOrderManId() == null){
+                    promoterOrderMan.setPromoterId(1);
+                }
+                promoterOrderMan.setIdentity("ORDER_MAN");
+                promoterOrderMan.setCreateTime(nowTime);
+                promoterOrderMan.setParentType("PROMOTER");
+                promoterOrderManMapper.insert(promoterOrderMan);
             }else{
                 OpenOrderManInfo openOrderManInfo3 = new OpenOrderManInfo();
                 openOrderManInfo3.setOpenOrderManInfoId(currentOpenOrderManInfo.getOpenOrderManInfoId());
@@ -773,19 +795,6 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             user.setIsOrderMan("TRUE");
             userMapper.updateUserByuserId(user);
 
-            //插入推广商下单员表（前期有用到此表，怕影响之前的接口，所以还是插入此表比较保险）
-            PromoterOrderMan promoterOrderMan = new PromoterOrderMan();
-            promoterOrderMan.setOrderManId(apply.getUserId());
-            if(openOrderManInfo2 != null){
-                promoterOrderMan.setPromoterId(openOrderManInfo2.getPromoterId());
-            }
-            if(apply.getOrderManId() == null){
-                promoterOrderMan.setPromoterId(1);
-            }
-            promoterOrderMan.setIdentity("ORDER_MAN");
-            promoterOrderMan.setCreateTime(nowTime);
-            promoterOrderMan.setParentType("PROMOTER");
-            promoterOrderManMapper.insert(promoterOrderMan);
         }
         if("AUDIT_FAIL".equals(apply.getAuditStr())){
             AuthenticationApply authenticationApply = new AuthenticationApply();
@@ -822,7 +831,9 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         Integer teamProfit = 0; //团队收益
         Integer teamSales = 0; //团队销售服务额
         //获取全部家庭服务师列表
-        int count = 0;
+        int count = 0;  //个人订单大于10单的下级家庭服务师数量
+        int OverOrders50Count = 0; //个人订单大于50单的下级家庭服务师数量
+        int OverOrders100Count = 0; //个人订单大于100单的下级家庭服务师数量
         List<PromoterOrderMan> promoterOrderMEN = openOrderManInfoMapper.getOpenOrderManInfoList(promoterOrderMan);
         if (promoterOrderMEN.size() > 0) {
             promoterOrderMEN.remove(0);
@@ -830,6 +841,12 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
                 PromoterOrderMan teamPromoterOrder = openOrderManInfoMapper.getPersonalOrder(promoterOrderMAN.getOrderManId());
                 if (teamPromoterOrder.getNumberOfOrders() > 10) {
                     count++;
+                }
+                if (teamPromoterOrder.getNumberOfOrders() > 50) {
+                    OverOrders50Count++;
+                }
+                if (teamPromoterOrder.getNumberOfOrders() > 100) {
+                    OverOrders100Count++;
                 }
                 teamOfOrders += teamPromoterOrder.getNumberOfOrders();
                 teamTotalSum += teamPromoterOrder.getTotalSum();
@@ -863,8 +880,13 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         }
         promoterOrder.setTeamSales(teamSales);
         promoterOrder.setOrderManId(promoterOrderMan.getUserId());
+
+        //一次性奖励
+//        Integer OneTimeReward = orderManOneTimeReward(promoterOrderMan.getUserId(), count, OverOrders50Count, OverOrders100Count, teamOfOrders);
+
         //个人总收益
         promoterOrder.setPersonalTotalProfit(promoterOrder.getTeamProfit()+promoterOrder.getPersonalProfit());
+
         User user = userService.selectUserByuserId(promoterOrderMan.getUserId());
         if(null==user.getHeadImage()) {
             promoterOrder.setHeadImage("http://www.laykj.cn/wherebuy/images/2019/02/14/15/d40c2c26-20bc-4a4d-a012-e62c7ede7d80.png");
@@ -1023,8 +1045,151 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
 
     }
 
-//    @Override
-//    public List<OpenOrderManInfo> getOrderManListForWeb(OpenOrderManInfo openOrderManInfo) {
-//        return (openOrderManInfoMapper.getOrderManList(openOrderManInfo));
-//    }
+    //家庭服务师列表（后台管理系统）
+    @Override
+    public List<OpenOrderManInfo> getOrderManListForWeb(OpenOrderManInfo openOrderManInfo) {
+        return (openOrderManInfoMapper.getOrderManList(openOrderManInfo));
+    }
+
+    //初始化家庭服务师的奖励表数据
+    private void initOrderManRewardData(Integer OrderManId){
+        //获取家庭服务师一次性奖励的所有奖励规则数据
+        List<RewardRule> rewardRules = rewardRuleMapper.selectRewardRuleByReward(1);
+        OrderManReward orderManReward = new OrderManReward();
+        orderManReward.setOrderManId(OrderManId);
+        for(RewardRule rewardRule:rewardRules){
+            orderManReward.setRewardRuleId(rewardRule.getRewardRuleId());
+            orderManReward.setActualAmount(0);
+            orderManReward.setStatus("INIT");
+            orderManReward.setCreateTime(new Date());
+            OrderManRewardMapper.insertSelective(orderManReward);
+        }
+
+    }
+
+    private Integer orderManOneTimeReward(Integer orderManId,Integer count,Integer OverOrders50Count,Integer OverOrders100Count,Integer teamOfOrders){
+        Date nowTime = new Date();
+        Integer oneTimeReward = 0;
+        OrderManReward orderManReward = new OrderManReward();
+        //获取家庭服务师对应的所有一次性奖励信息
+        OrderManRewardExample orderManRewardExample = new OrderManRewardExample();
+        orderManRewardExample.setOrderByClause("order_man_reward_id ASC");
+        orderManRewardExample.or().andOrderManIdEqualTo(orderManId);
+        List<OrderManReward> orderManRewards = OrderManRewardMapper.selectByExample(orderManRewardExample);
+
+        if(orderManRewards != null){
+
+        RewardRuleExample rewardRuleExample = new RewardRuleExample();
+
+        //计算引荐会员奖励
+        Integer memberCount = openMemberInfoMapper.getOpenMemberCountByOrderManId(orderManId);
+        if(10<=memberCount && memberCount<=49){
+            //查询家庭服务师一次性奖励表对应条件，如果状态为INIT，则更新奖励金额
+            if("INIT".equals(orderManRewards.get(0).getStatus())){
+                //获取对应奖励金额值
+                rewardRuleExample.or().andRewardRuleIdEqualTo(orderManRewards.get(0).getRewardRuleId());
+                RewardRule rewardRule = rewardRuleMapper.selectByExample(rewardRuleExample).stream().findFirst().orElse(null);
+
+                orderManReward.setOrderManRewardId(orderManRewards.get(0).getOrderManRewardId());
+                if(rewardRule != null){
+                    orderManReward.setActualAmount(rewardRule.getRewardAmount());
+                }
+                orderManReward.setFinishTime(nowTime);
+                orderManReward.setStatus("FINISH");
+                OrderManRewardMapper.updateByPrimaryKeySelective(orderManReward);
+                
+            }
+        }
+        if(50<=memberCount && memberCount<=99){
+            //查询家庭服务师一次性奖励表对应条件，如果状态为INIT，则更新奖励金额
+            if("INIT".equals(orderManRewards.get(1).getStatus())){
+                //获取对应奖励金额值
+                rewardRuleExample.or().andRewardRuleIdEqualTo(orderManRewards.get(1).getRewardRuleId());
+                RewardRule rewardRule = rewardRuleMapper.selectByExample(rewardRuleExample).stream().findFirst().orElse(null);
+
+                orderManReward.setOrderManRewardId(orderManRewards.get(1).getOrderManRewardId());
+                if(rewardRule != null){
+                    orderManReward.setActualAmount(rewardRule.getRewardAmount());
+                }
+                orderManReward.setFinishTime(nowTime);
+                orderManReward.setStatus("FINISH");
+                OrderManRewardMapper.updateByPrimaryKeySelective(orderManReward);
+               
+            }
+        }
+        if(100<=memberCount){
+            //查询家庭服务师一次性奖励表对应条件，如果状态为INIT，则更新奖励金额
+            if("INIT".equals(orderManRewards.get(2).getStatus())){
+                //获取对应奖励金额值
+                rewardRuleExample.or().andRewardRuleIdEqualTo(orderManRewards.get(2).getRewardRuleId());
+                RewardRule rewardRule = rewardRuleMapper.selectByExample(rewardRuleExample).stream().findFirst().orElse(null);
+
+                orderManReward.setOrderManRewardId(orderManRewards.get(2).getOrderManRewardId());
+                if(rewardRule != null){
+                    orderManReward.setActualAmount(rewardRule.getRewardAmount());
+                }
+                orderManReward.setFinishTime(nowTime);
+                orderManReward.setStatus("FINISH");
+                OrderManRewardMapper.updateByPrimaryKeySelective(orderManReward);
+               
+            }
+        }
+
+        //计算团队建设奖励
+        if(count>6 && teamOfOrders>300){
+            if("INIT".equals(orderManRewards.get(3).getStatus())){
+                //获取对应奖励金额值
+                rewardRuleExample.or().andRewardRuleIdEqualTo(orderManRewards.get(3).getRewardRuleId());
+                RewardRule rewardRule = rewardRuleMapper.selectByExample(rewardRuleExample).stream().findFirst().orElse(null);
+
+                orderManReward.setOrderManRewardId(orderManRewards.get(3).getOrderManRewardId());
+                if(rewardRule != null){
+                    orderManReward.setActualAmount(rewardRule.getRewardAmount());
+                }
+                orderManReward.setFinishTime(nowTime);
+                orderManReward.setStatus("FINISH");
+                OrderManRewardMapper.updateByPrimaryKeySelective(orderManReward);
+                
+            }
+        }
+        if(count>=10 && OverOrders50Count>=6 && teamOfOrders>1500){
+            if("INIT".equals(orderManRewards.get(4).getStatus())){
+                //获取对应奖励金额值
+                rewardRuleExample.or().andRewardRuleIdEqualTo(orderManRewards.get(4).getRewardRuleId());
+                RewardRule rewardRule = rewardRuleMapper.selectByExample(rewardRuleExample).stream().findFirst().orElse(null);
+
+                orderManReward.setOrderManRewardId(orderManRewards.get(4).getOrderManRewardId());
+                if(rewardRule != null){
+                    orderManReward.setActualAmount(rewardRule.getRewardAmount());
+                }
+                orderManReward.setFinishTime(nowTime);
+                orderManReward.setStatus("FINISH");
+                OrderManRewardMapper.updateByPrimaryKeySelective(orderManReward);
+               
+            }
+        }
+        if(count>=20 && OverOrders50Count>=6 && OverOrders100Count>=6 && teamOfOrders>5000){
+            if("INIT".equals(orderManRewards.get(5).getStatus())){
+                //获取对应奖励金额值
+                rewardRuleExample.or().andRewardRuleIdEqualTo(orderManRewards.get(5).getRewardRuleId());
+                RewardRule rewardRule = rewardRuleMapper.selectByExample(rewardRuleExample).stream().findFirst().orElse(null);
+
+                orderManReward.setOrderManRewardId(orderManRewards.get(5).getOrderManRewardId());
+                if(rewardRule != null){
+                    orderManReward.setActualAmount(rewardRule.getRewardAmount());
+                }
+                orderManReward.setFinishTime(nowTime);
+                orderManReward.setStatus("FINISH");
+                OrderManRewardMapper.updateByPrimaryKeySelective(orderManReward);
+               
+            }
+        }
+        }
+        //重新获取该服务师未结算的所有一次性奖励金额
+        List<OrderManReward> getAmountOrderManRewards = OrderManRewardMapper.selectByExample(orderManRewardExample);
+        for(OrderManReward OrderManReward:getAmountOrderManRewards){
+            oneTimeReward+=OrderManReward.getActualAmount();
+        }
+        return oneTimeReward;
+    }
 }

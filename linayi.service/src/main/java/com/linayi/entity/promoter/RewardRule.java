@@ -1,6 +1,7 @@
 package com.linayi.entity.promoter;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -23,7 +24,7 @@ public class RewardRule implements Serializable {
     /**
      * [奖励金额]
      */
-    private Long rewardAmount;
+    private Integer rewardAmount;
 
     private Integer rewardId;
 
@@ -55,11 +56,11 @@ public class RewardRule implements Serializable {
         this.effectiveType = effectiveType;
     }
 
-    public Long getRewardAmount() {
+    public Integer getRewardAmount() {
         return rewardAmount;
     }
 
-    public void setRewardAmount(Long rewardAmount) {
+    public void setRewardAmount(Integer rewardAmount) {
         this.rewardAmount = rewardAmount;
     }
 

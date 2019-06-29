@@ -417,7 +417,6 @@ public class CorrectServiceImpl implements CorrectService {
                     }
                 }
 
-
                 if (correct.getParentId() != null) {
                     Correct param3 = new Correct();
                     param3.setCorrectId(correct.getParentId());
