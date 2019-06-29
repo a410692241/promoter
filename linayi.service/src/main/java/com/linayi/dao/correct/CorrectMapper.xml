@@ -886,6 +886,8 @@
         AND
             pat.task_date=#{taskDate}
         AND
+            pat.price_type=#{priceType}
+        AND
             (c.status='AFFECTED' OR c.status='WAIT_AUDIT')
         AND
             (c.audit_time &lt;  DATE_ADD(NOW(),INTERVAL -2 MONTH) OR c.manual_audit_status='NOT_AUDIT')
@@ -897,7 +899,7 @@
             WHERE
                  parent_id=#{categoryId})
         </if>
-        ORDER BY  FIELD(c.status,'WAIT_AUDIT','AFFECTED')
+        ORDER BY  c.correct_id DESC
     </select>
 
     <!--审核历史(已审核)-->
@@ -925,5 +927,42 @@
                 </if>
          AND  if(pat.price_type=='WAIT_AUDIT',c.auditer_id=#{userId},c.auditer_after_affect=#{userId})
          ORDER BY c.audit_time DESC
+    </select>
+
+    <!--查询所有任务(后台任务列表)-->
+    <select id="getTaskList" resultType="com.linayi.entity.correct.Correct">
+      SELECT
+            pat.create_time,
+            (select name from supermarket where supermarket_id=c.supermarket_id) supermarkerName,
+            gs.full_name,
+            gs.barcode,
+            gs.goods_sku_id,
+            c.price,
+            (select real_name from user where user_id = IF(pat.price_type='WAIT_AUDIT',c.auditer_id,c.auditer_after_affect)) realName,
+            c.manual_audit_status
+       FROM
+            price_audit_task pat JOIN correct c ON  c.correct_id=pat.correct_id JOIN goods_sku gs ON gs.goods_sku_id=c.goods_sku_id
+       WHERE
+            1=1
+            <if test="PriceType!=null and PriceType!=''">
+             AND   pat.price_type=#{PriceType}
+            </if>
+            <if test="manualAuditStatus!=null and manualAuditStatus!=''">
+             AND   c.manual_audit_status=#{manualAuditStatus}
+            </if>
+            <if test="createTimeStart != null and createTimeStart != ''">
+             AND   pat.create_time <![CDATA[ >= ]]> #{createTimeStart}
+            </if>
+            <if test="createTimeEnd != null and createTimeEnd != ''">
+             AND   pat.create_time <![CDATA[ <= ]]> #{createTimeEnd}
+            </if>
+        HAVING
+             1=1
+            <if test="supermarkerName!=null and supermarkerName!=''">
+             AND   supermarkerName=#{supermarkerName}
+            </if>
+            <if test="realName!=null and realName!=''">
+              AND   realName=#{realName}
+            </if>
     </select>
 </mapper>
