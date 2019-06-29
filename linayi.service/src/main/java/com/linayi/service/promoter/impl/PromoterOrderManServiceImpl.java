@@ -574,10 +574,11 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
                 totalSum += promoterOrderMAN.getTotalSum();
             }
         }
+        PromoterOrderMan promoterOrderMan1 =  openOrderManInfoMapper.getOrderManCount(promoterOrderMan);
         PromoterOrderMan promoterOrder = new PromoterOrderMan();
         promoterOrder.setNumberOfOrders(numberOfOrders);
         promoterOrder.setTotalSum(totalSum);
-        promoterOrder.setNumberOfOrderMan(promoterOrderMEN.size());
+        promoterOrder.setNumberOfOrderMan(promoterOrderMan1.getNumberOfOrderMan());
         promoterOrder.setOrderProfit(orderProfit);
         return promoterOrder;
     }

@@ -1057,6 +1057,9 @@ public class CorrectServiceImpl implements CorrectService {
             }
         }
         for (PriceAuditTask priceAuditTask : totalQuantity) {
+            if (!completeQuantity.contains(priceAuditTask.getTaskDate())){
+                priceAuditTask.setCompleteQuantity(priceAuditTask.getTotalQuantity());
+            }
             for (PriceAuditTask auditTask : completeQuantity) {
                 if (priceAuditTask.getTaskDate().getTime()-auditTask.getTaskDate().getTime()==0){
                     priceAuditTask.setCompleteQuantity(priceAuditTask.getTotalQuantity()-auditTask.getTotalQuantity());
