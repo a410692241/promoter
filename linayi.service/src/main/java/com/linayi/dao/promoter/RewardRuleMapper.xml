@@ -225,4 +225,20 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where reward_rule_id = #{rewardRuleId,jdbcType=INTEGER}
   </update>
+
+  <select id="selectRewardRuleByReward" resultType="com.linayi.entity.promoter.RewardRule">
+    SELECT * FROM reward_rule WHERE reward_id in
+    (SELECT
+	  c3.reward_id
+    FROM
+	  reward c1
+    JOIN reward c2 ON c2.parent_id = c1.reward_id
+    JOIN reward c3 ON c3.parent_id = c2.reward_id
+    WHERE
+	  c1.reward_id = #{rewardId})
+	ORDER BY
+      reward_rule_id
+
+  </select>
+
 </mapper>

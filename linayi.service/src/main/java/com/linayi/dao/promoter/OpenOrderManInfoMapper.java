@@ -85,11 +85,12 @@ public interface OpenOrderManInfoMapper {
      * @param PromoterOrderMan
      * @return
      */
-    List<PromoterOrderMan> getOrderManList(PromoterOrderMan PromoterOrderMan);
+    List<OpenOrderManInfo> getOrderManList(OpenOrderManInfo openOrderManInfo);
 
 
     /**
      * 获取家庭服务师的订单Id(分页用)
      */
    List<Integer> getOrdersIdByOrderManId(PromoterOrderMan PromoterOrderMan);
+
 }

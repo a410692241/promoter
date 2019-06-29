@@ -165,4 +165,12 @@ public interface CorrectService {
      */
     List<Correct> getAuditHistory(Correct correct);
 
+
+    /**
+     * 获取任务列表(后台用)
+     * @param correct
+     * @return
+     */
+    List<Correct> getTaskList(Correct correct);
+
 }

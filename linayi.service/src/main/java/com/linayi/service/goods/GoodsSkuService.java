@@ -217,4 +217,13 @@ public interface GoodsSkuService {
 	 * @return
 	 */
 	List<GoodsSku> getHighClickNoPriceGoodsList(GoodsSku goodsSku);
+
+	/**
+	 * 导入查看任务列表
+	 * @param
+	 * @param request
+	 * @param response
+	 * @throws Exception
+	 */
+	 void viewTask(Correct correct, HttpServletRequest request, HttpServletResponse response)throws Exception;
 }

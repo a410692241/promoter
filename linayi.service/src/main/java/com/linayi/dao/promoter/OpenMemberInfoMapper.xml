@@ -121,4 +121,13 @@
         where user_id = #{userId} AND order_man_id=#{orderManId}
     </update>
 
+    <select id="getOpenMemberCountByOrderManId" resultType="java.lang.Integer">
+    	SELECT
+    		 COUNT(*)
+    	FROM
+    		open_member_info
+    	WHERE
+    		order_man_id=#{orderManId}
+    </select>
+
 </mapper>

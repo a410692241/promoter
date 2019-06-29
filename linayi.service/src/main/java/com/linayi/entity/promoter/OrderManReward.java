@@ -1,6 +1,7 @@
 package com.linayi.entity.promoter;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -17,7 +18,7 @@ public class OrderManReward implements Serializable {
     /**
      * [实际奖励金额]
      */
-    private Long actualAmount;
+    private Integer actualAmount;
 
     /**
      * [状态]INIT初始化；FINISH完成；SETTLEMENT已结算
@@ -65,11 +66,11 @@ public class OrderManReward implements Serializable {
         this.rewardRuleId = rewardRuleId;
     }
 
-    public Long getActualAmount() {
+    public Integer getActualAmount() {
         return actualAmount;
     }
 
-    public void setActualAmount(Long actualAmount) {
+    public void setActualAmount(Integer actualAmount) {
         this.actualAmount = actualAmount;
     }
 

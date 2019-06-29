@@ -453,4 +453,16 @@ public class AuthenticationApplyServiceImpl implements AuthenticationApplyServic
 		return new ResponseData("操作成功！").toString();
 	}
 
+	@Override
+	public String save(AuthenticationApply authenticationApply) {
+		try {
+			authenticationApplyMapper.update(authenticationApply);
+			return "success";
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "fail";
+	}
+
+
 }

@@ -47,4 +47,6 @@ public interface AuthenticationApplyMapper {
 	AuthenticationApply selectByApplyId(AuthenticationApply apply);
 
 	Integer updateStatusByApplyId2(AuthenticationApply apply);
+
+	void update(AuthenticationApply authenticationApply);
 }

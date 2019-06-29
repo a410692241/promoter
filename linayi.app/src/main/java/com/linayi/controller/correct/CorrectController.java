@@ -429,6 +429,7 @@ public class CorrectController extends BaseController {
 		if(correct.getPageSize() == null){
 			correct.setPageSize(8);
 		}
+		correct.setUserId(getUserId());
 		List<Correct> correctList = correctService.getTaskGoodsSkuList(correct);
 		Integer totalPage = (int) Math.ceil(Double.valueOf(correct.getTotal())/Double.valueOf(correct.getPageSize()));
 		if(totalPage <= 0){
@@ -522,6 +523,7 @@ public class CorrectController extends BaseController {
             if(correct.getPageSize() == null){
                 correct.setPageSize(8);
             }
+			correct.setUserId(getUserId());
             List<Correct> correctList = correctService.getAuditHistory(correct);
             Integer totalPage = (int) Math.ceil(Double.valueOf(correct.getTotal())/Double.valueOf(correct.getPageSize()));
             if(totalPage <= 0){

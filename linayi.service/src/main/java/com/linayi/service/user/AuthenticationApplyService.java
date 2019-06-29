@@ -56,4 +56,6 @@ public interface AuthenticationApplyService {
 
 	public Object applyOrderMan(AuthenticationApply apply, MultipartFile[] file);
 
+	String save(AuthenticationApply authenticationApply);
+
 }

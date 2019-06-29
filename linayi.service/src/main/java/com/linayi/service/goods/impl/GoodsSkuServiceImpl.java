@@ -1529,4 +1529,56 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
         return goodsSkusList;
     }
 
+
+
+    @Override
+    public void viewTask(Correct correct, HttpServletRequest request, HttpServletResponse response)throws Exception {
+        // 只是让浏览器知道要保存为什么文件而已，真正的文件还是在流里面的数据，你设定一个下载类型并不会去改变流里的内容。
+        //而实际上只要你的内容正确，文件后缀名之类可以随便改，就算你指定是下载excel文件，下载时我也可以把他改成pdf等。
+        response.setContentType("application/vnd.ms-excel");
+        // 传递中文参数编码
+        String codedFileName = java.net.URLEncoder.encode("审核任务信息","UTF-8");
+        response.setHeader("content-disposition", "attachment;filename=" + codedFileName + ".xls");
+        List<Correct> corrects = correctMapper.getTaskGoodsSkuList(correct);
+        // 定义一个工作薄
+        Workbook workbook = new HSSFWorkbook();
+        // 创建一个sheet页
+        Sheet sheet = workbook.createSheet("审核任务信息");
+        // 创建一行
+        Row row = sheet.createRow(0);
+        // 在本行赋值 以0开始
+
+        row.createCell(0).setCellValue("商品编号");
+        row.createCell(1).setCellValue("商品全称");
+        row.createCell(2).setCellValue("超市名称");
+        row.createCell(3).setCellValue("商品条码");
+        row.createCell(4).setCellValue("审核类型");
+        row.createCell(5).setCellValue("价格(元)");
+        row.createCell(6).setCellValue("审核状态");
+        row.createCell(7).setCellValue("审核人");
+        row.createCell(8).setCellValue("发布时间");
+        // 定义样式
+        CellStyle cellStyle = workbook.createCellStyle();
+        // 格式化日期
+        //cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("yyyy-MM-dd"));
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        // 遍历输出
+        for (int i = 1; i <= corrects.size(); i++) {
+            Correct goods = corrects.get(i - 1);
+            row = sheet.createRow(i);
+            row.createCell(0).setCellValue(goods.getGoodsSkuId());
+            row.createCell(1).setCellValue(goods.getFullName());
+            row.createCell(2).setCellValue(goods.getSupermarkerName());
+            row.createCell(3).setCellValue(goods.getBarcode());
+            row.createCell(4).setCellValue(goods.getPriceType());
+            row.createCell(5).setCellValue(goods.getPrice()/100.00);
+            row.createCell(6).setCellValue(goods.getManualAuditStatus());
+            row.createCell(7).setCellValue(goods.getAuditerId());
+            row.createCell(8).setCellValue(goods.getCreateTime());
+        }
+        OutputStream  fOut = response.getOutputStream();
+        workbook.write(fOut);
+        fOut.flush();
+        fOut.close();
+    }
 }

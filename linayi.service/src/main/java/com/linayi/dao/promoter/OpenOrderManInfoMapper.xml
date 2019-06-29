@@ -210,7 +210,7 @@
         FROM
               orders
         WHERE
-            (community_status='PROCURE_FINISHED' OR community_status='DELIVER_FINISHED')
+            1=1
             <if test="orderManId!=null and orderManId!=''">
                 and  order_man_id = #{orderManId}
             </if>
@@ -293,16 +293,49 @@
     </resultMap>
 
     <!--获取家庭服务师列表(后台用)-->
-    <select id="getOrderManList" resultType="com.linayi.entity.promoter.PromoterOrderMan">
+    <select id="getOrderManList" resultType="com.linayi.entity.promoter.OpenOrderManInfo" parameterType="com.linayi.entity.promoter.OpenOrderManInfo">
       SELECT
-            u.user_id,
+           oomi.open_order_man_info_id,
+            oomi.order_man_id,
             u.nickname,
-            u.mobile,
-            u.is_member,
+            aa.mobile,
+            (select real_name from authentication_apply where user_id = oomi.sales_id and authentication_type='ORDER_MAN' GROUP BY user_id) salesName,
+            aa.real_name,
             u.is_order_man,
             oomi.start_time,
-            oomi.end_time
-       FROM
+            oomi.end_time,
+			oomi.create_time
+      FROM
             open_order_man_info oomi LEFT JOIN  user u ON oomi.order_man_id=u.user_id
+             LEFT JOIN authentication_apply aa ON oomi.order_man_id=aa.user_id AND aa.status="AUDIT_SUCCESS" AND aa.authentication_type="ORDER_MAN"
+      GROUP BY
+            oomi.open_order_man_info_id
+      HAVING
+        1=1
+        <if test="mobile !=null and mobile !=''">
+            AND aa.mobile = #{mobile,jdbcType=VARCHAR}
+        </if>
+        <if test="nickName !=null and nickName !=''">
+            AND u.nickname = #{nickName,jdbcType=VARCHAR}
+        </if>
+        <if test="realName !=null and realName !=''">
+            AND  aa.real_name = #{realName,jdbcType=VARCHAR}
+        </if>
+        <if test="orderManId !=null ">
+            AND  oomi.order_man_id = #{orderManId,jdbcType=INTEGER}
+        </if>
+        <if test="salesName !=null and salesName !=''">
+            AND salesName = #{salesName,jdbcType=VARCHAR}
+        </if>
+        <if test="createTimeStart != null">
+            and oomi.create_time &gt; #{createTimeStart}
+        </if>
+        <if test="createTimeEnd != null">
+            and oomi.create_time &lt; #{createTimeEnd}
+        </if>
+
+      ORDER BY
+            oomi.create_time desc
+
     </select>
 </mapper>
