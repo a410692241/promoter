@@ -60,13 +60,14 @@
     WHERE
              oomi1.start_time &lt; NOW()
          AND oomi1.end_time &gt; NOW()
-        <if test="date==null  or date!='MONTH'">
+         AND   (oomi1.sales_id = #{userId} or oomi1.order_man_id=#{userId})
+   <!--     <if test="date==null  or date!='MONTH'">
          AND   (oomi1.sales_id = #{userId} or oomi1.order_man_id=#{userId})
         </if>
         <if test="date!=null and date=='MONTH'">
          AND  oomi1.create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
          AND  (oomi1.sales_id = #{userId} or oomi1.order_man_id=#{userId})
-        </if>
+        </if>-->
     GROUP BY
         oomi1.open_order_man_info_id
     ORDER BY oomi1.order_man_id &lt;&gt; #{userId},oomi1.open_order_man_info_id DESC
@@ -337,5 +338,14 @@
       ORDER BY
             oomi.create_time desc
 
+    </select>
+
+    <select id="getOrderManCount" resultType="com.linayi.entity.promoter.PromoterOrderMan">
+        select IFNULL(count(open_order_man_info_id),0) numberOfOrderMan
+        from open_order_man_info
+         where sales_id = #{userId}
+        <if test="date!=null and date=='MONTH'">
+        AND  create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
+      </if>
     </select>
 </mapper>

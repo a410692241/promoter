@@ -93,4 +93,11 @@ public interface OpenOrderManInfoMapper {
      */
    List<Integer> getOrdersIdByOrderManId(PromoterOrderMan PromoterOrderMan);
 
+    /**
+     * 获取家庭服务师数量
+     * @param PromoterOrderMan
+     * @return
+     */
+    PromoterOrderMan getOrderManCount(PromoterOrderMan PromoterOrderMan);
+
 }
