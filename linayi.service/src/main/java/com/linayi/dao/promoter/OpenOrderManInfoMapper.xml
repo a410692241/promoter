@@ -52,7 +52,7 @@
         u.nickname
     FROM
         open_order_man_info oomi1
-        LEFT JOIN orders o ON oomi1.order_man_id = o.order_man_id AND (o.community_status='PROCURE_FINISHED' or o.community_status='DELIVER_FINISHED')
+        LEFT JOIN orders o ON oomi1.order_man_id = o.order_man_id AND o.community_status in ('PROCURE_FINISHED','DELIVER_FINISHED','RECEIVED','PACKED','DELIVERING')
           <if test="date!=null and date=='MONTH'">
               AND  o.create_time &gt; timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
           </if>
@@ -87,7 +87,7 @@
        FROM
             receive_address ra
             JOIN orders o ON o.receive_address_id = ra.receive_address_id
-            AND (o.community_status='PROCURE_FINISHED' OR o.community_status='DELIVER_FINISHED')
+            AND o.community_status in ('PROCURE_FINISHED','DELIVER_FINISHED','RECEIVED','PACKED','DELIVERING')
             AND o.create_time >  timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
       WHERE
             (ra.STATUS = 'NORMAL'AND ra.address_type = 'CUSTOMER'AND ra.user_id = #{userId})
@@ -104,7 +104,7 @@
        FROM
             receive_address ra LEFT
             JOIN orders o ON o.receive_address_id = ra.receive_address_id
-            AND (o.community_status='PROCURE_FINISHED' OR o.community_status='DELIVER_FINISHED')
+            AND  o.community_status in ('PROCURE_FINISHED','DELIVER_FINISHED','RECEIVED','PACKED','DELIVERING')
             <if test="date!=null and date=='MONTH'">
                 AND o.create_time &gt;  timestamp(date_add(curdate(), interval - day(curdate()) + 1 day))
             </if>
@@ -150,7 +150,7 @@
         FROM
               orders
         WHERE
-        (community_status='PROCURE_FINISHED' OR community_status='DELIVER_FINISHED')
+         community_status in ('PROCURE_FINISHED','DELIVER_FINISHED','RECEIVED','PACKED','DELIVERING')
          <if test="orderManId!=null and orderManId!=''">
             AND   order_man_id = #{orderManId}
          </if>
