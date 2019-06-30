@@ -1,5 +1,5 @@
 'use strict';
-app.service('smallCommunityReqService', [function() {
+app.service('areaService', [function() {
 	
 	function ajax( options ){
 		$.ajax({

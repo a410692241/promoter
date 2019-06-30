@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.linayi.entity.area.Area;
 import com.linayi.entity.area.SmallCommunityFullName;
+import com.linayi.entity.community.Community;
 import com.linayi.util.PageResult;
 import com.linayi.vo.promoter.PromoterVo;
 
@@ -54,4 +55,8 @@ public interface AreaService {
      * @return
      */
     PageResult<SmallCommunityFullName> getSmallCommunityByKey(PromoterVo.SearchSmallCommunityByKey key);
+
+    List<Area> getAllStreet(Area area);
+
+    Area getByPrimaryKey(String code);
 }

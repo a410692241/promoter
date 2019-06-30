@@ -761,6 +761,31 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    @Override
+    public String getStreetByAreaCode(String areaCode) {
+        //获取街道名
+        String streetName = areaMapper.getNameByCode(areaCode);
+        return streetName;
+    }
+
+
+
+    @Override
+    public String getUnStreetByAreaCode(String areaCode) {
+        //获取省市区区名
+        String regionName = areaMapper.getNameByCode(areaCode.substring(0, 8));
+        String cityName = areaMapper.getNameByCode(areaCode.substring(0, 6));
+        String provinceName = areaMapper.getNameByCode(areaCode.substring(0, 4));
+        if (areaCode.length() > 8) {
+            //拼接
+            String areaName = provinceName + cityName + regionName;
+            return areaName;
+        } else {
+            //拼接
+            String areaName = provinceName + cityName + regionName;
+            return areaName;
+        }
+    }
     /**
      * 分转元为单位
      *

@@ -2,10 +2,12 @@ package com.linayi.service.community.impl;
 
 
 import com.linayi.dao.area.AreaMapper;
+import com.linayi.dao.area.SmallCommunityMapper;
 import com.linayi.dao.community.CommunityMapper;
 import com.linayi.entity.area.Area;
 import com.linayi.entity.area.SmallCommunity;
 import com.linayi.entity.community.Community;
+import com.linayi.enums.SourceType;
 import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.area.SmallCommunityService;
@@ -29,6 +31,8 @@ public class CommunityServiceImpl implements CommunityService {
     private SmallCommunityService smallCommunityService;
     @Resource
     private AreaMapper areaMapper;
+    @Autowired
+    private SmallCommunityMapper smallCommunityMapper;
 
 
     @Override
@@ -121,5 +125,19 @@ public class CommunityServiceImpl implements CommunityService {
             throw new BusinessException(ErrorType.UNFILLED_SHIPPING_ADDRESS);
         }
         return communityId;
+    }
+
+    @Override
+    @Transactional
+    public void bindCommunity(Area area) {
+        //更新与该街道有关,而且是用户端添加的小区到新网点
+        SmallCommunity smallCommunity = new SmallCommunity();
+        smallCommunity.setAreaCode(area.getCode());
+        smallCommunity.setCommunityId(area.getCommunityId());
+        smallCommunity.setSource(SourceType.USER.name());
+        smallCommunity.setUpdateTime(new Date());
+        smallCommunityMapper.updateSmallCommunity(smallCommunity);
+        //更新街道绑定的网点
+        areaMapper.updateByPrimaryKey(area);
     }
 }

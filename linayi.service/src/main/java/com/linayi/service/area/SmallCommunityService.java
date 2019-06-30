@@ -64,4 +64,9 @@ public interface SmallCommunityService {
 	 * @return 通过areaCode查询小区
 	 */
 	List<SmallCommunity> getSmallCommunityByAreaCode(String areaCode) throws Exception;
+
+	/**用户端添加小区
+	 * @param smallCommunity
+	 */
+    void addSmallCommunity(SmallCommunity smallCommunity);
 }

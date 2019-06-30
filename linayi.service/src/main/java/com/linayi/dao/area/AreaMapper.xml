@@ -92,7 +92,7 @@
     数据库表的基本查询列名集合
   -->
     <sql id="Base_Column_List">
-        code, name, parent, level, rank, section_no
+        code, name, parent, level, rank, section_no,community_id
     </sql>
 
     <!--
@@ -103,7 +103,7 @@
             and code = #{code,jdbcType=VARCHAR}
         </if>
         <if test="name != null">
-            and name = #{name,jdbcType=VARCHAR}
+            and name like concat('%', #{name,jdbcType=VARCHAR},'%')
         </if>
         <if test="parent != null">
             and parent = #{parent,jdbcType=VARCHAR}
@@ -183,9 +183,6 @@
     <update id="updateByPrimaryKey" parameterType="com.linayi.entity.area.Area">
         update area
         <set>
-            <if test="code != null">
-                code = #{code,jdbcType=VARCHAR},
-            </if>
             <if test="name != null">
                 name = #{name,jdbcType=VARCHAR},
             </if>
@@ -200,6 +197,9 @@
             </if>
             <if test="sectionNo != null">
                 section_no = #{sectionNo,jdbcType=VARCHAR}
+            </if>
+            <if test="communityId != null">
+                community_id = #{communityId,jdbcType=INTEGER}
             </if>
         </set>
         where code = #{code,jdbcType=VARCHAR}
@@ -253,4 +253,10 @@
      	</if>
      </where>
   </select>
+
+    <select id="getByPrimaryKey" resultType="com.linayi.entity.area.Area">
+        select  code,parent,name,level,rank,section_no,community_id
+        from area
+        where code = #{code}
+    </select>
 </mapper>

@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core"  prefix="c"%>
+<%@ taglib prefix="cl" uri="http://www.lay.com/option" %>
 
 <!DOCTYPE html>
 <html>
@@ -70,6 +71,21 @@
 		                            <input ng-model="search.name" type="text" class="form-control">
 		                        </div>
 		                    </div>
+					<div class="form-group form-group-margin">
+						<div class="input-group">
+							<span class="input-group-addon">来源</span>
+							<ui-select on-select="search.source=$item.code;"
+									   ng-init='options=<cl:getByEnum enumName="com.linayi.enums.SourceType" nameWithCode="getSourceTypeName;name"/>;
+                                   options.splice(0,0,{"name":"全部","code":""});'
+									   ng-model="temp" style="min-width: 178px">
+								<ui-select-match>{{$select.selected.name}}</ui-select-match>
+								<ui-select-choices
+										repeat="item in options | filter:{name: $select.search}">
+									<span ng-bind-html="item.name | highlight: $select.search"></span>
+								</ui-select-choices>
+							</ui-select>
+						</div>
+					</div>
 								<div class="form-group form-group-margin">
 		                        <div class="input-group">
 		                            <span class="input-group-addon">状态</span>

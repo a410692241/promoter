@@ -1,8 +1,10 @@
 package com.linayi.entity.area;
 
+import com.linayi.entity.BaseEntity;
+
 import java.util.List;
 
-public class Area {
+public class Area extends BaseEntity {
     private String code;
 
     private String parent;
@@ -16,6 +18,14 @@ public class Area {
     private String sectionNo;
     
     private List<Area> child;
+
+    private String fullName;
+
+    private String streetName;
+
+    private String communityName;
+
+    private Integer communityId;
 
     public String getCode() {
         return code;
@@ -72,5 +82,37 @@ public class Area {
 	public void setChild(List<Area> child) {
 		this.child = child;
 	}
-    
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getStreetName() {
+        return streetName;
+    }
+
+    public void setStreetName(String streetName) {
+        this.streetName = streetName;
+    }
+
+    public String getCommunityName() {
+        return communityName;
+    }
+
+    public void setCommunityName(String communityName) {
+
+        this.communityName = communityName;
+    }
+
+    public Integer getCommunityId() {
+        return communityId;
+    }
+
+    public void setCommunityId(Integer communityId) {
+        this.communityId = communityId;
+    }
 }

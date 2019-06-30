@@ -1,6 +1,9 @@
 package com.linayi.controller.area;
 
+import com.linayi.controller.BaseController;
+import com.linayi.entity.BaseEntity;
 import com.linayi.entity.area.SmallCommunity;
+import com.linayi.entity.community.SmallCommunityReq;
 import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.area.SmallCommunityService;
@@ -16,7 +19,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("area/SmallCommunity")
-public class SmallCommunityController {
+public class SmallCommunityController extends BaseController {
 
 
     @Autowired
@@ -30,6 +33,26 @@ public class SmallCommunityController {
             pa.Exist( "areaCode");
             SmallCommunity smallCommunity = pa.transObj(SmallCommunity.class);
             return new ResponseData(smallCommunityService.getSmallCommunityByAreaCode(smallCommunity.getAreaCode())).toString();
+        } catch (BusinessException e) {
+            return new ResponseData(e.getErrorType()).toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseData(e).toString();
+        }
+    }
+
+    @RequestMapping("addSmallCommunity.do")
+    @ResponseBody
+    public Object addSmallCommunity(@RequestBody Map<String, Object> param) {
+        try {
+
+            ParamValidUtil<SmallCommunity> pa = new ParamValidUtil<>(param);
+            pa.Exist( "areaCode");
+            pa.Exist("name");
+            SmallCommunity smallCommunity = pa.transObj(SmallCommunity.class);
+            smallCommunity.setCreatorId(getUserId());
+            smallCommunityService.addSmallCommunity(smallCommunity);
+            return new ResponseData("添加成功!");
         } catch (BusinessException e) {
             return new ResponseData(e.getErrorType()).toString();
         } catch (Exception e) {

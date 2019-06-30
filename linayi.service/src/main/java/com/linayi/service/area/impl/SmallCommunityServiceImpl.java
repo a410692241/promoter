@@ -5,6 +5,11 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
+import com.linayi.dao.user.UserMapper;
+import com.linayi.entity.user.User;
+import com.linayi.enums.RemoveType;
+import com.linayi.enums.SourceType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.linayi.dao.area.AreaMapper;
@@ -14,6 +19,7 @@ import com.linayi.entity.area.Area;
 import com.linayi.entity.area.SmallCommunity;
 import com.linayi.entity.community.Community;
 import com.linayi.service.area.SmallCommunityService;
+import org.springframework.transaction.annotation.Transactional;
 import sun.security.x509.UniqueIdentity;
 
 @Service
@@ -25,6 +31,8 @@ public class SmallCommunityServiceImpl implements SmallCommunityService {
 	private AreaMapper areaMapper;
 	@Resource
 	private CommunityMapper communityMapper;
+	@Autowired
+	private UserMapper userMapper;
 
 	@Override
 	public int insert(SmallCommunity record) {
@@ -108,6 +116,17 @@ public class SmallCommunityServiceImpl implements SmallCommunityService {
 				}
 			}
 		}
+
+		//添加操作人
+		List<User> users = userMapper.selectUserList(new User());
+		Map<Integer, List<User>> userMap = users.stream().collect(Collectors.groupingBy(User::getUserId));
+		smallCommunityList.stream().forEach(item -> {
+			Integer creatorId = item.getCreatorId();
+			if(creatorId != null){
+				User user = userMap.get(creatorId).stream().findFirst().orElse(null);
+				item.setMobile(user.getMobile());
+			}
+		});
 		return smallCommunityList;
 
 	}
@@ -194,8 +213,8 @@ public class SmallCommunityServiceImpl implements SmallCommunityService {
 		return smallCommunityList;
 	}
 	 /** 通过areaCode获取完整的省市区街道名
-     * @param community
-     * @return
+     * @param areaCode
+	  * @return
      */
     private String getAreaNameByAreaCode(String areaCode){
     	//获取街道名
@@ -208,4 +227,21 @@ public class SmallCommunityServiceImpl implements SmallCommunityService {
 		String areaName =provinceName+cityName+regionName+streetName;
     	return areaName;
     }
+
+	@Override
+	@Transactional
+	public void addSmallCommunity(SmallCommunity smallCommunity) {
+    	//查询该街道下属于哪个网点
+		String areaCode = smallCommunity.getAreaCode();
+		Area area = areaMapper.selectByPrimaryKey(areaCode);
+		if(area != null){
+			Integer communityId = area.getCommunityId();
+			smallCommunity.setCommunityId(communityId);
+		}
+		smallCommunity.setSource(SourceType.USER.name());
+		smallCommunity.setStatus(RemoveType.NORMAL.name());
+		smallCommunity.setCreateTime(new Date());
+		smallCommunity.setUpdateTime(new Date());
+		smallCommunityMapper.insert(smallCommunity);
+	}
 }

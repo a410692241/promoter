@@ -27,6 +27,8 @@ public class Community extends BaseEntity {
 
     private Date updateTime;
 
+    private boolean isBinding;
+
     public Integer getCommunityId() {
         return communityId;
     }
@@ -115,4 +117,11 @@ public class Community extends BaseEntity {
 		this.areaName = areaName;
 	}
 
+    public boolean isBinding() {
+        return isBinding;
+    }
+
+    public void setBinding(boolean binding) {
+        isBinding = binding;
+    }
 }

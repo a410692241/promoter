@@ -9,6 +9,9 @@ import org.apache.ibatis.annotations.Param;
 
 import com.linayi.entity.community.Community;
 
+/**
+ *
+ */
 public interface CommunityService {
 
 	/**
@@ -44,4 +47,9 @@ public interface CommunityService {
     Community getCommunityById(Integer communityId);
 
     Integer getcommunityIdByuserIdInDefaultAddress(Integer userId);
+
+    /**街道绑定默认网点
+     * @param area
+     */
+    void bindCommunity(Area area);
 }

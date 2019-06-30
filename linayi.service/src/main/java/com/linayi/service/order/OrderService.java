@@ -52,6 +52,10 @@ public interface OrderService {
 
     String getAreaNameByAreaCode(String areaCode);
 
+    String getStreetByAreaCode(String areaCode);
+
+    String getUnStreetByAreaCode(String areaCode);
+
     /**
      * 根据订单id获取订单详情
      * @param ordersSku

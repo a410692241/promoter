@@ -61,5 +61,6 @@ public interface AreaMapper {
 
     Integer deleteByPrimaryKey(Integer code);
 
+    Area getByPrimaryKey(String code);
 
 }

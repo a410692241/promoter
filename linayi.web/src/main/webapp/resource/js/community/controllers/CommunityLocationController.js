@@ -1,6 +1,6 @@
 'use strict';
 app.controller('communityLocationCtrl', function($scope,toaster,communityLocationService,messager,templateform,$http ) {
-	
+
 	function init(){
 		$scope.show = show;
 		$scope.edit = edit;
@@ -10,17 +10,18 @@ app.controller('communityLocationCtrl', function($scope,toaster,communityLocatio
 		$scope.unbind = unbind;
 		$scope.search={
 				address:"",
-				communityId:""
+				communityId:"",
+				source:""
 		}
 		//如果是从社区管理编辑页面跳转过来则初始化
 		if( $scope.fromCommunity ){
 			$scope.search.communityId = $scope.fromCommunity;
 		}
 		$scope.list();
-		
-		
+
+
 	}
-	
+
 	/**列表查询*/
 	function list(){
 		var $grid = $("#communityLocationList");
@@ -31,17 +32,17 @@ app.controller('communityLocationCtrl', function($scope,toaster,communityLocatio
 			}).trigger("reloadGrid");
 			return;
 		}
-		
+
 		$grid.jqGrid({
 			url : urls.ms+"/smallCommunity/list.do",
 			postData:$scope.search,
 			pager : "#communityLocationPager",
 			colModel : [
-	            {name:'smallCommunityId',label:'id',sortable:false,hidden:true}, 
-				{name:'areaName',label:'地址',sortable:false}, 
-				{name:'name',label:'小区',sortable:false}, 
+	            {name:'smallCommunityId',label:'id',sortable:false,hidden:true},
+				{name:'areaName',label:'地址',sortable:false},
+				{name:'name',label:'小区',sortable:false},
 				{name:'communityName',label:'社区',sortable:false},
-				{name:'delivererId',label:'配送员ID',sortable:false}, 
+				{name:'delivererId',label:'配送员ID',sortable:false},
 				{name:'type',label:'状态',sortable:false,formatter:function(cellvalue, options, rowObject){
 					if(cellvalue == "bind"){
 						return cellvalue = "绑定";
@@ -49,6 +50,14 @@ app.controller('communityLocationCtrl', function($scope,toaster,communityLocatio
 						return cellvalue = "未绑定";
 					}
 				}},
+				{name:'source',label:'来源',sortable:false,formatter:function(cellvalue, options, rowObject){
+                        if(cellvalue == "USER"){
+                            return cellvalue = "用户端";
+                        }else{
+                            return cellvalue = "后台端";
+                        }
+					}},
+                {name:'mobile',label:'添加人',sortable:false},
 				{name:'createTime',label:'创建时间',sortable:false,formatter:function( cellvalue, options, rowObject ){
 						return cellvalue ? new Date( cellvalue ).format("yyyy-MM-dd hh:mm:ss") : "";
 					}},
@@ -70,7 +79,7 @@ app.controller('communityLocationCtrl', function($scope,toaster,communityLocatio
 			]
 		});
 	}
-	
+
     /**删除小区*/
     function remove( smallCommunityId){
     	messager.confirm("确认删除该小区？",function( $modalInstance ){
@@ -97,7 +106,7 @@ app.controller('communityLocationCtrl', function($scope,toaster,communityLocatio
     		});
     	});
     }
-    
+
     /**绑定小区*/
     function bind(smallCommunityId,communityId){
     	messager.confirm("确认绑定该小区？",function( $modalInstance ){
@@ -115,7 +124,7 @@ app.controller('communityLocationCtrl', function($scope,toaster,communityLocatio
 	    					$scope.$apply(function(){
 	    						$modalInstance.close();
 							});
-	    					
+
 						}else{
 							toaster.error( "",data.msg,3000 );
 						}
@@ -190,7 +199,7 @@ app.controller('communityLocationCtrl', function($scope,toaster,communityLocatio
 						communityLocation : data.communityLocation,
 						communityList :data.communityList,
 				}
-		
+
 				/* 有id初始化表单 */
 				if( communityLocationCtrl.communityLocation ){
 					areaCtrl.province = data.provinceCityAndRegion;
@@ -210,21 +219,21 @@ app.controller('communityLocationCtrl', function($scope,toaster,communityLocatio
 					case 1:
 						areaCtrl.cityList = areaList[$item.code];
 						areaCtrl.city={};
-						
+
 						areaCtrl.regionList = [];
 						areaCtrl.region={};
-						
+
 						areaCtrl.streetList = [];
 						areaCtrl.street = {};
-						
+
 						break;
 					case 2:
 						areaCtrl.regionList = [];
 						areaCtrl.region={};
-						
+
 						areaCtrl.streetList = [];
 						areaCtrl.street = {};
-						
+
 						areaCtrl.regionList = areaList[$item.code];
 						break;
 						/*获取区下的社区和小区列表*/
@@ -240,16 +249,16 @@ app.controller('communityLocationCtrl', function($scope,toaster,communityLocatio
 						break;
 					}
 				}
-				
-				
+
+
 			}
 		},function( $modalInstance,data, $scope ){
 			save( $modalInstance,data, $scope );
 		});
     }
- 
 
-   
+
+
 	/**保存*/
     function save( $modalInstance,data, $scope ){
     	try{
@@ -304,7 +313,7 @@ app.controller('communityLocationCtrl', function($scope,toaster,communityLocatio
 							e.msg : "出错了",3000 );
 		}
     }
-    
+
     /**查看*/
     function show( id ){
     	var url = urls.ms + "/community/communityLocation/show.do?";

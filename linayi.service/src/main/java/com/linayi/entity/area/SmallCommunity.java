@@ -31,8 +31,12 @@ public class SmallCommunity extends BaseEntity{
     private String type;
     
     private Integer delivererId;
-    
-	public Integer getDelivererId() {
+
+    private String source;
+    private Integer creatorId;
+    private String mobile;
+
+    public Integer getDelivererId() {
 		return delivererId;
 	}
 
@@ -135,5 +139,28 @@ public class SmallCommunity extends BaseEntity{
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public Integer getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(Integer creatorId) {
+        this.creatorId = creatorId;
+    }
+
+    public void setMobile(String mobile) {
+	    this.mobile = mobile;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
 }

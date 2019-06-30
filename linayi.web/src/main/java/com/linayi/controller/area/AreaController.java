@@ -7,7 +7,11 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.linayi.service.community.CommunityService;
+import com.linayi.util.PageResult;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -17,6 +21,7 @@ import com.linayi.entity.community.Community;
 import com.linayi.service.area.AreaService;
 import com.linayi.service.area.SmallCommunityService;
 import com.linayi.util.ResponseData;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/area")
@@ -25,7 +30,9 @@ public class AreaController {
 	private AreaService areaService;
 	@Resource
 	private SmallCommunityService smallCommunityService;
-	
+	@Autowired
+	private CommunityService communityService;
+
 	@RequestMapping("/edit.do")
 	@ResponseBody
 	public ResponseData edit(Integer smallCommunityId){
@@ -66,5 +73,28 @@ public class AreaController {
 			return rr ;
 	}
 
-	
+	@RequestMapping("/list.do")
+	@ResponseBody
+	public Object list(Area area) {
+		List<Area> allStreet = areaService.getAllStreet(area);
+		PageResult<Area> areaPageResult = new PageResult<>(allStreet, area.getTotal());
+		return areaPageResult;
+	}
+
+	@GetMapping("/showCommunity.do")
+	public Object showCommunity(String code) {
+		ModelAndView modelAndView = new ModelAndView("jsp/community/AreaCommunity");
+		Area area = areaService.getByPrimaryKey(code);
+		Integer communityId = area.getCommunityId();
+		modelAndView.addObject("communityId", communityId);
+		modelAndView.addObject("code", code);
+		return modelAndView;
+	}
+
+	@GetMapping("/bindCommunity.do")
+	@ResponseBody
+	public Object bindCommunityList(Area area) {
+		communityService.bindCommunity(area);
+		return new ResponseData("绑定成功");
+	}
 }

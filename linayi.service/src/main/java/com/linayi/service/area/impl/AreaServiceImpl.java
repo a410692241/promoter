@@ -14,13 +14,10 @@ import com.linayi.enums.SmallCommunityReqType;
 import com.linayi.service.area.AreaService;
 import com.linayi.service.community.SmallCommunityReqService;
 import com.linayi.service.order.OrderService;
-import com.linayi.service.user.UserService;
 import com.linayi.util.CheckUtil;
 import com.linayi.util.PageResult;
 import com.linayi.vo.promoter.PromoterVo;
-import org.omg.PortableInterceptor.USER_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -256,6 +253,33 @@ public class AreaServiceImpl implements AreaService {
         PageResult<SmallCommunityFullName> goodsSkuPageResult = new PageResult<>(smallCommunityFullNames, smallCommunity);
 //        goodsSkuPageResult.setTotalPage(smallCommunity.getTotal()/pageSize);
         return goodsSkuPageResult;
+    }
+
+    @Override
+    public List<Area> getAllStreet(Area area) {
+        short level = 4;
+        area.setLevel(level);
+        List<Area> streetArea = areaMapper.query(area);
+        List<Community> communityList = communityMapper.getCommunityList(new Community());
+        Map<Integer, List<Community>> commMap = communityList.stream().collect(Collectors.groupingBy(Community::getCommunityId));
+        for (Area street : streetArea) {
+            String unStreetName = orderService.getUnStreetByAreaCode(street.getCode());
+            String streetName = orderService.getStreetByAreaCode(street.getCode());
+            street.setFullName(unStreetName);
+            street.setStreetName(streetName);
+            Integer communityId = street.getCommunityId();
+            if(communityId != null){
+                Community community = commMap.get(communityId).stream().findFirst().orElse(null);
+                street.setCommunityName(community.getName());
+            }
+        }
+        return streetArea;
+    }
+
+
+    @Override
+    public Area getByPrimaryKey(String code) {
+        return areaMapper.getByPrimaryKey(code);
     }
 }
 
