@@ -1,12 +1,16 @@
 package com.linayi.service.promoter.impl;
 
 import com.linayi.dao.address.ReceiveAddressMapper;
+import com.linayi.dao.area.AreaMapper;
+import com.linayi.dao.area.SmallCommunityMapper;
 import com.linayi.dao.community.CommunityMapper;
 import com.linayi.dao.order.OrdersMapper;
 import com.linayi.dao.promoter.*;
 import com.linayi.dao.supermarket.SupermarketMapper;
 import com.linayi.dao.user.AuthenticationApplyMapper;
 import com.linayi.dao.user.UserMapper;
+import com.linayi.entity.area.Area;
+import com.linayi.entity.area.SmallCommunity;
 import com.linayi.entity.community.Community;
 import com.linayi.entity.order.Orders;
 import com.linayi.entity.order.OrdersGoods;
@@ -16,6 +20,7 @@ import com.linayi.entity.user.ReceiveAddress;
 import com.linayi.entity.user.User;
 import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
+import com.linayi.service.address.ReceiveAddressService;
 import com.linayi.service.promoter.PromoterOrderManService;
 import com.linayi.service.user.UserService;
 import com.linayi.util.DateUtil;
@@ -57,6 +62,12 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     private RewardRuleMapper rewardRuleMapper;
     @Autowired
     private CommunityMapper communityMapper;
+    @Autowired
+    private ReceiveAddressService receiveAddressService;
+    @Autowired
+    private SmallCommunityMapper smallCommunityMapper;
+    @Autowired
+    private AreaMapper areaMapper;
 
 
     @Override
@@ -816,6 +827,26 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     @Override
     public PromoterOrderMan getIndexData(PromoterOrderMan promoterOrderMan) {
         //查询家庭服务师的信息
+        User user1 = new User();
+        user1.setUserId(promoterOrderMan.getUserId());
+        ReceiveAddress defaultReceiveAddress = receiveAddressService.getDefaultReceiveAddress(user1);
+        SmallCommunity smallCommunity = new SmallCommunity();
+        smallCommunity.setSmallCommunityId(defaultReceiveAddress.getAddressOne());
+        smallCommunity = smallCommunityMapper.getSmallCommunity(smallCommunity);
+
+        String areaCode = smallCommunity.getAreaCode();
+        String addressTwo = smallCommunity.getName();
+        Area area = new Area();
+        String areaName = "";
+        while (true) {
+            area.setCode(areaCode);
+            Area areaInfo = areaMapper.getAreaInfo(area);
+            areaName = areaInfo.getName() + areaName;
+            if (areaInfo.getParent().equals("1000")) {
+                break;
+            }
+            areaCode = areaInfo.getParent();
+        }
         Integer communityId = communityMapper.getcommunityIdByuserId(promoterOrderMan.getUserId());
         Community community = new Community();
         community.setCommunityId(communityId);
@@ -906,6 +937,7 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         }
         promoterOrder.setCommunityName(community.getName());
         promoterOrder.setCommunityMobile(community.getMobile());
+        promoterOrder.setSmallCommunityAddr(areaName + addressTwo);
         return promoterOrder;
     }
 

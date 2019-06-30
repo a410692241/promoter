@@ -111,4 +111,7 @@ public class PromoterOrderMan extends BaseEntity {
 
     @ApiModelProperty(name = "communityMobile", value = "社区网点联系方式")
     private String communityMobile;
+
+    @ApiModelProperty(name = "smallCommunityAddr", value = "小区地址")
+    private String smallCommunityAddr;
 }
