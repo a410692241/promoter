@@ -118,7 +118,11 @@ public class WeixinServiceImpl implements WeixinService {
                     if (!accountService.isBindMobile(accountId)) {
                         response.sendRedirect(Configuration.getConfig().getValue(WeixinConfig.BIND_MOBILE_URL) + "&accessToken=" + sysetemAccessToken);
                     } else {
-                        response.sendRedirect(redictUrl + "?accessToken=" + sysetemAccessToken+ "&accountId=" + accountId+"&userId="+userId+"&loginType="+1);
+                        if (redictUrl.contains("?")) {
+                            response.sendRedirect(redictUrl + "&accessToken=" + sysetemAccessToken+ "&accountId=" + accountId+"&userId="+userId+"&loginType="+1);
+                        }else{
+                            response.sendRedirect(redictUrl + "?accessToken=" + sysetemAccessToken+ "&accountId=" + accountId+"&userId="+userId+"&loginType="+1);
+                        }
                     }
                     return new ResponseData("登录成功");
                 }
