@@ -1,11 +1,13 @@
 package com.linayi.service.promoter.impl;
 
 import com.linayi.dao.address.ReceiveAddressMapper;
+import com.linayi.dao.community.CommunityMapper;
 import com.linayi.dao.order.OrdersMapper;
 import com.linayi.dao.promoter.*;
 import com.linayi.dao.supermarket.SupermarketMapper;
 import com.linayi.dao.user.AuthenticationApplyMapper;
 import com.linayi.dao.user.UserMapper;
+import com.linayi.entity.community.Community;
 import com.linayi.entity.order.Orders;
 import com.linayi.entity.order.OrdersGoods;
 import com.linayi.entity.promoter.*;
@@ -53,6 +55,8 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     private OrderManRewardMapper OrderManRewardMapper;
     @Autowired
     private RewardRuleMapper rewardRuleMapper;
+    @Autowired
+    private CommunityMapper communityMapper;
 
 
     @Override
@@ -811,6 +815,11 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
     //首页数据统计(本月包含收益)
     @Override
     public PromoterOrderMan getIndexData(PromoterOrderMan promoterOrderMan) {
+        //查询家庭服务师的信息
+        Integer communityId = communityMapper.getcommunityIdByuserId(promoterOrderMan.getUserId());
+        Community community = new Community();
+        community.setCommunityId(communityId);
+        community = communityMapper.getCommunity(community);
         //个人月订单/金额/有效销售额
         PromoterOrderMan promoterOrder = openOrderManInfoMapper.getPersonalOrder(promoterOrderMan.getUserId());
         OpenOrderManInfo openOrderManInfo = openOrderManInfoMapper.getOpenOrderManInfoByOrderManId(promoterOrderMan.getUserId()).stream().findFirst().orElse(null);
@@ -895,6 +904,8 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
             String headImage = ImageUtil.dealToShow(user.getHeadImage());
             promoterOrder.setHeadImage(headImage);
         }
+        promoterOrder.setCommunityName(community.getName());
+        promoterOrder.setCommunityMobile(community.getMobile());
         return promoterOrder;
     }
 

@@ -105,4 +105,10 @@ public class PromoterOrderMan extends BaseEntity {
 
 
     private List<Integer> ordersIdList;
+
+    @ApiModelProperty(name = "communityName", value = "社区网点名称")
+    private String communityName;
+
+    @ApiModelProperty(name = "communityMobile", value = "社区网点联系方式")
+    private String communityMobile;
 }
