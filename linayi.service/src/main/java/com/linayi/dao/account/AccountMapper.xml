@@ -325,13 +325,13 @@
     
     <!--  通过手机号查询userId
 		Integer getUserIdByMobile(String mobile);-->
-	<select id="getUserIdByMobile" resultType="java.lang.Integer">
+	<select id="getUserIdByMobile" parameterType="string" resultType="java.lang.Integer">
 		select
 			user_id
 		from 
 			account
 		where
-			mobile=#{mobile}
+			mobile = #{mobile}
 		and 
 		 user_type ='USER'
 	</select>

@@ -2,6 +2,7 @@ package com.linayi.dao.account;
 
 import com.linayi.entity.account.Account;
 import com.linayi.entity.account.Role;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -102,5 +103,5 @@ public interface AccountMapper {
      * @param mobile
      * @return
      */
-    Integer getUserIdByMobile(String mobile);
+    Integer getUserIdByMobile(@Param("mobile")String mobile);
 }

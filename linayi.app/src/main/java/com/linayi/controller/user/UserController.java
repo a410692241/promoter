@@ -115,14 +115,15 @@ public class UserController extends BaseController {
 
     /**
      * 用户绑定家庭服务师
-     * @param mobile
+     * @param param
      * @return
      */
     @RequestMapping(value = "/bindingHomeHelper.do",method = RequestMethod.POST)
     @ResponseBody
-    public Object bindingHomeHelper(String mobile){
+    public Object bindingHomeHelper(@RequestBody Map<String, Object> param){
         try {
-            if(StringUtils.isNotBlank(mobile)){
+            String mobile = (String) param.get("mobile");
+            if(StringUtils.isNotBlank( mobile)){
                 Integer userId = getUserId();
                 return userService.bindingHomeHelper(userId,mobile);
             }

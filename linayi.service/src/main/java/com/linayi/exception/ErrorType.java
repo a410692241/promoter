@@ -75,9 +75,9 @@ public enum ErrorType {
     MEMBER_EXIST(2037,"此用户已经是会员且在有效期内，邀请失败！"),
     CORRECT_SAME_PRICE(2038,"商品价格已存在生效记录，请勿重复纠错！"),
     APPLY_NOT_AUDTI(2038,"您已经申请过了，请勿重复申请！"),
-    NO_BINDING_ORDER_MAN(2040,"请绑定家庭服务师再来下单!"),
+    NO_BINDING_ORDER_MAN(2040,"您没有绑定家庭服务师,请绑定之后再来下单!"),
     USER_DOES_NOT_EXIST(2041,"无用户使用此号码!"),
-    NO_ORDER_MAN(2041,"此用户不是家庭服务师!");
+    NO_ORDER_MAN(2042,"此用户不是家庭服务师!");
 
 
 
