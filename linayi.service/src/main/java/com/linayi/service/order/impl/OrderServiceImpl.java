@@ -121,6 +121,7 @@ public class OrderServiceImpl implements OrderService {
             }
         }
         boolean isVIP = false;
+        Integer orderManId = null;
         if("MINE".equals(addressType)){
             openMemberInfo.setUserId(userId);
             openMemberInfo.setEndTime(new Date());
@@ -137,7 +138,13 @@ public class OrderServiceImpl implements OrderService {
 //                    openMemberInfoMapper.updateById(openMemberInfo);
 //                }
             }else {
-                return new ResponseData(ErrorType.NOT_MEMBER);
+//                return new ResponseData(ErrorType.NOT_MEMBER);
+                //不是会员必须绑定家庭服务师
+                orderManId = user.getOrderManId();
+                if(orderManId == null){
+                    //没有绑定家庭服务师
+                    return new ResponseData(ErrorType.NO_BINDING_ORDER_MAN);
+                }
             }
         }
 
@@ -173,6 +180,8 @@ public class OrderServiceImpl implements OrderService {
             OpenOrderManInfo openOrderManInfo = openOrderManInfoMapper.getOpenOrderManInfoById(openOrderManInfoId);
             order.setPromoterId(openOrderManInfo.getPromoterId());
             order.setOrderManId(openOrderManInfo.getOrderManId());
+        }else {
+            order.setOrderManId(orderManId);
         }
         // 插入订单
         ordersMapper.insert(order);

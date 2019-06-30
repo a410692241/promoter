@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 
 import com.linayi.controller.BaseController;
 import com.linayi.util.ParamValidUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -110,6 +111,24 @@ public class UserController extends BaseController {
             e.printStackTrace();
             return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
         }
+    }
 
+    /**
+     * 用户绑定家庭服务师
+     * @param mobile
+     * @return
+     */
+    @RequestMapping(value = "/bindingHomeHelper.do",method = RequestMethod.POST)
+    @ResponseBody
+    public Object bindingHomeHelper(String mobile){
+        try {
+            if(StringUtils.isNotBlank(mobile)){
+                Integer userId = getUserId();
+                return userService.bindingHomeHelper(userId,mobile);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseData(ErrorType.SYSTEM_ERROR).toString();
     }
 }

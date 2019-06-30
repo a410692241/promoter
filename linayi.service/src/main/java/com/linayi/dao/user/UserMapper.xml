@@ -30,7 +30,7 @@ where `employee_id` =#{employeeId}
     <select id="selectUserByuserId" resultType="com.linayi.entity.user.User">
  		select
 `user_id`,`nickname`,`is_sharer`,`is_procurer`,`head_image`,`birthday`,`sex`,`mobile`,`qq`,
-`email`,`real_name`,`create_time`,`update_time`,default_receive_address_id,is_flow,is_order_man,is_member from `user`
+`email`,`real_name`,`create_time`,`update_time`,default_receive_address_id,is_flow,is_order_man,is_member,order_man_id from `user`
 where user_id=#{userId}
  	</select>
 
@@ -237,6 +237,9 @@ where user_id=#{userId}
             </if>
             <if test="defaultReceiveAddressId !=null ">
                 `default_receive_address_id`=#{defaultReceiveAddressId} ,
+            </if>
+            <if test="orderManId !=null ">
+                `order_man_id`=#{orderManId} ,
             </if>
         </set>
         where user_id=#{userId}

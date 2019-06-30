@@ -18,7 +18,7 @@ public interface OpenOrderManInfoMapper {
      */
     OpenOrderManInfo getOpenOrderManInfoById(Integer openOrderManInfoId);
 
-    List<OpenOrderManInfo> getOpenOrderManInfoByEndTime(Integer userId);
+    List<OpenOrderManInfo> getOpenOrderManInfoByEndTime(Integer orderManId);
 
 
     /**

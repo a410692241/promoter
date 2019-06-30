@@ -5,6 +5,7 @@ import com.linayi.entity.account.Employee;
 import com.linayi.entity.promoter.PromoterOrderMan;
 import com.linayi.entity.user.User;
 import com.linayi.util.PageResult;
+import com.linayi.util.ResponseData;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -101,5 +102,7 @@ public interface UserService {
      * @param user
      */
     void enableMember(User user);
+
+    ResponseData bindingHomeHelper(Integer userId, String mobile);
 }
 

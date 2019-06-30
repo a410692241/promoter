@@ -6,12 +6,14 @@ import com.linayi.dao.account.AdminAccountMapper;
 import com.linayi.dao.account.EmployeeMapper;
 import com.linayi.dao.area.AreaMapper;
 import com.linayi.dao.area.SmallCommunityMapper;
+import com.linayi.dao.promoter.OpenOrderManInfoMapper;
 import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.account.Account;
 import com.linayi.entity.account.AdminAccount;
 import com.linayi.entity.account.Employee;
 import com.linayi.entity.area.Area;
 import com.linayi.entity.area.SmallCommunity;
+import com.linayi.entity.promoter.OpenOrderManInfo;
 import com.linayi.entity.user.User;
 import com.linayi.enums.EnabledDisabled;
 import com.linayi.exception.BusinessException;
@@ -29,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -46,6 +49,8 @@ public class UserServiceImpl implements UserService {
     private SmallCommunityMapper smallCommunityMapper;
     @Resource
     private AreaMapper areaMapper;
+    @Resource
+    private OpenOrderManInfoMapper openOrderManInfoMapper;
 
 
 
@@ -351,5 +356,23 @@ public class UserServiceImpl implements UserService {
             user.setIsMember("FALSE");
         }
         userMapper.updateUserByuserId(user);
+    }
+
+    @Override
+    public ResponseData bindingHomeHelper(Integer userId, String mobile) {
+            Integer useId = accountMapper.getUserIdByMobile(mobile);
+            if(useId == null){
+                return new ResponseData(ErrorType.USER_DOES_NOT_EXIST);
+            }
+            List<OpenOrderManInfo> orderManInfoByEndTime = openOrderManInfoMapper.getOpenOrderManInfoByEndTime(useId);
+            if(orderManInfoByEndTime != null && orderManInfoByEndTime.size() > 0){
+                User user = new User();
+                user.setUserId(userId);
+                user.setUpdateTime(new Date());
+                user.setOrderManId(useId);
+                userMapper.updateUserByuserId(user);
+                return new ResponseData("success");
+            }
+            return new ResponseData(ErrorType.NO_ORDER_MAN);
     }
 }

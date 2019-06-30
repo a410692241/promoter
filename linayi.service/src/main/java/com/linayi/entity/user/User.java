@@ -132,6 +132,8 @@ public class User extends BaseEntity implements Serializable {
 
     private Boolean orderMan;
 
+    private Integer orderManId;
+
     private static final long serialVersionUID = 1L;
     
     public String getIsProcurer() {
@@ -490,5 +492,13 @@ public class User extends BaseEntity implements Serializable {
 
     public void setOrderMan(Boolean orderMan) {
         this.orderMan = orderMan;
+    }
+
+    public Integer getOrderManId() {
+        return orderManId;
+    }
+
+    public void setOrderManId(Integer orderManId) {
+        this.orderManId = orderManId;
     }
 }
