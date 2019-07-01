@@ -1,11 +1,14 @@
 'use strict';
 
-app.controller('areaCtrl', function ($scope, toaster, areaService, messager, templateform) {
-
+app.controller('areaCtrl', function ($scope, toaster, areaService, messager, templateform,$http ) {
+    var provinceList = [];
     function init() {
         $scope.list = list;
         $scope.showCommunity = showCommunity;
+        $scope.edit = edit;
+        $scope.save = save;
         $scope.list();
+        provinceList = $scope.provinceList;
         $scope.search = {
             areaId: '',
             fullName: '',
@@ -41,7 +44,8 @@ app.controller('areaCtrl', function ($scope, toaster, areaService, messager, tem
                         if (cellvalue == null || cellvalue == '') {
                             return "<span style='color:red;border: 1px solid red;padding-left: 10px;padding-right: 10px'>暂未绑定</span>";
                         } else {
-                            return "<span class='btn btn-blue btn-sm td-compile'>"+cellvalue+"</span>";;
+                            return "<span class='btn btn-blue btn-sm td-compile'>" + cellvalue + "</span>";
+                            ;
                         }
                     }
                 },
@@ -83,6 +87,68 @@ app.controller('areaCtrl', function ($scope, toaster, areaService, messager, tem
         });
 
     }
+
+    function edit() {
+        //新增
+        var url = urls.ms + "/area/getArea.do?";
+        $http({
+            method: 'post',
+            url: url,
+            responseType:"json"
+        }).then(function successCallback(response) {
+            openEdit( response.data.data )
+            // this callback will be called asynchronously
+            // when the response is available
+        }, function errorCallback(response) {
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+        });
+    }
+
+    function openEdit(areaList) {
+        console.log(areaList);
+        debugger;
+        var url = urls.ms + "/area/add.do?";
+        templateform.open({
+            title: "添加街道",
+            url: url,
+            scope: $scope,
+            onOpen: function ($modalInstance, data, $scope) {
+//				/*绑定数据edit*/
+                provinceList = areaList[1000];
+
+
+            }
+        }, function ($modalInstance, data, $scope) {
+            save($modalInstance, data, $scope);
+        });
+    }
+
+    function save() {
+        //新增
+        try {
+            areaService.save({
+                data: $scope.community,
+                success: function (data) {
+                    if (data.respCode == "S") {
+                        $("#areaCommunityList").trigger("reloadGrid");
+                        $modalInstance.close();
+                    } else {
+                        $scope.$apply(function () {
+                            toaster.error("", data.errorType, 1000);
+                        });
+                    }
+                }
+            })
+        } catch (e) {
+            console.error(e);
+            toaster.error("", typeof e == "string" ? //
+                e : e.msg ? //
+                    e.msg : "出错了", 3000);
+        }
+
+    }
+
 
     //初始化
     init();

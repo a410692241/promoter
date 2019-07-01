@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('areaCommunityCtrl', function ($scope, toaster, areaCommunityService, messager, templateform) {
+app.controller('areaCommunityCtrl', function ($scope, toaster, areaCommunityService,areaService, messager, templateform) {
 
     function init() {
 
@@ -48,7 +48,6 @@ app.controller('areaCommunityCtrl', function ($scope, toaster, areaCommunityServ
             ]
         });
     }
-
 
 
     function bindCommunity(communityId) {

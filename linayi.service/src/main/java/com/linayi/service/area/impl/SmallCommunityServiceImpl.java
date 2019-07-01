@@ -9,6 +9,8 @@ import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.user.User;
 import com.linayi.enums.RemoveType;
 import com.linayi.enums.SourceType;
+import com.linayi.exception.BusinessException;
+import com.linayi.exception.ErrorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -230,9 +232,12 @@ public class SmallCommunityServiceImpl implements SmallCommunityService {
 
 	@Override
 	@Transactional
-	public void addSmallCommunity(SmallCommunity smallCommunity) {
+	public Integer addSmallCommunity(SmallCommunity smallCommunity) {
     	//查询该街道下属于哪个网点
 		String areaCode = smallCommunity.getAreaCode();
+		if (areaCode.length() < 14) {
+			throw new BusinessException(ErrorType.AREACODE_DOES_NOT_CORRESPOND_TO_THE_STREET);
+		}
 		Area area = areaMapper.selectByPrimaryKey(areaCode);
 		if(area != null){
 			Integer communityId = area.getCommunityId();
@@ -243,5 +248,6 @@ public class SmallCommunityServiceImpl implements SmallCommunityService {
 		smallCommunity.setCreateTime(new Date());
 		smallCommunity.setUpdateTime(new Date());
 		smallCommunityMapper.insert(smallCommunity);
+		return smallCommunity.getSmallCommunityId();
 	}
 }

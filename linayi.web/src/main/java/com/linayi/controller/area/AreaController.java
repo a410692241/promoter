@@ -12,6 +12,7 @@ import com.linayi.util.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -97,4 +98,27 @@ public class AreaController {
 		communityService.bindCommunity(area);
 		return new ResponseData("绑定成功");
 	}
+	@GetMapping("/add.do")
+	public Object add() {
+		ModelAndView modelAndView = new ModelAndView("jsp/community/AreaEdit");
+		Map<String,Object> result= new HashMap<>();
+		Map<String,List<Area>> allAreaList = areaService.getArea();
+		result.put("areaList", allAreaList);
+		return modelAndView;
+	}
+	@PostMapping("/getArea.do")
+	@ResponseBody
+	public Object getArea() {
+		Map<String,Object> result= new HashMap<>();
+		Map<String,List<Area>> allAreaList = areaService.getArea();
+		result.put("areaList", allAreaList);
+		return new ResponseData(result);
+	}
+	@GetMapping("/save.do")
+	@ResponseBody
+	public Object save(Area area) {
+		communityService.bindCommunity(area);
+		return new ResponseData("添加成功!");
+	}
+
 }

@@ -14,7 +14,7 @@
     <result column="source" jdbcType="VARCHAR" property="source" />
     <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
   </resultMap>
-  <insert id="insert" parameterType="com.linayi.entity.area.SmallCommunity">
+  <insert id="insert" parameterType="com.linayi.entity.area.SmallCommunity" useGeneratedKeys="true" keyColumn="small_community_id" keyProperty="smallCommunityId" >
     insert into small_community (small_community_id, area_code, name, 
       community_id, status, create_time, deliverer_id,
       update_time,source,creator_id)

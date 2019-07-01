@@ -68,5 +68,5 @@ public interface SmallCommunityService {
 	/**用户端添加小区
 	 * @param smallCommunity
 	 */
-    void addSmallCommunity(SmallCommunity smallCommunity);
+	Integer addSmallCommunity(SmallCommunity smallCommunity);
 }

@@ -38,6 +38,7 @@ public enum ErrorType {
     BARCODE_ERROR(1918,"请确保条码正确,该条码找不到对应的商品!"),
     SAME_AS_THE_ORIGINAL_PASSWORD(1919,"修改的密码和原密码相同!"),
     THIS_ACCOUNT_IS_NOT_ASSOCIATED_WITH_THE_COMMUNITY(1918,"该账号未关联社区!"),
+    AREACODE_DOES_NOT_CORRESPOND_TO_THE_STREET(1918,"areaCode没有对应街道!"),
     ACCOUNT_OR_PASSWORD_ERROR(2000,"密码错误"),
     ACCOUNT_OR_OLDPASSWORD_ERROR(2030,"旧密码输入错误，请重新输入！"),
     ACCOUNT_AND_ROLEID(2005,"数据库已经存在了这条数据"),

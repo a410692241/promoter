@@ -51,8 +51,7 @@ public class SmallCommunityController extends BaseController {
             pa.Exist("name");
             SmallCommunity smallCommunity = pa.transObj(SmallCommunity.class);
             smallCommunity.setCreatorId(getUserId());
-            smallCommunityService.addSmallCommunity(smallCommunity);
-            return new ResponseData("添加成功!");
+            return new ResponseData(smallCommunityService.addSmallCommunity(smallCommunity));
         } catch (BusinessException e) {
             return new ResponseData(e.getErrorType()).toString();
         } catch (Exception e) {
