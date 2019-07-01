@@ -1,7 +1,7 @@
 package com.linayi.enums;
 
 public enum AuditType {
-    WAIT_AUDIT("待审核"),
+    WAIT_AUDIT("未生效"),
     AFFECTED("已生效");
 
 
