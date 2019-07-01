@@ -314,13 +314,16 @@ public class ProcurementServiceImpl implements ProcurementService {
 			ordersGoods.setGoodsSkuId(procurementTask.getGoodsSkuId());
 			List<OrdersGoods> ordersGoodsList = ordersGoodsMapper.query(ordersGoods);
 			ordersGoods = ordersGoodsList.get(0);
-			String supermarketList = ordersGoods.getSupermarketList();
-			List<Map> list = JSON.parseArray(supermarketList, Map.class);
+
+			List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getSupermarketGoodsList(procurementTask.getGoodsSkuId(), procurementTask.getCommunityId());
+			MemberPriceUtil.supermarketPriceByLevel(MemberLevel.SUPER,supermarketGoodsList);
+			List<SupermarketGoods> allSpermarketGoodsList = MemberPriceUtil.allSpermarketGoodsList;
+
 			ProcurementTask procurementTask1 = new ProcurementTask();
 			procurementTask1.setOrdersId(procurementTask.getOrdersId());
 			procurementTask1.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
 			List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurementTask1);
-			if (list.size() == procurementTaskList.size()){
+			if (allSpermarketGoodsList.size() == procurementTaskList.size()){
 				//已经是最后一家
 				updateOrdersStatus(procurementTask,ordersGoods);
 			}
