@@ -66,12 +66,12 @@
 									ng-model="search.supermarkerName" type="text" class="form-control">
 							</div>
 						</div>
-					<%--	<div class="form-group form-group-margin">
+						<div class="form-group form-group-margin">
 							<div class="input-group">
-								<span class="input-group-addon">审核状态</span> <input
-									ng-model="search.manualAuditStatus" type="text" class="form-control">
+								<span class="input-group-addon">条形码</span> <input
+									ng-model="search.barcode" type="text" class="form-control">
 							</div>
-						</div>--%>
+						</div>
                         <div class="form-group form-group-margin">
                             <div class="input-group">
                                 <span class="input-group-addon">审核状态</span>
@@ -88,9 +88,29 @@
                             </div>
                         </div>
 
+						<div class="form-group form-group-margin">
+							<div class="input-group">
+								<span class="input-group-addon">审核人</span> <input
+									ng-model="search.realName" type="text" class="form-control">
+							</div>
+						</div>
+
+						<div class="form-group form-group-margin">
+							<div class="input-group">
+								<span class="input-group-addon">发布开始日期</span> <input type="text"
+																				   class="form-control" datetimepicker
+																				   ng-model="search.createTimeStart"/>
+							</div>
+
+							至
+							<div class="input-group">
+								<input type="text" class="form-control" datetimepicker
+									   ng-model="search.createTimeEnd"/>
+							</div>
+						</div>
 
 
-                                <div class="form-group form-group-margin">
+             <%--                   <div class="form-group form-group-margin">
 							<div class="input-group">
 								<span class="input-group-addon">发布开始日期</span> <input
 									ng-model="search.createTimeStart" type="text" class="form-control">
@@ -102,13 +122,8 @@
 								<span class="input-group-addon">发布结束日期</span> <input
 									ng-model="search.createTimeEnd" type="text" class="form-control">
 							</div>
-						</div>
-                        <div class="form-group form-group-margin">
-                            <div class="input-group">
-                                <span class="input-group-addon">审核人</span> <input
-                                    ng-model="search.realName" type="text" class="form-control">
-                            </div>
-                        </div>
+						</div>--%>
+
 						<a ng-click="list()" class="btn btn-primary form-group-margin"
 							href="javascript:void(0);"> <i class="fa fa-search"></i>搜索
 						</a>

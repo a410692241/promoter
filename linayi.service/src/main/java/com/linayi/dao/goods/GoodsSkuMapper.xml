@@ -888,7 +888,7 @@
 
     <select id="selectBySupermerketIdAndGoodsSkuIdList" resultType="com.linayi.entity.goods.GoodsSku" parameterType="com.linayi.entity.goods.GoodsSku">
         SELECT
-          gs.full_name,gs.goods_sku_id,gs.image
+          gs.full_name,gs.goods_sku_id,gs.image,gs.barcode
         FROM
           goods_sku gs
         LEFT JOIN supermarket_goods sg ON sg.goods_sku_id = gs.goods_sku_id AND sg.supermarket_id = #{supermarketId}

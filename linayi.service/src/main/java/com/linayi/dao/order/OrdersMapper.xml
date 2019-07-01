@@ -304,14 +304,14 @@
       extra_fee, arrive_time, actual_arrive_time,
       remark, quantity, amount, receive_address_id,
       user_status, community_status, community_id, address_type,sex,promoter_id,order_man_id,
-      update_time, create_time,small_community_id <if test="orderType!=null and orderType!=''">,order_type</if><if test="orderManId!=null and orderManId!=''">,order_man_id</if>)
+      update_time, create_time,small_community_id <if test="orderType!=null and orderType!=''">,order_type</if>)
     values (#{ordersId,jdbcType=BIGINT}, #{userId,jdbcType=INTEGER}, #{receiverName,jdbcType=VARCHAR},
       #{mobile,jdbcType=VARCHAR}, #{addressOne,jdbcType=VARCHAR}, #{addressTwo,jdbcType=VARCHAR}, #{addressThree,jdbcType=VARCHAR},
       #{payWay,jdbcType=VARCHAR}, #{saveAmount,jdbcType=INTEGER}, #{serviceFee,jdbcType=INTEGER},
       #{extraFee,jdbcType=INTEGER}, #{arriveTime,jdbcType=TIMESTAMP}, #{actualArriveTime,jdbcType=TIMESTAMP},
       #{remark,jdbcType=VARCHAR}, #{quantity,jdbcType=INTEGER}, #{amount,jdbcType=INTEGER}, #{receiveAddressId,jdbcType=INTEGER},
       #{userStatus,jdbcType=VARCHAR}, #{communityStatus,jdbcType=VARCHAR}, #{communityId,jdbcType=INTEGER}, #{addressType,jdbcType=VARCHAR},#{sex,jdbcType=VARCHAR},#{promoterId,jdbcType=INTEGER},#{orderManId,jdbcType=INTEGER},
-      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP},#{smallCommunityId,jdbcType=INTEGER}<if test="orderType!=null and orderType!=''">,#{orderType}</if><if test="orderManId!=null and orderManId!=''">,#{orderManId}</if>)
+      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP},#{smallCommunityId,jdbcType=INTEGER}<if test="orderType!=null and orderType!=''">,#{orderType}</if>)
   </insert>
   <insert id="insertSelective" parameterType="com.linayi.entity.order.Orders">
     insert into orders
