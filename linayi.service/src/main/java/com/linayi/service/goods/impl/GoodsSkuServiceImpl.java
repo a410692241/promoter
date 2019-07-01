@@ -1539,7 +1539,7 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
         // 传递中文参数编码
         String codedFileName = java.net.URLEncoder.encode("审核任务信息","UTF-8");
         response.setHeader("content-disposition", "attachment;filename=" + codedFileName + ".xls");
-        List<Correct> corrects = correctMapper.getTaskGoodsSkuList(correct);
+        List<Correct> corrects = correctMapper.getTaskList(correct);
         // 定义一个工作薄
         Workbook workbook = new HSSFWorkbook();
         // 创建一个sheet页
@@ -1573,8 +1573,8 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
             row.createCell(4).setCellValue(goods.getPriceType());
             row.createCell(5).setCellValue(goods.getPrice()/100.00);
             row.createCell(6).setCellValue(goods.getManualAuditStatus());
-            row.createCell(7).setCellValue(goods.getAuditerId());
-            row.createCell(8).setCellValue(goods.getCreateTime());
+            row.createCell(7).setCellValue(goods.getRealName());
+            row.createCell(8).setCellValue(DateUtil.date2String(goods.getCreateTime(),pattern));
         }
         OutputStream  fOut = response.getOutputStream();
         workbook.write(fOut);
