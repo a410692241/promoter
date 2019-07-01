@@ -916,19 +916,17 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void buySecondHeigh(ProcurementTask procurementTask) {
         Integer supermarketId = procurementTask.getSupermarketId();
-        OrdersGoods ordersGoods = new OrdersGoods();
         procurementTask = procurementTaskMapper.getProcurementById(procurementTask.getProcurementTaskId());
-        ordersGoods.setOrdersId(Long.parseLong(procurementTask.getOrdersId() + ""));
-        ordersGoods.setGoodsSkuId(procurementTask.getGoodsSkuId());
-        List<OrdersGoods> ordersGoodsList = ordersGoodsMapper.query(ordersGoods);
-        List<Map> list = JSON.parseArray(ordersGoodsList.get(0).getSupermarketList(), Map.class);
+        SupermarketGoods supermarketGoods = new SupermarketGoods();
+        supermarketGoods.setSupermarketId(supermarketId);
+        supermarketGoods.setGoodsSkuId(Long.valueOf(procurementTask.getGoodsSkuId() + ""));
+        List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getSupermarketGoods(supermarketGoods);
+        supermarketGoods = supermarketGoodsList.get(0);
 
-
-        Map s = list.stream().filter(item -> item.get("supermarket_id") == supermarketId).collect(Collectors.toList()).stream().findFirst().orElse(null);
         procurementTask.setQuantity(procurementTask.getQuantity() - procurementTask.getProcureQuantity());
         procurementTask.setProcurementTaskId(null);
         procurementTask.setProcureStatus("PROCURING");
-        procurementTask.setPrice(Integer.parseInt(s.get("price") + ""));
+        procurementTask.setPrice(supermarketGoods.getPrice());
         procurementTask.setActualQuantity(0);
         procurementTask.setProcureQuantity(0);
         procurementTask.setReceiveStatus("WAIT_OUT");
