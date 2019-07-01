@@ -18,30 +18,27 @@ app.service('areaService', [function() {
 	}
 	
 	function save( options ){
+		debugger;
 		var data = options.data;
 		
-	    if( data.status == ""){
-			throw new BusinessException("status不能为空");
-		}
-	    if( data.smallCommunity == ""){
-			throw new BusinessException("小区名不能为空");
-		}
-	    if( data.status == ""){
-			throw new BusinessException("请选择是否检查");
-		}
-	    if( data.createTime == ""){
-			throw new BusinessException("时间不能为空");
-		}
+	    // if( data.province == ""){
+		// 	throw new BusinessException("请选择省");
+		// }
+	    // if( data.city == ""){
+		// 	throw new BusinessException("市不能为空");
+		// }
+	    // if( data.region == ""){
+		// 	throw new BusinessException("小区名不能为空");
+		// }
+	    // if( data.street == ""){
+		// 	throw new BusinessException("街道不能为空");
+		// }
 
 		options.data = {
-            smallCommunityReqId:data.smallCommunityReqId,
-			createTime:new Date( data.createTime ).format('yyyy-MM-dd HH:mm:ss'),
-            status:data.status,
-			nickname:data.nickname,
-			mobile:data.mobile,
-            smallCommunity:data.smallCommunity,
+			code: data.code,
+			name:data.name,
 		}
-		options.url = urls.ms+"/community/smallCommunityReq/save.do";
+		options.url = urls.ms+"/area/save.do";
 		ajax( options );
 	}
 	

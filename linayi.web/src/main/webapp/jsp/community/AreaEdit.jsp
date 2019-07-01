@@ -17,9 +17,9 @@
                     <div class="form-group">
                         <label>省</label>
                         <ui-select
-                                on-select="selectedArea( $item,2 )" ng-model="areaCtrl.city" style="min-width: 200px">
+                                on-select="selectedArea( $item,1 )" ng-model="province" style="min-width: 200px">
                             <ui-select-match>{{$select.selected.name}}</ui-select-match>
-                            <ui-select-choices repeat="item in provinceList | filter:{name: $select.search}">
+                            <ui-select-choices repeat="item in areaCtrl.provinceList | filter:{name: $select.search}">
                                 <span ng-bind-html="item.name | highlight: $select.search"></span>
                             </ui-select-choices>
                         </ui-select>
@@ -29,7 +29,7 @@
                     <div class="form-group">
                         <label>市</label>
                         <ui-select
-                                on-select="selectedArea( $item,2 )" ng-model="areaCtrl.city" style="min-width: 200px">
+                                on-select="selectedArea( $item,2 )" ng-model="city" style="min-width: 200px">
                             <ui-select-match>{{$select.selected.name}}</ui-select-match>
                             <ui-select-choices repeat="item in areaCtrl.cityList | filter:{name: $select.search}">
                                 <span ng-bind-html="item.name | highlight: $select.search"></span>
@@ -41,9 +41,9 @@
                     <div class="form-group">
                         <label>区</label>
                         <ui-select
-                                on-select="selectedArea( $item,2 )" ng-model="areaCtrl.city" style="min-width: 200px">
+                                on-select="$scope.areaCtrl.code=$item.code" ng-model="areaCtrl.region" style="min-width: 200px">
                             <ui-select-match>{{$select.selected.name}}</ui-select-match>
-                            <ui-select-choices repeat="item in areaCtrl.cityList | filter:{name: $select.search}">
+                            <ui-select-choices repeat="item in areaCtrl.regionList | filter:{name: $select.search}">
                                 <span ng-bind-html="item.name | highlight: $select.search"></span>
                             </ui-select-choices>
                         </ui-select>
@@ -53,10 +53,10 @@
                     <div class="form-group">
                         <label>街道</label>
                         <span class="input-icon icon-right">
-                                <input type="text"
-                                       value="{{smallCommunityReq.createTime | date:'yyyy-MM-dd HH:mm:ss'}}"
-                                       class="form-control">
-                                <i class="glyphicon glyphicon-time blue"></i>
+                                 <input type="text"
+                                        ng-model="areaCtrl.name"
+                                        class="form-control">
+                                <i class="glyphicon glyphicon-fire blue"></i>
                             </span>
                     </div>
                 </div>

@@ -52,4 +52,6 @@ public interface CommunityService {
      * @param area
      */
     void bindCommunity(Area area);
+
+    void save(Area area);
 }
