@@ -512,6 +512,6 @@ public class GoodsSkuController extends BaseController{
     @RequestMapping("/viewTask.do")
     @ResponseBody
     public void viewTask(Correct correct, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        goodsService.exportAffectedPriceData(correct,request,response);
+        goodsService.viewTask(correct,request,response);
     }
 }

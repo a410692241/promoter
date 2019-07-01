@@ -36,6 +36,7 @@ public class Correct extends BaseEntity {
 
     private String realName;
     private String userName;
+    private String priceErrorType;
 
     public String getUserName() {
         return userName;

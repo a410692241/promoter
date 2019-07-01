@@ -127,7 +127,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 		List<ProcurementTask> procurementTaskList = procurementTaskMapper.getCommunityProcurementsList(procurementTask);
 		if (procurementTaskList != null && procurementTaskList.size() > 0){
 			for (ProcurementTask task : procurementTaskList) {
-				if(task != null){
+				if(task != null && "PROCURING".equals(procureStatus)){
 					if(task.getProcureMergeNo() == null || "".equals(task.getProcureMergeNo())){
 						//没有采买任务合并编号
                         ProcurementTask procurementTask1 = new ProcurementTask();
@@ -147,6 +147,7 @@ public class ProcurementServiceImpl implements ProcurementService {
 					GoodsSku goods = goodsSkuMapper.getGoodsById(task.getGoodsSkuId());
 					if(goods != null){
 						task.setGoodsImage(ImageUtil.dealToShow(goods.getImage()));
+						task.setBarcode(goods.getBarcode());
 					}
 
 				}
@@ -314,15 +315,35 @@ public class ProcurementServiceImpl implements ProcurementService {
 			ordersGoods.setGoodsSkuId(procurementTask.getGoodsSkuId());
 			List<OrdersGoods> ordersGoodsList = ordersGoodsMapper.query(ordersGoods);
 			ordersGoods = ordersGoodsList.get(0);
-			String supermarketList = ordersGoods.getSupermarketList();
-			List<Map> list = JSON.parseArray(supermarketList, Map.class);
-			ProcurementTask procurementTask1 = new ProcurementTask();
-			procurementTask1.setOrdersId(procurementTask.getOrdersId());
-			procurementTask1.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
-			List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurementTask1);
-			if (list.size() == procurementTaskList.size()){
-				//已经是最后一家
-				updateOrdersStatus(procurementTask,ordersGoods);
+
+			List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getSupermarketGoodsList(procurementTask.getGoodsSkuId(), procurementTask.getCommunityId());
+			if(supermarketGoodsList != null && supermarketGoodsList.size() > 0){
+				MemberPriceUtil.supermarketPriceByLevel(MemberLevel.SUPER,supermarketGoodsList);
+				List<SupermarketGoods> allSpermarketGoodsList = MemberPriceUtil.allSpermarketGoodsList;
+
+				ProcurementTask procurementTask1 = new ProcurementTask();
+				procurementTask1.setOrdersId(procurementTask.getOrdersId());
+				procurementTask1.setOrdersGoodsId(ordersGoods.getOrdersGoodsId());
+				List<ProcurementTask> procurementTaskList = procurementTaskMapper.getProcurementTaskList(procurementTask1);
+				Set<Integer> collect = procurementTaskList.stream().map(ProcurementTask::getSupermarketId).collect(Collectors.toSet());
+
+				List<SupermarketGoods> supermarketGoods1 = allSpermarketGoodsList.stream().filter(supermarketGoods ->  !collect.contains(supermarketGoods.getSupermarketId())).collect(Collectors.toList());
+				Boolean isContinue = true;
+				if(supermarketGoods1 != null && supermarketGoods1.size() > 0){
+					//逆序排序
+//					supermarketGoods1.stream().sorted(Comparator.comparing(SupermarketGoods::getPrice).reversed()).collect(Collectors.toList());
+//					for (SupermarketGoods supermarketGoods : supermarketGoods1) {
+//						if(supermarketGoods.getPrice() <= procurementTask.getPrice()){
+//							isContinue = true;
+//							break;
+//						}
+//					}
+					isContinue = false;
+				}
+				if (isContinue){
+					//已经是最后一家
+					updateOrdersStatus(procurementTask,ordersGoods);
+				}
 			}
 		}
 	}

@@ -955,6 +955,9 @@
             <if test="manualAuditStatus!=null and manualAuditStatus!=''">
              AND   c.manual_audit_status=#{manualAuditStatus}
             </if>
+            <if test="barcode!=null and barcode!=''">
+                AND   gs.barcode LIKE concat('%',#{barcode},'%')
+            </if>
             <if test="createTimeStart != null and createTimeStart != ''">
              AND   pat.create_time <![CDATA[ >= ]]> #{createTimeStart}
             </if>

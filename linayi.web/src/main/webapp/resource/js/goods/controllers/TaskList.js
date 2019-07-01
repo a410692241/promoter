@@ -11,7 +11,8 @@ app.controller('taskCtrl', function($scope,toaster,userService,messager,template
 			manualAuditStatus:'',
 			realName:'',
 			createTimeStart:'',
-			createTimeEnd:''
+			createTimeEnd:'',
+			barcode:''
 		};
 		$scope.list();
 	}
@@ -93,8 +94,14 @@ app.controller('taskCtrl', function($scope,toaster,userService,messager,template
 		var realName = $scope.search.realName;
         var createTimeStart = $scope.search.createTimeStart;
         var createTimeEnd = $scope.search.createTimeEnd;
-
+        var barcode = $scope.search.barcode;
 		var data = '';
+		if (barcode === undefined || barcode == '') {
+			barcode = null;
+		} else {
+			data += '&barcode=' + barcode;
+		}
+
 		if (priceType === undefined || priceType == '') {
             priceType = null;
 		} else {

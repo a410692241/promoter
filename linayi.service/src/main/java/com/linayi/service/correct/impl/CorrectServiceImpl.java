@@ -1110,12 +1110,12 @@ public class CorrectServiceImpl implements CorrectService {
             }else{
                 throw new BusinessException(ErrorType.AUDIT_ERROR); //已经被审核
             }
-        }else if(CorrectStatus.AFFECTED.toString().equals(priceAuditTask.getPriceType())){
+        }else if(CorrectStatus.AFFECTED.toString().equals(priceAuditTask.getPriceType()) && CorrectStatus.AFFECTED.toString().equals(correct1.getStatus())){
             Calendar c = Calendar.getInstance();
             c.setTime(now);
             c.add(Calendar.MONTH, -2);
             Date m3 = c.getTime();
-            if (CorrectStatus.AFFECTED.toString().equals(correct1.getStatus()) && correct1.getAuditTime().compareTo(m3)<0){
+            if (CorrectStatus.NOT_AUDIT.toString().equals(correct1.getManualAuditStatus()) || correct1.getAuditTime().compareTo(m3)<0){
                 correct2.setCorrectId(correct.getCorrectId());
                 correct2.setManualAuditStatus(CorrectStatus.AUDIT_SUCCESS.toString());
                 correct2.setAuditTime(now);
@@ -1134,6 +1134,7 @@ public class CorrectServiceImpl implements CorrectService {
      */
     @Override
     public Correct taskAuditPriceError(Correct correct) {
+        correct.setPriceErrorType("UPDATEPRICE");
         //通过任务id获取原来的状态
         PriceAuditTask priceAuditTask = priceAuditTaskMapper.selectByPrimaryKey(correct.getTaskId());
         //通过纠错id获取状态
@@ -1203,6 +1204,7 @@ public class CorrectServiceImpl implements CorrectService {
     @Override
     @Transactional
     public void noTimePrice(Correct correct) {
+        correct.setPriceErrorType("NOTPRICE");
         //通过任务id获取原来的状态
         PriceAuditTask priceAuditTask = priceAuditTaskMapper.selectByPrimaryKey(correct.getTaskId());
         //通过纠错id获取状态
@@ -1244,18 +1246,26 @@ public class CorrectServiceImpl implements CorrectService {
                 correct2.setAuditerId(correct.getUserId());
                 correct2.setAuditTime(now);
                 correct2.setAuditType("USER");
-                correct2.setManualAuditStatus(CorrectStatus.AUDIT_SUCCESS.toString());
+                if ("UPDATEPRICE".equals(correct.getPriceErrorType())){
+                    correct2.setManualAuditStatus(CorrectStatus.AUDIT_FAIL_CORRECT.toString());
+                }else {
+                    correct2.setManualAuditStatus(CorrectStatus.AUDIT_FAIL_EXPIRED.toString());
+                }
             }else{
                 throw new BusinessException(ErrorType.AUDIT_ERROR); //已经被审核
             }
-        }else if(CorrectStatus.AFFECTED.toString().equals(priceAuditTask.getPriceType())){
+        }else if(CorrectStatus.AFFECTED.toString().equals(priceAuditTask.getPriceType()) && CorrectStatus.AFFECTED.toString().equals(correct1.getStatus())){
             Calendar c = Calendar.getInstance();
             c.setTime(now);
             c.add(Calendar.MONTH, -2);
             Date m3 = c.getTime();
-            if (CorrectStatus.AFFECTED.toString().equals(correct1.getStatus()) && correct1.getAuditTime().compareTo(m3)<0){
+            if (CorrectStatus.NOT_AUDIT.toString().equals(correct1.getManualAuditStatus()) || correct1.getAuditTime().compareTo(m3)<0){
                 correct2.setCorrectId(correct.getCorrectId());
-                correct2.setManualAuditStatus(CorrectStatus.AUDIT_FAIL.toString());
+                if ("UPDATEPRICE".equals(correct.getPriceErrorType())){
+                    correct2.setManualAuditStatus(CorrectStatus.AUDIT_FAIL_CORRECT.toString());
+                }else {
+                    correct2.setManualAuditStatus(CorrectStatus.AUDIT_FAIL_EXPIRED.toString());
+                }
                 correct2.setAuditTime(now);
                 correct2.setAuditerAfterAffect(correct.getUserId());
             }else{
