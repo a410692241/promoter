@@ -49,4 +49,6 @@ public interface AuthenticationApplyMapper {
 	Integer updateStatusByApplyId2(AuthenticationApply apply);
 
 	void update(AuthenticationApply authenticationApply);
+
+	List<AuthenticationApply> getorderManApplyByMobile(String mobile);
 }

@@ -255,4 +255,24 @@
 		WHERE
 		apply_id=#{applyId}
 	</update>
+
+	<select id="getorderManApplyByMobile" resultType="com.linayi.entity.user.AuthenticationApply">
+	  SELECT
+		apply_id applyId,
+		user_id userId,
+		authentication_type authenticationType,
+		real_name realName,
+		mobile,
+		id_card_front idCardFront,
+		id_card_back idCardBack,
+		status,
+		update_time updateTime,
+		create_time createTime,
+		order_man_id
+	  FROM
+		authentication_apply
+	  WHERE
+		mobile=#{mobile} and authentication_type='ORDER_MAN' and status='AUDIT_SUCCESS'
+	</select>
+
 </mapper>
