@@ -6,6 +6,9 @@ public enum CorrectStatus {
     RECALL("撤回"),
     AUDIT_FAIL("审核不通过"),
     AFFECTED("已生效"),
+    NOT_AUDIT("未审核"),
+    AUDIT_FAIL_EXPIRED("价格错误过期"),
+    AUDIT_FAIL_CORRECT("价格错误修改价格"),
     EXPIRED("已过期");
 
 

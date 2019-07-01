@@ -942,7 +942,7 @@
             gs.barcode,
             gs.goods_sku_id,
             c.price,
-            if(pat.price_type='WAIT_AUDIT','待审核','已生效') priceType,
+            if(pat.price_type='WAIT_AUDIT','未生效','已生效') priceType,
             (select real_name from user where user_id = IF(pat.price_type='WAIT_AUDIT',c.auditer_id,c.auditer_after_affect)) realName,
             (case c.manual_audit_status when 'NOT_AUDIT' then '未审核' when 'AUDIT_SUCCESS' then '审核通过' when 'AUDIT_FAIL' then '价格错误' end) manualAuditStatus
        FROM
@@ -954,6 +954,9 @@
             </if>
             <if test="manualAuditStatus!=null and manualAuditStatus!=''">
              AND   c.manual_audit_status=#{manualAuditStatus}
+            </if>
+            <if test="barcode!=null and barcode!=''">
+                AND   gs.barcode LIKE concat('%',#{barcode},'%')
             </if>
             <if test="createTimeStart != null and createTimeStart != ''">
              AND   pat.create_time <![CDATA[ >= ]]> #{createTimeStart}
