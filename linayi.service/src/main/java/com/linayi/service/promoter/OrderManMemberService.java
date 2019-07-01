@@ -43,4 +43,11 @@ public interface OrderManMemberService {
 	 * @param date
 	 */
 	void updateMemberInfo(Date date);
+
+	/**
+	 * 用户绑定家庭服务师插入会员表信息
+	 * @param uid	用户id
+	 * @param userId	家庭服务师id
+	 */
+	public void userAddMemberInfo(Integer uid,Integer userId);
 }
