@@ -327,16 +327,17 @@ public class ProcurementServiceImpl implements ProcurementService {
 				Set<Integer> collect = procurementTaskList.stream().map(ProcurementTask::getSupermarketId).collect(Collectors.toSet());
 
 				List<SupermarketGoods> supermarketGoods1 = allSpermarketGoodsList.stream().filter(supermarketGoods ->  !collect.contains(supermarketGoods.getSupermarketId())).collect(Collectors.toList());
-				Boolean isContinue = false;
+				Boolean isContinue = true;
 				if(supermarketGoods1 != null && supermarketGoods1.size() > 0){
 					//逆序排序
-					supermarketGoods1.stream().sorted(Comparator.comparing(SupermarketGoods::getPrice).reversed()).collect(Collectors.toList());
-					for (SupermarketGoods supermarketGoods : supermarketGoods1) {
-						if(supermarketGoods.getPrice() <= procurementTask.getPrice()){
-							isContinue = true;
-							break;
-						}
-					}
+//					supermarketGoods1.stream().sorted(Comparator.comparing(SupermarketGoods::getPrice).reversed()).collect(Collectors.toList());
+//					for (SupermarketGoods supermarketGoods : supermarketGoods1) {
+//						if(supermarketGoods.getPrice() <= procurementTask.getPrice()){
+//							isContinue = true;
+//							break;
+//						}
+//					}
+					isContinue = false;
 				}
 				if (isContinue){
 					//已经是最后一家
