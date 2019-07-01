@@ -7,6 +7,7 @@ import com.linayi.dao.account.EmployeeMapper;
 import com.linayi.dao.area.AreaMapper;
 import com.linayi.dao.area.SmallCommunityMapper;
 import com.linayi.dao.promoter.OpenOrderManInfoMapper;
+import com.linayi.dao.user.AuthenticationApplyMapper;
 import com.linayi.dao.user.UserMapper;
 import com.linayi.entity.account.Account;
 import com.linayi.entity.account.AdminAccount;
@@ -14,10 +15,12 @@ import com.linayi.entity.account.Employee;
 import com.linayi.entity.area.Area;
 import com.linayi.entity.area.SmallCommunity;
 import com.linayi.entity.promoter.OpenOrderManInfo;
+import com.linayi.entity.user.AuthenticationApply;
 import com.linayi.entity.user.User;
 import com.linayi.enums.EnabledDisabled;
 import com.linayi.exception.BusinessException;
 import com.linayi.exception.ErrorType;
+import com.linayi.service.promoter.OrderManMemberService;
 import com.linayi.service.redis.RedisService;
 import com.linayi.service.user.UserService;
 import com.linayi.util.*;
@@ -51,6 +54,12 @@ public class UserServiceImpl implements UserService {
     private AreaMapper areaMapper;
     @Resource
     private OpenOrderManInfoMapper openOrderManInfoMapper;
+    @Resource
+    private AuthenticationApplyMapper authenticationApplyMapper;
+    @Resource
+    private OrderManMemberService orderManMemberService;
+
+
 
 
 
@@ -359,18 +368,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public ResponseData bindingHomeHelper(Integer userId, String mobile) {
-            Integer useId = accountMapper.getUserIdByMobile(mobile);
-            if(useId == null){
-                return new ResponseData(ErrorType.USER_DOES_NOT_EXIST);
-            }
-            List<OpenOrderManInfo> orderManInfoByEndTime = openOrderManInfoMapper.getOpenOrderManInfoByEndTime(useId);
+//            Integer useId = accountMapper.getUserIdByMobile(mobile);
+//            if(useId == null){
+//                return new ResponseData(ErrorType.USER_DOES_NOT_EXIST);
+//            }
+        AuthenticationApply authenticationApply = authenticationApplyMapper.getorderManApplyByMobile(mobile).stream().findFirst().orElse(null);
+        if(authenticationApply == null){
+            return new ResponseData(ErrorType.NO_ORDER_MAN);
+        }
+        Integer orderManId = authenticationApply.getUserId();
+        List<OpenOrderManInfo> orderManInfoByEndTime = openOrderManInfoMapper.getOpenOrderManInfoByEndTime(orderManId);
             if(orderManInfoByEndTime != null && orderManInfoByEndTime.size() > 0){
                 User user = new User();
                 user.setUserId(userId);
                 user.setUpdateTime(new Date());
-                user.setOrderManId(useId);
+                user.setOrderManId(orderManInfoByEndTime.get(0).getOrderManId());
                 userMapper.updateUserByuserId(user);
+
+                //插入会员表（非会员等级）
+                orderManMemberService.userAddMemberInfo(userId,orderManId);
+
                 return new ResponseData("success");
             }
             return new ResponseData(ErrorType.NO_ORDER_MAN);
