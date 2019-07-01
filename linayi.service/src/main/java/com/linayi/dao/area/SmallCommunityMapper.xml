@@ -216,12 +216,12 @@
    			</if>
    			update_time=#{updateTime}
    		</set>
-   		WHERE
+   		WHERE 1=1
 	   <if test="smallCommunityId != null and smallCommunityId != ''">
-   			small_community_id=#{smallCommunityId}
+   			and small_community_id=#{smallCommunityId}
 	   </if>
 	   <if test="areaCode != null and areaCode != ''">
-		   area_code=#{areaCode}
+		  and area_code=#{areaCode}
 	   </if>
 	   <if test="source != null and source != ''">
 		 and source=#{source}
