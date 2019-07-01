@@ -300,7 +300,7 @@
             oomi.order_man_id,
             u.nickname,
             aa.mobile,
-            (select real_name from authentication_apply where user_id = oomi.sales_id and authentication_type='ORDER_MAN' GROUP BY user_id) salesName,
+            (select real_name from authentication_apply where user_id = oomi.sales_id and authentication_type='ORDER_MAN' and status='AUDIT_SUCCESS' GROUP BY user_id) salesName,
             aa.real_name,
             u.is_order_man,
             oomi.start_time,
