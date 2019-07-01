@@ -319,7 +319,6 @@ public class ProcurementServiceImpl implements ProcurementService {
 			if(supermarketGoodsList != null && supermarketGoodsList.size() > 0){
 				MemberPriceUtil.supermarketPriceByLevel(MemberLevel.SUPER,supermarketGoodsList);
 				List<SupermarketGoods> allSpermarketGoodsList = MemberPriceUtil.allSpermarketGoodsList;
-//				SupermarketGoods supermarketGoods = allSpermarketGoodsList.get(allSpermarketGoodsList.size() - 1);
 
 				ProcurementTask procurementTask1 = new ProcurementTask();
 				procurementTask1.setOrdersId(procurementTask.getOrdersId());
