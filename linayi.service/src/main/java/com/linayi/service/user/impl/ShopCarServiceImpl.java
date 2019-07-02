@@ -111,6 +111,10 @@ public class ShopCarServiceImpl implements ShopCarService {
                 continue;
             }
             Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketIdAndPriceByLevel(currentMemberLevel, communityGoods);
+            if(idAndPriceByLevel[1] == null && idAndPriceByLevel[0] == null){
+                shoppingCars.add(car);
+                continue;
+            }
             Integer minPrice = idAndPriceByLevel[0];
             car.setMinPrice(getpriceString(minPrice));
             car.setMinSupermarketName(supermarketService.getSupermarketById(idAndPriceByLevel[1]).getName());
