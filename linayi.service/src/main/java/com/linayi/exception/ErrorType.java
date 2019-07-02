@@ -23,6 +23,7 @@ public enum ErrorType {
     THE_ACCOUNT_HAS_BEEN_BOUND_TO_THE_PHONE_NUMBER(1904, "该账号已绑定手机号!"),
     THE_MOBILE_PHONE_NUMBER_HAS_BEEN_BOUND_TO_WECHAT(1904, "该手机号已经绑定微信!"),
     THE_PHONE_NUMBER_HAS_BEEN_REGIST(1904, "该手机号已被注册!"),
+    NO_COMMUNITY(1904, "暂无小区!"),
     MESSAGE_FAILED_TO_SEND(1905, "短信发送失败!"),
     TOKEN_DISABLED(1906, "accessToken失效!"),
     ACCOUNT_ERROR(1908,"账号或手机号重复"),
