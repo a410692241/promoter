@@ -62,9 +62,9 @@ app.controller('areaCommunityCtrl', function ($scope, toaster, areaCommunityServ
                 success: function (data) {
                     if (data.respCode === 'S') {
                         $modalInstance.close();
-                        toaster.success("", "操作成功", 3000);
                         $scope.communityId = communityId;
                         $("#areaCommunityList").trigger("reloadGrid");
+                        $("#areaList").trigger("reloadGrid");
                     } else {
                         toaster.error("", data.msg, 3000);
                     }
