@@ -1,14 +1,12 @@
 'use strict';
 
 app.controller('areaCtrl', function ($scope, toaster, areaService, messager, templateform,$http ) {
-    var provinceList = [];
     function init() {
         $scope.list = list;
         $scope.showCommunity = showCommunity;
         $scope.edit = edit;
         $scope.save = save;
         $scope.list();
-        provinceList = $scope.provinceList;
         $scope.search = {
             areaId: '',
             fullName: '',
@@ -97,38 +95,75 @@ app.controller('areaCtrl', function ($scope, toaster, areaService, messager, tem
             responseType:"json"
         }).then(function successCallback(response) {
             openEdit( response.data.data )
-            // this callback will be called asynchronously
-            // when the response is available
         }, function errorCallback(response) {
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
         });
     }
 
-    function openEdit(areaList) {
-        console.log(areaList);
-        debugger;
-        var url = urls.ms + "/area/add.do?";
+    function openEdit(data) {
+        var url = urls.ms + "/jsp/community/AreaEdit.jsp";
         templateform.open({
             title: "添加街道",
             url: url,
             scope: $scope,
+            data:data,
             onOpen: function ($modalInstance, data, $scope) {
+                $scope.areaCtrl={
+                    code : '',
+                    name: ''
+                }
 //				/*绑定数据edit*/
-                provinceList = areaList[1000];
+                var areaList  = data.areaList;
+                var areaCtrl = $scope.areaCtrl = {
+                    provinceList: areaList[1000],
+                    province: {},
+                    cityList: data.area ? areaList[data.province] : [],
+                    city: {},
+                    regionList: data.area ? areaList[data.city] : [],
+                    region: {}
+                };
+                $scope.selectedArea = function( $item, level){
+                    /*改变区域时,后台获取的数据*/
+                    switch (level) {
+                        case 1:
+                            areaCtrl.cityList = areaList[$item.code];
+                            areaCtrl.city={};
 
+                            areaCtrl.regionList = [];
+                            areaCtrl.region={};
 
+                            areaCtrl.streetList = [];
+                            areaCtrl.street = {};
+
+                            break;
+                        case 2:
+                            areaCtrl.regionList = [];
+                            areaCtrl.region={};
+
+                            areaCtrl.streetList = [];
+                            areaCtrl.street = {};
+
+                            areaCtrl.regionList = areaList[$item.code];
+                            break;
+                        /*获取区下的社区和小区列表*/
+                        default :
+                            break;
+                    }
+                }
             }
         }, function ($modalInstance, data, $scope) {
             save($modalInstance, data, $scope);
         });
     }
 
-    function save() {
+    function save($modalInstance, data, $scope) {
         //新增
+        $scope.areaCtrl.code = $scope.areaCtrl.region.code;
         try {
             areaService.save({
-                data: $scope.community,
+                data: {
+                    code:$scope.areaCtrl.code,
+                    name: $scope.areaCtrl.name
+                },
                 success: function (data) {
                     if (data.respCode == "S") {
                         $("#areaCommunityList").trigger("reloadGrid");

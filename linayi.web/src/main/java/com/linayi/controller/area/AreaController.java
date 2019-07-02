@@ -114,10 +114,10 @@ public class AreaController {
 		result.put("areaList", allAreaList);
 		return new ResponseData(result);
 	}
-	@GetMapping("/save.do")
+	@PostMapping("/save.do")
 	@ResponseBody
 	public Object save(Area area) {
-		communityService.bindCommunity(area);
+		communityService.save(area);
 		return new ResponseData("添加成功!");
 	}
 

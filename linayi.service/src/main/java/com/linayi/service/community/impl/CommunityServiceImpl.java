@@ -140,4 +140,27 @@ public class CommunityServiceImpl implements CommunityService {
         //更新街道绑定的网点
         areaMapper.updateByPrimaryKey(area);
     }
+
+    @Override
+    public void save(Area area) {
+
+        String parent = area.getCode();
+        //使用上级编号生成子集编号
+        Area areaParam = new Area();
+        areaParam.setParent(parent);
+        List<Area> areaList = areaMapper.query(areaParam);
+        String newCode;
+        //存在已知最大code则+1,否则在父code上加000001
+        if (areaList != null && areaList.size() > 0) {
+            areaList.sort((a, b) -> (int) (Long.parseLong(b.getCode()) - Long.parseLong(a.getCode())));
+            newCode = Long.parseLong(areaList.stream().findFirst().orElse(null).getCode()) + 1 + "";
+        } else {
+            newCode = parent + "000001";
+        }
+        area.setParent(parent);
+        short level = 4;
+        area.setLevel(level);
+        area.setCode((newCode));
+        areaMapper.insert(area);
+    }
 }
