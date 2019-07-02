@@ -258,4 +258,14 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where order_man_reward_id = #{orderManRewardId,jdbcType=INTEGER}
   </update>
+
+  <select id="selectByOrderManId" resultType="com.linayi.entity.promoter.OrderManReward">
+  SELECT
+    *,rr.rule__description
+  FROM
+    order_man_reward omr Left JOIN reward_rule rr ON omr.reward_rule_id=rr.reward_rule_id
+  WHERE
+    omr.order_man_id=#{orderManId}
+  </select>
+
 </mapper>

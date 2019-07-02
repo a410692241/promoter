@@ -3,6 +3,7 @@ package com.linayi.controller.promoter;
 import com.linayi.dao.promoter.OpenOrderManInfoMapper;
 import com.linayi.entity.goods.GoodsSku;
 import com.linayi.entity.promoter.OpenOrderManInfo;
+import com.linayi.entity.promoter.OrderManReward;
 import com.linayi.entity.promoter.Promoter;
 import com.linayi.exception.ErrorType;
 import com.linayi.service.promoter.PromoterOrderManService;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -82,5 +84,14 @@ public class PromoterController {
 //        }
     }
 
+
+    //家庭服务师奖励明细
+    @RequestMapping("/rewardList.do")
+    public Object rewardList(OpenOrderManInfo openOrderManInfo, ModelMap modelMap) {
+        List<OrderManReward> orderManRewards = promoterOrderManService.getOrderManReward(openOrderManInfo.getOrderManId());
+        modelMap.addAttribute("orderManRewards", orderManRewards);
+
+        return "/jsp/user/OrderManReward";
+    }
 
 }
