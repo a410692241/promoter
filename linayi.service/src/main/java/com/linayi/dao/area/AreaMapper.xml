@@ -11,10 +11,10 @@
   </resultMap>
   <insert id="insert" parameterType="com.linayi.entity.area.Area">
     insert into area (code, parent, name, 
-      level, rank, section_no
+      level, rank, section_no,create_time
       )
     values (#{code,jdbcType=VARCHAR}, #{parent,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{level,jdbcType=SMALLINT}, #{rank,jdbcType=INTEGER}, #{sectionNo,jdbcType=VARCHAR}
+      #{level,jdbcType=SMALLINT}, #{rank,jdbcType=INTEGER}, #{sectionNo,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.linayi.entity.area.Area">
@@ -92,7 +92,7 @@
     数据库表的基本查询列名集合
   -->
     <sql id="Base_Column_List">
-        code, name, parent, level, rank, section_no,community_id
+        code, name, parent, level, rank, section_no,community_id,create_time
     </sql>
 
     <!--
@@ -117,6 +117,12 @@
         <if test="sectionNo != null">
             and section_no = #{sectionNo,jdbcType=VARCHAR}
         </if>
+        <if test="createTimeStart != null">
+            AND create_time <![CDATA[ >= ]]> #{createTimeStart}
+        </if>
+        <if test="createTimeEnd != null">
+            AND create_time <![CDATA[ <= ]]> #{createTimeEnd}
+        </if>
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -133,6 +139,7 @@
         <where>
             <include refid="Base_Query_Where"></include>
         </where>
+        order by create_time desc
     </select>
 
     <!--

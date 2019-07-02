@@ -1,7 +1,9 @@
 package com.linayi.entity.area;
 
 import com.linayi.entity.BaseEntity;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.Date;
 import java.util.List;
 
 public class Area extends BaseEntity {
@@ -26,6 +28,15 @@ public class Area extends BaseEntity {
     private String communityName;
 
     private Integer communityId;
+
+    @DateTimeFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
+    private Date createTime;
+
+    @DateTimeFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
+    private Date createTimeStart;
+
+    @DateTimeFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
+    private Date createTimeEnd;
 
     public String getCode() {
         return code;
@@ -114,5 +125,29 @@ public class Area extends BaseEntity {
 
     public void setCommunityId(Integer communityId) {
         this.communityId = communityId;
+    }
+
+    public Date getCreateTimeStart() {
+        return createTimeStart;
+    }
+
+    public void setCreateTimeStart(Date createTimeStart) {
+        this.createTimeStart = createTimeStart;
+    }
+
+    public Date getCreateTimeEnd() {
+        return createTimeEnd;
+    }
+
+    public void setCreateTimeEnd(Date createTimeEnd) {
+        this.createTimeEnd = createTimeEnd;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

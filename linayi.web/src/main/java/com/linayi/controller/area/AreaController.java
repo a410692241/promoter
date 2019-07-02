@@ -7,6 +7,9 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.linayi.entity.account.Account;
+import com.linayi.exception.BusinessException;
+import com.linayi.exception.ErrorType;
 import com.linayi.service.community.CommunityService;
 import com.linayi.util.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,8 +120,16 @@ public class AreaController {
 	@PostMapping("/save.do")
 	@ResponseBody
 	public Object save(Area area) {
-		communityService.save(area);
-		return new ResponseData("添加成功!");
+		try {
+			communityService.save(area);
+			return new ResponseData("添加成功!");
+		} catch (BusinessException e) {
+			return new ResponseData(e.getErrorType());
+		} catch (Exception e) {
+			return new ResponseData(ErrorType.SYSTEM_ERROR);
+		}
+
+
 	}
 
 }

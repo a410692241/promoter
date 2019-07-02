@@ -39,7 +39,7 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label>区</label>
+                        <label style="vertical-align: inherit;">区(县与区视为同等级)</label>
                         <ui-select
                                 on-select="$scope.areaCtrl.code=$item.code" ng-model="areaCtrl.region" style="min-width: 200px">
                             <ui-select-match>{{$select.selected.name}}</ui-select-match>
@@ -58,6 +58,7 @@
                                         class="form-control">
                                 <i class="glyphicon glyphicon-fire blue"></i>
                             </span>
+
                     </div>
                 </div>
             </form>

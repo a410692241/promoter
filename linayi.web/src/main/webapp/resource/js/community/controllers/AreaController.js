@@ -12,7 +12,9 @@ app.controller('areaCtrl', function ($scope, toaster, areaService, messager, tem
             fullName: '',
             streetName: '',
             communityName: '',
-            createTime: ''
+            createTime: '',
+            createTimeStart:"",
+            createTimeEnd:""
         }
     }
 
@@ -47,6 +49,9 @@ app.controller('areaCtrl', function ($scope, toaster, areaService, messager, tem
                         }
                     }
                 },
+                {name:'createTime',label:'创建时间',sortable:false,formatter:function( cellvalue, options, rowObject ){
+                        return cellvalue ? new Date( cellvalue ).format("yyyy-MM-dd hh:mm:ss") : "";
+                    }},
                 {
                     label: "操作",
                     name: "opt",
@@ -166,11 +171,11 @@ app.controller('areaCtrl', function ($scope, toaster, areaService, messager, tem
                 },
                 success: function (data) {
                     if (data.respCode == "S") {
-                        $("#areaCommunityList").trigger("reloadGrid");
+                        $("#areaList").trigger("reloadGrid");
                         $modalInstance.close();
                     } else {
                         $scope.$apply(function () {
-                            toaster.error("", data.errorType, 1000);
+                            toaster.error("", data.data, 1000);
                         });
                     }
                 }

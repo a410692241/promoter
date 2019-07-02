@@ -31,6 +31,21 @@
                         </div>
                     </div>
 
+                    <div class="form-group form-group-margin">
+                        <div class="input-group">
+                            <span class="input-group-addon"> 创建时间</span>
+                            <input type="text" class="form-control" datetimepicker ng-model="search.createTimeStart"/>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-margin">
+                        至
+                    </div>
+                    <div class="form-group form-group-margin">
+                        <div class="input-group">
+                            <input type="text" class="form-control" datetimepicker ng-model="search.createTimeEnd"/>
+                        </div>
+                    </div>
+
                     <a ng-click="list()" class="btn btn-primary form-group-margin" href="javascript:void(0);">
                         <i class="fa fa-search"></i>搜索
                     </a>

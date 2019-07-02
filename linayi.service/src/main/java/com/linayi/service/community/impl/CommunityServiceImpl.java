@@ -143,12 +143,16 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     public void save(Area area) {
-
         String parent = area.getCode();
         //使用上级编号生成子集编号
         Area areaParam = new Area();
         areaParam.setParent(parent);
+        //避免重复添加街道
         List<Area> areaList = areaMapper.query(areaParam);
+        List<String> nameList = areaList.stream().collect(Collectors.mapping(Area::getName, Collectors.toList()));
+        if (nameList.contains(area.getName())) {
+            throw new BusinessException(ErrorType.DO_NOT_ADD_STREETS_REPEATEDLY);
+        }
         String newCode;
         //存在已知最大code则+1,否则在父code上加000001
         if (areaList != null && areaList.size() > 0) {
@@ -161,6 +165,7 @@ public class CommunityServiceImpl implements CommunityService {
         short level = 4;
         area.setLevel(level);
         area.setCode((newCode));
+        area.setCreateTime(new Date());
         areaMapper.insert(area);
     }
 }

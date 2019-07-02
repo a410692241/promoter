@@ -18,9 +18,8 @@ app.service('areaService', [function() {
 	}
 	
 	function save( options ){
-		debugger;
 		var data = options.data;
-		
+
 	    // if( data.province == ""){
 		// 	throw new BusinessException("请选择省");
 		// }
@@ -30,9 +29,9 @@ app.service('areaService', [function() {
 	    // if( data.region == ""){
 		// 	throw new BusinessException("小区名不能为空");
 		// }
-	    // if( data.street == ""){
-		// 	throw new BusinessException("街道不能为空");
-		// }
+	    if( !data || data.name == ""){
+			throw new BusinessException("请填写街道!");
+		}
 
 		options.data = {
 			code: data.code,
