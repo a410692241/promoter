@@ -190,10 +190,7 @@ public class OrderServiceImpl implements OrderService {
         for (ShoppingCar car : shoppingCars) {
             List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getSupermarketGoodsList(car.getGoodsSkuId(), smallCommunity.getCommunityId());
             MemberPriceUtil.supermarketPriceByLevel(currentMemberLevel,supermarketGoodsList);
-            List<SupermarketGoods> supermarketGoods1 = MemberPriceUtil.supermarketGoods;
-            if(supermarketGoods1 == null || supermarketGoods1.size() <= 0){
-                continue;
-            }
+
             OrdersGoods ordersGoods = generateOrdersGoods(order,MemberPriceUtil.supermarketGoods,MemberPriceUtil.allSpermarketGoodsList, car.getQuantity(), car.getGoodsSkuId());
             ordersGoodsMapper.insert(ordersGoods);
             SupermarketGoods supermarketGoods = MemberPriceUtil.allSpermarketGoodsList.get(MemberPriceUtil.allSpermarketGoodsList.size() - 1);
