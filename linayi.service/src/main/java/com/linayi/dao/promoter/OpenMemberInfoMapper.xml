@@ -44,6 +44,7 @@
                 AND omi.order_man_id = #{orderManId}
             </if>
         </where>
+        and omi.member_level IS NOT NULL
         and u.is_member = 'TRUE'
         ORDER BY create_time DESC
     </select>
