@@ -168,12 +168,28 @@ public class OrderServiceImpl implements OrderService {
             smallCommunity.setSmallCommunityId(receiveAddress.getAddressOne());
             smallCommunity = smallCommunityMapper.getSmallCommunity(smallCommunity);
         }
+        MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(userId);
         Integer num = 0;
+        ArrayList<ShoppingCar> cars = new ArrayList<>();
         if (shoppingCars != null && shoppingCars.size() > 0) {
             for (ShoppingCar car : shoppingCars) {
+                CommunityGoods communityGoods = new CommunityGoods();
+                communityGoods.setCommunityId(smallCommunity.getCommunityId());
+                communityGoods.setGoodsSkuId(car.getGoodsSkuId());
+                communityGoods = communityGoodsService.getCommunityGoods(communityGoods);
+                if(communityGoods == null){
+                    cars.add(car);
+                    continue;
+                }
+                Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketIdAndPriceByLevel(currentMemberLevel, communityGoods);
+                if(idAndPriceByLevel[1] == null && idAndPriceByLevel[0] == null){
+                    cars.add(car);
+                    continue;
+                }
                 num += car.getQuantity();
             }
         }
+        shoppingCars.removeAll(cars);
         Orders order = generateOrders(userId, payWay, remark, amount, saveAmount, extraFee, serviceFee, num, receiveAddress, smallCommunity,receiveAddressId,addressType);
         if (isVIP){
             Integer openOrderManInfoId = openMemberInfo.getOpenOrderManInfoId();
@@ -185,7 +201,7 @@ public class OrderServiceImpl implements OrderService {
         }
         // 插入订单
         ordersMapper.insert(order);
-        MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(userId);
+
         //新增订单商品
         for (ShoppingCar car : shoppingCars) {
             List<SupermarketGoods> supermarketGoodsList = supermarketGoodsService.getSupermarketGoodsList(car.getGoodsSkuId(), smallCommunity.getCommunityId());
