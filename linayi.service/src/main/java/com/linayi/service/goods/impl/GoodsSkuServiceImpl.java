@@ -914,6 +914,8 @@ public class GoodsSkuServiceImpl implements GoodsSkuService {
         //超级vip
         else if (MemberLevel.SUPER.toString().equals(currentMemberLevel.toString())) {
             keyword = "Super";
+        }else{
+            keyword = "Normal";
         }
         String key = esConfig.getKey();
         SearchRequest searchRequest = new SearchRequest();

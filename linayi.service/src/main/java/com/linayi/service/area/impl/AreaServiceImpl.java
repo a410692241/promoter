@@ -11,6 +11,8 @@ import com.linayi.entity.community.Community;
 import com.linayi.entity.community.SmallCommunityReq;
 import com.linayi.entity.user.User;
 import com.linayi.enums.SmallCommunityReqType;
+import com.linayi.exception.BusinessException;
+import com.linayi.exception.ErrorType;
 import com.linayi.service.area.AreaService;
 import com.linayi.service.community.SmallCommunityReqService;
 import com.linayi.service.order.OrderService;
@@ -216,7 +218,7 @@ public class AreaServiceImpl implements AreaService {
         //防止初始化小区列表加载过慢
         SmallCommunity smallCommunity = new SmallCommunity();
         if (CheckUtil.isNullEmpty(key)) {
-            return  new PageResult<>(smallCommunityFullNames,smallCommunity);
+            throw new BusinessException(ErrorType.NO_COMMUNITY);
         }
         smallCommunity.setName(key);
         smallCommunity.setCurrentPage(currentPage);
@@ -239,19 +241,7 @@ public class AreaServiceImpl implements AreaService {
 
         });
         //保存空查询结果,统计到小区申请表(small_community_req)
-        if (smallCommunityFullNames.size() == 0) {
-            Integer userId = searchSmallCommunityByKey.getUserId();
-            User user = userMapper.selectUserByuserId(userId);
-            SmallCommunityReq smallCommunityReq = new SmallCommunityReq();
-            smallCommunityReq.setNickname(user.getNickname());
-            smallCommunityReq.setMobile(user.getMobile());
-            smallCommunityReq.setSmallCommunity(key);
-            smallCommunityReq.setCreateTime(new Date());
-            smallCommunityReq.setStatus(SmallCommunityReqType.NOTVIEWED.name());
-            smallCommunityReqService.addSmallCommunityReq(smallCommunityReq);
-        }
         PageResult<SmallCommunityFullName> goodsSkuPageResult = new PageResult<>(smallCommunityFullNames, smallCommunity);
-//        goodsSkuPageResult.setTotalPage(smallCommunity.getTotal()/pageSize);
         return goodsSkuPageResult;
     }
 
