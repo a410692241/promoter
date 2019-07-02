@@ -249,7 +249,7 @@ public class ShopCarServiceImpl implements ShopCarService {
         // 共多少件
         Integer totalPipce = 0;
         MemberLevel currentMemberLevel = openMemberInfoService.getCurrentMemberLevel(shoppingCar.getUserId());
-
+        ArrayList<ShoppingCar> cars = new ArrayList<>();
         for (ShoppingCar car : shoppingCars) {
             totalPipce += car.getQuantity();
             GoodsSku goodsSku = goodsSkuMapper.getGoodsById(car.getGoodsSkuId());
@@ -259,9 +259,17 @@ public class ShopCarServiceImpl implements ShopCarService {
             communityGoods.setCommunityId(communityId);
             communityGoods.setGoodsSkuId(car.getGoodsSkuId());
             communityGoods = communityGoodsService.getCommunityGoods(communityGoods);
+            if(communityGoods == null){
+                cars.add(car);
+                continue;
+            }
             Integer[] idAndPriceByLevel = MemberPriceUtil.supermarketIdAndPriceByLevel(currentMemberLevel, communityGoods);
             Integer minPrice = idAndPriceByLevel[0];
             Integer maxPrice = idAndPriceByLevel[2];
+            if(idAndPriceByLevel[1] == null && idAndPriceByLevel[0] == null){
+                cars.add(car);
+                continue;
+            }
 
             car.setMinPrice(getpriceString(minPrice));
             car.setMaxPrice(getpriceString(maxPrice));
@@ -275,6 +283,7 @@ public class ShopCarServiceImpl implements ShopCarService {
                 totalPrice += car.getQuantity() * minPrice;
             }
         }
+        shoppingCars.removeAll(cars);
         result.put("shopCars",shoppingCars);
 
         result.put("offerPrice",getpriceString(offerPrice));
