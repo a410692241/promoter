@@ -138,13 +138,13 @@ public class OrderServiceImpl implements OrderService {
 //                    openMemberInfoMapper.updateById(openMemberInfo);
 //                }
             }else {
-//                return new ResponseData(ErrorType.NOT_MEMBER);
+                return new ResponseData(ErrorType.NOT_MEMBER);
 //                //不是会员必须绑定家庭服务师
-                orderManId = user.getOrderManId();
-                if(orderManId == null){
-                    //没有绑定家庭服务师
-                    return new ResponseData(ErrorType.NO_BINDING_ORDER_MAN);
-                }
+//                orderManId = user.getOrderManId();
+//                if(orderManId == null){
+//                    //没有绑定家庭服务师
+//                    return new ResponseData(ErrorType.NO_BINDING_ORDER_MAN);
+//                }
             }
         }
 
