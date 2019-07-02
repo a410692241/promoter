@@ -27,4 +27,6 @@ public interface OrderManRewardMapper {
     int updateByPrimaryKeySelective(OrderManReward record);
 
     int updateByPrimaryKey(OrderManReward record);
+
+    List<OrderManReward> selectByOrderManId(Integer orderManId);
 }

@@ -3,6 +3,7 @@ package com.linayi.service.promoter;
 import com.linayi.entity.order.Orders;
 import com.linayi.entity.promoter.OpenOrderManInfo;
 import com.linayi.entity.promoter.OrderManMember;
+import com.linayi.entity.promoter.OrderManReward;
 import com.linayi.entity.promoter.PromoterOrderMan;
 import com.linayi.entity.user.AuthenticationApply;
 import org.springframework.web.multipart.MultipartFile;
@@ -146,4 +147,6 @@ public interface PromoterOrderManService {
      * @return
      */
     List<OpenOrderManInfo> getOrderManListForWeb(OpenOrderManInfo openOrderManInfo);
+
+    List<OrderManReward> getOrderManReward(Integer orderManId);
 }

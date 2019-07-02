@@ -4,6 +4,7 @@ app.controller('orderManCtrl', function($scope,toaster,orderManService,messager,
 	function init(){
 		$scope.list = list;
         $scope.orderMan = orderMan;
+		$scope.rewardSettlement = rewardSettlement;
 		$scope.batchDelivery= batchDelivery;
 		$scope.exportData = exportData;
 		$scope.list();
@@ -66,6 +67,7 @@ app.controller('orderManCtrl', function($scope,toaster,orderManService,messager,
 							}else{
 								opts = opts + "<a href='javascript:void(0);' ng-click='orderMan( "+rowObject.orderManId+" ,"+ 10 + ")' class='btn btn-primary fa fa-show btn-sm td-compile'>禁用家庭服务师</a> ";
 							}
+						// opts = opts + "<a href='javascript:void(0);' ng-click='rewardSettlement( "+rowObject.orderManId+","+ 20+ ")' class='btn btn-primary fa fa-show btn-sm td-compile'>奖励结算</a> ";
 
 						return opts;
 					}}
@@ -187,6 +189,24 @@ app.controller('orderManCtrl', function($scope,toaster,orderManService,messager,
         });
     }
 
+	//奖励结算窗口
+	function rewardSettlement(orderManId) {
+		var url = urls.ms + "/promoter/promoter/rewardList.do?";
+		if (orderManId) {
+			url = url + $.param({orderManId: orderManId});
+		}
+		templateform.open({
+			title: "奖励明细",
+			url: url,
+			scope: $scope,
+			buttons: [],
+			onOpen: function ($modalInstance, data, $scope) {
+
+			}
+		}, function (modalInstance, data) {
+			$scope.correct = data.data;
+		});
+	}
 
 	//初始化
 	init();

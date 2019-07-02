@@ -40,6 +40,8 @@ public class OrderManReward implements Serializable {
      */
     private Date createTime;
 
+    private String ruleDescription;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getOrderManRewardId() {
@@ -104,5 +106,13 @@ public class OrderManReward implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getRuleDescription() {
+        return ruleDescription;
+    }
+
+    public void setRuleDescription(String ruleDescription) {
+        this.ruleDescription = ruleDescription;
     }
 }

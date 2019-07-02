@@ -1090,6 +1090,14 @@ public class PromoterOrderManServiceImpl implements PromoterOrderManService {
         return (openOrderManInfoMapper.getOrderManList(openOrderManInfo));
     }
 
+    @Override
+    public List<OrderManReward> getOrderManReward(Integer orderManId) {
+        //获取家庭服务师对应的所有一次性奖励信息
+        List<OrderManReward> orderManRewards = OrderManRewardMapper.selectByOrderManId(orderManId);
+
+        return orderManRewards;
+    }
+
     //初始化家庭服务师的奖励表数据
     private void initOrderManRewardData(Integer OrderManId){
         //获取家庭服务师一次性奖励的所有奖励规则数据
