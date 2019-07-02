@@ -225,6 +225,9 @@ public class AreaServiceImpl implements AreaService {
         smallCommunity.setPageSize(pageSize);
         //模糊查询关键字的小区列表,还要满足小区绑定了communityId
         List<SmallCommunity> smallCommunityList = smallCommunityMapper.getBindedSmallCommunityList(smallCommunity);
+        if (smallCommunityList.size() == 0) {
+            throw new BusinessException(ErrorType.NO_COMMUNITY);
+        }
         smallCommunityList.stream().forEach(item -> {
             SmallCommunityFullName smallCommunityFullName = new SmallCommunityFullName();
             smallCommunityFullName.setSmallCommunityId(item.getSmallCommunityId());
