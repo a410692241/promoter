@@ -171,8 +171,8 @@ app.controller('areaCtrl', function ($scope, toaster, areaService, messager, tem
                 },
                 success: function (data) {
                     if (data.respCode == "S") {
+                        toaster.info("添加成功!");
                         $("#areaList").trigger("reloadGrid");
-                        $modalInstance.close();
                     } else {
                         $scope.$apply(function () {
                             toaster.error("", data.data, 1000);
